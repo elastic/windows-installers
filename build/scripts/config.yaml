@@ -1,0 +1,34 @@
+elasticsearch:
+  upgrade_code: daaa2cba-a1ed-4f29-afbf-5478617b00f6
+  known_versions:
+    - version: 5.0.0-alpha1
+      guid: 53e2a74c-26c1-4dd7-b6fb-4f91af321b28
+    - version: 5.0.0-alpha2
+      guid: a3be3c9c-00f0-4896-beb1-fea1c57bdd02
+    - version: 5.0.0-alpha3
+      guid: 6035f515-1dfe-4a79-9ef5-7bb9384551b6
+    - version: 5.0.0-alpha4
+      guid: e979c387-45df-4bbb-aca5-82aec7b54f0e
+    - version: 5.0.0-alpha5
+      guid: c516704e-13ef-4ab8-9b27-c846d1e499b2
+    - version: 5.0.0-beta1
+      guid: 498c0857-e6fc-48ec-b210-c70586861e49
+    - version: 5.0.0-rc1
+      guid: 61847728-349e-4f2a-9965-cf8667d4558c
+    - version: 5.0.0
+      guid: cf632ca6-8588-4e94-9661-99cafcc974ac
+    - version: 5.0.1
+      guid: ab0244de-5a08-4812-97da-0c46c2f87eb9
+    - version: 5.1.1
+      guid: 82292245-25f0-41c1-88ee-0892b733a7e3
+kibana:
+  upgrade_code: 6a2e6f51-5145-4c1a-8d05-2190ae213367
+  known_versions:
+    - version: 5.0.0-rc1
+      guid: 23049947-d309-46f1-988b-49f62ed76630
+    - version: 5.0.0
+      guid: 2136a182-7b96-42f3-b23a-42fead9e9b5d
+    - version: 5.0.1
+      guid: 2c8d840a-f91b-4ecb-b66a-02e01ad649c1
+    - version: 5.1.1
+      guid: 059d0ca3-6448-4da3-97b6-83662aa754dc

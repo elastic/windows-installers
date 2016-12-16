@@ -1,0 +1,575 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConfigurationView_AddUnicastNode_Message" xml:space="preserve">
+    <value>Each value is either in the form of host or host:port. Invalid values will be ignored. Multiple values separated by a comma can be specified.</value>
+  </data>
+  <data name="ConfigurationView_AddUnicastNode_Title" xml:space="preserve">
+    <value>Add unicast node</value>
+  </data>
+  <data name="ConfigurationView_ClusterLabel" xml:space="preserve">
+    <value>Identifiers</value>
+  </data>
+  <data name="ConfigurationView_ClusterNameLabel" xml:space="preserve">
+    <value>Cluster name</value>
+  </data>
+  <data name="ConfigurationView_HttpPortLabel" xml:space="preserve">
+    <value>HTTP port</value>
+  </data>
+  <data name="ConfigurationView_TransportPortLabel" xml:space="preserve">
+    <value>Transport port</value>
+  </data>
+  <data name="ConfigurationView_NetworkHostLabel" xml:space="preserve">
+    <value>Network host</value>
+  </data>
+  <data name="ConfigurationView_DataNodeCheckBox" xml:space="preserve">
+    <value>Make this a data node</value>
+  </data>
+  <data name="ConfigurationView_DiscoveryLabel" xml:space="preserve">
+    <value>Discovery</value>
+  </data>
+  <data name="ConfigurationView_MinimumMasterNodesSet" xml:space="preserve">
+    <value> {0} minimum master-eligible nodes</value>
+  </data>
+  <data name="ConfigurationView_MinimumMasterNodesNotSet" xml:space="preserve">
+    <value> Minimum master nodes not set</value>
+  </data>
+  <data name="ConfigurationView_LockMemoryCheckBox" xml:space="preserve">
+    <value>Lock JVM memory</value>
+  </data>
+  <data name="ConfigurationView_MasterNodeCheckBox" xml:space="preserve">
+    <value>Make this a master-eligible node</value>
+  </data>
+  <data name="ConfigurationView_MemoryLabel" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="ConfigurationView_NetworkLabel" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="ConfigurationView_OptionalLabel" xml:space="preserve">
+    <value>(Optional)</value>
+  </data>
+  <data name="ConfigurationView_NodeBehaviorLabel" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="ConfigurationView_NodeNameLabel" xml:space="preserve">
+    <value>Node name</value>
+  </data>
+  <data name="ConfigurationView_MinimumMasterLabel" xml:space="preserve">
+    <value>Min master nodes</value>
+  </data>
+  <data name="ConfigurationView_SliderLabel" xml:space="preserve">
+    <value>Max</value>
+  </data>
+  <data name="ConfigurationView_UnicastExplanationLabel" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ConfigurationView_UnicastHostsLabel" xml:space="preserve">
+    <value>Unicast Hosts</value>
+  </data>
+  <data name="ClosingView_TitleSuccess" xml:space="preserve">
+    <value>Elasticsearch {0} successfully!</value>
+  </data>
+  <data name="ClosingView_SubTitleSuccess" xml:space="preserve">
+    <value>What's Next?</value>
+  </data>
+  <data name="ClosingView_RunningAtHeader" xml:space="preserve">
+    <value>Open Elasticsearch in the browser</value>
+  </data>
+  <data name="ClosingView_FindYourClient" xml:space="preserve">
+    <value>Find a client for your favorite language</value>
+  </data>
+  <data name="ClosingView_ReadTheReference" xml:space="preserve">
+    <value>Read the {0} API reference</value>
+  </data>
+  <data name="ClosingView_ReadGettingStarted" xml:space="preserve">
+    <value>Read "The Definitive Guide" for free online!</value>
+  </data>
+  <data name="ClosingView_ReadTheDocsOnCloseCheckBox" xml:space="preserve">
+    <value>Open the Elasticsearch documentation after exiting</value>
+  </data>
+  <data name="ClosingView_TitleFailed" xml:space="preserve">
+    <value>An error occured during {0}!</value>
+  </data>
+  <data name="ClosingView_ParagraphFailed" xml:space="preserve">
+    <value>This is very unfortunate and not something we'd hope to repeat.  Please let us know by filing an issue on our GitHub issues page.</value>
+  </data>
+  <data name="ClosingView_SubTitleFailed" xml:space="preserve">
+    <value>Diagnose and Report</value>
+  </data>
+  <data name="ClosingView_OpenInstallationLog" xml:space="preserve">
+    <value>Open the installation log file</value>
+  </data>
+  <data name="ClosingView_OpenElasticsearchLog" xml:space="preserve">
+    <value>Open the Elasticsearch log file</value>
+  </data>
+  <data name="ClosingView_OpenIssues" xml:space="preserve">
+    <value>Report the issue on our GitHub issues page</value>
+  </data>
+  <data name="ClosingView_TitleCancelled" xml:space="preserve">
+    <value>The {0} was cancelled.</value>
+  </data>
+  <data name="ClosingView_ParagraphCancelled" xml:space="preserve">
+    <value>We'll just assume you hit the cancel button by accident, no hard feelings!</value>
+  </data>
+  <data name="ClosingView_TitlePreempted" xml:space="preserve">
+    <value>The {0} can not run at this time</value>
+  </data>
+  <data name="ClosingView_ParagraphPreempted" xml:space="preserve">
+    <value>One or more pre-requisites are not satisfied. Try fixing these and re-running the installer.</value>
+  </data>
+  <data name="LocationsView_ConfigDirectoryBrowseButton" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="LocationsView_ConfigDirectoryLabel" xml:space="preserve">
+    <value>Configuration directory</value>
+  </data>
+  <data name="LocationsView_CustomLocationsCheckBox" xml:space="preserve">
+    <value>Place logs, data, and config in the same directory</value>
+  </data>
+  <data name="LocationsView_CustomLocationsRadioButton" xml:space="preserve">
+    <value>Use a custom installation directory</value>
+  </data>
+  <data name="LocationsView_DataDirectoryBrowseButton" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="LocationsView_InstallationDirectoryLabel" xml:space="preserve">
+    <value>Installation directory</value>
+  </data>
+  <data name="LocationsView_DataDirectoryLabel" xml:space="preserve">
+    <value>Data directory</value>
+  </data>
+  <data name="LocationsView_DefaultLocationsRadioButton" xml:space="preserve">
+    <value>Use default directories</value>
+  </data>
+  <data name="LocationsView_InstallDirectoryBrowseButton" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="LocationsView_LogsDirectoryBrowseButton" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="LocationsView_LogsDirectoryLabel" xml:space="preserve">
+    <value>Logs directory</value>
+  </data>
+  <data name="MainWindow_InstallingMessage" xml:space="preserve">
+    <value>Installing Elasticsearch {0}</value>
+    <comment>{0} = Elasticsearch Version</comment>
+  </data>
+  <data name="MainWindow_InstallingTitle" xml:space="preserve">
+    <value>Installing...</value>
+  </data>
+  <data name="MainWindow_TabItemConfiguration" xml:space="preserve">
+    <value>configuration</value>
+  </data>
+  <data name="MainWindow_TabItemLocations" xml:space="preserve">
+    <value>locations</value>
+  </data>
+  <data name="MainWindow_TabItemPlugins" xml:space="preserve">
+    <value>plugins</value>
+  </data>
+  <data name="MainWindow_TabItemService" xml:space="preserve">
+    <value>service</value>
+  </data>
+  <data name="MainWindow_TabItemWelcome" xml:space="preserve">
+    <value>welcome</value>
+  </data>
+  <data name="MainWindow_Title" xml:space="preserve">
+    <value>Elasticsearch {0} Installation</value>
+    <comment>{0} = Elasticsearch Version</comment>
+  </data>
+  <data name="MainWindow_LicenseHeader" xml:space="preserve">
+    <value>License Information</value>
+  </data>
+  <data name="MainWindow_LicenseInformation" xml:space="preserve">
+    <value>Except as otherwise noted, Elasticsearch is distributed and licensed 
+ under the Apache 2.0 License.
+X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
+  </data>
+  <data name="MainWindow_ValidationError" xml:space="preserve">
+    <value>Validation Error</value>
+  </data>
+  <data name="MainWindow_ValidationErrors" xml:space="preserve">
+    <value>Validation Errors</value>
+  </data>
+  <data name="MainWindow_PrequisiteErrors" xml:space="preserve">
+    <value>Pre-requisite Errors</value>
+  </data>
+  <data name="MainWindow_PrequisiteFixed" xml:space="preserve">
+    <value>I have fixed this!</value>
+  </data>
+  <data name="MainWindow_QuitInstallation" xml:space="preserve">
+    <value>Quit installation</value>
+  </data>
+  <data name="PluginType_Analysis" xml:space="preserve">
+    <value>Analysis</value>
+  </data>
+  <data name="PluginType_Discovery" xml:space="preserve">
+    <value>Discovery</value>
+  </data>
+  <data name="PluginType_Scripting" xml:space="preserve">
+    <value>Scripting</value>
+  </data>
+  <data name="PluginType_Snapshot" xml:space="preserve">
+    <value>Snapshot</value>
+  </data>
+  <data name="ServiceView_ConfigurationLabel" xml:space="preserve">
+    <value>General properties</value>
+  </data>
+  <data name="ServiceView_LocalSystemRadioButton" xml:space="preserve">
+    <value>Use Local System account</value>
+  </data>
+  <data name="ServiceView_ValidateLabel" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="ServiceView_ExistingUserRadioButton" xml:space="preserve">
+    <value>Existing user</value>
+  </data>
+  <data name="ServiceView_InstallAsServiceRadioButton" xml:space="preserve">
+    <value>Install as a service</value>
+  </data>
+  <data name="ServiceView_LogonLabel" xml:space="preserve">
+    <value>Account information</value>
+  </data>
+  <data name="ServiceView_ManualRadioButton" xml:space="preserve">
+    <value>Do not install as a service (start manually when needed)</value>
+  </data>
+  <data name="ServiceView_NetworkServiceRadioButton" xml:space="preserve">
+    <value>Use NT AUTHORITY\NETWORK SERVICE</value>
+  </data>
+  <data name="ServiceView_PasswordLabel" xml:space="preserve">
+    <value>password</value>
+  </data>
+  <data name="ServiceView_ServiceNameLabel" xml:space="preserve">
+    <value>Service name</value>
+  </data>
+  <data name="ServiceView_StartAfterInstallCheckBox" xml:space="preserve">
+    <value>Start the service after this installation is complete</value>
+  </data>
+  <data name="ServiceView_StartWhenWindowsStartsCheckBox" xml:space="preserve">
+    <value>Start the service when Windows starts (Automatic)</value>
+  </data>
+  <data name="ServiceView_UserLabel" xml:space="preserve">
+    <value>user</value>
+  </data>
+  <data name="SetupView_ExitText" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="SetupView_InstallText" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="SetupView_NextText" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="NoticeView_ReadMoreOnUpgrades" xml:space="preserve">
+    <value>Read the upgrade documentation to learn more</value>
+  </data>
+  <data name="NoticeViewModelValidator_AlreadyInstalled" xml:space="preserve">
+    <value>This version of Elasticsearch is already installed.</value>
+  </data>
+  <data name="NoticeViewModelValidator_CanInstall" xml:space="preserve">
+    <value>An error in the MSI prevents us from installing.</value>
+  </data>
+  <data name="NoticeViewModelValidator_JavaInstalled" xml:space="preserve">
+    <value>Could not find a valid Java installation.</value>
+  </data>
+  <data name="NoticeView_ReadOnlyPropertiesHeader" xml:space="preserve">
+    <value>Read only properties from previous installation</value>
+  </data>
+  <data name="NoticeView_RunAsServiceHeaderLabel" xml:space="preserve">
+    <value>Install as a service</value>
+  </data>
+  <data name="ConfigurationView_Help" xml:space="preserve">
+    <value>This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We're only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
+
+
+[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important not to reuse the same cluster name in different environments.
+
+[b]Node name[/b]: The unique name given to this particular Elasticsearch node.
+
+[b]Node role[/b]: The type of role(s) this node should have.  If no roles are assigned, then it will act as a client node any only route requests to other nodes in your cluster.
+
+[b]Memory[/b]: The amount of memory to allocate to the JVM heap for Elasticsearch.  The standard rule of thumb is to allocate 50% of available memory to the heap, but never exceed 30.5 GB, leaving the remaining 50% free to ensure there is enough for kernel file system caches.  The 30.5 GB limit is recommended in order to prevent the JVM from entering 64-bit address space, which will result in a performance degradation.
+
+[b]Lock memory[/b]: Windows will try to use as much memory as possible for file system caches and eagerly swap out unused application memory, possibly resulting in the Elasticsearch process being swapped, which is very bad for performance and node stability. By choosing to lock memory, Elasticsearch will leverage the native VirtualLock function in Windows, in effort to keep the JVM in physical memory at all times.
+
+[b]Network host[/b]: By default, Elasticsearch binds to loopback addresses only (e.g. [b]127.0.0.1[/b]).  This is sufficient to run a single development node on a server.  However, in order to communicate to form a cluster on other servers, your node will need to bind to a non-loopback address.
+
+[b]HTTP port[/b]: The port to communicate with Elasticsearch REST API over HTTP.
+
+[b]Transport port[/b]: The port to use for node-to-node communication over the Elasticsearch transport protocol.</value>
+  </data>
+  <data name="LocationsView_Help" xml:space="preserve">
+    <value>Elasticsearch has several different folders that it needs to have read and/or write access to:
+
+[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are intalled to.
+
+[b]Data[/b]: The directory where Elasticsearch stores your data.
+
+[b]Logs[/b]: The directory where Elasticsearch will write its log files to.
+
+[b]Config[/b]: The directory where Elasticsearch will its configuration files.
+
+It is best practice to keep your logs, config, and data directories separate from your home directory.  This keeps your data and configuration safe from overwriting when upgrading to newer versions of Elasticsearch.</value>
+  </data>
+  <data name="MainWindow_Help" xml:space="preserve">
+    <value>Heya! Welcome the Elasticsearch Windows intaller.
+
+This installer will walk you through various steps to help you conifigure and install Elasticsearch on your system.  To make things easier, we've gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you'll definitely want to change.</value>
+  </data>
+  <data name="PluginsView_Help" xml:space="preserve">
+    <value>Plugins are a way to enhance the basic Elasticsearch functionality in a custom manner.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), native scripts, custom discovery and more.
+
+We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually.</value>
+  </data>
+  <data name="ServiceView_Help" xml:space="preserve">
+    <value>By default, Elasticsearch will be installed as a service.
+
+This step allows you to configure the Windows user to run the service with, as well as when the service should be started.
+
+Alternatively, you may choose to not install Elasticsearch as a service and run it manually as needed from the command line.</value>
+  </data>
+  <data name="PluginType_ApiExtensions" xml:space="preserve">
+    <value>API Extensions</value>
+  </data>
+  <data name="PluginType_Ingest" xml:space="preserve">
+    <value>Ingest</value>
+  </data>
+  <data name="PluginType_Mapper" xml:space="preserve">
+    <value>Mapper</value>
+  </data>
+  <data name="PluginType_Store" xml:space="preserve">
+    <value>Store</value>
+  </data>
+  <data name="PluginType_XPack" xml:space="preserve">
+    <value>X-Pack</value>
+  </data>
+  <data name="ConfigurationView_IngestNodeCheckBox" xml:space="preserve">
+    <value>Make this an ingest node</value>
+  </data>
+  <data name="InstallOptions_ClusterName" xml:space="preserve">
+    <value>The name of the cluster. Defaults to {0}</value>
+    <comment>{0} = Default Cluster Name</comment>
+  </data>
+  <data name="InstallOptions_ConfigDirectory" xml:space="preserve">
+    <value>The config directory. Defaults to {0}</value>
+    <comment>{0} = Default Config Directory</comment>
+  </data>
+  <data name="InstallOptions_DataDirectory" xml:space="preserve">
+    <value>The data directory. Defaults to {0}</value>
+    <comment>{0} = Default DataText Directory</comment>
+  </data>
+  <data name="InstallOptions_DataNode" xml:space="preserve">
+    <value>Whether this node is a DataText node. Defaults to {0}</value>
+    <comment>{0} = Is this a DataText Node</comment>
+  </data>
+  <data name="InstallOptions_HeapSize" xml:space="preserve">
+    <value>The heap memory that will be allocated to the Elasticsearch Java Process. This should be more than 250mb and ideally less than 32GB (so that Java uses compressed pointers). Defaults to {0}mb for this installation</value>
+    <comment>{0} = Default Heap Size</comment>
+  </data>
+  <data name="InstallOptions_IngestNode" xml:space="preserve">
+    <value>Whether this node is an Ingest node. Defaults to {0}</value>
+    <comment>{0} = Is this an Ingest Node</comment>
+  </data>
+  <data name="InstallOptions_InstallDirectory" xml:space="preserve">
+    <value>The installation directory. Defaults to {0}</value>
+    <comment>{0} = Default Install Directory</comment>
+  </data>
+  <data name="InstallOptions_LockMemory" xml:space="preserve">
+    <value>Whether to lock the process address space in RAM, preventing any Elasticsearch memory from being swapped out. This uses VirtualLock on Windows. Defaults to {0}</value>
+    <comment>{0} = Default lock memory value</comment>
+  </data>
+  <data name="InstallOptions_LogsDirectory" xml:space="preserve">
+    <value>The logs directory. Defaults to {0}</value>
+    <comment>{0} = Default Logs Directory</comment>
+  </data>
+  <data name="InstallOptions_MasterNode" xml:space="preserve">
+    <value>Whether this node is a Master node. Defaults to {0}</value>
+    <comment>{0} = Is this a Master Node</comment>
+  </data>
+  <data name="InstallOptions_NodeName" xml:space="preserve">
+    <value>The name of the node. Defaults to {0} for this installation</value>
+    <comment>{0} = Default Node Name</comment>
+  </data>
+  <data name="InstallOptions_Plugins" xml:space="preserve">
+    <value>A comma-separated list of plugins to install as part of the Elasticsearch installation</value>
+  </data>
+  <data name="InstallOptions_ServiceAutomatic" xml:space="preserve">
+    <value>Whether to automatically start the service after Windows starts/restarts, if installing as a Windows Service. Defaults to {0}</value>
+    <comment>{0} = Default Start Service after Windows Starts/Restarts</comment>
+  </data>
+  <data name="InstallOptions_ServiceInstall" xml:space="preserve">
+    <value>Whether to install Elasticsearch as a Windows service. Defaults to {0}</value>
+    <comment>{0} = Default Install as a Service value</comment>
+  </data>
+  <data name="InstallOptions_ServiceName" xml:space="preserve">
+    <value>The name of the Windows service, if installing as a Windows Service. Defaults to {0}</value>
+    <comment>{0} = Default Windows Service name</comment>
+  </data>
+  <data name="InstallOptions_ServicePassword" xml:space="preserve">
+    <value>Password for the specified Username, if installing as a Windows Service</value>
+  </data>
+  <data name="InstallOptions_ServiceRunAsNetworkService" xml:space="preserve">
+    <value>Whether to run the service using {0} if installing as a Windows Service. Defaults to {1}. If this value is false and {2} is not specified, the service will be run using {3}</value>
+    <comment>{0} = Network Service Account
+{1} = Default Network Service Account Name
+{2} = Service Username Install Option Name
+{3} = Local System Service Account</comment>
+  </data>
+  <data name="InstallOptions_ServiceStart" xml:space="preserve">
+    <value>Whether to start the service after installation, if installing as a Windows Service. Defaults to {0}</value>
+    <comment>{0} = Default Start Service after installation</comment>
+  </data>
+  <data name="InstallOptions_ServiceUsername" xml:space="preserve">
+    <value>Whether to run the service using a specified Username, if installing as a Windows Service</value>
+  </data>
+  <data name="InstallOptions_UnicastHosts" xml:space="preserve">
+    <value>A comma-separated list of hosts to use for unicast discovery</value>
+  </data>
+  <data name="SilentSetup_CommandLineOptions" xml:space="preserve">
+    <value>Options signal how and what routine the setup should run</value>
+  </data>
+  <data name="SilentSetup_CommandLineVariables" xml:space="preserve">
+    <value>Variables control the values used during (un)installation</value>
+  </data>
+  <data name="SilentSetup_Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="SilentSetup_InstallVariables" xml:space="preserve">
+    <value>Install Variables</value>
+  </data>
+  <data name="SilentSetup_UninstallVariables" xml:space="preserve">
+    <value>Uninstall Variables</value>
+  </data>
+  <data name="SilentSetup_Description" xml:space="preserve">
+    <value>Installs Elasticsearch on Windows. Run without arguments for interactive setup or with command line options for silent setup.</value>
+  </data>
+  <data name="SilentSetup_Help" xml:space="preserve">
+    <value>Display help text and exit</value>
+  </data>
+  <data name="SilentSetup_AmbiguousFlags" xml:space="preserve">
+    <value>Can not start setup because of conflicting parameters e.g specifying /i and /u</value>
+  </data>
+  <data name="SilentSetup_Title" xml:space="preserve">
+    <value>Elasticsearch {0} Installer</value>
+    <comment>{0} = Installer Version</comment>
+  </data>
+  <data name="SilentSetup__Uninstall" xml:space="preserve">
+    <value>Uninstall Elasticsearch</value>
+  </data>
+</root>

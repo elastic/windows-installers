@@ -1,0 +1,46 @@
+source https://api.nuget.org/v3/index.json
+
+nuget NuGet.CommandLine
+nuget Costura.Fody 1.3.3.0
+nuget FluentValidation 5.5.0.0 framework: >= net45
+nuget Fody 1.28.3 content: none
+nuget HtmlTextBlock 1.0.1 content: none, framework: >= net45
+nuget ILMerge 2.14.1208 framework: >= net40
+nuget MahApps.Metro 1.0.1-ALPHA027 framework: >= net45
+nuget MahApps.Metro.Resources 0.4.0.0 framework: >= net45
+nuget reactiveui 6.3.1 framework: >= net45
+nuget reactiveui-core 6.3.1 framework: >= net45
+nuget reactiveui-events 6.3.1 framework: >= net45
+nuget Rx-Core 2.2.5
+nuget Rx-Interfaces 2.2.5
+nuget Rx-Linq 2.2.5
+nuget Rx-Main 2.2.5
+nuget Rx-PlatformServices 2.2.5
+nuget Rx-XAML 2.2.5 framework: >= net45
+nuget Splat 1.6.0 framework: >= net45
+nuget Topshelf 3.1.4
+nuget WindowsAPICodePack-Core 1.1.1 framework: >= net45
+nuget WindowsAPICodePack-Shell 1.1.1 framework: >= net45
+nuget WixSharp.bin framework: >= net40
+nuget YamlDotNet 3.8.0 framework: >= net40
+nuget SharpYaml framework: >= net40
+nuget System.IO.Abstractions
+nuget System.IO.Abstractions.TestingHelpers
+nuget semver
+
+group tests
+    source https://www.nuget.org/api/v2
+
+    nuget xunit
+    nuget FluentAssertions
+
+group build
+    source https://www.nuget.org/api/v2
+
+    nuget FAKE
+    nuget FSharp.Data
+    nuget FSharp.Configuration
+    nuget System.Management.Automation
+
+    source https://www.myget.org/F/xunit/
+    nuget xunit.runner.console 2.2.0-beta3-build3330
