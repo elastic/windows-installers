@@ -1,6 +1,6 @@
 # Windows installers for the Elastic stack
 
-This is the repository for the Elastick stack MSI-based Windows installers.
+This is the repository for the Elastic stack MSI-based Windows installers.
 
 ![Example Install Flow](images/example-flow.gif)
 
@@ -14,7 +14,9 @@ This will download the latest version of the stack (currently only Elasticsearch
 
 You can also specify a specific version
 
-`build 5.1.1`
+```bat
+build 5.1.1
+```
 
 **NOTE**: *Building from source should only be done for development purposes.  Only the officially distributed and signed Elastic installer should be used in production. Using an unofficial Elastic installer is not supported.*
 
@@ -22,15 +24,21 @@ You can also specify a specific version
 
 Instead of installing through the UI, it is also possible to perform an installation in "quiet" mode via the command-line using [msiexec](https://technet.microsoft.com/en-us/library/bb490936.aspx?f=255&MSPPError=-2147217396) and passing the `/qn` flag, which will invoke the installer without the UI.  This can be particularly useful for automating deployments.
 
-`msiexec /i elasticsearch-5.1.1.msi /qn`
+```bat
+msiexec /i elasticsearch-5.1.1.msi /qn
+```
 
 You can also optionally specify a log file
 
-`msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log`
+```bat
+msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log
+```
 
 All of the configurable options available in the UI are also exposed as command line arguments to `msiexec`:
 
-`msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log NODENAME=my_node_name CLUSTERNAME=my_cluster_name`
+```bat
+msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log NODENAME=my_node_name CLUSTERNAME=my_cluster_name
+```
 
 ### Command-line options
 
@@ -66,11 +74,15 @@ All of the configurable options available in the UI are also exposed as command 
 
 If Elasticsearch was installed as a service via the MSI, then it can be controlled using the native Windows [sc](https://technet.microsoft.com/en-us/library/bb490995.aspx) utility.
 
-`sc start Elasticsearch`
+```bat
+sc start Elasticsearch
+```
 
 to start the service, or
 
-`sc stop Elasticsearch`
+```bat
+sc stop Elasticsearch
+```
 
 to stop it.
 
@@ -82,7 +94,9 @@ In addition to installing and running Elasticsearch as a service, it can also be
 
 It also accepts the same command-line arguments as the original bat file.
 
-`./elasticsearch.exe -Ecluster.name=my_cluster_name -Enode.name=my_node_name`
+```bat
+./elasticsearch.exe -Ecluster.name=my_cluster_name -Enode.name=my_node_name
+```
 
 ## Reporting problems
 
