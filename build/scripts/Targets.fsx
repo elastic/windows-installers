@@ -62,12 +62,12 @@ Target "Clean" (fun _ ->
 
 Target "DownloadProducts" (fun () ->
   Downloader.downloadProduct Product.Elasticsearch version
-  //Downloader.downloadProduct Product.Kibana version
+  Downloader.downloadProduct Product.Kibana version
 )
 
 Target "UnzipProducts" (fun () ->
   Downloader.unzipProduct Product.Elasticsearch version
-  //Downloader.unzipProduct Product.Kibana version
+  Downloader.unzipProduct Product.Kibana version
 )
 
 Target "PatchGuids" (fun () ->
@@ -185,14 +185,14 @@ Target "BuildServices" (fun () ->
 
 Target "BuildInstallers" (fun () ->
     buildMsi Product.Elasticsearch false
-    //buildMsi Product.Kibana false
+    buildMsi Product.Kibana false
 )
 
 Target "Sign" (fun () ->
     buildService Product.Elasticsearch true
     //buildService Product.Kibana true
     buildMsi Product.Elasticsearch true
-    //buildMsi Product.Kibana false
+    buildMsi Product.Kibana true
 )
 
 Target "Release" (fun () ->
