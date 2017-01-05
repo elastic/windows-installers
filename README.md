@@ -6,9 +6,11 @@ This is the repository for the Elastic stack MSI-based Windows installers.
 
 ## Building
 
-Simply clone the repository and run
+First, make sure you have the latest stable version of the [WiX Toolset](http://wixtoolset.org/releases/) installed.  Then simply clone the repository and run
 
-`build`
+```bat
+build
+```
 
 This will download the latest version of the stack (currently only Elasticsearch) and create the MSIs.
 
@@ -88,7 +90,7 @@ to stop it.
 
 Configuring Elasticsearch specific settings while running as a service is as simple as editing the `elasticsearch.yml` and `jvm.options` files, and then restarting the service.
 
-## Running from command-line
+## Running from the command-line
 
 In addition to installing and running Elasticsearch as a service, it can also be started from the command-line by calling `elasticsearch.exe` located in the `bin` directory, much like the original `elasticsearch.bat` that's distributed with the zip file.
 
@@ -100,7 +102,7 @@ It also accepts the same command-line arguments as the original bat file.
 
 ## Reporting problems
 
-To report any problems encountered during installation, or to request features, please open an [issue]().  We ask that you please attach the MSI log file if applicable.
+To report any problems encountered during installation, or to request features, please open an [issue](https://github.com/elastic/windows-installers/issues).  We ask that you please attach the MSI log file if applicable.
 
 When installing from the command-line, the log file can be captured by passing the `/l <logfilename>`.  When installing through the UI, a link to the log file will be provided at the end of the installation.
 
