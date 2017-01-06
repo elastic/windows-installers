@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using FluentValidation.Results;
 using Elastic.Installer.Domain.Session;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Extensions;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {

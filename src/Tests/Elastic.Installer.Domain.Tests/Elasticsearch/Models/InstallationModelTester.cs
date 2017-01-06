@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
 using Elastic.Installer.Domain.Elasticsearch.Model;
 using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
@@ -14,6 +12,8 @@ using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using FluentAssertions;
 using FluentValidation.Results;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 {

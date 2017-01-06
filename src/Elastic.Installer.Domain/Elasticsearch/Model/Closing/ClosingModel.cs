@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Elastic.Installer.Domain.Model;
 using ReactiveUI;
 using Semver;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
+using Elastic.Installer.Domain.Shared.Configuration;
+using Elastic.Installer.Domain.Shared.Model.Closing;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Closing
 {

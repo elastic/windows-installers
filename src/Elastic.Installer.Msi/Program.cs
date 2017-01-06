@@ -8,9 +8,9 @@ using System.Linq;
 using System.Xml.Linq;
 using WixSharp;
 using Elastic.Installer.Domain.Elasticsearch.Model;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Msi.Elasticsearch;
 using Elastic.Installer.Msi.Kibana;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 
 namespace Elastic.Installer.Msi
 {

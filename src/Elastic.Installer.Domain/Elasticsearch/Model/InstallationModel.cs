@@ -1,30 +1,33 @@
-﻿using System;
+﻿using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
+using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
+using Elastic.Installer.Domain.Elasticsearch.Model.Config;
+using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
+using Elastic.Installer.Domain.Elasticsearch.Model.Notice;
+using Elastic.Installer.Domain.Model;
+using Elastic.Installer.Domain.Properties;
+using Elastic.Installer.Domain.Service;
+using Elastic.Installer.Domain.Session;
+using Elastic.Installer.Domain.Shared.Configuration;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Shared.Model.Closing;
+using Elastic.Installer.Domain.Shared.Model.Plugins;
+using Elastic.Installer.Domain.Shared.Model.Service;
+using FluentValidation.Results;
+using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
-using Elastic.Installer.Domain.Properties;
-using Elastic.Installer.Domain.Service;
-using FluentValidation.Results;
-using ReactiveUI;
-using Elastic.Installer.Domain.Session;
-using System.Reactive.Linq;
-using Elastic.Installer.Domain.Model;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
-using Elastic.Installer.Domain.Elasticsearch.Model.Notice;
-using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
-using Elastic.Installer.Domain.Elasticsearch.Model.Config;
-using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
-using Elastic.Installer.Domain.Elasticsearch.Model.Service;
-using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model
 {
-	public class InstallationModel : ValidatableReactiveObjectBase<InstallationModel, InstallationModelValidator>
+	public class InstallationModel 
+		: ValidatableReactiveObjectBase<InstallationModel, InstallationModelValidator>
 	{
 		private readonly IWixStateProvider _wixStateProvider;
 		public JavaConfiguration JavaConfiguration { get; }

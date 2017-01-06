@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Session;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {

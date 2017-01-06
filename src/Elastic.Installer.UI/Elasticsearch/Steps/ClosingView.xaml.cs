@@ -8,6 +8,7 @@ using Elastic.Installer.UI.Controls;
 using Elastic.Installer.UI.Properties;
 using FluentValidation.Results;
 using ReactiveUI;
+using Elastic.Installer.Domain.Shared.Model.Closing;
 
 namespace Elastic.Installer.UI.Elasticsearch.Steps
 {

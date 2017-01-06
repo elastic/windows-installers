@@ -2,8 +2,8 @@
 using System.Text;
 using WindowsInstaller;
 using Elastic.Installer.Domain;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Semver;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 
 namespace Elastic.Installer.UI.Elasticsearch.Configuration.EnvironmentBased
 {

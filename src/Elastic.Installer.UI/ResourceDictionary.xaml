@@ -17,6 +17,7 @@
   </ResourceDictionary.MergedDictionaries>
 
   <BitmapImage x:Key="ElasticsearchLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/Elasticsearchlogo.png" />
+  <BitmapImage x:Key="KibanaLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/Kibanalogo.png" />
 
   <!--ACCENT COLORS-->
   <Color x:Key="IdealForegroundColor">White</Color>

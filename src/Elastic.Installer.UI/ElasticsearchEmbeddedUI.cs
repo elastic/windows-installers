@@ -8,6 +8,7 @@ using ReactiveUI;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Domain.Elasticsearch.Model;
 using Elastic.Installer.UI.Elasticsearch.Configuration.EnvironmentBased;
+using Elastic.Installer.UI.Elasticsearch;
 
 namespace Elastic.Installer.UI
 {

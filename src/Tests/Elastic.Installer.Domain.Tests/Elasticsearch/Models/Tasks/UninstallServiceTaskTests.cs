@@ -4,6 +4,7 @@ using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
 using FluentAssertions;
 using Xunit;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 {

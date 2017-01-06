@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
 using FluentAssertions;
 using Xunit;
+using Elastic.Installer.Domain.Shared.Model.Plugins;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 {

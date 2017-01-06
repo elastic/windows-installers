@@ -4,14 +4,14 @@ using System.Reactive.Concurrency;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Elastic.Installer.UI;
 using ReactiveUI;
 using Elastic.Installer.Domain.Session;
 using Semver;
 using System.Reactive.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Model;
-using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
+using Elastic.Installer.UI.Elasticsearch;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Shared.Model.Closing;
 
 namespace Elastic.Installer.Elasticsearch.DevHost
 {

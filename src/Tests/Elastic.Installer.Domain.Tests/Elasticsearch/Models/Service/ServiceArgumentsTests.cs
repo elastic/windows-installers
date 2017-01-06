@@ -1,4 +1,4 @@
-﻿using Elastic.Installer.Domain.Elasticsearch.Model.Service;
+﻿using Elastic.Installer.Domain.Shared.Model.Service;
 using FluentAssertions;
 using Xunit;
 

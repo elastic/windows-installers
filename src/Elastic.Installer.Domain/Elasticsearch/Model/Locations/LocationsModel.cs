@@ -5,6 +5,7 @@ using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
 using Elastic.Installer.Domain.Model;
 using ReactiveUI;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Locations
 {

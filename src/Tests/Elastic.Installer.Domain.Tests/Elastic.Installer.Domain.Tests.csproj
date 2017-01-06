@@ -795,6 +795,20 @@
     </When>
     <When Condition="$(TargetPlatformIdentifier) == 'UAP' And $(TargetPlatformVersion.StartsWith('10.0'))">
       <ItemGroup>
+        <Reference Include="FluentAssertions.Core">
+          <HintPath>..\..\..\packages\tests\FluentAssertions\lib\uap10.0\FluentAssertions.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="FluentAssertions">
+          <HintPath>..\..\..\packages\tests\FluentAssertions\lib\uap10.0\FluentAssertions.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETCore' And $(TargetFrameworkVersion) == 'v4.5.1'">
+      <ItemGroup>
         <Reference Include="FluentAssertions">
           <HintPath>..\..\..\packages\tests\FluentAssertions\lib\uap10.0\FluentAssertions.dll</HintPath>
           <Private>True</Private>
@@ -1424,8 +1438,8 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETStandard' And ($(TargetFrameworkVersion) == 'v1.3' Or $(TargetFrameworkVersion) == 'v1.4' Or $(TargetFrameworkVersion) == 'v1.5' Or $(TargetFrameworkVersion) == 'v1.6' Or $(TargetFrameworkVersion) == 'v2.0')">
       <ItemGroup>
         <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
-          <HintPath>..\..\..\packages\tests\System.Runtime.InteropServices.RuntimeInformation\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-          <Private>False</Private>
+          <HintPath>..\..\..\packages\tests\System.Runtime.InteropServices.RuntimeInformation\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+          <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>

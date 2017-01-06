@@ -1,4 +1,4 @@
-﻿using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
+﻿using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using FluentAssertions;
 using Xunit;

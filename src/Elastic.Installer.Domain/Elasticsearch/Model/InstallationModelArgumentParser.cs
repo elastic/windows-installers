@@ -5,8 +5,8 @@ using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
 using Elastic.Installer.Domain.Elasticsearch.Model.Config;
 using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
 using Elastic.Installer.Domain.Elasticsearch.Model.Notice;
-using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
-using Elastic.Installer.Domain.Elasticsearch.Model.Service;
+using Elastic.Installer.Domain.Shared.Model.Plugins;
+using Elastic.Installer.Domain.Shared.Model.Service;
 using Elastic.Installer.Domain.Model;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model

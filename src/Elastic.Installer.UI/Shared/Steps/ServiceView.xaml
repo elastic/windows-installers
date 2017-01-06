@@ -1,0 +1,77 @@
+﻿<controls:StepControl  x:Class="Elastic.Installer.UI.Shared.Steps.ServiceView"
+             x:TypeArguments="serviceStep:ServiceModel, steps:ServiceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
+             xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
+             xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:viewmodels="clr-namespace:Elastic.Installer.Domain.Model;assembly=Elastic.Installer.Domain"
+             xmlns:serviceStep="clr-namespace:Elastic.Installer.Domain.Shared.Model.Service;assembly=Elastic.Installer.Domain"
+             xmlns:steps="clr-namespace:Elastic.Installer.UI.Shared.Steps"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance d:Type=serviceStep:ServiceModel }"
+             d:DesignHeight="500" d:DesignWidth="900">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="10" />
+      <RowDefinition Height="35" />
+      <RowDefinition Height="35" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <RadioButton Grid.Row="1" x:Name="ManualRadioButton" Content="{x:Static resx:ViewResources.ServiceView_ManualRadioButton}" HorizontalAlignment="Left" VerticalAlignment="Top" GroupName="InstallType" FontWeight="Bold" Margin="5,0,0,0"/>
+    <RadioButton Grid.Row="2" x:Name="InstallAsServiceRadioButton" Content="{x:Static resx:ViewResources.ServiceView_InstallAsServiceRadioButton}" HorizontalAlignment="Left" VerticalAlignment="Top" GroupName="InstallType" FontWeight="Bold" Margin="5,0,0,0"/>
+    <Grid Grid.Row="3" x:Name="ServiceGrid">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="20"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="30" />
+        <RowDefinition Height="30" />
+        <RowDefinition Height="30" />
+        <RowDefinition Height="35" />
+        <RowDefinition Height="35" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="2" x:Name="ConfigurationLabel" Content="{x:Static resx:ViewResources.ServiceView_ConfigurationLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+      <CheckBox Grid.Row="1" Grid.Column="2" x:Name="StartAfterInstallCheckBox" Content="{x:Static resx:ViewResources.ServiceView_StartAfterInstallCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="5,0,0,0"/>
+      <CheckBox Grid.Row="2" Grid.Column="2" x:Name="StartWhenWindowsStartsCheckBox" Content="{x:Static resx:ViewResources.ServiceView_StartWhenWindowsStartsCheckBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
+      <Label Grid.Row="0" x:Name="LogonLabel" Content="{x:Static resx:ViewResources.ServiceView_LogonLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+      <RadioButton Grid.Row="1" x:Name="LocalSystemRadioButton" Content="{x:Static resx:ViewResources.ServiceView_LocalSystemRadioButton}" GroupName="UserType"  HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="5,0,0,0"/>
+      <RadioButton Grid.Row="2" x:Name="NetworkServiceRadioButton" Content="{x:Static resx:ViewResources.ServiceView_NetworkServiceRadioButton}" GroupName="UserType"  HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="5,0,0,0"/>
+      <RadioButton Grid.Row="3" x:Name="ExistingUserRadioButton" Content="{x:Static resx:ViewResources.ServiceView_ExistingUserRadioButton}" GroupName="UserType"  HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="5,0,0,0"/>
+      <Grid Grid.Row="4" Grid.RowSpan="6" x:Name="UserGrid">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="10" />
+          <RowDefinition Height="45" />
+          <RowDefinition Height="45" />
+          <RowDefinition Height="45" />
+          <RowDefinition Height="45" />
+          <RowDefinition Height="45" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="1" Grid.Column="0" x:Name="UserLabel" Content="{x:Static resx:ViewResources.ServiceView_UserLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="UserTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" />
+        <Label Grid.Row="2" Grid.Column="0" x:Name="PasswordLabel" Content="{x:Static resx:ViewResources.ServiceView_PasswordLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+        <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="PasswordTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" />
+        <Button Grid.Row="3" Grid.Column="1" x:Name="ValidateCredentials"
+                HorizontalAlignment="Stretch" Height="30" 
+                Content="{x:Static resx:ViewResources.ServiceView_ValidateLabel}"
+                VerticalAlignment="Center" />
+        <mahapps:ProgressRing x:Name="ValidationProgress"
+          Visibility="Collapsed" 
+                HorizontalAlignment="Center" Height="30" Width="30" VerticalAlignment="Center"
+          Grid.Row="3" Grid.Column="1"
+          IsActive="True" />
+        
+      </Grid>
+    </Grid>
+  </Grid>
+</controls:StepControl>

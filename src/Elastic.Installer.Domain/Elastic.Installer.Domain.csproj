@@ -73,21 +73,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentAttribute.cs" />
-    <Compile Include="Elasticsearch\Configuration\EnvironmentBased\IWixStateProvider.cs" />
+    <Compile Include="Kibana\Closing\ClosingModel.cs" />
+    <Compile Include="Kibana\Closing\ClosingModelValidator.cs" />
+    <Compile Include="Kibana\Model\InstallationModelArgumentParser.cs" />
+    <Compile Include="Kibana\Model\InstallationModelValidator.cs" />
+    <Compile Include="Shared\Configuration\EnvironmentBased\IWixStateProvider.cs" />
     <Compile Include="Elasticsearch\Configuration\EnvironmentBased\ElasticsearchEnvironmentStateProvider.cs" />
-    <Compile Include="Elasticsearch\Configuration\EnvironmentBased\JavaEnvironmentStateProvider.cs" />
-    <Compile Include="Elasticsearch\Configuration\EnvironmentBased\NoopWixStateProvider.cs" />
+    <Compile Include="Shared\Configuration\EnvironmentBased\JavaEnvironmentStateProvider.cs" />
+    <Compile Include="Shared\Configuration\EnvironmentBased\NoopWixStateProvider.cs" />
     <Compile Include="Elasticsearch\Configuration\FileBased\ElasticsearchYamlConfiguration.cs" />
     <Compile Include="Elasticsearch\Configuration\FileBased\LocalJvmOptionsConfiguration.cs" />
     <Compile Include="Elasticsearch\Configuration\FileBased\ElasticsearchYamlSettings.cs" />
-    <Compile Include="Elasticsearch\Configuration\PluginStateProvider.cs" />
-    <Compile Include="Elasticsearch\Configuration\ServiceStateProvider.cs" />
-    <Compile Include="Elasticsearch\Model\Plugins\Plugin.cs" />
-    <Compile Include="Elasticsearch\Model\Plugins\PluginType.cs" />
+    <Compile Include="Shared\Configuration\PluginStateProvider.cs" />
+    <Compile Include="Shared\Configuration\ServiceStateProvider.cs" />
+    <Compile Include="Shared\Model\Plugins\Plugin.cs" />
+    <Compile Include="Shared\Model\Plugins\PluginType.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\RemovePluginsTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\StartServiceTask.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
-    <Compile Include="Elasticsearch\Model\Closing\ClosingResult.cs" />
+    <Compile Include="Shared\Model\Closing\ClosingResult.cs" />
     <Compile Include="Elasticsearch\Model\InstallationModelArgumentParser.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\StopServiceTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\SetEnvironmentVariablesTask.cs" />
@@ -101,6 +105,7 @@
     <Compile Include="Elasticsearch\Model\Tasks\RemoveEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\UninstallServiceTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\ValidateArgumentsTask.cs" />
+    <Compile Include="Kibana\Model\InstallationModel.cs" />
     <Compile Include="Model\StepBase.cs" />
     <Compile Include="Model\ModelArgument.cs" />
     <Compile Include="Model\ModelArgumentParser.cs" />
@@ -126,13 +131,13 @@
     <Compile Include="Service\ElasticsearchServiceInstaller.Designer.cs">
       <DependentUpon>ElasticsearchServiceInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="Elasticsearch\Configuration\EnvironmentBased\JavaConfiguration.cs" />
+    <Compile Include="Shared\Configuration\EnvironmentBased\JavaConfiguration.cs" />
     <Compile Include="Elasticsearch\Model\Config\ConfigurationModel.cs" />
     <Compile Include="Elasticsearch\Model\Closing\ClosingModel.cs" />
     <Compile Include="Model\IValidatableReactiveObject.cs" />
     <Compile Include="Elasticsearch\Model\Locations\LocationsModel.cs" />
-    <Compile Include="Elasticsearch\Model\Plugins\PluginsModel.cs" />
-    <Compile Include="Elasticsearch\Model\Service\ServiceModel.cs" />
+    <Compile Include="Shared\Model\Plugins\PluginsModel.cs" />
+    <Compile Include="Shared\Model\Service\ServiceModel.cs" />
     <Compile Include="Elasticsearch\Model\InstallationModel.cs" />
     <Compile Include="Elasticsearch\Model\Notice\NoticeModel.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchMessage.cs" />
@@ -156,8 +161,8 @@
     <Compile Include="Extensions\FluentValidationExtensions.cs" />
     <Compile Include="Elasticsearch\Model\Closing\ClosingModelValidator.cs" />
     <Compile Include="Elasticsearch\Model\Locations\LocationsModelValidator.cs" />
-    <Compile Include="Elasticsearch\Model\Plugins\PluginsModelValidator.cs" />
-    <Compile Include="Elasticsearch\Model\Service\ServiceModelValidator.cs" />
+    <Compile Include="Shared\Model\Plugins\PluginsModelValidator.cs" />
+    <Compile Include="Shared\Model\Service\ServiceModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
