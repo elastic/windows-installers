@@ -10,7 +10,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 	{
 		public InstallPluginsTask(string[] args, ISession session) 
 			: base(args, session) { }
-		public InstallPluginsTask(InstallationModel model, ISession session, IFileSystem fileSystem) 
+		public InstallPluginsTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 
 			: base(model, session, fileSystem) { }
 
 		protected override bool ExecuteTask()

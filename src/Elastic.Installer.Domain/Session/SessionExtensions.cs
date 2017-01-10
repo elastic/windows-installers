@@ -22,7 +22,7 @@ namespace Elastic.Installer.Domain.Session
 			{
 				if (CachedSetupArguments != null) return CachedSetupArguments;
 
-				var allProperties = InstallationModelArgumentParser.AllArguments;
+				var allProperties = ElasticsearchInstallationModelArgumentParser.AllArguments;
 				var arguments = new List<string>();
 				foreach (var p in allProperties)
 				{

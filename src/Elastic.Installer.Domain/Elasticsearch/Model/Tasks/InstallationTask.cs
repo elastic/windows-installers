@@ -17,19 +17,19 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 
 		protected ISession Session { get; }
 
-		protected InstallationModel InstallationModel { get; }
+		protected ElasticsearchInstallationModel InstallationModel { get; }
 
 		protected string[] Args { get; }
 
 		protected string ActionName => this.GetType().FullName;
 
 		protected InstallationTask(string[] args, ISession session)
-			: this(InstallationModel.Create(new NoopWixStateProvider(), session, args), session, new FileSystem())
+			: this(ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), session, args), session, new FileSystem())
 		{
 			this.Args = args;
 		}
 
-		protected InstallationTask(InstallationModel model, ISession session, IFileSystem fileSystem)
+		protected InstallationTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 		{
 			this.InstallationModel = model;
 			this.Session = session;

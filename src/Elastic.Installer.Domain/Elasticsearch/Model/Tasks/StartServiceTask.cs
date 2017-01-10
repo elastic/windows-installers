@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 			this.ServiceStateProvider = new ServiceStateProvider(session);
 		}
 
-		public StartServiceTask(InstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
+		public StartServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
 			: base(model, session, fileSystem)
 		{
 			this.ServiceStateProvider = serviceConfig;

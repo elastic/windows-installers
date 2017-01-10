@@ -11,7 +11,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 	{
 		public DeleteDirectoriesTask(string[] args, ISession session) : base(args, session) { }
 
-		public DeleteDirectoriesTask(InstallationModel model, ISession session, IFileSystem fileSystem)
+		public DeleteDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
 
 		/// <summary>

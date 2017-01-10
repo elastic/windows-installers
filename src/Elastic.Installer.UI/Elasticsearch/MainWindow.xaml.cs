@@ -42,15 +42,15 @@ namespace Elastic.Installer.UI.Elasticsearch
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : MetroWindow, IViewFor<InstallationModel>
+	public partial class MainWindow : MetroWindow, IViewFor<ElasticsearchInstallationModel>
 	{
 		object IViewFor.ViewModel
 		{
 			get { return ViewModel; }
-			set { ViewModel = (InstallationModel)value; }
+			set { ViewModel = (ElasticsearchInstallationModel)value; }
 		}
 
-		public InstallationModel ViewModel { get; set; }
+		public ElasticsearchInstallationModel ViewModel { get; set; }
 
 		private readonly ManualResetEvent _installerStartEvent;
 		private readonly ISession _session;
@@ -58,7 +58,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 		private InstallProgressCounter _progressCounter;
 		private readonly string _currentVersion;
 
-		public MainWindow(InstallationModel setupViewModel, ManualResetEvent startEvent)
+		public MainWindow(ElasticsearchInstallationModel setupViewModel, ManualResetEvent startEvent)
 		{
 			this._installerStartEvent = startEvent;
 			this._session = setupViewModel.Session;
@@ -304,7 +304,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 			this.JumpToInstallationResult();
 			this.ViewModel.ClosingModel.Installed = ClosingResult.Preempted;
 
-			this.ViewModel.ClosingModel.PrequisiteFailures = this.ViewModel.PrequisiteFailures.Select(v => v.ErrorMessage);
+			this.ViewModel.ClosingModel.PrequisiteFailures = this.ViewModel.PrerequisiteFailures.Select(v => v.ErrorMessage);
 		}
 
 		private async Task<IObservable<ClosingResult>> InstallAsync()
@@ -333,7 +333,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 		private void SetSessionValues(object viewModel)
 		{
 			var type = viewModel.GetType();
-			var ps = InstallationModelArgumentParser.ArgumentsByModel[type];
+			var ps = ElasticsearchInstallationModelArgumentParser.ArgumentsByModel[type];
 			foreach (var p in ps)
 			{
 				var pi = type.GetProperty(p, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
@@ -358,7 +358,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 		{
 			base.OnInitialized(e);
 
-			this.WhenAnyValue(view => view.ViewModel.PrequisiteFailures)
+			this.WhenAnyValue(view => view.ViewModel.PrerequisiteFailures)
 				.Subscribe(failures => PromptPrerequisiteFailures(failures));
 		}
 

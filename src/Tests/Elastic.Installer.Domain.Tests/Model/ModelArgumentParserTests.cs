@@ -17,10 +17,10 @@ namespace Elastic.Installer.Domain.Tests.Model
 			public void Refresh() { }
 			public void Validate() { }
 			public IList<ValidationFailure> ValidationFailures => null;
+			public IList<ValidationFailure> PrerequisiteFailures => null;
 
 			[Argument("A")]
 			public string X { get; set; }
-
 		}
 
 		private class ModelB : IValidatableReactiveObject
@@ -30,10 +30,10 @@ namespace Elastic.Installer.Domain.Tests.Model
 			public void Refresh() { }
 			public void Validate() { }
 			public IList<ValidationFailure> ValidationFailures => null;
+			public IList<ValidationFailure> PrerequisiteFailures => null;
 
 			[Argument("A")]
 			public string X { get; set; }
-
 		}
 
 		[Fact]

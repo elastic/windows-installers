@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model
 {
-	public class InstallationModelValidator : AbstractValidator<InstallationModel>
+	public class ElasticsearchInstallationModelValidator : AbstractValidator<ElasticsearchInstallationModel>
 	{
 		public static readonly string AlreadyInstalled = TextResources.NoticeModelValidator_AlreadyInstalled;
 		public static readonly string HigherVersionInstalled = TextResources.NoticeModelValidator_HigherVersionInstalled;
@@ -13,7 +13,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 		public static readonly string BadElasticsearchYamlFile = TextResources.NoticeModelValidator_BadElasticsearchYamlFile;
 		public static readonly string NotAllModelsAreValid = TextResources.InstallationModelValidator_NotAllModelsAreValid;
 
-		public InstallationModelValidator()
+		public ElasticsearchInstallationModelValidator()
 		{
 			RuleFor(vm => vm.JavaInstalled).Must(b => b).WithMessage(JavaInstalled);
 
@@ -26,15 +26,13 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			RuleFor(vm => vm.HigherVersionAlreadyInstalled).Must(b => !b).WithMessage(HigherVersionInstalled);
 
 			RuleFor(vm => vm.Steps)
-				.Must(steps => steps.All(s => s.IsValid))
+				.Must(steps => steps.Where(s => s != null).All(s => s.IsValid))
 				.When(vm => !vm.JavaInstalled
 							&& !vm.JavaMisconfigured
 							&& !vm.SameVersionAlreadyInstalled
 							&& !vm.HigherVersionAlreadyInstalled
 							&& !vm.BadElasticsearchYamlFile)
 				.WithMessage(NotAllModelsAreValid);
-
-
 		}
 	}
 }

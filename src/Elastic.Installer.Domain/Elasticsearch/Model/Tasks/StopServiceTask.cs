@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 		{
 			this.ServiceStateProvider = new ServiceStateProvider(session);
 		}
-		public StopServiceTask(InstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
+		public StopServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
 			: base(model, session, fileSystem)
 		{
 			this.ServiceStateProvider = serviceConfig;

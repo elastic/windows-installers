@@ -21,7 +21,7 @@
                       MinWidth="900"
                       MaxHeight="600"
                       MaxWidth="900"
-                      d:DataContext="{d:DesignInstance setup:InstallationModel}"
+                      d:DataContext="{d:DesignInstance setup:KibanaInstallationModel}"
                       Style="{DynamicResource CleanWindowStyleKey}"
                       >
 

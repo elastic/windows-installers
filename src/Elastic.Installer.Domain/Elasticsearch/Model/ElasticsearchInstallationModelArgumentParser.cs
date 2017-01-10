@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
+using Elastic.Installer.Domain.Elasticsearch.Model.Config;
+using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
+using Elastic.Installer.Domain.Elasticsearch.Model.Notice;
 using Elastic.Installer.Domain.Shared.Model.Plugins;
 using Elastic.Installer.Domain.Shared.Model.Service;
 using Elastic.Installer.Domain.Model;
-using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
 
-namespace Elastic.Installer.Domain.Kibana.Model
+namespace Elastic.Installer.Domain.Elasticsearch.Model
 {
-	public class InstallationModelArgumentParser : ModelArgumentParser
+	public class ElasticsearchInstallationModelArgumentParser : ModelArgumentParser
 	{
 		public static Type[] ExpectedTypes = new[]
 		{
-			typeof(InstallationModel),
+			typeof(ElasticsearchInstallationModel),
+			typeof(NoticeModel),
+			typeof(LocationsModel),
+			typeof(ConfigurationModel),
 			typeof(ServiceModel),
 			typeof(PluginsModel),
 			typeof(ClosingModel)
@@ -22,7 +28,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 
 		public static IDictionary<Type, IEnumerable<string>> ArgumentsByModel { get; } = _argumentsByModel();
 
-		public InstallationModelArgumentParser(IList<IValidatableReactiveObject> models, string[] args) : base(models, args)
+		public ElasticsearchInstallationModelArgumentParser(IList<IValidatableReactiveObject> models, string[] args) : base(models, args)
 		{
 			if (models.Count != ExpectedTypes.Count())
 				throw new ArgumentException($"{nameof(models)} should provide an instance of all the expected types");

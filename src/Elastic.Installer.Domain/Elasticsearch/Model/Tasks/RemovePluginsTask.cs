@@ -11,7 +11,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 		public RemovePluginsTask(string[] args, ISession session) 
 			: base(args, session) { }
 
-		public RemovePluginsTask(InstallationModel model, ISession session, IFileSystem fileSystem) 
+		public RemovePluginsTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 
 			: base(model, session, fileSystem) { }
 
 		protected override bool ExecuteTask()

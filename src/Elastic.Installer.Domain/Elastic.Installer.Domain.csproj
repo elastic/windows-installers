@@ -75,8 +75,9 @@
     <Compile Include="ArgumentAttribute.cs" />
     <Compile Include="Kibana\Closing\ClosingModel.cs" />
     <Compile Include="Kibana\Closing\ClosingModelValidator.cs" />
-    <Compile Include="Kibana\Model\InstallationModelArgumentParser.cs" />
-    <Compile Include="Kibana\Model\InstallationModelValidator.cs" />
+    <Compile Include="Kibana\Model\KibanaInstallationModelArgumentParser.cs" />
+    <Compile Include="Kibana\Model\KibanaInstallationModelValidator.cs" />
+    <Compile Include="Model\InstallationModelBase.cs" />
     <Compile Include="Shared\Configuration\EnvironmentBased\IWixStateProvider.cs" />
     <Compile Include="Elasticsearch\Configuration\EnvironmentBased\ElasticsearchEnvironmentStateProvider.cs" />
     <Compile Include="Shared\Configuration\EnvironmentBased\JavaEnvironmentStateProvider.cs" />
@@ -92,7 +93,7 @@
     <Compile Include="Elasticsearch\Model\Tasks\StartServiceTask.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Shared\Model\Closing\ClosingResult.cs" />
-    <Compile Include="Elasticsearch\Model\InstallationModelArgumentParser.cs" />
+    <Compile Include="Elasticsearch\Model\ElasticsearchInstallationModelArgumentParser.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\StopServiceTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\SetEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\CreateDirectoriesTask.cs" />
@@ -105,11 +106,11 @@
     <Compile Include="Elasticsearch\Model\Tasks\RemoveEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\UninstallServiceTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\ValidateArgumentsTask.cs" />
-    <Compile Include="Kibana\Model\InstallationModel.cs" />
+    <Compile Include="Kibana\Model\KibanaInstallationModel.cs" />
     <Compile Include="Model\StepBase.cs" />
     <Compile Include="Model\ModelArgument.cs" />
     <Compile Include="Model\ModelArgumentParser.cs" />
-    <Compile Include="Elasticsearch\Model\InstallationModelValidator.cs" />
+    <Compile Include="Elasticsearch\Model\ElasticsearchInstallationModelValidator.cs" />
     <Compile Include="Elasticsearch\Model\Notice\NoticeModelValidator.cs" />
     <Compile Include="ProductGuids.cs" />
     <Compile Include="Properties\TextResources.Designer.cs">
@@ -138,7 +139,7 @@
     <Compile Include="Elasticsearch\Model\Locations\LocationsModel.cs" />
     <Compile Include="Shared\Model\Plugins\PluginsModel.cs" />
     <Compile Include="Shared\Model\Service\ServiceModel.cs" />
-    <Compile Include="Elasticsearch\Model\InstallationModel.cs" />
+    <Compile Include="Elasticsearch\Model\ElasticsearchInstallationModel.cs" />
     <Compile Include="Elasticsearch\Model\Notice\NoticeModel.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchMessage.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchNode.cs" />

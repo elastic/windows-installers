@@ -10,7 +10,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 	public class CreateDirectoriesTask : InstallationTask
 	{
 		public CreateDirectoriesTask(string[] args, ISession session) : base(args, session) { }
-		public CreateDirectoriesTask(InstallationModel model, ISession session, IFileSystem fileSystem)
+		public CreateDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
 
 		private const int TotalTicks = 5000;

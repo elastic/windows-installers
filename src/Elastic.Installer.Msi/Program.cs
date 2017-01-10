@@ -27,7 +27,7 @@ namespace Elastic.Installer.Msi
 			// set properties in the MSI so that they don't have to be set on the command line.
 			// The only awkward one is plugins as it has a not empty default value, but an empty
 			// string can be passed to not install any plugins
-			var model = InstallationModel.Create(new NoopWixStateProvider(), new NoopSession());
+			var model = ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), new NoopSession());
 			var setupParams = model.ToMsiParams();
 			var staticProperties = setupParams
 				.Where(v => v.Attribute.IsStatic)

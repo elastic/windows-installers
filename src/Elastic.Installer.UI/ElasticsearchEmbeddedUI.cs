@@ -131,7 +131,7 @@ namespace Elastic.Installer.UI
 			string version;
 			this._session.TryGetValue("CurrentVersion", out version);
 
-			var model = InstallationModel.Create(new WixStateProvider(version), new SessionWrapper(_session));
+			var model = ElasticsearchInstallationModel.Create(new WixStateProvider(version), new SessionWrapper(_session));
 			this._mainWindow = new MainWindow(model, this._installStartEvent);
 			this._app.Run(this._mainWindow);
 			this._installExitEvent.Set();

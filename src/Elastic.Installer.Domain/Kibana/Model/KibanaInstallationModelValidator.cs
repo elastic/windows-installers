@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Elastic.Installer.Domain.Kibana.Model
 {
-	public class InstallationModelValidator : AbstractValidator<InstallationModel>
+	public class KibanaInstallationModelValidator : AbstractValidator<KibanaInstallationModel>
 	{
 
 	}

@@ -7,7 +7,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 	public class EditJvmOptionsTask : InstallationTask
 	{
 		public EditJvmOptionsTask(string[] args, ISession session) : base(args, session) { }
-		public EditJvmOptionsTask(InstallationModel model, ISession session, IFileSystem fileSystem) 
+		public EditJvmOptionsTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 
 			: base(model, session, fileSystem) { }
 
 		protected override bool ExecuteTask()

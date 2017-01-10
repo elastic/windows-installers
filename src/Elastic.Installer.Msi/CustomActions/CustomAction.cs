@@ -44,7 +44,7 @@ namespace Elastic.Installer.Msi.CustomActions
 				Sequence = this.Sequence,
 				Execute = this.Execute,
 				Impersonate = !this.NeedsElevatedPrivileges,
-				UsesProperties = string.Join(",", InstallationModelArgumentParser.AllArguments
+				UsesProperties = string.Join(",", ElasticsearchInstallationModelArgumentParser.AllArguments
 					.Concat(new string[] { "UILevel", "INSTALLDIRECTORY.bin", "VERSION" }))
 			};
 		}
