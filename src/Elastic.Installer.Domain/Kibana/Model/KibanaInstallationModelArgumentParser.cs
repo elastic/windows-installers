@@ -5,6 +5,9 @@ using Elastic.Installer.Domain.Shared.Model.Plugins;
 using Elastic.Installer.Domain.Shared.Model.Service;
 using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
+using Elastic.Installer.Domain.Kibana.Model.Locations;
+using Elastic.Installer.Domain.Kibana.Model.Configuration;
+using Elastic.Installer.Domain.Kibana.Model.Connecting;
 
 namespace Elastic.Installer.Domain.Kibana.Model
 {
@@ -13,7 +16,10 @@ namespace Elastic.Installer.Domain.Kibana.Model
 		public static Type[] ExpectedTypes = new[]
 		{
 			typeof(KibanaInstallationModel),
+			typeof(LocationsModel),
 			typeof(ServiceModel),
+			typeof(ConfigurationModel),
+			typeof(ConnectingModel),
 			typeof(PluginsModel),
 			typeof(ClosingModel)
 		};

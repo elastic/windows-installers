@@ -1,0 +1,87 @@
+﻿<controls:StepControl x:Class="Elastic.Installer.UI.Kibana.Steps.ConfigurationView"
+             x:TypeArguments="configurationStep:ConfigurationModel, steps:ConfigurationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
+             xmlns:viewmodels="clr-namespace:Elastic.Installer.Domain.Model;assembly=Elastic.Installer.Domain"
+             xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:configurationStep="clr-namespace:Elastic.Installer.Domain.Kibana.Model.Configuration;assembly=Elastic.Installer.Domain"
+             xmlns:steps="clr-namespace:Elastic.Installer.UI.Kibana.Steps"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance d:Type=configurationStep:ConfigurationModel }"
+             d:DesignHeight="500" d:DesignWidth="900">
+
+  <Grid>
+    <Grid.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceDictionary Source="pack://application:,,,/Elastic.Installer.UI;component/ResourceDictionary.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+    </Grid.Resources>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="20"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Grid Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+      </Grid.RowDefinitions>
+
+      <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ClusterLabel" Content="Server" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+      <Label Grid.Row="1" Grid.Column="0" x:Name="HostNameLabel" Content="Host" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="1" Grid.Column="1" x:Name="HostNameTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <Label Grid.Row="2" Grid.Column="0" x:Name="ServerNameLabel" Content="Server Name" HorizontalAlignment="Left" VerticalAlignment="Center" />
+      <TextBox Grid.Row="2" Grid.Column="1" x:Name="ServerNameTextBox" HorizontalAlignment="Stretch" Height="30" TextWrapping="Wrap" VerticalAlignment="Center" />
+
+      <Label Grid.Row="3" Grid.Column="0" x:Name="RoutingLabel" Content="Routing" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
+      <Label Grid.Row="4" Grid.Column="0" x:Name="BasePathLabel" Content="Base Path" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="4" Grid.Column="1" x:Name="BasePathTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <Label Grid.Row="5" Grid.Column="0" x:Name="DefaultRouteLabel" Content="Default Route" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="5" Grid.Column="1" x:Name="DefaultRouteTextbox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+
+      <Label Grid.Row="6" Grid.Column="0" x:Name="SecurityLabel" Content="Security" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
+      <Label Grid.Row="7" Grid.Column="0" x:Name="ServerKeyLabel" Content="Server Key" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="7" Grid.Column="1" x:Name="ServerKeyTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <Label Grid.Row="8" Grid.Column="0" x:Name="ServerCertificateLabel" Content="Server Certificate" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="8" Grid.Column="1" x:Name="ServerCertificateTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <CheckBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" x:Name="AllowAnonymousAccessCheckBox" Content="Allow anonymous access" HorizontalAlignment="Left" Margin="7,5,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+    <Grid HorizontalAlignment="Stretch" Grid.Column="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="30"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+      </Grid.RowDefinitions>
+
+      <Label Grid.Row="1" Grid.Column="0" x:Name="HttpPortLabel" Content="Port" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <mahapps:NumericUpDown  Grid.Row="1" Grid.Column="1" x:Name="HttpPortTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" 
+         StringFormat="{}{0:0}" />
+    </Grid>
+  </Grid>
+</controls:StepControl>

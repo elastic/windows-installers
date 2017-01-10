@@ -631,15 +631,6 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Place logs, data, and config in the same directory.
-        /// </summary>
-        public static string LocationsView_CustomLocationsCheckBox {
-            get {
-                return ResourceManager.GetString("LocationsView_CustomLocationsCheckBox", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Use a custom installation directory.
         /// </summary>
         public static string LocationsView_CustomLocationsRadioButton {
@@ -672,6 +663,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string LocationsView_DefaultLocationsRadioButton {
             get {
                 return ResourceManager.GetString("LocationsView_DefaultLocationsRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Place logs, data, and config in the same directory.
+        /// </summary>
+        public static string LocationsView_ElasticsearchCustomLocationsCheckBox {
+            get {
+                return ResourceManager.GetString("LocationsView_ElasticsearchCustomLocationsCheckBox", resourceCulture);
             }
         }
         
@@ -709,6 +709,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string LocationsView_InstallDirectoryBrowseButton {
             get {
                 return ResourceManager.GetString("LocationsView_InstallDirectoryBrowseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Place logs in the same directory.
+        /// </summary>
+        public static string LocationsView_KibanaCustomLocationsCheckBox {
+            get {
+                return ResourceManager.GetString("LocationsView_KibanaCustomLocationsCheckBox", resourceCulture);
             }
         }
         

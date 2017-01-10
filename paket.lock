@@ -57,8 +57,8 @@ NUGET
       System.Runtime (>= 4.3) - framework: dnxcore50, netstandard10, netstandard13, >= netstandard15
       System.Text.Encoding (>= 4.3) - framework: dnxcore50, netstandard10, netstandard13, >= netstandard15
       System.Threading.Tasks (>= 4.3) - framework: dnxcore50, netstandard10, netstandard13, >= netstandard15
-    System.IO.Abstractions (2.0.0.138)
-    System.IO.Abstractions.TestingHelpers (2.0.0.138)
+    System.IO.Abstractions (2.0.0.139)
+    System.IO.Abstractions.TestingHelpers (2.0.0.139)
       System.IO.Abstractions
     System.Reflection (4.3) - framework: netstandard11, netstandard12, netstandard13, >= netstandard15
       Microsoft.NETCore.Platforms (>= 1.1) - framework: dnxcore50, netstandard10, netstandard13, >= netstandard15
@@ -117,13 +117,12 @@ NUGET
     WindowsAPICodePack-Shell (1.1.1) - framework: >= net45
       WindowsAPICodePack-Core (>= 1.1.1)
     WixSharp.bin (1.2) - framework: >= net40
-    WixSharp.wix.bin (3.10.1)
     YamlDotNet (3.8) - framework: >= net40
 
 GROUP build
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.47.2)
+    FAKE (4.48)
     FSharp.Configuration (0.6.4)
     FSharp.Data (2.3.2)
       Zlib.Portable (>= 1.11) - framework: >= netstandard11, portable-net45+sl5+win8, portable-net45+win8, portable-net45+win8+wp8+wpa81

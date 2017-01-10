@@ -1,6 +1,9 @@
 ﻿using Elastic.Installer.Domain.Extensions;
 using Elastic.Installer.Domain.Kibana.Model;
 using Elastic.Installer.Domain.Kibana.Model.Closing;
+using Elastic.Installer.Domain.Kibana.Model.Configuration;
+using Elastic.Installer.Domain.Kibana.Model.Connecting;
+using Elastic.Installer.Domain.Kibana.Model.Locations;
 using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Domain.Shared.Model.Closing;
@@ -115,8 +118,14 @@ namespace Elastic.Installer.UI.Kibana
 		private readonly IDictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>> StepModelToControl =
 			new Dictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>>
 		{
+			{ typeof(LocationsModel),
+					(m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, ViewResources.LocationsView_Help) },
 			{ typeof(ServiceModel),
 					(m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, ViewResources.ServiceView_Help) },
+			{ typeof(ConfigurationModel),
+					(m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, ViewResources.ConfigurationView_Help) },
+			{ typeof(ConnectingModel),
+					(m, s) => Step(s, new ConnectingView { ViewModel = m as ConnectingModel }, ViewResources.ConfigurationView_Help) },
 			{ typeof(PluginsModel),
 					(m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, ViewResources.PluginsView_Help) },
 			{ typeof(ClosingModel),

@@ -116,6 +116,15 @@
     <Compile Include="Kibana\Steps\ClosingView.xaml.cs">
       <DependentUpon>ClosingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Kibana\Steps\ConnectingView.xaml.cs">
+      <DependentUpon>ConnectingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Kibana\Steps\ConfigurationView.xaml.cs">
+      <DependentUpon>ConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Kibana\Steps\LocationsView.xaml.cs">
+      <DependentUpon>LocationsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Progress\InstallProgressCounter.cs" />
     <Compile Include="Progress\ProgressDialogControllerExtensions.cs" />
     <Compile Include="Progress\ProgressIndicator.cs" />
@@ -127,13 +136,13 @@
     <Compile Include="Controls\StepWithHelp.xaml.cs">
       <DependentUpon>StepWithHelp.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Elasticsearch\Steps\ConfigurationView.xaml.cs">
+      <DependentUpon>ConfigurationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\ViewResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewResources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Elasticsearch\Steps\ConfigurationView.xaml.cs">
-      <DependentUpon>ConfigurationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shared\Steps\ServiceView.xaml.cs">
       <DependentUpon>ServiceView.xaml</DependentUpon>
@@ -168,6 +177,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Kibana\Steps\ClosingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Kibana\Steps\ConnectingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Kibana\Steps\ConfigurationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Kibana\Steps\LocationsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -219,9 +240,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\ViewResources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>ViewResources1.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="paket.references" />

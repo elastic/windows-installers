@@ -73,8 +73,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentAttribute.cs" />
-    <Compile Include="Kibana\Closing\ClosingModel.cs" />
-    <Compile Include="Kibana\Closing\ClosingModelValidator.cs" />
+    <Compile Include="Kibana\Model\Closing\ClosingModel.cs" />
+    <Compile Include="Kibana\Model\Closing\ClosingModelValidator.cs" />
+    <Compile Include="Kibana\Model\Connecting\ConnectingModel.cs" />
+    <Compile Include="Kibana\Model\Connecting\ConnectingModelValidator.cs" />
+    <Compile Include="Kibana\Model\Configuration\ConfigurationModel.cs" />
+    <Compile Include="Kibana\Model\Configuration\ConfigurationModelValidator.cs" />
+    <Compile Include="Kibana\Model\Locations\LocationsModel.cs" />
+    <Compile Include="Kibana\Model\Locations\LocationsModelValidator.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModelArgumentParser.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModelValidator.cs" />
     <Compile Include="Model\InstallationModelBase.cs" />

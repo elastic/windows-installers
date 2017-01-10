@@ -22,7 +22,6 @@ nuget Topshelf 3.1.4
 nuget WindowsAPICodePack-Core 1.1.1 framework: >= net45
 nuget WindowsAPICodePack-Shell 1.1.1 framework: >= net45
 nuget WixSharp.bin framework: >= net40
-nuget WixSharp.wix.bin
 nuget YamlDotNet 3.8.0 framework: >= net40
 nuget SharpYaml framework: >= net40
 nuget System.IO.Abstractions

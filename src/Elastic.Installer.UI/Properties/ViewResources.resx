@@ -240,7 +240,7 @@
   <data name="LocationsView_ConfigDirectoryLabel" xml:space="preserve">
     <value>Configuration directory</value>
   </data>
-  <data name="LocationsView_CustomLocationsCheckBox" xml:space="preserve">
+  <data name="LocationsView_ElasticsearchCustomLocationsCheckBox" xml:space="preserve">
     <value>Place logs, data, and config in the same directory</value>
   </data>
   <data name="LocationsView_CustomLocationsRadioButton" xml:space="preserve">
@@ -571,5 +571,8 @@ Alternatively, you may choose to not install Elasticsearch as a service and run 
   </data>
   <data name="SilentSetup__Uninstall" xml:space="preserve">
     <value>Uninstall Elasticsearch</value>
+  </data>
+  <data name="LocationsView_KibanaCustomLocationsCheckBox" xml:space="preserve">
+    <value>Place logs in the same directory</value>
   </data>
 </root>
