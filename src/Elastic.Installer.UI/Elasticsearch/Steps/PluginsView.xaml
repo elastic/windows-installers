@@ -1,4 +1,4 @@
-﻿<controls:StepControl x:Class="Elastic.Installer.UI.Shared.Steps.PluginsView"
+﻿<controls:StepControl x:Class="Elastic.Installer.UI.Elasticsearch.Steps.PluginsView"
              x:TypeArguments="pluginsStep:PluginsModel, steps:PluginsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,8 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
              xmlns:viewmodels="clr-namespace:Elastic.Installer.Domain.Model;assembly=Elastic.Installer.Domain"
-             xmlns:pluginsStep="clr-namespace:Elastic.Installer.Domain.Shared.Model.Plugins;assembly=Elastic.Installer.Domain"
-             xmlns:steps="clr-namespace:Elastic.Installer.UI.Shared.Steps"
+             xmlns:pluginsStep="clr-namespace:Elastic.Installer.Domain.Elasticsearch.Model.Plugins;assembly=Elastic.Installer.Domain"
+             xmlns:steps="clr-namespace:Elastic.Installer.UI.Elasticsearch.Steps"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance d:Type=pluginsStep:PluginsModel }"
              d:DesignHeight="300" d:DesignWidth="600">

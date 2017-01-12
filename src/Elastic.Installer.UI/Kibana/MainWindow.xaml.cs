@@ -4,6 +4,7 @@ using Elastic.Installer.Domain.Kibana.Model.Closing;
 using Elastic.Installer.Domain.Kibana.Model.Configuration;
 using Elastic.Installer.Domain.Kibana.Model.Connecting;
 using Elastic.Installer.Domain.Kibana.Model.Locations;
+using Elastic.Installer.Domain.Kibana.Model.Plugins;
 using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Domain.Shared.Model.Closing;

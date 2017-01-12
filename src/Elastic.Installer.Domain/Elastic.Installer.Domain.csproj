@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentAttribute.cs" />
+    <Compile Include="Elasticsearch\Model\Plugins\PluginsModel.cs" />
+    <Compile Include="Elasticsearch\Model\Plugins\PluginsModelValidator.cs" />
     <Compile Include="Kibana\Model\Closing\ClosingModel.cs" />
     <Compile Include="Kibana\Model\Closing\ClosingModelValidator.cs" />
     <Compile Include="Kibana\Model\Connecting\ConnectingModel.cs" />
@@ -83,6 +85,8 @@
     <Compile Include="Kibana\Model\Locations\LocationsModelValidator.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModelArgumentParser.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModelValidator.cs" />
+    <Compile Include="Kibana\Model\Plugins\PluginsModel.cs" />
+    <Compile Include="Kibana\Model\Plugins\PluginsModelValidator.cs" />
     <Compile Include="Model\InstallationModelBase.cs" />
     <Compile Include="Shared\Configuration\EnvironmentBased\IWixStateProvider.cs" />
     <Compile Include="Elasticsearch\Configuration\EnvironmentBased\ElasticsearchEnvironmentStateProvider.cs" />
@@ -143,7 +147,7 @@
     <Compile Include="Elasticsearch\Model\Closing\ClosingModel.cs" />
     <Compile Include="Model\IValidatableReactiveObject.cs" />
     <Compile Include="Elasticsearch\Model\Locations\LocationsModel.cs" />
-    <Compile Include="Shared\Model\Plugins\PluginsModel.cs" />
+    <Compile Include="Shared\Model\Plugins\PluginsModelBase.cs" />
     <Compile Include="Shared\Model\Service\ServiceModel.cs" />
     <Compile Include="Elasticsearch\Model\ElasticsearchInstallationModel.cs" />
     <Compile Include="Elasticsearch\Model\Notice\NoticeModel.cs" />
@@ -168,7 +172,6 @@
     <Compile Include="Extensions\FluentValidationExtensions.cs" />
     <Compile Include="Elasticsearch\Model\Closing\ClosingModelValidator.cs" />
     <Compile Include="Elasticsearch\Model\Locations\LocationsModelValidator.cs" />
-    <Compile Include="Shared\Model\Plugins\PluginsModelValidator.cs" />
     <Compile Include="Shared\Model\Service\ServiceModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>

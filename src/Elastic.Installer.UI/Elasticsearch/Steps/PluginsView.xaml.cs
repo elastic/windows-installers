@@ -1,9 +1,9 @@
 ﻿using System.Windows;
-using Elastic.Installer.Domain.Shared.Model.Plugins;
+using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
 using Elastic.Installer.UI.Controls;
 using ReactiveUI;
 
-namespace Elastic.Installer.UI.Shared.Steps
+namespace Elastic.Installer.UI.Elasticsearch.Steps
 {
 	public partial class PluginsView : StepControl<PluginsModel, PluginsView>
 	{

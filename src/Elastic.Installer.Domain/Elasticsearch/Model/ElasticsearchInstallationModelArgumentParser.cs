@@ -8,6 +8,7 @@ using Elastic.Installer.Domain.Elasticsearch.Model.Notice;
 using Elastic.Installer.Domain.Shared.Model.Plugins;
 using Elastic.Installer.Domain.Shared.Model.Service;
 using Elastic.Installer.Domain.Model;
+using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model
 {

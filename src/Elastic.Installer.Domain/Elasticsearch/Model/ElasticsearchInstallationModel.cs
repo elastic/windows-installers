@@ -4,6 +4,7 @@ using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
 using Elastic.Installer.Domain.Elasticsearch.Model.Config;
 using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
 using Elastic.Installer.Domain.Elasticsearch.Model.Notice;
+using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
 using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Properties;
 using Elastic.Installer.Domain.Service;

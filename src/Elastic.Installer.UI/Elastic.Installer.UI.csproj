@@ -125,6 +125,9 @@
     <Compile Include="Kibana\Steps\LocationsView.xaml.cs">
       <DependentUpon>LocationsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Kibana\Steps\PluginsView.xaml.cs">
+      <DependentUpon>PluginsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Progress\InstallProgressCounter.cs" />
     <Compile Include="Progress\ProgressDialogControllerExtensions.cs" />
     <Compile Include="Progress\ProgressIndicator.cs" />
@@ -153,7 +156,7 @@
     <Compile Include="Elasticsearch\Steps\LocationsView.xaml.cs">
       <DependentUpon>LocationsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Shared\Steps\PluginsView.xaml.cs">
+    <Compile Include="Elasticsearch\Steps\PluginsView.xaml.cs">
       <DependentUpon>PluginsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StepControl.cs" />
@@ -192,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Kibana\Steps\PluginsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -217,7 +224,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Shared\Steps\PluginsView.xaml">
+    <Page Include="Elasticsearch\Steps\PluginsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

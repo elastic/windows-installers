@@ -36,6 +36,7 @@ using Elastic.Installer.UI.Shared.Steps;
 using Elastic.Installer.Domain.Shared.Model.Plugins;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Shared.Model.Closing;
+using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
 
 namespace Elastic.Installer.UI.Elasticsearch
 {

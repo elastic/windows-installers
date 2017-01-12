@@ -16,6 +16,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Elastic.Installer.Domain.Kibana.Model.Configuration;
 using Elastic.Installer.Domain.Kibana.Model.Connecting;
+using Elastic.Installer.Domain.Kibana.Model.Plugins;
 
 namespace Elastic.Installer.Domain.Kibana.Model
 {
