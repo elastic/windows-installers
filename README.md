@@ -6,7 +6,7 @@ This is the repository for the Elastic stack MSI-based Windows installers.
 
 ## Building
 
-First, make sure you have the latest stable version of the [WiX Toolset](http://wixtoolset.org/releases/) installed.  Then simply clone the repository and run
+Simply clone the repository and run
 
 ```bat
 build
