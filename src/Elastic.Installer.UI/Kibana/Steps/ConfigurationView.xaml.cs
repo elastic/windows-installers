@@ -33,13 +33,20 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 		protected override void InitializeBindings()
 		{
+			this.Bind(ViewModel, vm => vm.HostName, v => v.HostNameTextBox.Text);
+			this.Bind(ViewModel, vm => vm.HttpPort, v => v.HttpPortTextBox.Value, null, new NullableIntToNullableDoubleConverter(), new NullableDoubleToNullableIntConverter());
+			this.Bind(ViewModel, vm => vm.ServerName, v => v.ServerNameTextBox.Text);
 
+			this.Bind(ViewModel, vm => vm.BasePath, v => v.BasePathTextBox.Text);
+			this.Bind(ViewModel, vm => vm.DefaultRoute, v => v.DefaultRouteTextbox.Text);
+
+			this.Bind(ViewModel, vm => vm.ServerCertificate, v => v.ServerCertificateTextBox.Text);
+			this.Bind(ViewModel, vm => vm.ServerKey, v => v.ServerKeyTextBox.Text);
+			this.Bind(ViewModel, vm => vm.AllowAnonymousAccess, v => v.AllowAnonymousAccessCheckBox.IsChecked);
 		}
-
 
 		protected override void UpdateValidState(bool isValid, IList<ValidationFailure> failures)
 		{
-
 		}
 	}
 }

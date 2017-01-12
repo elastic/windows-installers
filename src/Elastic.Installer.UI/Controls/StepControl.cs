@@ -47,5 +47,82 @@ namespace Elastic.Installer.UI.Controls
 			var self = d as TControl;
 			self?.InitializeGlobalStepBindings();
 		}
+
+		//ReactiveUI 7 will allow creating these from lambda's on Bind() (rejoice!)
+		protected class IntToDoubleConverter : IBindingTypeConverter
+		{
+			public int GetAffinityForObjects(Type fromType, Type toType) => 1;
+
+			public bool TryConvert(object @from, Type toType, object conversionHint, out object result)
+			{
+				result = 0.0;
+				if (@from == null) return true;
+				if (@from is int)
+				{
+					result = (double)((int)@from);
+					return true;
+				}
+				if (!(@from is double)) return true;
+				result = ((double)@from);
+				return true;
+			}
+		}
+		protected class NullableDoubleToIntConverter : IBindingTypeConverter
+		{
+			public int GetAffinityForObjects(Type fromType, Type toType) => 1;
+
+			public bool TryConvert(object @from, Type toType, object conversionHint, out object result)
+			{
+				result = 0;
+				if (!(@from is double)) return true;
+				result = (int)((double)@from);
+				return true;
+			}
+		}
+		protected class NullableDoubleToNullableIntConverter : IBindingTypeConverter
+		{
+			public int GetAffinityForObjects(Type fromType, Type toType) => 1;
+
+			public bool TryConvert(object @from, Type toType, object conversionHint, out object result)
+			{
+				if (@from == null)
+				{
+					result = null;
+					return true;
+				}
+				if (@from is int)
+				{
+					result = (int) @from;
+					return true;
+				}
+				if (@from is double)
+				{
+					result = (int)((double) @from);
+					return true;
+				}
+				result = null;
+				return true;
+			}
+		}
+		protected class NullableIntToNullableDoubleConverter : IBindingTypeConverter
+		{
+			public int GetAffinityForObjects(Type fromType, Type toType) => 1;
+
+			public bool TryConvert(object @from, Type toType, object conversionHint, out object result)
+			{
+				if (@from == null)
+				{
+					result = null;
+					return true;
+				}
+				if (@from is int)
+				{
+					result = Convert.ToDouble((int)@from);
+					return true;
+				}
+				result = null;
+				return true;
+			}
+		}
 	}
 }

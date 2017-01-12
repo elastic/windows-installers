@@ -59,7 +59,7 @@
       <Label Grid.Row="0" Grid.Column="0" x:Name="UsernameLabel" Content="Username" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <TextBox Grid.Row="0" Grid.Column="1" x:Name="UsernameTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
       <Label Grid.Row="1" Grid.Column="0" x:Name="PasswordLabel" Content="Password" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
-      <TextBox Grid.Row="1" Grid.Column="1" x:Name="PasswordTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="PasswordTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
     </Grid>
     <Label Grid.Row="4" Grid.Column="0" x:Name="CertificatesLabel" Content="Certificates" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
     <Grid Grid.Row="5">

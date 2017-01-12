@@ -29,8 +29,8 @@ namespace Elastic.Installer.Domain.Kibana.Model.Configuration
 		}
 			
 		int port;
-		[StaticArgument(nameof(Port))]
-		public int Port
+		[StaticArgument(nameof(HttpPort))]
+		public int HttpPort
 		{
 			get { return this.port; }
 			set { this.RaiseAndSetIfChanged(ref this.port, value); }
@@ -87,7 +87,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Configuration
 		public override void Refresh()
 		{
 			this.HostName = DefaultHostName;
-			this.Port = DefaultPort;
+			this.HttpPort = DefaultPort;
 			this.ServerName = DefaultServerName;
 			this.DefaultRoute = DefaultDefaultRoute;
 		}

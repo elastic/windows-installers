@@ -69,7 +69,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			this.ConnectingModel = new ConnectingModel();
 			this.PluginsModel = new PluginsModel(pluginStateProvider);
 
-			var observeHost = this.WhenAnyValue(x => x.ConfigurationModel.HostName, x => x.ConfigurationModel.Port,
+			var observeHost = this.WhenAnyValue(x => x.ConfigurationModel.HostName, x => x.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
 			var observeLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 

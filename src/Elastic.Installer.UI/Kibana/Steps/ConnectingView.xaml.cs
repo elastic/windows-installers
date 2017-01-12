@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Elastic.Installer.UI.Controls;
-using Elastic.Installer.UI.Properties;
 using FluentValidation.Results;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 using ReactiveUI;
 using Elastic.Installer.Domain.Kibana.Model.Connecting;
 
@@ -33,7 +31,11 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 		protected override void InitializeBindings()
 		{
-
+			this.Bind(ViewModel, vm => vm.Url, v => v.UrlTextBox.Text);
+			this.Bind(ViewModel, vm => vm.IndexName, v => v.IndexTextBox.Text);
+			this.Bind(ViewModel, vm => vm.ElasticsearchUsername, v => v.UsernameTextBox.Text);
+			this.PasswordTextBox.Events().PasswordChanged
+				.Subscribe(a => this.ViewModel.ElasticsearchPassword = this.PasswordTextBox.Password);
 		}
 
 
