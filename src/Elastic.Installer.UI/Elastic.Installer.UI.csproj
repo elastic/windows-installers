@@ -108,8 +108,7 @@
     <Content Include="Resources\WindowsIcons-license.txt">
       <Paket>True</Paket>
     </Content>
-    <Compile Include="Elasticsearch\Configuration\EnvironmentBased\WixStateProvider.cs" />
-    <Compile Include="ElasticsearchEmbeddedUI.cs" />
+    <Compile Include="EmbeddedUI.cs" />
     <Compile Include="Kibana\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -147,6 +146,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Shared\Configuration\EnvironmentBased\WixStateProvider.cs" />
     <Compile Include="Shared\Steps\ServiceView.xaml.cs">
       <DependentUpon>ServiceView.xaml</DependentUpon>
     </Compile>

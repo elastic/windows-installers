@@ -4,8 +4,9 @@ using WindowsInstaller;
 using Elastic.Installer.Domain;
 using Semver;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using System.Linq;
 
-namespace Elastic.Installer.UI.Elasticsearch.Configuration.EnvironmentBased
+namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 {
 	public class WixStateProvider : IWixStateProvider
 	{
@@ -22,8 +23,11 @@ namespace Elastic.Installer.UI.Elasticsearch.Configuration.EnvironmentBased
 
 		private bool IsAlreadyInstalled(out string installedVersion)
 		{
+			var productCodes = ProductGuids.ElasticsearchProductCodes
+				.Concat(ProductGuids.KibanaProductCodes)
+				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 			installedVersion = null;
-			foreach (var kvp in ProductGuids.ElasticsearchProductCodes)
+			foreach (var kvp in productCodes)
 			{
 				var version = kvp.Key;
 				var productCode = FormatProductCode(kvp.Value.ToString());

@@ -43,7 +43,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : MetroWindow, IViewFor<ElasticsearchInstallationModel>
+	public partial class MainWindow : MetroWindow, IViewFor<ElasticsearchInstallationModel>, IEmbeddedWindow
 	{
 		object IViewFor.ViewModel
 		{

@@ -40,7 +40,7 @@ namespace Elastic.Installer.UI.Kibana
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : MetroWindow, IViewFor<KibanaInstallationModel>
+	public partial class MainWindow : MetroWindow, IViewFor<KibanaInstallationModel>, IEmbeddedWindow
 	{
 		object IViewFor.ViewModel
 		{

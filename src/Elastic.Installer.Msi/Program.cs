@@ -77,6 +77,8 @@ namespace Elastic.Installer.Msi
 				InstallScope = InstallScope.perMachine,
 				Properties = new[]
 				{
+					// used by the embedded UI to create the correct installation model
+					new Property("ProductName", productName),
 					// make it easy to reference current version within MSI process
 					new Property("CurrentVersion", version),
 					new Property("MsiLogging", "voicewarmup"),
