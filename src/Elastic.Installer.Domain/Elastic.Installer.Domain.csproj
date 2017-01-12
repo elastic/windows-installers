@@ -58,7 +58,6 @@
     <Content Include="FodyWeavers.xml" />
     <None Include="Resources\version.txt" />
     <None Include="Resources\LICENSE.txt" />
-    <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
@@ -844,6 +843,37 @@
       <ItemGroup>
         <Reference Include="System.Threading">
           <HintPath>..\..\packages\System.Threading\lib\netstandard1.3\System.Threading.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
+      <ItemGroup>
+        <Reference Include="BootstrapperCore">
+          <HintPath>..\..\packages\WixSharp.bin\lib\BootstrapperCore.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Microsoft.Deployment.WindowsInstaller">
+          <HintPath>..\..\packages\WixSharp.bin\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="WixSharp">
+          <HintPath>..\..\packages\WixSharp.bin\lib\WixSharp.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="WixSharp.Msi">
+          <HintPath>..\..\packages\WixSharp.bin\lib\WixSharp.Msi.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="WixSharp.UI">
+          <HintPath>..\..\packages\WixSharp.bin\lib\WixSharp.UI.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
