@@ -130,6 +130,10 @@ namespace Elastic.Installer.Msi
 			project.WixSourceGenerated += PatchWixSource;
 			project.IncludeWixExtension(WixExtension.NetFx);
 
+			const string wixLocation = @"..\..\packages\WixSharp.wix.bin\tools\bin";
+			if (!Directory.Exists(wixLocation))
+			  throw new Exception($"The directory '{wixLocation}' could not be found");
+			Compiler.WixLocation = wixLocation;
 			Compiler.BuildWxs(project, $@"_Generated\{productName.ToLower()}.wxs", Compiler.OutputType.MSI);
 			Compiler.BuildMsi(project);
 		}

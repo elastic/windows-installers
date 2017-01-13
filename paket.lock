@@ -1,5 +1,5 @@
 NUGET
-  remote: http://api.nuget.org/v3/index.json
+  remote: https://api.nuget.org/v3/index.json
     Costura.Fody (1.3.3)
       Fody (>= 1.26.1)
     FluentValidation (5.5) - framework: >= net45
@@ -9,9 +9,6 @@ NUGET
     MahApps.Metro (1.0.1-ALPHA027) - framework: >= net45
     MahApps.Metro.Resources (0.4) - framework: >= net45
       MahApps.Metro (>= 1.0)
-    Microsoft.NETCore.Platforms (1.0.1) - framework: netstandard11, netstandard12, netstandard13, >= netstandard15
-    Microsoft.NETCore.Targets (1.0.1) - framework: netstandard11, netstandard12, netstandard13, >= netstandard15
-    NuGet.CommandLine (3.4.3)
     reactiveui (6.3.1) - framework: >= net45
       reactiveui-core (6.3.1)
     reactiveui-core (6.3.1) - framework: >= net45
@@ -36,13 +33,23 @@ NUGET
       Rx-Interfaces (>= 2.2.5)
     Rx-Xaml (2.2.5) - framework: >= net45
       Rx-Main (>= 2.2.5)
+    Splat (1.6) - framework: >= net45
+    Topshelf (3.1.4)
+    WindowsAPICodePack-Core (1.1.1) - framework: >= net45
+    WindowsAPICodePack-Shell (1.1.1) - framework: >= net45
+      WindowsAPICodePack-Core (>= 1.1.1)
+    WixSharp.wix.bin (3.10.1)
+    YamlDotNet (3.8) - framework: >= net40
+  remote: http://api.nuget.org/v3/index.json
+    Microsoft.NETCore.Platforms (1.0.1) - framework: netstandard11, netstandard12, netstandard13, >= netstandard15
+    Microsoft.NETCore.Targets (1.0.1) - framework: netstandard11, netstandard12, netstandard13, >= netstandard15
+    NuGet.CommandLine (3.4.3)
     semver (2.0.4)
       System.Runtime (>= 4.1) - framework: >= netstandard11
       System.Runtime.Extensions (>= 4.1) - framework: >= netstandard11
       System.Runtime.InteropServices (>= 4.1) - framework: >= netstandard11
       System.Text.RegularExpressions (>= 4.1) - framework: >= netstandard11
     SharpYaml (1.5.3) - framework: >= net40
-    Splat (1.6) - framework: >= net45
     System.Collections (4.0.11) - framework: >= netstandard16
       Microsoft.NETCore.Platforms (>= 1.0.1) - framework: dnxcore50, netstandard10, >= netstandard13
       Microsoft.NETCore.Targets (>= 1.0.1) - framework: dnxcore50, netstandard10, >= netstandard13
@@ -112,12 +119,7 @@ NUGET
       Microsoft.NETCore.Platforms (>= 1.0.1) - framework: dnxcore50, netstandard10, >= netstandard13
       Microsoft.NETCore.Targets (>= 1.0.1) - framework: dnxcore50, netstandard10, >= netstandard13
       System.Runtime (>= 4.1) - framework: dnxcore50, netstandard10, >= netstandard13
-    Topshelf (3.1.4)
-    WindowsAPICodePack-Core (1.1.1) - framework: >= net45
-    WindowsAPICodePack-Shell (1.1.1) - framework: >= net45
-      WindowsAPICodePack-Core (>= 1.1.1)
     WixSharp.bin (1.0.44) - framework: >= net40
-    YamlDotNet (3.8) - framework: >= net40
 
 GROUP build
 NUGET
