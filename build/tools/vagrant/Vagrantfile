@@ -14,7 +14,6 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "chocolatey", type: "shell", inline: configure_chocolatey()
   config.vm.provision "dotnet",     type: "shell", inline: configure_dotnet()
-  config.vm.provision "wix",        type: "shell", inline: configure_wix()
   config.vm.provision "bash",       type: "shell", inline: configure_bash()
   config.vm.provision "imdisk",     type: "shell", inline: configure_imdisk()
 end
@@ -29,12 +28,6 @@ def configure_dotnet()
   return <<-SHELL
     choco install microsoft-build-tools -y
     choco install windows-sdk-8.0 -y
-  SHELL
-end
-
-def configure_wix()
-  return <<-SHELL
-    choco install wixtoolset -y --allow-empty-checksums
   SHELL
 end
 
