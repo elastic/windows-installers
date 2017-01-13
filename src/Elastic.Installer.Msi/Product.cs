@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Elastic.Installer.UI;
+using System;
 using System.Collections.Generic;
 using WixSharp;
 
@@ -6,7 +7,7 @@ namespace Elastic.Installer.Msi
 {
 	public abstract class Product
 	{
-		public virtual Type EmbeddedUI { get; }
+		public virtual Type EmbeddedUI => typeof(EmbeddedUI);
 
 		public abstract Guid UpgradeCode { get; }
 

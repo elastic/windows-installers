@@ -86,7 +86,7 @@ namespace Elastic.Installer.UI
 				throw new Exception("CurrentVersion not found in session state.");
 
 			string product;
-			if (!this._session.TryGetValue("ProductName", out product))
+			if (!this._session.TryGetValue("ElasticProduct", out product))
 				throw new Exception("ProductName not found in session state.");
 
 			this._mainWindow = GetMainWindow(product, new WixStateProvider(version), new SessionWrapper(_session));

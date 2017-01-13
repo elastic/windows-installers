@@ -12,8 +12,6 @@ namespace Elastic.Installer.Msi.Elasticsearch
 
 		public override Guid UpgradeCode => ProductGuids.ElasticsearchUpgradeCode;
 
-		public override Type EmbeddedUI => typeof(EmbeddedUI);
-
 		public override List<Dir> Files(string path) => new List<Dir>
 		{
 			new Dir("bin", new Files(path + @"\bin\*.*")),
