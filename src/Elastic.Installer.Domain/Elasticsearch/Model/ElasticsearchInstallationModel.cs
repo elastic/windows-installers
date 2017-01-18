@@ -41,16 +41,6 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 		public ServiceModel ServiceModel { get; }
 		public ClosingModel ClosingModel { get; }
 
-		public override ReactiveList<IStep> AllSteps => new ReactiveList<IStep>
-			{
-				this.NoticeModel,
-				this.LocationsModel,
-				this.ServiceModel,
-				this.ConfigurationModel,
-				this.PluginsModel,
-				this.ClosingModel
-			};
-
 		public override IObservable<IStep> ObserveValidationChanges => this.WhenAny(
 			vm => vm.NoticeModel.ValidationFailures,
 			vm => vm.LocationsModel.ValidationFailures,
@@ -100,6 +90,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			this.ServiceModel = new ServiceModel(serviceStateProvider, versionConfig);
 			this.ConfigurationModel = new ConfigurationModel(yamlConfiguration, localJvmOptions);
 
+
 			var pluginDependencies = this.WhenAnyValue(
 				vm => vm.ConfigurationModel.IngestNode,
 				vm => vm.NoticeModel.AlreadyInstalled,
@@ -116,6 +107,17 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 
 			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeLog, observeElasticsearchLog, serviceStateProvider);
+			this.AllSteps = new ReactiveList<IStep>
+			{
+				this.NoticeModel,
+				this.LocationsModel,
+				this.ServiceModel,
+				this.ConfigurationModel,
+				this.PluginsModel,
+				this.ClosingModel
+			};
+			this.Steps = this.AllSteps.CreateDerivedCollection(x => x, x => x.IsRelevant);
+
 
 			this.WhenAny(
 				vm => vm.NoticeModel.IsValid,

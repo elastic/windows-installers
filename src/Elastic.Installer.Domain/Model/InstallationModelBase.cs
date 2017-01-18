@@ -28,9 +28,11 @@ namespace Elastic.Installer.Domain.Model
 		public abstract IObservable<IStep> ObserveValidationChanges { get; }
 
 		public ISession Session { get; }
-		public abstract ReactiveList<IStep> AllSteps { get; }
-		public IReactiveDerivedList<IStep> Steps => this.AllSteps.CreateDerivedCollection(x => x, x => true);
+
+		public ReactiveList<IStep> AllSteps { get; protected set; } = new ReactiveList<IStep>();
+		public IReactiveDerivedList<IStep> Steps { get; protected set; } = new ReactiveList<IStep>().CreateDerivedCollection(x => x, x => true);
 		public IValidatableReactiveObject ActiveStep => this.Steps[this.TabSelectedIndex];
+
 		public ReactiveCommand<object> Next { get; }
 		public ReactiveCommand<object> Back { get; }
 		public ReactiveCommand<object> Help { get; set; }

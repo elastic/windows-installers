@@ -30,16 +30,6 @@ namespace Elastic.Installer.Domain.Kibana.Model
 		public PluginsModel PluginsModel { get; }
 		public ClosingModel ClosingModel { get; }
 
-		public override ReactiveList<IStep> AllSteps => new ReactiveList<IStep>
-			{
-				this.LocationsModel,
-				this.ServiceModel,
-				this.ConfigurationModel,
-				this.ConnectingModel,
-				this.PluginsModel,
-				this.ClosingModel
-			};
-
 		public override IObservable<IStep> ObserveValidationChanges => this.WhenAny(
 			vm => vm.LocationsModel.ValidationFailures,
 			vm => vm.PluginsModel.ValidationFailures,
@@ -68,7 +58,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			this.ServiceModel = new ServiceModel(serviceStateProvider, versionConfig);
 			this.ConfigurationModel = new ConfigurationModel();
 			this.ConnectingModel = new ConnectingModel();
-			this.PluginsModel = new PluginsModel(pluginStateProvider);
+			this.PluginsModel = new PluginsModel(pluginStateProvider);	
 
 			var observeHost = this.WhenAnyValue(x => x.ConfigurationModel.HostName, x => x.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
@@ -76,6 +66,17 @@ namespace Elastic.Installer.Domain.Kibana.Model
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeLog, serviceStateProvider);
+
+			this.AllSteps = new ReactiveList<IStep>
+			{
+				this.LocationsModel,
+				this.ServiceModel,
+				this.ConfigurationModel,
+				this.ConnectingModel,
+				this.PluginsModel,
+				this.ClosingModel
+			};
+			this.Steps = this.AllSteps.CreateDerivedCollection(x => x, x => x.IsRelevant);
 
 			this.Install.Subscribe(installationObservable =>
 			{
