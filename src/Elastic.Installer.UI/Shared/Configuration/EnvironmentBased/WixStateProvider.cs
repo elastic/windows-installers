@@ -5,6 +5,7 @@ using Elastic.Installer.Domain;
 using Semver;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 {
@@ -13,19 +14,17 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 		public SemVersion ExistingVersion { get; }
 		public SemVersion CurrentVersion { get; }
 
-		public WixStateProvider(string currentVersion)
+		public WixStateProvider(Product product, string currentVersion)
 		{
 			string existingVersion;
-			var installed = IsAlreadyInstalled(out existingVersion);
+			var installed = IsAlreadyInstalled(product, out existingVersion);
 			this.CurrentVersion = currentVersion;
 			if (installed) this.ExistingVersion = existingVersion;
 		}
 
-		private bool IsAlreadyInstalled(out string installedVersion)
+		private bool IsAlreadyInstalled(Product product, out string installedVersion)
 		{
-			var productCodes = ProductGuids.ElasticsearchProductCodes
-				.Concat(ProductGuids.KibanaProductCodes)
-				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+			var productCodes = GetProductCodes(product);
 			installedVersion = null;
 			foreach (var kvp in productCodes)
 			{
@@ -38,6 +37,16 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 				}
 			}
 			return false;
+		}
+
+		private Dictionary<string, Guid> GetProductCodes(Product product)
+		{
+			switch(product)
+			{
+				case Product.Elasticsearch: return ProductGuids.ElasticsearchProductCodes;
+				case Product.Kibana: return ProductGuids.KibanaProductCodes;
+				default: throw new ArgumentException($"Unknown product {product}");
+			}
 		}
 
 		private bool IsInstalled(string productCode)

@@ -89,7 +89,7 @@ namespace Elastic.Installer.UI
 			if (!this._session.TryGetValue("ElasticProduct", out product))
 				throw new Exception("ProductName not found in session state.");
 
-			this._mainWindow = GetMainWindow(product, new WixStateProvider(version), new SessionWrapper(_session));
+			this._mainWindow = GetMainWindow(product, new WixStateProvider(GetProduct(product), version), new SessionWrapper(_session));
 
 			Application.ResourceAssembly = _mainWindow.GetType().Assembly;
 			this._app.Run(this._mainWindow as Window);
@@ -114,6 +114,16 @@ namespace Elastic.Installer.UI
 					}
 				default:
 					throw new Exception($"Unknown product name {product}");
+			}
+		}
+
+		private Product GetProduct(string name)
+		{
+			switch(name.ToLowerInvariant())
+			{
+				case "elasticsearch": return Product.Elasticsearch;
+				case "kibana": return Product.Kibana;
+				default: throw new ArgumentException($"Unknown product name {name}");
 			}
 		}
 	}
