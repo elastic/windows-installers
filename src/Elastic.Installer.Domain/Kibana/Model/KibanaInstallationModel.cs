@@ -17,12 +17,14 @@ using System.Threading.Tasks;
 using Elastic.Installer.Domain.Kibana.Model.Configuration;
 using Elastic.Installer.Domain.Kibana.Model.Connecting;
 using Elastic.Installer.Domain.Kibana.Model.Plugins;
+using Elastic.Installer.Domain.Kibana.Model.Notice;
 
 namespace Elastic.Installer.Domain.Kibana.Model
 {
 	public class KibanaInstallationModel
 		: InstallationModelBase<KibanaInstallationModel, KibanaInstallationModelValidator>
 	{
+		public NoticeModel NoticeModel { get; }
 		public LocationsModel LocationsModel { get; }
 		public ServiceModel ServiceModel { get; }
 		public ConfigurationModel ConfigurationModel { get; }
@@ -31,6 +33,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 		public ClosingModel ClosingModel { get; }
 
 		public override IObservable<IStep> ObserveValidationChanges => this.WhenAny(
+			vm => vm.NoticeModel.ValidationFailures,
 			vm => vm.LocationsModel.ValidationFailures,
 			vm => vm.PluginsModel.ValidationFailures,
 			vm => vm.ServiceModel.ValidationFailures,
@@ -38,7 +41,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			vm => vm.ConnectingModel.ValidationFailures,
 			vm => vm.ClosingModel.ValidationFailures,
 			vm => vm.TabSelectedIndex,
-			(locations, plugins, service, config, connecting, closing, index) =>
+			(notice, locations, plugins, service, config, connecting, closing, index) =>
 			{
 				var firstInvalidScreen = this.Steps.FirstOrDefault(s => !s.IsValid) ?? this.ClosingModel;
 				return firstInvalidScreen;
@@ -55,6 +58,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			var versionConfig = new VersionConfiguration(wixStateProvider);
 
 			this.LocationsModel = new LocationsModel(versionConfig);
+			this.NoticeModel = new NoticeModel(versionConfig, serviceStateProvider, this.LocationsModel);
 			this.ServiceModel = new ServiceModel(serviceStateProvider, versionConfig);
 			this.ConfigurationModel = new ConfigurationModel();
 			this.ConnectingModel = new ConnectingModel();
@@ -69,6 +73,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 
 			this.AllSteps = new ReactiveList<IStep>
 			{
+				this.NoticeModel,
 				this.LocationsModel,
 				this.ServiceModel,
 				this.ConfigurationModel,
@@ -87,13 +92,14 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			});
 
 			this.WhenAny(
+				vm => vm.NoticeModel.IsValid,
 				vm => vm.LocationsModel.IsValid,
 				vm => vm.PluginsModel.IsValid,
 				vm => vm.ServiceModel.IsValid,
 				vm => vm.ConfigurationModel.IsValid,
 				vm => vm.ConnectingModel.IsValid,
 				vm => vm.ClosingModel.IsValid,
-				(locations, plugins, service, config, connecting, closing) =>
+				(notice, locations, plugins, service, config, connecting, closing) =>
 				{
 					var firstInvalidScreen = this.Steps.Select((s, i) => new { s, i }).FirstOrDefault(s => !s.s.IsValid);
 					return firstInvalidScreen?.i ?? (this.Steps.Count - 1);

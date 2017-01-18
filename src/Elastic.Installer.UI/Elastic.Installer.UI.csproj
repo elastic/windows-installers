@@ -124,6 +124,9 @@
     <Compile Include="Kibana\Steps\LocationsView.xaml.cs">
       <DependentUpon>LocationsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Kibana\Steps\NoticeView.xaml.cs">
+      <DependentUpon>NoticeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Kibana\Steps\PluginsView.xaml.cs">
       <DependentUpon>PluginsView.xaml</DependentUpon>
     </Compile>
@@ -193,6 +196,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Kibana\Steps\LocationsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Kibana\Steps\NoticeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

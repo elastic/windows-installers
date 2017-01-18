@@ -9,6 +9,7 @@ using Elastic.Installer.Domain.Kibana.Model.Locations;
 using Elastic.Installer.Domain.Kibana.Model.Configuration;
 using Elastic.Installer.Domain.Kibana.Model.Connecting;
 using Elastic.Installer.Domain.Kibana.Model.Plugins;
+using Elastic.Installer.Domain.Kibana.Model.Notice;
 
 namespace Elastic.Installer.Domain.Kibana.Model
 {
@@ -17,6 +18,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 		public static Type[] ExpectedTypes = new[]
 		{
 			typeof(KibanaInstallationModel),
+			typeof(NoticeModel),
 			typeof(LocationsModel),
 			typeof(ServiceModel),
 			typeof(ConfigurationModel),

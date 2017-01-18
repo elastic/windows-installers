@@ -85,6 +85,8 @@
     <Compile Include="Kibana\Model\Locations\LocationsModelValidator.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModelArgumentParser.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModelValidator.cs" />
+    <Compile Include="Kibana\Model\Notice\NoticeModel.cs" />
+    <Compile Include="Kibana\Model\Notice\NoticeModelValidator.cs" />
     <Compile Include="Kibana\Model\Plugins\PluginsModel.cs" />
     <Compile Include="Kibana\Model\Plugins\PluginsModelValidator.cs" />
     <Compile Include="Model\InstallationModelBase.cs" />
