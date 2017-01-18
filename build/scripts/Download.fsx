@@ -25,7 +25,7 @@ module Downloader =
     type DownloadFeed = XmlProvider< feedUrl >
 
     type ProductVersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>\w+))?)$", noMethodPrefix=true >
-
+    
     type Product = 
         | Elasticsearch
         | Kibana
@@ -48,6 +48,14 @@ module Downloader =
             buildInFolder
             |> Path.GetFullPath
             |> fun f -> Path.Combine(f, sprintf "%s-%s.zip" this.Name version)
+    
+        member this.ExtractedDirectory version = 
+            buildInFolder
+            |> Directory.CreateDirectory
+            |> ignore
+            buildInFolder
+            |> Path.GetFullPath
+            |> fun f -> Path.Combine(f, sprintf "%s-%s" this.Name version)
 
     let unzipProduct (product : Product) version = 
         tracefn "Unzipping %s %s" product.Name version 
@@ -69,13 +77,13 @@ module Downloader =
             use webClient = new System.Net.WebClient()
             locations |> webClient.DownloadFile
             tracefn "Done downloading %s %s" product.Name version
-        
+    
     let lastVersion() = 
         // TODO: disallow prereleases for moment. Make build parameter in future
-        let itemIsElasticsearch itemText = 
+    let itemIsElasticsearch itemText = 
             let m = ProductVersionRegex().Match itemText
             m.Success && m.Product.Value = "Elasticsearch" && (isNullOrWhiteSpace m.Prerelease.Value)
-
+    
         let feed = DownloadFeed.Load feedUrl
         let firstEsLink = feed.Channel.Items |> Seq.find (fun item -> itemIsElasticsearch item.Title)
         let version = (ProductVersionRegex().Match firstEsLink.Title).Version.Value

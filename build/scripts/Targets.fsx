@@ -61,13 +61,15 @@ Target "Clean" (fun _ ->
 )
 
 Target "DownloadProducts" (fun () ->
-  Downloader.downloadProduct Product.Elasticsearch version
-  Downloader.downloadProduct Product.Kibana version
-)
+  if (not (Directory.Exists (Product.Elasticsearch.ExtractedDirectory version)))
+  then 
+    Downloader.downloadProduct Product.Elasticsearch version
+    Downloader.unzipProduct Product.Elasticsearch version
 
-Target "UnzipProducts" (fun () ->
-  Downloader.unzipProduct Product.Elasticsearch version
-  Downloader.unzipProduct Product.Kibana version
+  if (not (Directory.Exists (Product.Kibana.ExtractedDirectory version)))
+  then 
+    Downloader.downloadProduct Product.Kibana version
+    Downloader.unzipProduct Product.Kibana version
 )
 
 Target "PatchGuids" (fun () ->
@@ -219,7 +221,6 @@ Target "Integrate" (fun () ->
 
 "Clean"
   =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
-  ==> "UnzipProducts"
   ==> "PatchGuids"
   ==> "PruneFiles"
 //  ==> "UnitTest"
