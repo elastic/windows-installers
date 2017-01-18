@@ -118,6 +118,13 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			};
 			this.Steps = this.AllSteps.CreateDerivedCollection(x => x, x => x.IsRelevant);
 
+			this.Install.Subscribe(installationObservable =>
+			{
+				installationObservable.Subscribe(installed =>
+				{
+					this.ClosingModel.Installed = installed;
+				});
+			});
 
 			this.WhenAny(
 				vm => vm.NoticeModel.IsValid,
