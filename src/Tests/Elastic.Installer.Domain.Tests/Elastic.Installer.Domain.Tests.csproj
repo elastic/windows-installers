@@ -810,20 +810,6 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCore' And $(TargetFrameworkVersion) == 'v4.5.1'">
       <ItemGroup>
         <Reference Include="FluentAssertions">
-          <HintPath>..\..\..\packages\tests\FluentAssertions\lib\uap10.0\FluentAssertions.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FluentAssertions.Core">
-          <HintPath>..\..\..\packages\tests\FluentAssertions\lib\uap10.0\FluentAssertions.Core.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETCore' And $(TargetFrameworkVersion) == 'v4.5.1'">
-      <ItemGroup>
-        <Reference Include="FluentAssertions">
           <HintPath>..\..\..\packages\tests\FluentAssertions\lib\win81\FluentAssertions.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
