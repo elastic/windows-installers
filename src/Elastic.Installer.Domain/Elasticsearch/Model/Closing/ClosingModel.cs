@@ -72,11 +72,11 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Closing
 			set { this.RaiseAndSetIfChanged(ref openDocs, value); }
 		}
 
-		IEnumerable<string> prequisiteFailures;
-		public IEnumerable<string> PrequisiteFailures
+		IEnumerable<string> prerequisiteFailureMessages;
+		public IEnumerable<string> PrerequisiteFailureMessages
 		{
-			get { return prequisiteFailures; }
-			set { this.RaiseAndSetIfChanged(ref prequisiteFailures, value); }
+			get { return prerequisiteFailureMessages; }
+			set { this.RaiseAndSetIfChanged(ref prerequisiteFailureMessages, value); }
 		}
 
 	}

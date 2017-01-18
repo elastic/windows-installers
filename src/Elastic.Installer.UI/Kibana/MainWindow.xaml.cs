@@ -293,8 +293,8 @@ namespace Elastic.Installer.UI.Kibana
 
 			this.JumpToInstallationResult();
 			this.ViewModel.ClosingModel.Installed = ClosingResult.Preempted;
-
-			this.ViewModel.ClosingModel.PrequisiteFailures = this.ViewModel.PrerequisiteFailures.Select(v => v.ErrorMessage);
+			this.ViewModel.ClosingModel.PrerequisiteFailures = this.ViewModel.PrerequisiteFailures;
+			this.ViewModel.ClosingModel.PrerequisiteFailureMessages = this.ViewModel.PrerequisiteFailures.Select(v => v.ErrorMessage);
 		}
 
 		private async Task<IObservable<ClosingResult>> InstallAsync()

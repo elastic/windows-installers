@@ -134,8 +134,8 @@
 
         <Label Grid.Row="0" x:Name="PreemptReasonLabel"
                HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
-        
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding PrequisiteFailures}">
+
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding PrerequisiteFailures}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding StringFormat='• {0}'}" />

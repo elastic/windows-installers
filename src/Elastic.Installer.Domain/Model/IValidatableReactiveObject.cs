@@ -78,7 +78,7 @@ namespace Elastic.Installer.Domain.Model
 		public IList<ValidationFailure> PrerequisiteFailures
 		{
 			get { return prerequisiteFailures; }
-			protected set { this.RaiseAndSetIfChanged(ref prerequisiteFailures, value); }
+			set { this.RaiseAndSetIfChanged(ref prerequisiteFailures, value); }
 		}
 	}
 }
