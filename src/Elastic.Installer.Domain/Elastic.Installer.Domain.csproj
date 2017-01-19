@@ -89,6 +89,8 @@
     <Compile Include="Kibana\Model\Notice\NoticeModelValidator.cs" />
     <Compile Include="Kibana\Model\Plugins\PluginsModel.cs" />
     <Compile Include="Kibana\Model\Plugins\PluginsModelValidator.cs" />
+    <Compile Include="Kibana\Model\Tasks\EditKibanaYamlTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\KibanaInstallationTask.cs" />
     <Compile Include="Model\InstallationModelBase.cs" />
     <Compile Include="Shared\Configuration\EnvironmentBased\IWixStateProvider.cs" />
     <Compile Include="Elasticsearch\Configuration\EnvironmentBased\ElasticsearchEnvironmentStateProvider.cs" />
@@ -110,7 +112,7 @@
     <Compile Include="Elasticsearch\Model\Tasks\StopServiceTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\SetEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\CreateDirectoriesTask.cs" />
-    <Compile Include="Elasticsearch\Model\Tasks\InstallationTask.cs" />
+    <Compile Include="Elasticsearch\Model\Tasks\ElasticsearchInstallationTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\DeleteDirectoriesTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\EditElasticsearchYamlTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\EditJvmOptionsTask.cs" />
@@ -176,6 +178,7 @@
     <Compile Include="Elasticsearch\Model\Closing\ClosingModelValidator.cs" />
     <Compile Include="Elasticsearch\Model\Locations\LocationsModelValidator.cs" />
     <Compile Include="Shared\Model\Service\ServiceModelValidator.cs" />
+    <Compile Include="Shared\Model\Tasks\InstallationTaskBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />

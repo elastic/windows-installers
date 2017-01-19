@@ -6,7 +6,7 @@ using Elastic.Installer.Domain.Session;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class InstallPluginsTask : InstallationTask
+	public class InstallPluginsTask : ElasticsearchInstallationTask
 	{
 		public InstallPluginsTask(string[] args, ISession session) 
 			: base(args, session) { }

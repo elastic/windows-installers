@@ -7,7 +7,7 @@ using System.Security.Principal;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class CreateDirectoriesTask : InstallationTask
+	public class CreateDirectoriesTask : ElasticsearchInstallationTask
 	{
 		public CreateDirectoriesTask(string[] args, ISession session) : base(args, session) { }
 		public CreateDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)

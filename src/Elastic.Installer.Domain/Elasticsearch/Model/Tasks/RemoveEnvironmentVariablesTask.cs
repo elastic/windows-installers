@@ -3,7 +3,7 @@ using System.IO.Abstractions;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class RemoveEnvironmentVariablesTask : InstallationTask
+	public class RemoveEnvironmentVariablesTask : ElasticsearchInstallationTask
 	{
 		public RemoveEnvironmentVariablesTask(string[] args, ISession session) : base(args, session) { }
 		public RemoveEnvironmentVariablesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 

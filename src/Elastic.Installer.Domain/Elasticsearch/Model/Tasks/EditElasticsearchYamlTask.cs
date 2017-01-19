@@ -6,7 +6,7 @@ using Elastic.Installer.Domain.Session;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class EditElasticsearchYamlTask : InstallationTask
+	public class EditElasticsearchYamlTask : ElasticsearchInstallationTask
 	{
 		public EditElasticsearchYamlTask(string[] args, ISession session) : base(args, session) { }
 		public EditElasticsearchYamlTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 

@@ -5,7 +5,7 @@ using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class UninstallServiceTask : InstallationTask
+	public class UninstallServiceTask : ElasticsearchInstallationTask
 	{
 		private IServiceStateProvider ServiceStateProvider{ get; }
 

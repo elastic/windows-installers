@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class ValidateArgumentsTask : InstallationTask
+	public class ValidateArgumentsTask : ElasticsearchInstallationTask
 	{
 		public ValidateArgumentsTask(string[] args, ISession session) : base(args, session) { }
 

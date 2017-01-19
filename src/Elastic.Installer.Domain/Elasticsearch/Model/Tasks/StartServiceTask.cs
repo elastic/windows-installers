@@ -6,7 +6,7 @@ using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class StartServiceTask : InstallationTask
+	public class StartServiceTask : ElasticsearchInstallationTask
 	{
 		private IServiceStateProvider ServiceStateProvider { get; }
 
