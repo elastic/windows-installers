@@ -99,6 +99,7 @@
     <Compile Include="Elasticsearch\Configuration\FileBased\ElasticsearchYamlSettings.cs" />
     <Compile Include="Shared\Configuration\PluginStateProvider.cs" />
     <Compile Include="Shared\Configuration\ServiceStateProvider.cs" />
+    <Compile Include="Shared\Model\Closing\ClosingModelBase.cs" />
     <Compile Include="Shared\Model\Plugins\Plugin.cs" />
     <Compile Include="Shared\Model\Plugins\PluginType.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\RemovePluginsTask.cs" />

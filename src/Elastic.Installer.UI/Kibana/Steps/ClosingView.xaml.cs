@@ -31,7 +31,7 @@ namespace Elastic.Installer.UI.Kibana.Steps
 		protected override void InitializeBindings()
 		{
 			this.Bind(ViewModel, vm => vm.OpenDocumentationAfterInstallation, v => v.ReadTheDocsOnCloseCheckBox.IsChecked);
-			this.BindCommand(ViewModel, vm => vm.OpenKibana, v => v.OpenKibana, nameof(OpenKibana.Click));
+			this.BindCommand(ViewModel, vm => vm.OpenProduct, v => v.OpenKibana, nameof(OpenKibana.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenGettingStarted, v => v.OpenGettingStarted, nameof(OpenGettingStarted.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenReference, v => v.OpenReference, nameof(OpenReference.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenInstallationLog, v => v.OpenInstallationLog, nameof(OpenInstallationLog.Click));
@@ -42,7 +42,7 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 			var host = "http://localhost:9200";
 			this.ViewModel.Host.Subscribe(h => host = h);
-			this.ViewModel.OpenKibana.Subscribe(x => Process.Start(host));
+			this.ViewModel.OpenProduct.Subscribe(x => Process.Start(host));
 
 			this.ViewModel.OpenReference.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/reference/{majorMinor}/index.html"));
 			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/guide/index.html"));

@@ -56,7 +56,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 						return Path.Combine(c.GetValue(), "kibana.log");
 					return null;
 				})
-				.ToProperty(this, vm => vm.ElasticsearchLog, out elasticsearchLog);
+				.ToProperty(this, vm => vm.KibanaLog, out kibanaLog);
 
 			this.ThrownExceptions.Subscribe(e =>
 			{
@@ -129,8 +129,8 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 		readonly ObservableAsPropertyHelper<bool> configureAllLocations;
 		public bool ConfigureAllLocations => configureAllLocations.Value;
 
-		readonly ObservableAsPropertyHelper<string> elasticsearchLog;
-		public string ElasticsearchLog => elasticsearchLog.Value;
+		readonly ObservableAsPropertyHelper<string> kibanaLog;
+		public string KibanaLog => kibanaLog.Value;
 
 		bool placeWriteableLocationsInSamePath;
 		[Argument(nameof(PlaceWritableLocationsInSamePath))]

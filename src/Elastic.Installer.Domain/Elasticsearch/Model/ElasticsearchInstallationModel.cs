@@ -99,14 +99,13 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			);
 			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);
 
+			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
-			var observeLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
+			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 			var observeElasticsearchLog = this.WhenAnyValue(vm => vm.LocationsModel.ElasticsearchLog);
 
-			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
-
-			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeLog, observeElasticsearchLog, serviceStateProvider);
+			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog, observeElasticsearchLog, serviceStateProvider);
 			this.AllSteps = new ReactiveList<IStep>
 			{
 				this.NoticeModel,

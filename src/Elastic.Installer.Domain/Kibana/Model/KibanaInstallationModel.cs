@@ -64,12 +64,12 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			this.ConnectingModel = new ConnectingModel();
 			this.PluginsModel = new PluginsModel(pluginStateProvider);	
 
+			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(x => x.ConfigurationModel.HostName, x => x.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
-			var observeLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
-
-			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
-			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeLog, serviceStateProvider);
+			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
+			var observeKibanaLog = this.WhenAnyValue(vm => vm.LocationsModel.KibanaLog);
+			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog, observeKibanaLog, serviceStateProvider);
 
 			this.AllSteps = new ReactiveList<IStep>
 			{
