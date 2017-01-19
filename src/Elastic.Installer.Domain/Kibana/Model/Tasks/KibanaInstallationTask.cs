@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 {
 	public abstract class KibanaInstallationTask : InstallationTaskBase
 	{
-		protected KibanaInstallationTask InstallationModel { get { return this.Model as KibanaInstallationTask; } }
+		protected KibanaInstallationModel InstallationModel { get { return this.Model as KibanaInstallationModel; } }
 
 		protected KibanaInstallationTask(string[] args, ISession session)
 			: this(KibanaInstallationModel.Create(new NoopWixStateProvider(), session, args), session, new FileSystem())

@@ -75,6 +75,8 @@
     <Compile Include="ArgumentAttribute.cs" />
     <Compile Include="Elasticsearch\Model\Plugins\PluginsModel.cs" />
     <Compile Include="Elasticsearch\Model\Plugins\PluginsModelValidator.cs" />
+    <Compile Include="Kibana\Configuration\FileBased\KibanaYamlConfiguration.cs" />
+    <Compile Include="Kibana\Configuration\FileBased\KibanaYamlSettings.cs" />
     <Compile Include="Kibana\Model\Closing\ClosingModel.cs" />
     <Compile Include="Kibana\Model\Closing\ClosingModelValidator.cs" />
     <Compile Include="Kibana\Model\Connecting\ConnectingModel.cs" />
@@ -99,6 +101,8 @@
     <Compile Include="Elasticsearch\Configuration\FileBased\ElasticsearchYamlConfiguration.cs" />
     <Compile Include="Elasticsearch\Configuration\FileBased\LocalJvmOptionsConfiguration.cs" />
     <Compile Include="Elasticsearch\Configuration\FileBased\ElasticsearchYamlSettings.cs" />
+    <Compile Include="Shared\Configuration\FileBased\IYamlSettings.cs" />
+    <Compile Include="Shared\Configuration\FileBased\YamlSettingsBase.cs" />
     <Compile Include="Shared\Configuration\PluginStateProvider.cs" />
     <Compile Include="Shared\Configuration\ServiceStateProvider.cs" />
     <Compile Include="Shared\Model\Closing\ClosingModelBase.cs" />

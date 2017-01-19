@@ -11,9 +11,12 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 	{
 		private const string ProgramDataEnvironmentVariable = "ALLUSERSPROFILE";
 		private const string Logs = "logs";
+		private const string Config = "config";
 		private const string DefaultWritableDirectoryArgument = 
 			@"[%" + ProgramDataEnvironmentVariable + @"]\" + CompanyFolderName + @"\" + ProductFolderName;
 		private const string DefaultLogsDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Logs;
+		// TODO add this to UI
+		private const string DefaultConfigDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Config;
 		public const string CompanyFolderName = "Elastic";
 		public const string ProductFolderName = "Kibana";
 
@@ -160,6 +163,14 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 				this.RaiseAndSetIfChanged(ref installDirectory, value);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
+		}
+
+		string configDirectory;
+		[SetPropertyActionArgument(nameof(ConfigDirectory), DefaultConfigDirectoryArgument)]
+		public string ConfigDirectory
+		{
+			get { return configDirectory; }
+			set { this.RaiseAndSetIfChanged(ref configDirectory, value); }
 		}
 
 		string logsDirectory;
