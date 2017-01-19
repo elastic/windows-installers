@@ -303,6 +303,9 @@ namespace Elastic.Installer.UI.Kibana
 		private async Task<IObservable<ClosingResult>> InstallAsync()
 		{
 			SetSessionValues(this.ViewModel);
+			SetSessionValues(this.ViewModel.LocationsModel);
+			SetSessionValues(this.ViewModel.ConfigurationModel);
+			SetSessionValues(this.ViewModel.ConnectingModel);
 			SetSessionValues(this.ViewModel.ServiceModel);
 			SetSessionValues(this.ViewModel.PluginsModel);
 
