@@ -66,6 +66,7 @@
     <Compile Include="Elasticsearch\CustomActions\ValidateArgumentsAction.cs" />
     <Compile Include="Elasticsearch\Elasticsearch.cs" />
     <Compile Include="Kibana\CustomActions\Install\InstallConfigurationAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\InstallDirectoriesAction.cs" />
     <Compile Include="Kibana\CustomActions\KibanaCustomActionOrder.cs" />
     <Compile Include="Kibana\Kibana.cs" />
     <Compile Include="Product.cs" />
@@ -75,6 +76,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="paket.references" />
+    <None Include="_Generated\kibana.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\elasticsearch.ico" />
@@ -82,7 +84,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="_Generated\elasticsearch.wxs" />
-    <Content Include="_Generated\kibana.wxs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elastic.Installer.Domain\Elastic.Installer.Domain.csproj">

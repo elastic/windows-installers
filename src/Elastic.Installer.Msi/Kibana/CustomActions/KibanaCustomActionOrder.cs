@@ -8,6 +8,7 @@ namespace Elastic.Installer.Msi.Kibana.CustomActions
 {
 	public enum KibanaCustomActionOrder
 	{
-		InstallConfiguration = 1
+		InstallDirectories = 1,
+		InstallConfiguration = 2
 	}
 }

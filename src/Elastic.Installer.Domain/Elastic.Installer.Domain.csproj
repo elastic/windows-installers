@@ -91,6 +91,7 @@
     <Compile Include="Kibana\Model\Notice\NoticeModelValidator.cs" />
     <Compile Include="Kibana\Model\Plugins\PluginsModel.cs" />
     <Compile Include="Kibana\Model\Plugins\PluginsModelValidator.cs" />
+    <Compile Include="Kibana\Model\Tasks\CreateDirectoriesTask.cs" />
     <Compile Include="Kibana\Model\Tasks\EditKibanaYamlTask.cs" />
     <Compile Include="Kibana\Model\Tasks\KibanaInstallationTask.cs" />
     <Compile Include="Model\InstallationModelBase.cs" />
