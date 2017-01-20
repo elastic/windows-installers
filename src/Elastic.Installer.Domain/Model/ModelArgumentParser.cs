@@ -130,6 +130,40 @@ namespace Elastic.Installer.Domain.Model
 			return string.Join(" ", parameters.Select(kv => $"{kv.Key}=\"{kv.Value?.Replace("\"", "\\\"")}\""));
 		}
 
+		protected static IDictionary<Type, IEnumerable<string>> GetArgumentsByModel(Type[] expectedTypes)
+		{
+			var argumentsByType = new Dictionary<Type, IEnumerable<string>>();
+			foreach (var type in expectedTypes)
+			{
+				var seenNames = new HashSet<string>();
+				var viewModelProperties = GetProperties(type);
+				foreach (var p in viewModelProperties)
+				{
+					if (seenNames.Contains(p.Name, StringComparer.OrdinalIgnoreCase))
+						throw new ArgumentException($"{p.Name} can not be reused as argument option on {type.Name}");
+					seenNames.Add(p.Name.ToUpperInvariant());
+				}
+				argumentsByType.Add(type, seenNames);
+			}
+			return argumentsByType;
+		}
+
+		protected static IEnumerable<string> GetAllArguments(Type[] expectedTypes)
+		{
+			var seenNames = new HashSet<string>();
+			foreach (var type in expectedTypes)
+			{
+				var viewModelProperties = GetProperties(type);
+				foreach (var p in viewModelProperties)
+				{
+					if (seenNames.Contains(p.Name, StringComparer.OrdinalIgnoreCase))
+						throw new ArgumentException($"{p.Name} can not be reused as argument option on {type.Name}");
+					seenNames.Add(p.Name.ToUpperInvariant());
+				}
+			}
+
+			return seenNames;
+		}
 		private void ApplyViewModelArguments()
 		{
 			foreach (var a in this.ViewModelArguments)

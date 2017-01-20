@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
+﻿using Elastic.Installer.Domain.Elasticsearch.Model;
+using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Msi.CustomActions;
 using Microsoft.Deployment.WindowsInstaller;
@@ -6,7 +7,7 @@ using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions
 {
-	public class ValidateArgumentsAction : CustomAction<ElasticsearchProduct>
+	public class ValidateArgumentsAction : CustomAction<Elasticsearch>
 	{
 		public override string Name => nameof(ValidateArgumentsAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.LogAllTheThings;
@@ -19,6 +20,6 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions
 
 		[CustomAction]
 		public static ActionResult ValidateArguments(Session session) =>
-			session.Handle(() => new ValidateArgumentsTask(session.ToSetupArguments(), session.ToISession()).Execute());
+			session.Handle(() => new ValidateArgumentsTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }

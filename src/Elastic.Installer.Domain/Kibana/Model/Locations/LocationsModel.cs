@@ -191,6 +191,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 			sb.AppendLine($"- {nameof(ConfigureLocations)} = " + ConfigureLocations);
 			sb.AppendLine($"- {nameof(InstallDir)} = " + InstallDir);
 			sb.AppendLine($"- {nameof(LogsDirectory)} = " + LogsDirectory);
+			sb.AppendLine($"- {nameof(ConfigDirectory)} = " + ConfigDirectory);
 			return sb.ToString();
 		}
 	}

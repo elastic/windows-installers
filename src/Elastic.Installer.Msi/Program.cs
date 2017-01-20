@@ -11,6 +11,8 @@ using Elastic.Installer.Domain.Elasticsearch.Model;
 using Elastic.Installer.Msi.Elasticsearch;
 using Elastic.Installer.Msi.Kibana;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Model;
+using Elastic.Installer.Domain.Kibana.Model;
 
 namespace Elastic.Installer.Msi
 {
@@ -23,17 +25,14 @@ namespace Elastic.Installer.Msi
 			var version = args[1];
 			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}"); ;
 
-
 			// set properties in the MSI so that they don't have to be set on the command line.
 			// The only awkward one is plugins as it has a not empty default value, but an empty
 			// string can be passed to not install any plugins
-			var model = ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), new NoopSession());
-			var setupParams = model.ToMsiParams();
+			var setupParams = product.MsiParams;
 			var staticProperties = setupParams
 				.Where(v => v.Attribute.IsStatic)
 				.Select(a => new Property(a.Key, a.Value)
 			);
-
 			// Only set dynamic property if MSI is not installed and value is empty 
 			var dynamicProperties = setupParams
 				.Where(v => v.Attribute.IsDynamic)
@@ -134,7 +133,7 @@ namespace Elastic.Installer.Msi
 
 			const string wixLocation = @"..\..\packages\WixSharp.wix.bin\tools\bin";
 			if (!Directory.Exists(wixLocation))
-			  throw new Exception($"The directory '{wixLocation}' could not be found");
+				throw new Exception($"The directory '{wixLocation}' could not be found");
 			Compiler.WixLocation = wixLocation;
 			Compiler.BuildWxs(project, $@"_Generated\{productName.ToLower()}.wxs", Compiler.OutputType.MSI);
 			Compiler.BuildMsi(project);
@@ -145,9 +144,9 @@ namespace Elastic.Installer.Msi
 			switch (name.ToLower())
 			{
 				case "elasticsearch":
-					return new ElasticsearchProduct();
+					return new Elasticsearch.Elasticsearch();
 				case "kibana":
-					return new KibanaProduct();
+					return new Kibana.Kibana();
 				default:
 					throw new ArgumentException($"Unknown product: {name}");
 			}

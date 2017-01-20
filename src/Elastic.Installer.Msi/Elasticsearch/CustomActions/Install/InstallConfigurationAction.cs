@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
+﻿using Elastic.Installer.Domain.Elasticsearch.Model;
+using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Msi.CustomActions;
 using Microsoft.Deployment.WindowsInstaller;
@@ -6,7 +7,7 @@ using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 {
-	public class InstallConfigurationAction : CustomAction<ElasticsearchProduct>
+	public class InstallConfigurationAction : CustomAction<Elasticsearch>
 	{
 		public override string Name => nameof(InstallConfigurationAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.InstallConfiguration;
@@ -19,6 +20,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 
 		[CustomAction]
 		public static ActionResult InstallConfiguration(Session session) =>
-			session.Handle(() => new EditElasticsearchYamlTask(session.ToSetupArguments(), session.ToISession()).Execute());
+			session.Handle(() => new EditElasticsearchYamlTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
+
 	}
 }

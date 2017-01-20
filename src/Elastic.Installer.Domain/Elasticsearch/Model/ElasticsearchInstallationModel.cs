@@ -150,7 +150,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			this.Refresh();
 			//validate the first stab explicitly on constructing this 
 			//main viewmodel. WPF triggers a validation already
-			this.ParsedArguments = new ElasticsearchInstallationModelArgumentParser(this.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] { this }).ToList(), args);
+			this.ParsedArguments = new ElasticsearchArgumentParser(this.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] { this }).ToList(), args);
 
 			this.ActiveStep.Validate();
 		}

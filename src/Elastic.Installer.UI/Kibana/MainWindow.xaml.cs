@@ -326,7 +326,7 @@ namespace Elastic.Installer.UI.Kibana
 		private void SetSessionValues(object viewModel)
 		{
 			var type = viewModel.GetType();
-			var ps = KibanaInstallationModelArgumentParser.ArgumentsByModel[type];
+			var ps = KibanaArgumentParser.ArgumentsByModel[type];
 			foreach (var p in ps)
 			{
 				var pi = type.GetProperty(p, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);

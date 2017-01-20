@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Session
 		private static volatile string[] CachedSetupArguments;
 		private static object _lock = new object { };
 
-		public static string[] ToSetupArguments(this Microsoft.Deployment.WindowsInstaller.Session session)
+		public static string[] ToSetupArguments(this Microsoft.Deployment.WindowsInstaller.Session session, IEnumerable<string> allArguments)
 		{
 			if (session == null) return new string[] { };
 			if (CachedSetupArguments != null) return CachedSetupArguments;
@@ -22,9 +22,8 @@ namespace Elastic.Installer.Domain.Session
 			{
 				if (CachedSetupArguments != null) return CachedSetupArguments;
 
-				var allProperties = ElasticsearchInstallationModelArgumentParser.AllArguments;
 				var arguments = new List<string>();
-				foreach (var p in allProperties)
+				foreach (var p in allArguments)
 				{
 					string v;
 					if (session.TryGetValue(p, out v))

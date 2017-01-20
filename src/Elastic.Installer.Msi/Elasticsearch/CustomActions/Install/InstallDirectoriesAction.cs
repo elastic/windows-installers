@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
+﻿using Elastic.Installer.Domain.Elasticsearch.Model;
+using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Msi.CustomActions;
 using Microsoft.Deployment.WindowsInstaller;
@@ -6,7 +7,7 @@ using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 {
-	public class InstallDirectoriesAction : CustomAction<ElasticsearchProduct>
+	public class InstallDirectoriesAction : CustomAction<Elasticsearch>
 	{
 		public override string Name => nameof(InstallDirectoriesAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.InstallDirectories;
@@ -19,6 +20,6 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 
 		[CustomAction]
 		public static ActionResult InstallDirectories(Session session) =>
-			session.Handle(() => new CreateDirectoriesTask(session.ToSetupArguments(), session.ToISession()).Execute());
+			session.Handle(() => new CreateDirectoriesTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }

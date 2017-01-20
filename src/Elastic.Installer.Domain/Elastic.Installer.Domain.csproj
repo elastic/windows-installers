@@ -85,7 +85,7 @@
     <Compile Include="Kibana\Model\Configuration\ConfigurationModelValidator.cs" />
     <Compile Include="Kibana\Model\Locations\LocationsModel.cs" />
     <Compile Include="Kibana\Model\Locations\LocationsModelValidator.cs" />
-    <Compile Include="Kibana\Model\KibanaInstallationModelArgumentParser.cs" />
+    <Compile Include="Kibana\Model\KibanaArgumentParser.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModelValidator.cs" />
     <Compile Include="Kibana\Model\Notice\NoticeModel.cs" />
     <Compile Include="Kibana\Model\Notice\NoticeModelValidator.cs" />
@@ -112,7 +112,7 @@
     <Compile Include="Elasticsearch\Model\Tasks\StartServiceTask.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Shared\Model\Closing\ClosingResult.cs" />
-    <Compile Include="Elasticsearch\Model\ElasticsearchInstallationModelArgumentParser.cs" />
+    <Compile Include="Elasticsearch\Model\ElasticsearchArgumentParser.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\StopServiceTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\SetEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\CreateDirectoriesTask.cs" />

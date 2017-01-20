@@ -23,10 +23,11 @@ namespace Elastic.Installer.Domain.Kibana.Configuration.FileBased
 		[DefaultValue(null)]
 		public string ServerBasePath { get; set; }
 
-		[YamlMember("server.host")]
+		[YamlMember("server.name")]
 		[DefaultValue(null)]
 		public string ServerName { get; set; }
 
+		[YamlMember("server.defaultRoute")]
 		[DefaultValue(null)]
 		public string ServerDefaultRoute { get; set; }
 
@@ -38,6 +39,7 @@ namespace Elastic.Installer.Domain.Kibana.Configuration.FileBased
 		[DefaultValue(null)]
 		public string KibanaIndex { get; set; }
 
+		[YamlMember("server.ssl.cert")]
 		[DefaultValue(null)]
 		public string ServerCert { get; set; }
 

@@ -7,7 +7,7 @@ using WixSharp;
 namespace Elastic.Installer.Msi.CustomActions
 {
 	public abstract class RollbackCustomAction<TProduct> : CustomAction<TProduct> 
-		where TProduct : Product
+		where TProduct : Product, new()
 	{
 		public override Execute Execute => Execute.rollback;
 		public override Condition Condition => null;

@@ -334,7 +334,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 		private void SetSessionValues(object viewModel)
 		{
 			var type = viewModel.GetType();
-			var ps = ElasticsearchInstallationModelArgumentParser.ArgumentsByModel[type];
+			var ps = ElasticsearchArgumentParser.ArgumentsByModel[type];
 			foreach (var p in ps)
 			{
 				var pi = type.GetProperty(p, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);

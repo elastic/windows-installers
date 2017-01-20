@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using Microsoft.Deployment.WindowsInstaller;
 using WixSharp;
 using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
+using Elastic.Installer.Domain.Elasticsearch.Model;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 {
-	public class UninstallPluginsAction : UninstallCustomAction<ElasticsearchProduct>
+	public class UninstallPluginsAction : UninstallCustomAction<Elasticsearch>
 	{
 		public override string Name => nameof(UninstallPluginsAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.UninstallPlugins;
@@ -22,5 +23,5 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 
 		[CustomAction]
 		public static ActionResult UninstallPlugins(Session session) =>
-			session.Handle(() => new RemovePluginsTask(session.ToSetupArguments(), session.ToISession()).Execute());
+			session.Handle(() => new RemovePluginsTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}}

@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
+﻿using Elastic.Installer.Domain.Elasticsearch.Model;
+using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Msi.CustomActions;
 using Microsoft.Deployment.WindowsInstaller;
@@ -6,7 +7,7 @@ using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 {
-	public class InstallJvmOptionsAction : CustomAction<ElasticsearchProduct>
+	public class InstallJvmOptionsAction : CustomAction<Elasticsearch>
 	{
 		public override string Name => nameof(InstallJvmOptionsAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.InstallJvmOptions;
@@ -20,6 +21,6 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 
 		[CustomAction]
 		public static ActionResult InstallJvmOptions(Session session) =>
-			session.Handle(() => new EditJvmOptionsTask(session.ToSetupArguments(), session.ToISession()).Execute());
+			session.Handle(() => new EditJvmOptionsTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }

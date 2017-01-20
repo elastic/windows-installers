@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
+﻿using Elastic.Installer.Domain.Elasticsearch.Model;
+using Elastic.Installer.Domain.Elasticsearch.Model.Tasks;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Msi.CustomActions;
 using Elastic.Installer.Msi.Elasticsearch.CustomActions.Install;
@@ -7,7 +8,7 @@ using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 {
-	public class RollbackServiceAction : RollbackCustomAction<ElasticsearchProduct>
+	public class RollbackServiceAction : RollbackCustomAction<Elasticsearch>
 	{
 		public override string Name => nameof(RollbackServiceAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.RollbackService;
@@ -16,6 +17,6 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 
 		[CustomAction]
 		public static ActionResult RollbackService(Session session) =>
-			session.Handle(() => new UninstallServiceTask(session.ToSetupArguments(), session.ToISession()).Execute());
+			session.Handle(() => new UninstallServiceTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }
