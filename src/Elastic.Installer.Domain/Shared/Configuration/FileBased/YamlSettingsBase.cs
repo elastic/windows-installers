@@ -38,6 +38,7 @@ namespace Elastic.Installer.Domain.Shared.Configuration.FileBased
 			SerializeDictionaryItemsAsMembers = true,
 			EmitTags = false,
 			EmitDefaultValues = false,
+			EmitAlias = false
 		});
 
 		protected TSettings YamlSettings { get; set; } = new TSettings();

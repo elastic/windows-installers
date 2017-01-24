@@ -14,11 +14,19 @@ namespace Elastic.Installer.Domain.Kibana.Configuration.FileBased
 	{
 		public KibanaYamlSettings Settings { get { return this.YamlSettings as KibanaYamlSettings; } }
 
+		internal KibanaYamlConfiguration() : base (null, null) { }
+
+		public KibanaYamlConfiguration(KibanaYamlSettings settings)
+			: base(null, null)
+		{
+			this.YamlSettings = settings;
+		}
+
 		public KibanaYamlConfiguration(string path) : base(path, null) { }
 
 		public KibanaYamlConfiguration(string path, IFileSystem fileSystem) : base(path, fileSystem) { }
 
-		public static KibanaYamlConfiguration Default { get; } = new KibanaYamlConfiguration(null);
+		public static KibanaYamlConfiguration Default { get; } = new KibanaYamlConfiguration();
 
 		public static KibanaYamlConfiguration FromFolder(string configDirectory) =>
 			string.IsNullOrEmpty(configDirectory)

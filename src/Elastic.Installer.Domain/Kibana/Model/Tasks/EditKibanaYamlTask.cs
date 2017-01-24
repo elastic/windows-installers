@@ -25,6 +25,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 			var yaml = KibanaYamlConfiguration.FromFolder(locations.ConfigDirectory, this.FileSystem);
 			this.Session.SendProgress(1000, "updating kibana.yml");
 			var settings = yaml.Settings;
+			settings.LoggingDestination = locations.LogsDirectory;
 			settings.ServerHost = config.HostName;
 			settings.ServerPort = config.HttpPort;
 			settings.ServerBasePath = config.BasePath;

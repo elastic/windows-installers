@@ -9,54 +9,58 @@ using System.Threading.Tasks;
 
 namespace Elastic.Installer.Domain.Kibana.Configuration.FileBased
 {
-	public class KibanaYamlSettings : IYamlSettings
+	public class KibanaYamlSettings : Dictionary<string, object>, IYamlSettings
 	{
 		[YamlMember("server.host")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ServerHost { get; set; }
 
 		[YamlMember("server.port")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public int? ServerPort { get; set; }
 
 		[YamlMember("server.basePath")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ServerBasePath { get; set; }
 
 		[YamlMember("server.name")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ServerName { get; set; }
 
 		[YamlMember("server.defaultRoute")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ServerDefaultRoute { get; set; }
 
+		[YamlMember("logging.dest")]
+		[DefaultValue("")]
+		public string LoggingDestination { get; set; }
+
 		[YamlMember("elasticsearch.url")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ElasticsearchUrl { get; set; }
 
 		[YamlMember("kibana.index")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string KibanaIndex { get; set; }
 
 		[YamlMember("server.ssl.cert")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ServerCert { get; set; }
 
 		[YamlMember("server.ssl.key")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ServerKey { get; set; }
 
 		[YamlMember("elasticsearch.ssl.cert")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ElasticsearchCert { get; set; }
 
 		[YamlMember("elasticsearch.ssl.key")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ElasticsearchKey { get; set; }
 
 		[YamlMember("elasticsearch.ssl.ca")]
-		[DefaultValue(null)]
+		[DefaultValue("")]
 		public string ElasticsearchCA { get; set; }
 
 		[YamlMember("status.allowAnonymous")]
