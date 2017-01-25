@@ -13,34 +13,34 @@ using System.Threading.Tasks;
 namespace Elastic.Installer.Domain.Service
 {
 	[RunInstaller(true)]
-	public partial class ElasticsearchServiceInstaller : System.Configuration.Install.Installer
+	public partial class ServiceInstallationManager : System.Configuration.Install.Installer
 	{
-		public ElasticsearchServiceConfiguration Configuration { get; set; }
+		public ServiceConfiguration Configuration { get; set; }
 
-		public ElasticsearchServiceInstaller(ElasticsearchServiceConfiguration configuration)
+		public ServiceInstallationManager(ServiceConfiguration configuration)
 		{
 			Configuration = configuration;			
 		}
 
-		public static void RuntimeInstall(ElasticsearchServiceConfiguration configuration)
+		public static void RuntimeInstall(ServiceConfiguration configuration)
 		{
 			string path = "/assemblypath=" + configuration.ExeLocation;
 
 			using (var ti = new TransactedInstaller())
 			{
-				ti.Installers.Add(new ElasticsearchServiceInstaller(configuration));
+				ti.Installers.Add(new ServiceInstallationManager(configuration));
 				ti.Context = new InstallContext(null, new[] { path });
 				ti.Install(new Hashtable());
 			}
 		}
 
-		public static void RuntimeUninstall(ElasticsearchServiceConfiguration configuration)
+		public static void RuntimeUninstall(ServiceConfiguration configuration)
 		{
 			string path = "/assemblypath=" + configuration.ExeLocation;
 
 			using (var ti = new TransactedInstaller())
 			{
-				ti.Installers.Add(new ElasticsearchServiceInstaller(configuration));
+				ti.Installers.Add(new ServiceInstallationManager(configuration));
 				ti.Context = new InstallContext(null, new[] { path });
 				ti.Uninstall(null);
 			}

@@ -11,7 +11,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 
 		public UninstallServiceTask(string[] args, ISession session) : base(args, session)
 		{
-			this.ServiceStateProvider = new ServiceStateProvider(session);
+			this.ServiceStateProvider = new ServiceStateProvider(session, "Elasticsearch");
 		}
 
 		public UninstallServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 

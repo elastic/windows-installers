@@ -8,6 +8,7 @@ using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
 using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Properties;
 using Elastic.Installer.Domain.Service;
+using Elastic.Installer.Domain.Service.Elasticsearch;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Domain.Shared.Configuration;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
@@ -159,7 +160,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 		{
 			var javaConfig = JavaConfiguration.Default;
 			var esState = ElasticsearchEnvironmentStateProvider.Default;
-			var serviceState = ServiceStateProvider.FromSession(session);
+			var serviceState = ServiceStateProvider.FromSession(session, "Elasticsearch");
 			var pluginState = PluginStateProvider.Default;
 
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esState.ConfigDirectory);

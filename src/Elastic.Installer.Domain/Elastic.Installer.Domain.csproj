@@ -96,6 +96,10 @@
     <Compile Include="Kibana\Model\Tasks\EditKibanaYamlTask.cs" />
     <Compile Include="Kibana\Model\Tasks\KibanaInstallationTask.cs" />
     <Compile Include="Model\InstallationModelBase.cs" />
+    <Compile Include="Service\Service.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Service\ServiceConfiguration.cs" />
     <Compile Include="Shared\Configuration\EnvironmentBased\IWixStateProvider.cs" />
     <Compile Include="Elasticsearch\Configuration\EnvironmentBased\ElasticsearchEnvironmentStateProvider.cs" />
     <Compile Include="Shared\Configuration\EnvironmentBased\JavaEnvironmentStateProvider.cs" />
@@ -146,12 +150,12 @@
     <Compile Include="Process\ConsoleOut.cs" />
     <Compile Include="Process\IObservableProcess.cs" />
     <Compile Include="Process\RxProcessUtilities.cs" />
-    <Compile Include="Service\ElasticsearchServiceConfiguration.cs" />
-    <Compile Include="Service\ElasticsearchServiceInstaller.cs">
+    <Compile Include="Elasticsearch\Service\ElasticsearchServiceConfiguration.cs" />
+    <Compile Include="Service\ServiceInstallationManager.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Service\ElasticsearchServiceInstaller.Designer.cs">
-      <DependentUpon>ElasticsearchServiceInstaller.cs</DependentUpon>
+    <Compile Include="Service\ServiceInstallationManager.Designer.cs">
+      <DependentUpon>ServiceInstallationManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Shared\Configuration\EnvironmentBased\JavaConfiguration.cs" />
     <Compile Include="Elasticsearch\Model\Config\ConfigurationModel.cs" />
@@ -172,10 +176,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Service\ElasticsearchService.cs">
+    <Compile Include="Elasticsearch\Service\ElasticsearchService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Service\ElasticsearchService.Designer.cs">
+    <Compile Include="Elasticsearch\Service\ElasticsearchService.Designer.cs">
       <DependentUpon>ElasticsearchService.cs</DependentUpon>
     </Compile>
     <Compile Include="Elasticsearch\Model\Config\ConfigurationModelValidator.cs" />

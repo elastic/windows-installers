@@ -4,6 +4,7 @@ using System.ServiceProcess;
 using System.Threading;
 using Elastic.Installer.Domain.Service;
 using Elastic.Installer.Domain.Session;
+using Elastic.Installer.Domain.Service.Elasticsearch;
 
 namespace Elastic.Installer.Domain.Shared.Configuration
 {
@@ -12,51 +13,52 @@ namespace Elastic.Installer.Domain.Shared.Configuration
 		bool SeesService { get; }
 		bool Running { get; }
 
-		void RunTimeInstall(ElasticsearchServiceConfiguration config);
+		void RunTimeInstall(ServiceConfiguration config);
 		void StartAndWaitForRunning(TimeSpan timeToWait, int totalTicks);
-		void RunTimeUninstall(ElasticsearchServiceConfiguration elasticsearchServiceConfiguration);
+		void RunTimeUninstall(ServiceConfiguration config);
 		void StopIfRunning(TimeSpan timeToWait);
 	}
 
 	public class ServiceStateProvider : IServiceStateProvider
 	{
-		public static ServiceStateProvider FromSession(ISession session) => new ServiceStateProvider(session);
-		private static readonly string ServiceName = "Elasticsearch";
+		public static ServiceStateProvider FromSession(ISession session, string serviceName) => new ServiceStateProvider(session, serviceName);
 
 		private readonly ISession _session;
+		private readonly string _serviceName;
 
-		public ServiceStateProvider(ISession session)
+		public ServiceStateProvider(ISession session, string serviceName)
 		{
 			_session = session;
+			_serviceName = serviceName;
 		}
 
-		public bool SeesService => ServiceController.GetServices().Any(s => s.ServiceName.Equals(ServiceName));
+		public bool SeesService => ServiceController.GetServices().Any(s => s.ServiceName.Equals(_serviceName));
 
 		public bool Running
 		{
 			get
 			{
 				if (!SeesService) return false;
-				using (var service = new ServiceController(ServiceName))
+				using (var service = new ServiceController(_serviceName))
 					return service.Status == ServiceControllerStatus.Running;
 			}
 		}
 
-		public void RunTimeInstall(ElasticsearchServiceConfiguration config)
+		public void RunTimeInstall(ServiceConfiguration config)
 		{
-			if (this.SeesService) ElasticsearchServiceInstaller.RuntimeUninstall(config);
-			ElasticsearchServiceInstaller.RuntimeInstall(config);
+			if (this.SeesService) ServiceInstallationManager.RuntimeUninstall(config);
+			ServiceInstallationManager.RuntimeInstall(config);
 		}
 
-		public void RunTimeUninstall(ElasticsearchServiceConfiguration config)
+		public void RunTimeUninstall(ServiceConfiguration config)
 		{
-			ElasticsearchServiceInstaller.RuntimeUninstall(config);
+			ServiceInstallationManager.RuntimeUninstall(config);
 		}
 		
 		public void StopIfRunning(TimeSpan timeToWait)
 		{
 			if (!SeesService) return;
-			using (var service = new ServiceController(ServiceName))
+			using (var service = new ServiceController(_serviceName))
 			{
 				if (service.Status == ServiceControllerStatus.Running)
 				{
@@ -69,7 +71,7 @@ namespace Elastic.Installer.Domain.Shared.Configuration
 		public void StartAndWaitForRunning(TimeSpan timeToWait, int totalTicks)
 		{
 			if (!SeesService) return;
-			using (var service = new ServiceController(ServiceName))
+			using (var service = new ServiceController(_serviceName))
 			{
 				service.Start();
 				service.Refresh();
@@ -101,13 +103,13 @@ namespace Elastic.Installer.Domain.Shared.Configuration
 		public bool SeesService { get; set; }
 		public bool Running { get; set; }
 
-		public ElasticsearchServiceConfiguration SeenServiceConfig { get; private set; }
+		public ServiceConfiguration SeenServiceConfig { get; private set; }
 
-		public void RunTimeInstall(ElasticsearchServiceConfiguration config)
+		public void RunTimeInstall(ServiceConfiguration config)
 		{
 			this.SeenServiceConfig = config;
 		}
-		public void RunTimeUninstall(ElasticsearchServiceConfiguration config)
+		public void RunTimeUninstall(ServiceConfiguration config)
 		{
 			this.SeenServiceConfig = config;
 		}

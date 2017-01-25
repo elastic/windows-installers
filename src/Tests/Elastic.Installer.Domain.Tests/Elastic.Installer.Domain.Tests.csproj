@@ -105,6 +105,7 @@
     <Compile Include="Elasticsearch\Models\Tasks\CreateDirectoriesTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\SetEnvironmentVariablesTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\RemoveEnvironmentVariablesTaskTests.cs" />
+    <Compile Include="Kibana\Configuration\KibanaYamlFileTests.cs" />
     <Compile Include="Model\ModelArgumentParserTests.cs" />
     <Compile Include="Elasticsearch\Models\Notice\NoticeModelTests.cs" />
     <Compile Include="Elasticsearch\Models\InstallationModelTests.cs" />

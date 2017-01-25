@@ -129,7 +129,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			params string[] args
 			)
 		{
-			var serviceState = ServiceStateProvider.FromSession(session);
+			var serviceState = ServiceStateProvider.FromSession(session, "Kibana");
 			var pluginState = PluginStateProvider.Default;
 			return new KibanaInstallationModel(wixState, serviceState, pluginState, session, args);
 		}

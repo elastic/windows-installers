@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 
 		public StartServiceTask(string[] args, ISession session) : base(args, session)
 		{
-			this.ServiceStateProvider = new ServiceStateProvider(session);
+			this.ServiceStateProvider = new ServiceStateProvider(session, "Elasticsearch");
 		}
 
 		public StartServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 

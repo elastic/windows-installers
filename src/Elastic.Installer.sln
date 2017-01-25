@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elastic.Installer.Integrati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.DevHost", "Elastic.Installer.Kibana.DevHost\Elastic.Installer.Kibana.DevHost.csproj", "{1C9B64D3-69D2-43DE-9F54-DAC51B483A08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.Process", "Elastic.Installer.Kibana.Process\Elastic.Installer.Kibana.Process.csproj", "{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,14 @@ Global
 		{1C9B64D3-69D2-43DE-9F54-DAC51B483A08}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C9B64D3-69D2-43DE-9F54-DAC51B483A08}.Release|x64.ActiveCfg = Release|Any CPU
 		{1C9B64D3-69D2-43DE-9F54-DAC51B483A08}.Release|x64.Build.0 = Release|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Debug|x64.Build.0 = Debug|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Release|x64.ActiveCfg = Release|Any CPU
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,5 +133,6 @@ Global
 		{65F60048-AE6E-43A1-BCFA-0341F7D2C9F4} = {C22C77B8-CF73-4DAF-8594-B5BDB4F16CDB}
 		{E974DBD8-906A-4A20-AC9E-A1B09F725197} = {E1497696-F84E-4D13-B359-649BDE5B4212}
 		{1C9B64D3-69D2-43DE-9F54-DAC51B483A08} = {5A6F0AC8-6243-41C1-8CA9-AA58E6C7E725}
+		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4} = {5A6F0AC8-6243-41C1-8CA9-AA58E6C7E725}
 	EndGlobalSection
 EndGlobal
