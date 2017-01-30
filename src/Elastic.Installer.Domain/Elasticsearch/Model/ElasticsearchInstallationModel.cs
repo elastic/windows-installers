@@ -211,8 +211,8 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 				Description = "You know, for Search.",
 				StartMode = automaticStart ? ServiceStartMode.Automatic : ServiceStartMode.Manual,
 				EventLogSource = "Elasticsearch",
-				ElasticsearchHomeDirectory = this.LocationsModel.InstallDir,
-				ElasticsearchConfigDirectory = this.LocationsModel.ConfigDirectory,
+				HomeDirectory = this.LocationsModel.InstallDir,
+				ConfigDirectory = this.LocationsModel.ConfigDirectory,
 				ExeLocation = Path.Combine(this.LocationsModel.InstallDir, "bin", "elasticsearch.exe")
 			};
 			var username = service.User;

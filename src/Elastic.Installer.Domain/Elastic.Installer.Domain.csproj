@@ -95,6 +95,14 @@
     <Compile Include="Kibana\Model\Tasks\CreateDirectoriesTask.cs" />
     <Compile Include="Kibana\Model\Tasks\EditKibanaYamlTask.cs" />
     <Compile Include="Kibana\Model\Tasks\KibanaInstallationTask.cs" />
+    <Compile Include="Kibana\Process\KibanaProcess.cs" />
+    <Compile Include="Kibana\Service\KibanaService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Kibana\Service\KibanaService.Designer.cs">
+      <DependentUpon>KibanaService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kibana\Service\KibanaServiceConfiguration.cs" />
     <Compile Include="Model\InstallationModelBase.cs" />
     <Compile Include="Service\Service.cs">
       <SubType>Component</SubType>
@@ -167,7 +175,7 @@
     <Compile Include="Elasticsearch\Model\ElasticsearchInstallationModel.cs" />
     <Compile Include="Elasticsearch\Model\Notice\NoticeModel.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchMessage.cs" />
-    <Compile Include="Elasticsearch\Process\ElasticsearchNode.cs" />
+    <Compile Include="Elasticsearch\Process\ElasticsearchProcess.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchNodeInfo.cs" />
     <Compile Include="Process\ObservableProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

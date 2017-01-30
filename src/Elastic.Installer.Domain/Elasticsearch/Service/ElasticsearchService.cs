@@ -13,12 +13,12 @@ namespace Elastic.Installer.Domain.Service.Elasticsearch
 {
 	public partial class ElasticsearchService : Service
 	{
-		private ElasticsearchNode _node;
+		private ElasticsearchProcess _node;
 
 		public ElasticsearchService(IEnumerable<string> args)
 		{
 			InitializeComponent();
-			this._node = new ElasticsearchNode(args);
+			this._node = new ElasticsearchProcess(args);
 		}
 
 		public override string Name => "Elasticsearch";

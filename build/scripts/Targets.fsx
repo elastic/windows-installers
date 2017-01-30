@@ -47,9 +47,14 @@ tracefn "Starting build for version %s" version
 let msiDir = "./src/Elastic.Installer.Msi/"
 let msiBuildDir = msiDir @@ "bin/Release/"
 
+// TODO move these directory properties to Product
 let esBinDir = inDir @@ "elasticsearch-" + version @@ "/bin/"
 let esServiceDir = "./src/Elasticsearch/Elastic.Installer.Elasticsearch.Process/"
 let esServiceBuildDir = esServiceDir @@ "bin/AnyCPU/Release/"
+
+let kibanaBinDir = inDir @@ "kibana-" + version @@ "/bin/";
+let kibanaServiceDir = "./src/Elasticsearch/Elastic.Installer.Kibana.Process/"
+let kibanaServiceBuildDir = kibanaServiceDir @@ "bin/AnyCPU/Release/"
 
 let integrationTestsDir = FullName "./src/Tests/Elastic.Installer.Integration.Tests"
 let unitTestsDir = "src/Tests/Elastic.Installer.Domain.Tests"
@@ -88,10 +93,14 @@ Target "UnitTest" (fun () ->
         |> xUnit2 (fun p -> { p with HtmlOutputPath = Some (resultsDir @@ "xunit.html") })
 )
 
+let prune keep directory =
+  for file in System.IO.Directory.EnumerateFiles(directory) do
+        if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file)
+        
 Target "PruneFiles" (fun () ->
-  let keep = ["elasticsearch-plugin.bat"] |> Seq.map (fun n -> esBinDir @@ n)
-  for file in System.IO.Directory.EnumerateFiles(esBinDir) do
-        if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file))
+    prune ["elasticsearch-plugin.bat"] esBinDir
+    prune ["kibana-plugin.bat"] kibanaBinDir
+)
 
 let signFile file (product : Product) =
     let getBuildParamOrEnvVariable param variable (valueFromFile:string -> string)  =
@@ -149,15 +158,14 @@ let signFile file (product : Product) =
     let exitCode = sign()
     if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" description exitCode
 
-// TODO need to make this more generic to handle other services eventually
-let buildService (product : Product) sign =
+let buildService (product : Product) sign serviceBuildDir serviceBinDir =
     !! (esServiceDir @@ "*.csproj")
     |> MSBuildRelease esServiceBuildDir "Build"
     |> Log "ServiceBuild-Output: "
-
-    let elasticsearchService = esBinDir @@ "elasticsearch.exe"
-    CopyFile elasticsearchService (esServiceBuildDir @@ "Elastic.Installer.Elasticsearch.Process.exe")
-    if sign then signFile elasticsearchService product |> ignore
+    let serviceAssembly = serviceBuildDir @@ (sprintf "Elastic.Installer.%s.Process.exe" product.Name)
+    let service = serviceBinDir @@ (sprintf "%s.exe" product.Name)
+    CopyFile service serviceAssembly
+    if sign then signFile service product |> ignore
 
 let buildMsi (product : Product) sign =
     !! (msiDir @@ "*.csproj")
@@ -181,8 +189,8 @@ let buildMsi (product : Product) sign =
     if sign then signFile finalMsi product |> ignore
 
 Target "BuildServices" (fun () ->
-    buildService Product.Elasticsearch false
-    //buildService Product.Kibana false
+    buildService Product.Elasticsearch false esServiceBuildDir esBinDir
+    buildService Product.Kibana false kibanaServiceBuildDir kibanaBinDir
 )
 
 Target "BuildInstallers" (fun () ->
@@ -191,8 +199,8 @@ Target "BuildInstallers" (fun () ->
 )
 
 Target "Sign" (fun () ->
-    buildService Product.Elasticsearch true
-    //buildService Product.Kibana true
+    buildService Product.Elasticsearch true esServiceBuildDir esBinDir
+    buildService Product.Kibana true kibanaServiceBuildDir kibanaBinDir
     buildMsi Product.Elasticsearch true
     buildMsi Product.Kibana true
 )
