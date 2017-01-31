@@ -53,7 +53,7 @@ let esServiceDir = "./src/Elasticsearch/Elastic.Installer.Elasticsearch.Process/
 let esServiceBuildDir = esServiceDir @@ "bin/AnyCPU/Release/"
 
 let kibanaBinDir = inDir @@ "kibana-" + version @@ "/bin/";
-let kibanaServiceDir = "./src/Elasticsearch/Elastic.Installer.Kibana.Process/"
+let kibanaServiceDir = "./src/Kibana/Elastic.Installer.Kibana.Process/"
 let kibanaServiceBuildDir = kibanaServiceDir @@ "bin/AnyCPU/Release/"
 
 let integrationTestsDir = FullName "./src/Tests/Elastic.Installer.Integration.Tests"
@@ -93,7 +93,8 @@ Target "UnitTest" (fun () ->
         |> xUnit2 (fun p -> { p with HtmlOutputPath = Some (resultsDir @@ "xunit.html") })
 )
 
-let prune keep directory =
+let prune files directory =
+  let keep = files |> Seq.map (fun n -> directory @@ n)
   for file in System.IO.Directory.EnumerateFiles(directory) do
         if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file)
         
@@ -158,9 +159,9 @@ let signFile file (product : Product) =
     let exitCode = sign()
     if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" description exitCode
 
-let buildService (product : Product) sign serviceBuildDir serviceBinDir =
-    !! (esServiceDir @@ "*.csproj")
-    |> MSBuildRelease esServiceBuildDir "Build"
+let buildService (product : Product) sign serviceDir serviceBuildDir serviceBinDir =
+    !! (serviceDir @@ "*.csproj")
+    |> MSBuildRelease serviceBuildDir "Build"
     |> Log "ServiceBuild-Output: "
     let serviceAssembly = serviceBuildDir @@ (sprintf "Elastic.Installer.%s.Process.exe" product.Name)
     let service = serviceBinDir @@ (sprintf "%s.exe" product.Name)
@@ -189,8 +190,8 @@ let buildMsi (product : Product) sign =
     if sign then signFile finalMsi product |> ignore
 
 Target "BuildServices" (fun () ->
-    buildService Product.Elasticsearch false esServiceBuildDir esBinDir
-    buildService Product.Kibana false kibanaServiceBuildDir kibanaBinDir
+    buildService Product.Elasticsearch false esServiceDir esServiceBuildDir esBinDir
+    buildService Product.Kibana false kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
 )
 
 Target "BuildInstallers" (fun () ->
@@ -199,8 +200,8 @@ Target "BuildInstallers" (fun () ->
 )
 
 Target "Sign" (fun () ->
-    buildService Product.Elasticsearch true esServiceBuildDir esBinDir
-    buildService Product.Kibana true kibanaServiceBuildDir kibanaBinDir
+    buildService Product.Elasticsearch true esServiceDir esServiceBuildDir esBinDir
+    buildService Product.Kibana true kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
     buildMsi Product.Elasticsearch true
     buildMsi Product.Kibana true
 )

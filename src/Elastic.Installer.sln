@@ -33,9 +33,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Msi", "El
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elastic.Installer.Integration.Tests", "Tests\Elastic.Installer.Integration.Tests\Elastic.Installer.Integration.Tests.csproj", "{E974DBD8-906A-4A20-AC9E-A1B09F725197}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.DevHost", "Elastic.Installer.Kibana.DevHost\Elastic.Installer.Kibana.DevHost.csproj", "{1C9B64D3-69D2-43DE-9F54-DAC51B483A08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.DevHost", "Kibana\Elastic.Installer.Kibana.DevHost\Elastic.Installer.Kibana.DevHost.csproj", "{1C9B64D3-69D2-43DE-9F54-DAC51B483A08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.Process", "Elastic.Installer.Kibana.Process\Elastic.Installer.Kibana.Process.csproj", "{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.Process", "Kibana\Elastic.Installer.Kibana.Process\Elastic.Installer.Kibana.Process.csproj", "{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
