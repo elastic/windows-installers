@@ -65,9 +65,22 @@
     <Compile Include="Elasticsearch\CustomActions\Uninstall\UninstallServiceAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\ValidateArgumentsAction.cs" />
     <Compile Include="Elasticsearch\Elasticsearch.cs" />
+    <Compile Include="Kibana\CustomActions\Install\InstallStopServiceAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\InstallEnvironmentAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\InstallStartServiceAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\InstallServiceAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\InstallPluginsAction.cs" />
     <Compile Include="Kibana\CustomActions\Install\InstallConfigurationAction.cs" />
     <Compile Include="Kibana\CustomActions\Install\InstallDirectoriesAction.cs" />
     <Compile Include="Kibana\CustomActions\KibanaCustomActionOrder.cs" />
+    <Compile Include="Kibana\CustomActions\Rollback\RollbackDirectoriesAction.cs" />
+    <Compile Include="Kibana\CustomActions\Rollback\RollbackEnvironmentAction.cs" />
+    <Compile Include="Kibana\CustomActions\Rollback\RollbackServiceAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\UninstallDirectoriesAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\UninstallEnvironmentAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\UninstallPluginsAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\UninstallServiceAction.cs" />
+    <Compile Include="Kibana\CustomActions\ValidateArgumentsAction.cs" />
     <Compile Include="Kibana\Kibana.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
@@ -95,6 +108,7 @@
       <Name>Elastic.Installer.UI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

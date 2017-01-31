@@ -1,0 +1,25 @@
+﻿using Elastic.Installer.Domain.Kibana.Model;
+using Elastic.Installer.Domain.Kibana.Model.Tasks;
+using Elastic.Installer.Domain.Session;
+using Elastic.Installer.Msi.CustomActions;
+using Microsoft.Deployment.WindowsInstaller;
+using WixSharp;
+
+namespace Elastic.Installer.Msi.Kibana.CustomActions.Uninstall
+{
+	public class KibanaUninstallServiceAction : UninstallCustomAction<Kibana>
+	{
+		public override string Name => nameof(KibanaUninstallServiceAction);
+		public override int Order => (int)KibanaCustomActionOrder.UninstallService;
+		public override Step Step => Step.RemoveFiles;
+		public override When When => When.Before;
+
+		public override Condition Condition => new Condition("(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=\"ALL\")");
+
+
+		[CustomAction("KibanaUninstallService")]
+		public static ActionResult KibanaUninstallService(Session session) =>
+			session.Handle(() => new UninstallServiceTask(session.ToSetupArguments(KibanaArgumentParser.AllArguments), session.ToISession()).Execute());
+
+	}
+}

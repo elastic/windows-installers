@@ -18,7 +18,7 @@ namespace Elastic.Installer.Msi.Kibana.CustomActions.Install
 		public override Step Step => Step.InstallFiles;
 		public override Execute Execute => Execute.deferred;
 
-		[CustomAction]
+		[CustomAction("KibanaInstallDirectories")]
 		public static ActionResult KibanaInstallDirectories(Session session) =>
 			session.Handle(() => new CreateDirectoriesTask(session.ToSetupArguments(KibanaArgumentParser.AllArguments), session.ToISession()).Execute());
 	}

@@ -24,7 +24,7 @@ namespace Elastic.Installer.Msi.Kibana.CustomActions.Install
 		public override Execute Execute => Execute.deferred;
 
 		[CustomAction("KibanaInstallConfiguration")]
-		public static ActionResult InstallConfiguration(Session session) =>
+		public static ActionResult KibanaInstallConfiguration(Session session) =>
 			session.Handle(() => new EditKibanaYamlTask(session.ToSetupArguments(KibanaArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }

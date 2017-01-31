@@ -18,12 +18,19 @@ using Elastic.Installer.Domain.Kibana.Model.Configuration;
 using Elastic.Installer.Domain.Kibana.Model.Connecting;
 using Elastic.Installer.Domain.Kibana.Model.Plugins;
 using Elastic.Installer.Domain.Kibana.Model.Notice;
+using Elastic.Installer.Domain.Kibana.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Service.Kibana;
+using System.ServiceProcess;
+using System.IO;
 
 namespace Elastic.Installer.Domain.Kibana.Model
 {
 	public class KibanaInstallationModel
 		: InstallationModelBase<KibanaInstallationModel, KibanaInstallationModelValidator>
 	{
+
+		public IKibanaEnvironmentStateProvider KibanaEnvironmentState { get; }
+
 		public NoticeModel NoticeModel { get; }
 		public LocationsModel LocationsModel { get; }
 		public ServiceModel ServiceModel { get; }
@@ -51,6 +58,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			IWixStateProvider wixStateProvider,
 			IServiceStateProvider serviceStateProvider,
 			IPluginStateProvider pluginStateProvider,
+			IKibanaEnvironmentStateProvider environmentStateProvider,
 			ISession session,
 			string[] args
 			) : base(wixStateProvider, session, args)
@@ -131,13 +139,45 @@ namespace Elastic.Installer.Domain.Kibana.Model
 		{
 			var serviceState = ServiceStateProvider.FromSession(session, "Kibana");
 			var pluginState = PluginStateProvider.Default;
-			return new KibanaInstallationModel(wixState, serviceState, pluginState, session, args);
+			var envState = KibanaEnvironmentStateProvider.Default;
+			return new KibanaInstallationModel(wixState, serviceState, pluginState, envState, session, args);
 		}
 
 		public override void Refresh()
 		{
 			foreach (var step in this.Steps) step.Refresh();
 			this.MsiLogFileLocation = this.Session.Get<string>("MsiLogFileLocation");
+		}
+
+		public KibanaServiceConfiguration GetServiceConfiguration()
+		{
+			var service = this.ServiceModel;
+			var automaticStart = service.StartWhenWindowsStarts;
+			var configuration = new KibanaServiceConfiguration
+			{
+				Name = "Kibana",
+				DisplayName = "Kibana",
+				Description = "You know, for Search.",
+				StartMode = automaticStart ? ServiceStartMode.Automatic : ServiceStartMode.Manual,
+				EventLogSource = "Kibana",
+				HomeDirectory = this.LocationsModel.InstallDir,
+				ConfigDirectory = this.LocationsModel.ConfigDirectory,
+				ExeLocation = Path.Combine(this.LocationsModel.InstallDir, "bin", "kibana.exe")
+			};
+			var username = service.User;
+
+			var password = service.Password;
+			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+			{
+				configuration.ServiceAccount = ServiceAccount.User;
+				configuration.UserName = username;
+				configuration.Password = password;
+			}
+			else if (service.UseNetworkService)
+				configuration.ServiceAccount = ServiceAccount.NetworkService;
+			else
+				configuration.ServiceAccount = ServiceAccount.LocalSystem;
+			return configuration;
 		}
 	}
 }

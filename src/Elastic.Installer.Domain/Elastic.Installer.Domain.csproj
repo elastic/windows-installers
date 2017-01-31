@@ -76,6 +76,8 @@
     <Compile Include="ArgumentAttribute.cs" />
     <Compile Include="Elasticsearch\Model\Plugins\PluginsModel.cs" />
     <Compile Include="Elasticsearch\Model\Plugins\PluginsModelValidator.cs" />
+    <Compile Include="Elasticsearch\Model\Tasks\ValidateArgumentsTask.cs" />
+    <Compile Include="Kibana\Configuration\EnvironmentBased\ElasticsearchEnvironmentStateProvider.cs" />
     <Compile Include="Kibana\Configuration\FileBased\KibanaYamlConfiguration.cs" />
     <Compile Include="Kibana\Configuration\FileBased\KibanaYamlSettings.cs" />
     <Compile Include="Kibana\Model\Closing\ClosingModel.cs" />
@@ -93,8 +95,18 @@
     <Compile Include="Kibana\Model\Plugins\PluginsModel.cs" />
     <Compile Include="Kibana\Model\Plugins\PluginsModelValidator.cs" />
     <Compile Include="Kibana\Model\Tasks\CreateDirectoriesTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\DeleteDirectoriesTask.cs" />
     <Compile Include="Kibana\Model\Tasks\EditKibanaYamlTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\InstallPluginsTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\InstallServiceTask.cs" />
     <Compile Include="Kibana\Model\Tasks\KibanaInstallationTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\RemoveEnvironmentVariablesTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\RemovePluginsTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\SetEnvironmentVariablesTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\StartServiceTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\StopServiceTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\UninstallServiceTask.cs" />
+    <Compile Include="Kibana\Model\Tasks\ValidateArgumentsTask.cs" />
     <Compile Include="Kibana\Process\KibanaProcess.cs" />
     <Compile Include="Kibana\Service\KibanaService.cs">
       <SubType>Component</SubType>
@@ -139,7 +151,6 @@
     <Compile Include="Elasticsearch\Model\Tasks\InstallServiceTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\RemoveEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Model\Tasks\UninstallServiceTask.cs" />
-    <Compile Include="Elasticsearch\Model\Tasks\ValidateArgumentsTask.cs" />
     <Compile Include="Kibana\Model\KibanaInstallationModel.cs" />
     <Compile Include="Model\StepBase.cs" />
     <Compile Include="Model\ModelArgument.cs" />
