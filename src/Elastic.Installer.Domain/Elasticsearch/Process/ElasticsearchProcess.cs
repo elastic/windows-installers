@@ -12,36 +12,26 @@ using Microsoft.SqlServer.Server;
 
 namespace Elastic.Installer.Domain.Process
 {
-	public class ElasticsearchProcess : IDisposable
+	public class ElasticsearchProcess : ProcessBase
 	{
-		private ObservableProcess _process;
-		private IDisposable _processListener;
 		private readonly string[] _libs;
-
-		public string JavaExe { get; }
-		public string ElasticsearchJar { get; }
-		public string HomeDirectory { get; private set; }
-		public string ConfigDirectory { get; private set; }
-		public string LibDirectory { get; }
-		public string JavaOptions { get; }
-		public bool Started { get; private set; }
+		public string ElasticsearchJar { get; private set; }
+		public string LibDirectory { get; private set; }
+		
+		public string JavaOptions { get; private set; }
 		public int Port { get; private set; }
-		public IEnumerable<string> AdditionalArguments { get; }
 		public bool NoColor { get; private set; }
-		private readonly Subject<ManualResetEvent> _blockingSubject = new Subject<ManualResetEvent>();
 
 		public ElasticsearchProcess() : this(null) { }
 
-		public ElasticsearchProcess(IEnumerable<string> args)
+		public ElasticsearchProcess(IEnumerable<string> args) : base(args)
 		{
-			this.AdditionalArguments = ParseArgs(args);
-
-			this.HomeDirectory = (this.HomeDirectory 
-				?? Environment.GetEnvironmentVariable("ES_HOME", EnvironmentVariableTarget.Machine) 
+			this.HomeDirectory = (this.HomeDirectory
+				?? Environment.GetEnvironmentVariable("ES_HOME", EnvironmentVariableTarget.Machine)
 				?? Directory.GetParent(".").FullName).TrimEnd('\\');
 
-			this.ConfigDirectory = (this.ConfigDirectory 
-				?? Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.Machine) 
+			this.ConfigDirectory = (this.ConfigDirectory
+				?? Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.Machine)
 				?? Path.Combine(this.HomeDirectory, "config")).TrimEnd('\\');
 
 			this.LibDirectory = Path.Combine(this.HomeDirectory, "lib");
@@ -55,13 +45,14 @@ namespace Elastic.Installer.Domain.Process
 			var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Machine);
 			if (javaHome == null)
 				throw new Exception("JAVA_HOME is not set!");
-			this.JavaExe = Path.Combine(javaHome, @"bin\java.exe");
 
-			if (!File.Exists(this.JavaExe))
+			this.ProcessExe = Path.Combine(javaHome, @"bin\java.exe");
+
+			if (!File.Exists(this.ProcessExe))
 				throw new Exception("JAVA_HOME set but bin\\java.exe is not found using it as the root");
 		}
 
-		public void Start()
+		protected override List<string> GetArguments()
 		{
 			this.Stop();
 
@@ -78,54 +69,13 @@ namespace Elastic.Installer.Domain.Process
 				.Concat(this.AdditionalArguments)
 				.ToList();
 
-			this._process = new ObservableProcess(this.JavaExe, arguments.ToArray());
-
-			//Create a hot observer on process that does not disposbe itself (Stop() method does this)
-			var observable = Observable.Create<ConsoleOut>(observer =>
-				{
-					this._disposables.Add(this._process.Start().Subscribe(observer));
-					return Disposable.Empty;
-				}) 
-				.Publish(); //promote to connectable observable
-
-			//subscribe underlying observable stream
-			this._disposables.Add(observable.Connect());
-
-			if (Environment.UserInteractive)
-			{
-				//subscribe to all messages and write them to console
-				this._disposables.Add(observable.Subscribe(c =>
-				{
-					if (c.Error) ElasticsearchConsole.WriteLine(ConsoleColor.Red, c.Data);
-					else ElasticsearchConsole.WriteLine(c.Data);
-				}));
-			}
-
-			//subscribe as long we are not in started state and attempt to read console out for this confirmation
-			var handle = new ManualResetEvent(false);
-			this._disposables.Add(observable
-				.TakeWhile(c => !this.Started)
-				.Select(consoleLine => new ElasticsearchMessage(this.Started, consoleLine.Data))
-				.Subscribe(onNext: s => HandleConsoleMessage(s, handle))
-			);
-
-			var timeout = TimeSpan.FromSeconds(120);
-			if (!handle.WaitOne(TimeSpan.FromSeconds(120), true))
-			{
-				this.Stop();
-				throw new Exception($"Could not start Elasticsearch within ({timeout}): {this.JavaExe} {string.Join(" ", arguments)}");
-			}
+			return arguments;
 		}
 
-		private void HandleConsoleMessage(ElasticsearchMessage s, ManualResetEvent handle)
+		protected override void HandleMessage(ConsoleOut message)
 		{
-		
+			var s = new ElasticsearchMessage(this.Started, message.Data);
 			if (this.Started || string.IsNullOrWhiteSpace(s.Message)) return;
-			//if (s.Error && !this.Started)
-			//{
-			//	this.Fatal(handle, new Exception(consoleOut.Data));
-			//	return;
-			//}
 
 			string version; int? pid; int port;
 			if (s.TryParseNodeInfo(out version, out pid))
@@ -135,27 +85,13 @@ namespace Elastic.Installer.Domain.Process
 				this.Port = port;
 			else if (s.TryGetStartedConfirmation())
 			{
-				this._blockingSubject.OnNext(handle);
+				this.BlockingSubject.OnNext(this.StartedHandle);
 				this.Started = true;
-				handle.Set();
+				this.StartedHandle.Set();
 			}
 		}
 
-		private CompositeDisposable _disposables = new CompositeDisposable();
-		public void Stop()
-		{
-			this._process?.Dispose();
-			this._processListener?.Dispose();
-			this._disposables?.Dispose();
-			this._disposables = new CompositeDisposable();
-		}
-
-		public void Dispose()
-		{
-			this.Stop();
-		}
-
-		private List<string> ParseArgs(IEnumerable<string> args)
+		protected override List<string> ParseArguments(IEnumerable<string> args)
 		{
 			var newArgs = new List<string>();
 			if (args == null)
@@ -190,5 +126,9 @@ namespace Elastic.Installer.Domain.Process
 				return null;
 			return kv[1];
 		}
+
+		protected override void WriteError(string message) => ElasticsearchConsole.WriteLine(ConsoleColor.Red, message);
+
+		protected override void WriteSuccess(string message) => ElasticsearchConsole.WriteLine(message);
 	}
 }
