@@ -599,11 +599,11 @@
     <Property Id="CLUSTERNAME" Value="elasticsearch" />
     <Property Id="MASTERNODE" Value="true" />
     <Property Id="DATANODE" Value="true" />
-    <Property Id="INGESTNODE" Value="true" />
+    <Property Id="INGESTNODE" Value="false" />
     <Property Id="LOCKMEMORY" Value="true" />
     <Property Id="HTTPPORT" Value="9200" />
     <Property Id="TRANSPORTPORT" Value="9300" />
-    <Property Id="PLUGINS" Value="x-pack, ingest-attachment, ingest-geoip" />
+    <Property Id="PLUGINS" Value="x-pack" />
     <Property Id="ARPHELPLINK" Value="https://discuss.elastic.co/c/elasticsearch" />
     <Property Id="ARPPRODUCTICON" Value="app_icon.ico" />
     <Property Id="ARPURLINFOABOUT" Value="https://www.elastic.co/products/elasticsearch" />
