@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.De
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Kibana.Process", "Kibana\Elastic.Installer.Kibana.Process\Elastic.Installer.Kibana.Process.csproj", "{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Msi.Tests", "Tests\Elastic.Installer.Msi.Tests\Elastic.Installer.Msi.Tests.csproj", "{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -164,6 +166,18 @@ Global
 		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Release|x64.Build.0 = Release|Any CPU
 		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Release|x86.ActiveCfg = Release|x86
 		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4}.Release|x86.Build.0 = Release|x86
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Debug|x64.Build.0 = Debug|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Debug|x86.Build.0 = Debug|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Release|x64.ActiveCfg = Release|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Release|x64.Build.0 = Release|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,5 +190,6 @@ Global
 		{E974DBD8-906A-4A20-AC9E-A1B09F725197} = {E1497696-F84E-4D13-B359-649BDE5B4212}
 		{1C9B64D3-69D2-43DE-9F54-DAC51B483A08} = {5A6F0AC8-6243-41C1-8CA9-AA58E6C7E725}
 		{FFB9DA32-12FA-4C9D-A5BD-06CDDAE74FD4} = {5A6F0AC8-6243-41C1-8CA9-AA58E6C7E725}
+		{C3C41DEC-48C2-40A1-9C7B-F46718F117A7} = {E1497696-F84E-4D13-B359-649BDE5B4212}
 	EndGlobalSection
 EndGlobal

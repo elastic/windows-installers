@@ -96,6 +96,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
     <Content Include="kibana.ico" />
   </ItemGroup>
   <ItemGroup>
