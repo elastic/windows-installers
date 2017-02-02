@@ -12,9 +12,9 @@ using Elastic.Installer.Domain.Kibana.Model;
 
 namespace Elastic.Installer.Msi.Kibana.CustomActions.Install
 {
-	public class KibanaStopServiceAction : CustomAction<Kibana>
+	public class KibanaInstallStopServiceAction : CustomAction<Kibana>
 	{
-		public override string Name => nameof(KibanaStopServiceAction);
+		public override string Name => nameof(KibanaInstallStopServiceAction);
 		public override int Order => (int)KibanaCustomActionOrder.InstallStopService;
 		public override Condition Condition => Condition.Always;
 		public override Return Return => Return.check;
@@ -23,8 +23,8 @@ namespace Elastic.Installer.Msi.Kibana.CustomActions.Install
 		public override Step Step => Step.InstallInitialize;
 		public override Execute Execute => Execute.deferred;
 
-		[CustomAction("KibanaStopService")]
-		public static ActionResult KibanaStopService(Session session) =>
+		[CustomAction("KibanaInstallStopService")]
+		public static ActionResult KibanaInstallStopService(Session session) =>
 			session.Handle(() => new StopServiceTask(session.ToSetupArguments(KibanaArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }

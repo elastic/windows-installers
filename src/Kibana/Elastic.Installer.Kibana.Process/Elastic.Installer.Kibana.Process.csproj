@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Elastic.Installer.Domain\Elastic.Installer.Domain.csproj">
@@ -117,4 +118,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\..\..\packages\Fody\build\Fody.targets" Condition="Exists('..\..\..\packages\Fody\build\Fody.targets')" Label="Paket" />
 </Project>
