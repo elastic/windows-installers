@@ -11,7 +11,17 @@ namespace Elastic.Installer.Domain.Kibana.Model.Plugins
 {
 	public class PluginsModel : PluginsModelBase<PluginsModel, PluginsModelValidator>
 	{
-		public PluginsModel(IPluginStateProvider pluginStateProvider) : base(pluginStateProvider) { }
+		private bool _alreadyInstalled;
+
+		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies) : base(pluginStateProvider)
+		{
+			pluginDependencies.Subscribe((t) =>
+			{
+				this._alreadyInstalled = t.Item1;
+				this.InstallDirectory = t.Item2;
+				this.ConfigDirectory = t.Item3;
+			});
+		}
 
 		protected override IEnumerable<Plugin> GetPlugins()
 		{
@@ -23,5 +33,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Plugins
 				Description = TextResources.PluginsModel_XPack,
 			};
 		}
+
+		protected override List<string> DefaultPlugins() => new List<string> { "x-pack" };
 	}
 }

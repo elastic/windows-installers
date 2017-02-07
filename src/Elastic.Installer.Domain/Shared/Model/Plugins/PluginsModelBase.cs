@@ -18,6 +18,10 @@ namespace Elastic.Installer.Domain.Shared.Model.Plugins
 		public IPluginStateProvider PluginStateProvider { get; }
 		private ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
 
+		protected bool AlreadyInstalled { get; set; }
+		protected string InstallDirectory { get; set; }
+		protected string ConfigDirectory { get; set; }
+
 		protected abstract IEnumerable<Plugin> GetPlugins();
 
 		public ReactiveList<Plugin> AvailablePlugins
@@ -50,6 +54,11 @@ namespace Elastic.Installer.Domain.Shared.Model.Plugins
 			this.AvailablePlugins.Clear();
 			var plugins = this.GetPlugins();
 			this.AvailablePlugins.AddRange(plugins);
+			var selectedPlugins = !this.AlreadyInstalled
+				? this.DefaultPlugins()
+				: this.PluginStateProvider.InstalledPlugins(this.InstallDirectory, this.ConfigDirectory).ToList();
+			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))
+				plugin.Selected = true;
 		}
 
 		public override string ToString()
@@ -60,5 +69,7 @@ namespace Elastic.Installer.Domain.Shared.Model.Plugins
 			sb.AppendLine($"- {nameof(Plugins)} = " + string.Join(", ", Plugins));
 			return sb.ToString();
 		}
+
+		protected virtual List<string> DefaultPlugins() => new List<string>();
 	}
 }

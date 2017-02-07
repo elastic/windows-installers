@@ -12,9 +12,6 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Plugins
 	public class PluginsModel : PluginsModelBase<PluginsModel, PluginsModelValidator>
 	{
 		private bool _includeSuggest;
-		private bool _alreadyInstalled;
-		private string _installDirectory;
-		private string _configDirectory;
 
 		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, bool, string, string>> pluginDependencies)
 			: base(pluginStateProvider)
@@ -22,9 +19,9 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Plugins
 			pluginDependencies.Subscribe((t) =>
 			{
 				this._includeSuggest = t.Item1;
-				this._alreadyInstalled = t.Item2;
-				this._installDirectory = t.Item3;
-				this._configDirectory = t.Item4;
+				this.AlreadyInstalled = t.Item2;
+				this.InstallDirectory = t.Item3;
+				this.ConfigDirectory = t.Item4;
 				this.Refresh();
 			});
 		}
@@ -186,24 +183,15 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Plugins
 				Description = TextResources.PluginsModel_StoreSmb
 			};
 		}
-
-		public override void Refresh()
+		protected override List<string> DefaultPlugins()
 		{
-			base.Refresh();
-			var selectedPlugins = new List<string>();
-			if (!this._alreadyInstalled)
+			var selectedPlugins = new List<string> { "x-pack" };
+			if (this._includeSuggest)
 			{
-				selectedPlugins.Add("x-pack");
-				if (this._includeSuggest)
-				{
-					selectedPlugins.Add("ingest-attachment");
-					selectedPlugins.Add("ingest-geoip");
-				}
+				selectedPlugins.Add("ingest-attachment");
+				selectedPlugins.Add("ingest-geoip");
 			}
-			else selectedPlugins = this.PluginStateProvider.InstalledPlugins(this._installDirectory, this._configDirectory).ToList();
-
-			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))
-				plugin.Selected = true;
+			return selectedPlugins;
 		}
 	}
 }
