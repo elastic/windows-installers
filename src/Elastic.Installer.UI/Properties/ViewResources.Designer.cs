@@ -126,6 +126,15 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Read &quot;The Definitive Guide&quot; for free online!.
         /// </summary>
+        public static string ClosingView_ReadDefinitiveGuide {
+            get {
+                return ResourceManager.GetString("ClosingView_ReadDefinitiveGuide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read the &quot;Getting Started&quot; guide.
+        /// </summary>
         public static string ClosingView_ReadGettingStarted {
             get {
                 return ResourceManager.GetString("ClosingView_ReadGettingStarted", resourceCulture);
@@ -205,7 +214,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Elasticsearch {0} successfully!.
+        ///   Looks up a localized string similar to {0} {1} successfully!.
         /// </summary>
         public static string ClosingView_TitleSuccess {
             get {
@@ -228,6 +237,33 @@ namespace Elastic.Installer.UI.Properties {
         public static string ConfigurationView_AddUnicastNode_Title {
             get {
                 return ResourceManager.GetString("ConfigurationView_AddUnicastNode_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow anonymous access.
+        /// </summary>
+        public static string ConfigurationView_AllowAnonymousAccessLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_AllowAnonymousAccessLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base Path.
+        /// </summary>
+        public static string ConfigurationView_BasePathLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_BasePathLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        public static string ConfigurationView_BrowseButton {
+            get {
+                return ResourceManager.GetString("ConfigurationView_BrowseButton", resourceCulture);
             }
         }
         
@@ -259,6 +295,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Route.
+        /// </summary>
+        public static string ConfigurationView_DefaultRouteLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_DefaultRouteLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discovery.
         /// </summary>
         public static string ConfigurationView_DiscoveryLabel {
@@ -273,9 +318,18 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string ConfigurationView_Help {
+        public static string ConfigurationView_Elasticsearch_Help {
             get {
-                return ResourceManager.GetString("ConfigurationView_Help", resourceCulture);
+                return ResourceManager.GetString("ConfigurationView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host.
+        /// </summary>
+        public static string ConfigurationView_HostNameLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_HostNameLabel", resourceCulture);
             }
         }
         
@@ -294,6 +348,22 @@ namespace Elastic.Installer.UI.Properties {
         public static string ConfigurationView_IngestNodeCheckBox {
             get {
                 return ResourceManager.GetString("ConfigurationView_IngestNodeCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
+        ///
+        ///
+        ///[b]Host[/b]: This setting specifies the host of the back end server.
+        ///
+        ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
+        ///
+        ///[b]Base Path[/b]: Enables you to specify a p [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string ConfigurationView_Kibana_Help {
+            get {
+                return ResourceManager.GetString("ConfigurationView_Kibana_Help", resourceCulture);
             }
         }
         
@@ -397,6 +467,60 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Routing.
+        /// </summary>
+        public static string ConfigurationView_RoutingLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_RoutingLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security.
+        /// </summary>
+        public static string ConfigurationView_SecurityLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_SecurityLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Certificate.
+        /// </summary>
+        public static string ConfigurationView_ServerCertLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_ServerCertLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Key.
+        /// </summary>
+        public static string ConfigurationView_ServerKeyLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_ServerKeyLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server.
+        /// </summary>
+        public static string ConfigurationView_ServerLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_ServerLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Name.
+        /// </summary>
+        public static string ConfigurationView_ServerNameLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_ServerNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max.
         /// </summary>
         public static string ConfigurationView_SliderLabel {
@@ -429,6 +553,121 @@ namespace Elastic.Installer.UI.Properties {
         public static string ConfigurationView_UnicastHostsLabel {
             get {
                 return ResourceManager.GetString("ConfigurationView_UnicastHostsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        public static string ConnectingView_BrowseButton {
+            get {
+                return ResourceManager.GetString("ConnectingView_BrowseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Certificates.
+        /// </summary>
+        public static string ConnectingView_CertificatesLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_CertificatesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Credentials.
+        /// </summary>
+        public static string ConnectingView_CredentialsLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_CredentialsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elasticsearch CA.
+        /// </summary>
+        public static string ConnectingView_ElasticsearchCALabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_ElasticsearchCALabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elasticsearch Cert.
+        /// </summary>
+        public static string ConnectingView_ElasticsearchCertLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_ElasticsearchCertLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elasticsearch Key.
+        /// </summary>
+        public static string ConnectingView_ElasticsearchKeyLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_ElasticsearchKeyLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elasticsearch.
+        /// </summary>
+        public static string ConnectingView_ElasticsearchLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_ElasticsearchLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index Name.
+        /// </summary>
+        public static string ConnectingView_IndexNameLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_IndexNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This step allows you to specify some settings for connecting to your Elasticsearch cluster.
+        ///
+        ///
+        ///[b]URL[/b]: The URL of the Elasticsearch instance to use for all your queries.
+        ///
+        ///[b]Index Name[/b]: Kibana uses an index in Elasticsearch to store saved searches, visualizations and dashboards. Kibana creates a new index if the index doesn’t already exist.
+        ///
+        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that t [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string ConnectingView_Kibana_Help {
+            get {
+                return ResourceManager.GetString("ConnectingView_Kibana_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string ConnectingView_PasswordLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_PasswordLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL.
+        /// </summary>
+        public static string ConnectingView_UrlLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_UrlLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string ConnectingView_UsernameLabel {
+            get {
+                return ResourceManager.GetString("ConnectingView_UsernameLabel", resourceCulture);
             }
         }
         
@@ -667,15 +906,6 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Place logs, data, and config in the same directory.
-        /// </summary>
-        public static string LocationsView_ElasticsearchCustomLocationsCheckBox {
-            get {
-                return ResourceManager.GetString("LocationsView_ElasticsearchCustomLocationsCheckBox", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Elasticsearch has several different folders that it needs to have read and/or write access to:
         ///
         ///[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are intalled to.
@@ -688,9 +918,18 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///It is best practice to keep your logs, config, and data directories separate from y [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string LocationsView_Help {
+        public static string LocationsView_Elasticsearch_Help {
             get {
-                return ResourceManager.GetString("LocationsView_Help", resourceCulture);
+                return ResourceManager.GetString("LocationsView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Place logs, data, and config in the same directory.
+        /// </summary>
+        public static string LocationsView_ElasticsearchCustomLocationsCheckBox {
+            get {
+                return ResourceManager.GetString("LocationsView_ElasticsearchCustomLocationsCheckBox", resourceCulture);
             }
         }
         
@@ -709,6 +948,20 @@ namespace Elastic.Installer.UI.Properties {
         public static string LocationsView_InstallDirectoryBrowseButton {
             get {
                 return ResourceManager.GetString("LocationsView_InstallDirectoryBrowseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kibana has several different folders that it needs to have read and/or write access to:
+        ///
+        ///[b]Home[/b]: The directory where the Kibana binaries, plugins, and scripts are intalled to.
+        ///
+        ///[b]Logs[/b]: The directory where Kibana will write its log files to.
+        ///.
+        /// </summary>
+        public static string LocationsView_Kibana_Help {
+            get {
+                return ResourceManager.GetString("LocationsView_Kibana_Help", resourceCulture);
             }
         }
         
@@ -740,9 +993,9 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Heya! Welcome the Elasticsearch Windows intaller.
+        ///   Looks up a localized string similar to Heya! Welcome the {0} Windows intaller.
         ///
-        ///This installer will walk you through various steps to help you conifigure and install Elasticsearch on your system.  To make things easier, we&apos;ve gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you&apos;ll definitely want to change..
+        ///This installer will walk you through various steps to help you conifigure and install {0} on your system.  To make things easier, we&apos;ve gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you&apos;ll definitely want to change..
         /// </summary>
         public static string MainWindow_Help {
             get {
@@ -946,9 +1199,18 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///We&apos;ve only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually..
         /// </summary>
-        public static string PluginsView_Help {
+        public static string PluginsView_Elasticsearch_Help {
             get {
-                return ResourceManager.GetString("PluginsView_Help", resourceCulture);
+                return ResourceManager.GetString("PluginsView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugins are a way to enhance the basic Kibana functionality in a custom manner.  We&apos;ve only listed the official Kibanas plugins here, but there are many more community plugins that can be installed manually..
+        /// </summary>
+        public static string PluginsView_Kibana_Help {
+            get {
+                return ResourceManager.GetString("PluginsView_Kibana_Help", resourceCulture);
             }
         }
         
@@ -1043,6 +1305,19 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to By default, Elasticsearch will be installed as a service.
+        ///
+        ///This step allows you to configure the Windows user to run the service with, as well as when the service should be started.
+        ///
+        ///Alternatively, you may choose to not install Elasticsearch as a service and run it manually as needed from the command line..
+        /// </summary>
+        public static string ServiceView_Elasticsearch_Help {
+            get {
+                return ResourceManager.GetString("ServiceView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Existing user.
         /// </summary>
         public static string ServiceView_ExistingUserRadioButton {
@@ -1052,24 +1327,24 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to By default, Elasticsearch will be installed as a service.
-        ///
-        ///This step allows you to configure the Windows user to run the service with, as well as when the service should be started.
-        ///
-        ///Alternatively, you may choose to not install Elasticsearch as a service and run it manually as needed from the command line..
-        /// </summary>
-        public static string ServiceView_Help {
-            get {
-                return ResourceManager.GetString("ServiceView_Help", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Install as a service.
         /// </summary>
         public static string ServiceView_InstallAsServiceRadioButton {
             get {
                 return ResourceManager.GetString("ServiceView_InstallAsServiceRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By default, Kibana will be installed as a service.
+        ///
+        ///This step allows you to configure the Windows user to run the service with, as well as when the service should be started.
+        ///
+        ///Alternatively, you may choose to not install Kibana as a service and run it manually as needed from the command line..
+        /// </summary>
+        public static string ServiceView_Kibana_Help {
+            get {
+                return ResourceManager.GetString("ServiceView_Kibana_Help", resourceCulture);
             }
         }
         

@@ -66,7 +66,7 @@
         <Button Grid.Row="2" Grid.Column="0" x:Name="OpenGettingStarted"  Style="{DynamicResource Link}" 
              FontWeight="Bold" 
              Margin="6, 12, 0,0"
-             Content="{x:Static resx:ViewResources.ClosingView_ReadGettingStarted}"
+             Content="{x:Static resx:ViewResources.ClosingView_ReadDefinitiveGuide}"
              HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <Button Grid.Row="3" Grid.Column="0" x:Name="OpenReference"  Style="{DynamicResource Link}" 

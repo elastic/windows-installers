@@ -123,15 +123,15 @@ namespace Elastic.Installer.UI.Elasticsearch
 			new Dictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>>
 		{
 			{ typeof(NoticeModel),
-					(m, s) =>  Step(s, new NoticeView { ViewModel = m as NoticeModel }, ViewResources.MainWindow_Help) },
+					(m, s) =>  Step(s, new NoticeView { ViewModel = m as NoticeModel }, string.Format(ViewResources.MainWindow_Help, "Elasticsearch")) },
 			{ typeof(LocationsModel),
-					(m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, ViewResources.LocationsView_Help)  },
+					(m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, ViewResources.LocationsView_Elasticsearch_Help)  },
 			{ typeof(ServiceModel),
-					(m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, ViewResources.ServiceView_Help) },
+					(m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, ViewResources.ServiceView_Elasticsearch_Help) },
 			{ typeof(ConfigurationModel),
-					(m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, ViewResources.ConfigurationView_Help) },
+					(m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, ViewResources.ConfigurationView_Elasticsearch_Help) },
 			{ typeof(PluginsModel),
-					(m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, ViewResources.PluginsView_Help) },
+					(m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, ViewResources.PluginsView_Elasticsearch_Help) },
 			{ typeof(ClosingModel),
 					(m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null) },
 		};

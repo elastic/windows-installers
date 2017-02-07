@@ -44,8 +44,8 @@ namespace Elastic.Installer.UI.Kibana.Steps
 			this.ViewModel.Host.Subscribe(h => host = h);
 			this.ViewModel.OpenProduct.Subscribe(x => Process.Start(host));
 
-			this.ViewModel.OpenReference.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/reference/{majorMinor}/index.html"));
-			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/guide/index.html"));
+			this.ViewModel.OpenReference.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/kibana/{majorMinor}/index.html"));
+			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/kibana/{majorMinor}/getting-started.html"));
 
 			string wixLog = null;
 			this.ViewModel.WixLogFile.Subscribe(l =>
@@ -58,7 +58,7 @@ namespace Elastic.Installer.UI.Kibana.Steps
 				if (wixLog != null) Process.Start(wixLog);
 			});
 
-			this.ViewModel.OpenIssues.Subscribe(x => Process.Start("https://github.com/elastic/elasticsearch-windows-installer/issues"));
+			this.ViewModel.OpenIssues.Subscribe(x => Process.Start("https://github.com/elastic/windows-installers/issues"));
 
 			this.WhenAnyValue(view => view.ViewModel.Installed)
 				.Subscribe(x =>
@@ -86,7 +86,7 @@ namespace Elastic.Installer.UI.Kibana.Steps
 			{
 				case ClosingResult.Success:
 					this.GridSuccess.Visibility = Visibility.Visible;
-					this.ResultTitleLabel.Content = string.Format(ViewResources.ClosingView_TitleSuccess, installedOrUpgradedLanguage);
+					this.ResultTitleLabel.Content = string.Format(ViewResources.ClosingView_TitleSuccess, "Kibana", installedOrUpgradedLanguage);
 					this.ResultParagraphLabel.Visibility = Visibility.Hidden;
 					this.OpenKibana.Visibility = 
 						this.ViewModel.ServiceStateProvider.Running ? Visibility.Visible : Visibility.Collapsed;

@@ -93,7 +93,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			{
 				case ClosingResult.Success:
 					this.GridSuccess.Visibility = Visibility.Visible;
-					this.ResultTitleLabel.Content = string.Format(ViewResources.ClosingView_TitleSuccess, installedOrUpgradedLanguage);
+					this.ResultTitleLabel.Content = string.Format(ViewResources.ClosingView_TitleSuccess, "Elasticsearch", installedOrUpgradedLanguage);
 					this.ResultParagraphLabel.Visibility = Visibility.Hidden;
 					this.OpenElasticsearch.Visibility = 
 						this.ViewModel.ServiceStateProvider.Running ? Visibility.Visible : Visibility.Collapsed;

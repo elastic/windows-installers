@@ -33,7 +33,7 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="40"/>
     </Grid.RowDefinitions>
-    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ClusterLabel" Content="Server" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ClusterLabel" Content="{x:Static resx:ViewResources.ConfigurationView_ServerLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
     <Grid Grid.Row="1">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="150" />
@@ -41,9 +41,9 @@
         <ColumnDefinition Width="50" />
         <ColumnDefinition Width="100" />
       </Grid.ColumnDefinitions>
-      <Label Grid.Column="0" x:Name="HostNameLabel" Content="Host" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <Label Grid.Column="0" x:Name="HostNameLabel" Content="{x:Static resx:ViewResources.ConfigurationView_HostNameLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <TextBox Grid.Column="1" x:Name="HostNameTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
-      <Label Grid.Column="2" x:Name="HttpPortLabel" Content="Port" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+      <Label Grid.Column="2" x:Name="HttpPortLabel" Content="{x:Static resx:ViewResources.ConfigurationView_HttpPortLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
       <mahapps:NumericUpDown Grid.Column="3" x:Name="HttpPortTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" StringFormat="{}{0:0}" />
     </Grid>
     <Grid Grid.Row="2">
@@ -51,10 +51,10 @@
         <ColumnDefinition Width="150" />
         <ColumnDefinition Width="400" />
       </Grid.ColumnDefinitions>
-      <Label Grid.Column="0" x:Name="ServerNameLabel" Content="Server Name" HorizontalAlignment="Left" VerticalAlignment="Center" />
+      <Label Grid.Column="0" x:Name="ServerNameLabel" Content="{x:Static resx:ViewResources.ConfigurationView_ServerNameLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
       <TextBox Grid.Column="1" x:Name="ServerNameTextBox" HorizontalAlignment="Stretch" Height="30" TextWrapping="Wrap" VerticalAlignment="Center" />
     </Grid>
-    <Label Grid.Row="3" x:Name="RoutingLabel" Content="Routing" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
+    <Label Grid.Row="3" x:Name="RoutingLabel" Content="{x:Static resx:ViewResources.ConfigurationView_RoutingLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
     <Grid Grid.Row="4">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="150" />
@@ -64,12 +64,12 @@
         <RowDefinition Height="35"/>
         <RowDefinition Height="35"/>
       </Grid.RowDefinitions>
-      <Label Grid.Row="0" Grid.Column="0" x:Name="BasePathLabel" Content="Base Path" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <Label Grid.Row="0" Grid.Column="0" x:Name="BasePathLabel" Content="{x:Static resx:ViewResources.ConfigurationView_BasePathLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <TextBox Grid.Row="0" Grid.Column="1" x:Name="BasePathTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
-      <Label Grid.Row="1" Grid.Column="0" x:Name="DefaultRouteLabel" Content="Default Route" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <Label Grid.Row="1" Grid.Column="0" x:Name="DefaultRouteLabel" Content="{x:Static resx:ViewResources.ConfigurationView_DefaultRouteLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <TextBox Grid.Row="1" Grid.Column="1" x:Name="DefaultRouteTextbox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
     </Grid>
-    <Label Grid.Row="5" Grid.Column="0" x:Name="SecurityLabel" Content="Security" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
+    <Label Grid.Row="5" Grid.Column="0" x:Name="SecurityLabel" Content="{x:Static resx:ViewResources.ConfigurationView_SecurityLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
     <Grid Grid.Row="6">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="150"/>
@@ -80,13 +80,13 @@
         <RowDefinition Height="35"/>
         <RowDefinition Height="35"/>
       </Grid.RowDefinitions>
-      <Label Grid.Row="0" Grid.Column="0" x:Name="ServerKeyLabel" Content="Server Key" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <Label Grid.Row="0" Grid.Column="0" x:Name="ServerKeyLabel" Content="{x:Static resx:ViewResources.ConfigurationView_ServerKeyLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <TextBox Grid.Row="0" Grid.Column="1" x:Name="ServerKeyTextBox" HorizontalAlignment="Stretch" Height="30" Margin="0,0,5,0" VerticalAlignment="Center" />
-      <Button Grid.Row="0" Grid.Column="2" x:Name="ServerKeyBrowsButton" Content="{x:Static resx:ViewResources.LocationsView_InstallDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
-      <Label Grid.Row="1" Grid.Column="0" x:Name="ServerCertificateLabel" Content="Server Certificate" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <Button Grid.Row="0" Grid.Column="2" x:Name="ServerKeyBrowseButton" Content="{x:Static resx:ViewResources.ConfigurationView_BrowseButton}" Height="30" VerticalAlignment="Center" />
+      <Label Grid.Row="1" Grid.Column="0" x:Name="ServerCertificateLabel" Content="{x:Static resx:ViewResources.ConfigurationView_ServerCertLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <TextBox Grid.Row="1" Grid.Column="1" x:Name="ServerCertificateTextBox" HorizontalAlignment="Stretch" Height="30" Margin="0,0,5,0" VerticalAlignment="Center" />
-      <Button Grid.Row="1" Grid.Column="2" x:Name="ServerCertificateBrowseButton" Content="{x:Static resx:ViewResources.LocationsView_InstallDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
+      <Button Grid.Row="1" Grid.Column="2" x:Name="ServerCertificateBrowseButton" Content="{x:Static resx:ViewResources.ConfigurationView_BrowseButton}" Height="30" VerticalAlignment="Center" />
     </Grid>
-    <CheckBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" x:Name="AllowAnonymousAccessCheckBox" Content="Allow anonymous access" HorizontalAlignment="Left" Margin="7,5,0,0" VerticalAlignment="Center"/>
+    <CheckBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" x:Name="AllowAnonymousAccessCheckBox" Content="{x:Static resx:ViewResources.ConfigurationView_AllowAnonymousAccessLabel}" HorizontalAlignment="Left" Margin="7,5,0,0" VerticalAlignment="Center"/>
   </Grid>
 </controls:StepControl>

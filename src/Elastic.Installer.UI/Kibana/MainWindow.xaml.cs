@@ -121,17 +121,17 @@ namespace Elastic.Installer.UI.Kibana
 			new Dictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>>
 		{
 			{ typeof(NoticeModel),
-					(m, s) => Step(s, new NoticeView { ViewModel = m as NoticeModel }, null) },
+					(m, s) => Step(s, new NoticeView { ViewModel = m as NoticeModel }, string.Format(ViewResources.MainWindow_Help, "Kibana")) },
 			{ typeof(LocationsModel),
-					(m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, ViewResources.LocationsView_Help) },
+					(m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, ViewResources.LocationsView_Kibana_Help) },
 			{ typeof(ServiceModel),
-					(m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, ViewResources.ServiceView_Help) },
+					(m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, ViewResources.ServiceView_Kibana_Help) },
 			{ typeof(ConfigurationModel),
-					(m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, ViewResources.ConfigurationView_Help) },
+					(m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, ViewResources.ConfigurationView_Kibana_Help) },
 			{ typeof(ConnectingModel),
-					(m, s) => Step(s, new ConnectingView { ViewModel = m as ConnectingModel }, ViewResources.ConfigurationView_Help) },
+					(m, s) => Step(s, new ConnectingView { ViewModel = m as ConnectingModel }, ViewResources.ConnectingView_Kibana_Help) },
 			{ typeof(PluginsModel),
-					(m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, ViewResources.PluginsView_Help) },
+					(m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, ViewResources.PluginsView_Kibana_Help) },
 			{ typeof(ClosingModel),
 					(m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null) }
 		};
