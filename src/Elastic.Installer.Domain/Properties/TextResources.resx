@@ -449,4 +449,22 @@ by removing one of these environment variables.</value>
   <data name="NoticeModelValidator_HigherVersionInstalled" xml:space="preserve">
     <value>A higher version is already installed.  In order to downgrade, you must uninstall this version first.</value>
   </data>
+  <data name="ConfigurationModelValidator_BasePath" xml:space="preserve">
+    <value>Base Path</value>
+  </data>
+  <data name="ConfigurationModelValidator_DefaultRoute" xml:space="preserve">
+    <value>Default Route</value>
+  </data>
+  <data name="ConfigurationModelValidator_HostNameMustNotBeEmpty" xml:space="preserve">
+    <value>A host name must be specified.</value>
+  </data>
+  <data name="ConfigurationModelValidator_RouteFormatMustBeValid" xml:space="preserve">
+    <value>{0} is not a valid route format.  Routes cannot start or end with '/`.</value>
+  </data>
+  <data name="ConnectingModelValidator_ElasticsearchUrlMustBeSpecified" xml:space="preserve">
+    <value>A URL to Elasticsearch must be specified.</value>
+  </data>
+  <data name="ConnectingModelValidator_IndexMustBeSpecified" xml:space="preserve">
+    <value>An index must be specified.</value>
+  </data>
 </root>
