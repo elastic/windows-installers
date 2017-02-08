@@ -28,7 +28,6 @@ namespace Elastic.Installer.Domain.Kibana.Model
 	public class KibanaInstallationModel
 		: InstallationModelBase<KibanaInstallationModel, KibanaInstallationModelValidator>
 	{
-
 		public IKibanaEnvironmentStateProvider KibanaEnvironmentState { get; }
 
 		public NoticeModel NoticeModel { get; }
@@ -39,21 +38,6 @@ namespace Elastic.Installer.Domain.Kibana.Model
 		public PluginsModel PluginsModel { get; }
 		public ClosingModel ClosingModel { get; }
 
-		public override IObservable<IStep> ObserveValidationChanges => this.WhenAny(
-			vm => vm.NoticeModel.ValidationFailures,
-			vm => vm.LocationsModel.ValidationFailures,
-			vm => vm.PluginsModel.ValidationFailures,
-			vm => vm.ServiceModel.ValidationFailures,
-			vm => vm.ConfigurationModel.ValidationFailures,
-			vm => vm.ConnectingModel.ValidationFailures,
-			vm => vm.ClosingModel.ValidationFailures,
-			vm => vm.TabSelectedIndex,
-			(notice, locations, plugins, service, config, connecting, closing, index) =>
-			{
-				var firstInvalidScreen = this.Steps.FirstOrDefault(s => !s.IsValid) ?? this.ClosingModel;
-				return firstInvalidScreen;
-			});
-
 		public KibanaInstallationModel(
 			IWixStateProvider wixStateProvider,
 			IServiceStateProvider serviceStateProvider,
@@ -61,7 +45,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			IKibanaEnvironmentStateProvider environmentStateProvider,
 			ISession session,
 			string[] args
-			) : base(wixStateProvider, session, args)
+		) : base(wixStateProvider, session, args)
 		{
 			var versionConfig = new VersionConfiguration(wixStateProvider);
 			this.KibanaEnvironmentState = environmentStateProvider;
@@ -76,14 +60,15 @@ namespace Elastic.Installer.Domain.Kibana.Model
 				vm => vm.LocationsModel.InstallDir,
 				vm => vm.LocationsModel.ConfigDirectory
 			);
-			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);	
+			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(x => x.ConfigurationModel.HostName, x => x.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
 			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 			var observeKibanaLog = this.WhenAnyValue(vm => vm.LocationsModel.KibanaLog);
-			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog, observeKibanaLog, serviceStateProvider);
+			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog,
+				observeKibanaLog, serviceStateProvider);
 
 			this.AllSteps = new ReactiveList<IStep>
 			{
@@ -97,27 +82,41 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			};
 			this.Steps = this.AllSteps.CreateDerivedCollection(x => x, x => x.IsRelevant);
 
-			this.Install.Subscribe(installationObservable =>
-			{
-				installationObservable.Subscribe(installed =>
+			var observeValidationChanges = this.WhenAny(
+				vm => vm.NoticeModel.ValidationFailures,
+				vm => vm.LocationsModel.ValidationFailures,
+				vm => vm.PluginsModel.ValidationFailures,
+				vm => vm.ServiceModel.ValidationFailures,
+				vm => vm.ConfigurationModel.ValidationFailures,
+				vm => vm.ConnectingModel.ValidationFailures,
+				vm => vm.ClosingModel.ValidationFailures,
+				vm => vm.TabSelectedIndex,
+				(notice, locations, plugins, service, config, connecting, closing, index) =>
 				{
-					this.ClosingModel.Installed = installed;
+					var firstInvalidScreen = this.Steps.FirstOrDefault(s => !s.IsValid) ?? this.ClosingModel;
+					return firstInvalidScreen;
 				});
-			});
+			observeValidationChanges
+				.Subscribe(selected =>
+				{
+					var step = this.Steps[this.TabSelectedIndex];
+					var failures = step.ValidationFailures;
+					this.CurrentStepValidationFailures = selected.ValidationFailures;
+				});
 
 			this.WhenAny(
-				vm => vm.NoticeModel.IsValid,
-				vm => vm.LocationsModel.IsValid,
-				vm => vm.PluginsModel.IsValid,
-				vm => vm.ServiceModel.IsValid,
-				vm => vm.ConfigurationModel.IsValid,
-				vm => vm.ConnectingModel.IsValid,
-				vm => vm.ClosingModel.IsValid,
-				(notice, locations, plugins, service, config, connecting, closing) =>
-				{
-					var firstInvalidScreen = this.Steps.Select((s, i) => new { s, i }).FirstOrDefault(s => !s.s.IsValid);
-					return firstInvalidScreen?.i ?? (this.Steps.Count - 1);
-				})
+					vm => vm.NoticeModel.IsValid,
+					vm => vm.LocationsModel.IsValid,
+					vm => vm.PluginsModel.IsValid,
+					vm => vm.ServiceModel.IsValid,
+					vm => vm.ConfigurationModel.IsValid,
+					vm => vm.ConnectingModel.IsValid,
+					vm => vm.ClosingModel.IsValid,
+					(notice, locations, plugins, service, config, connecting, closing) =>
+					{
+						var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
+						return firstInvalidScreen?.i ?? (this.Steps.Count - 1);
+					})
 				.Subscribe(selected =>
 				{
 					this.TabSelectionMax = selected;
@@ -128,11 +127,22 @@ namespace Elastic.Installer.Domain.Kibana.Model
 					this.CurrentStepValidationFailures = this.ActiveStep.ValidationFailures;
 				});
 
-			this.Refresh();
-			//validate the first stab explicitly on constructing this 
-			//main viewmodel. WPF triggers a validation already	
+			this.Install = ReactiveCommand.CreateAsyncTask(observeValidationChanges.Select(s => s.IsValid), _ =>
+			{
+				this.TabSelectedIndex += 1;
+				return this.InstallUITask();
+			});
+			this.Install.Subscribe(installationObservable =>
+			{
+				installationObservable.Subscribe(installed => { this.ClosingModel.Installed = installed; });
+			});
 
-			this.ParsedArguments = new KibanaArgumentParser(this.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] { this }).ToList(), args);
+			this.Refresh();
+			//validate the first stab explicitly on constructing this
+			//main viewmodel. WPF triggers a validation already
+
+			this.ParsedArguments = new KibanaArgumentParser(
+				this.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] {this}).ToList(), args);
 
 			this.ActiveStep.Validate();
 		}
@@ -141,7 +151,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 			IWixStateProvider wixState,
 			ISession session,
 			params string[] args
-			)
+		)
 		{
 			var serviceState = ServiceStateProvider.FromSession(session, "Kibana");
 			var pluginState = PluginStateProvider.Default;

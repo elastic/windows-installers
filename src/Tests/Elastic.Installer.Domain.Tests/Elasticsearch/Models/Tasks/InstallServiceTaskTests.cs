@@ -20,8 +20,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				{
 					var c = serviceConfig.SeenServiceConfig;
 					c.Should().NotBeNull();
-					c.HomeDirectory.Should().Be(m.LocationsModel.ConfigDirectory);
-					c.ConfigDirectory.Should().Be(m.LocationsModel.InstallDir);
+					c.HomeDirectory.Should().Be(m.LocationsModel.InstallDir);
+					c.ConfigDirectory.Should().Be(m.LocationsModel.ConfigDirectory);
 					c.ExeLocation.Should().Be(Path.Combine(m.LocationsModel.InstallDir, "bin", "elasticsearch.exe"));
 					c.ServiceAccount.Should().Be(ServiceAccount.LocalSystem);
 				}

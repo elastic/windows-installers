@@ -232,7 +232,7 @@ Target "Integrate" (fun () ->
   =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
   ==> "PatchGuids"
   ==> "PruneFiles"
-//  ==> "UnitTest"
+  ==> "UnitTest"
   ==> "BuildServices"
   ==> "BuildInstallers"
   ==> "Integrate"

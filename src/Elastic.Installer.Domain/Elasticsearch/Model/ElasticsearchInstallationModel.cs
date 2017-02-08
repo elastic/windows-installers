@@ -42,26 +42,13 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 		public ServiceModel ServiceModel { get; }
 		public ClosingModel ClosingModel { get; }
 
-		public override IObservable<IStep> ObserveValidationChanges => this.WhenAny(
-			vm => vm.NoticeModel.ValidationFailures,
-			vm => vm.LocationsModel.ValidationFailures,
-			vm => vm.ConfigurationModel.ValidationFailures,
-			vm => vm.PluginsModel.ValidationFailures,
-			vm => vm.ServiceModel.ValidationFailures,
-			vm => vm.ClosingModel.ValidationFailures,
-			vm => vm.TabSelectedIndex,
-			(welcome, locations, configuration, plugins, service, install, index) =>
-			{
-				var firstInvalidScreen = this.Steps.FirstOrDefault(s => !s.IsValid) ?? this.ClosingModel;
-				return firstInvalidScreen;
-			});
-
 		protected override string[] PrerequisiteProperties => base.PrerequisiteProperties.Concat(new[]
-		{
-			nameof(JavaInstalled),
-			nameof(JavaMisconfigured),
-			nameof(BadElasticsearchYamlFile)
-		}).ToArray();
+			{
+				nameof(JavaInstalled),
+				nameof(JavaMisconfigured),
+				nameof(BadElasticsearchYamlFile)
+			})
+			.ToArray();
 
 		public ElasticsearchInstallationModel(
 			IWixStateProvider wixStateProvider,
@@ -73,9 +60,8 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			LocalJvmOptionsConfiguration localJvmOptions,
 			ISession session,
 			string[] args
-			) : base(wixStateProvider, session, args)
+		) : base(wixStateProvider, session, args)
 		{
-
 			if (javaConfiguration == null) throw new ArgumentNullException(nameof(javaConfiguration));
 
 			this.JavaConfiguration = javaConfiguration;
@@ -106,7 +92,8 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 			var observeElasticsearchLog = this.WhenAnyValue(vm => vm.LocationsModel.ElasticsearchLog);
 
-			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog, observeElasticsearchLog, serviceStateProvider);
+			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog,
+				observeElasticsearchLog, serviceStateProvider);
 			this.AllSteps = new ReactiveList<IStep>
 			{
 				this.NoticeModel,
@@ -118,26 +105,39 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			};
 			this.Steps = this.AllSteps.CreateDerivedCollection(x => x, x => x.IsRelevant);
 
-			this.Install.Subscribe(installationObservable =>
-			{
-				installationObservable.Subscribe(installed =>
+			var observeValidationChanges = this.WhenAny(
+				vm => vm.NoticeModel.ValidationFailures,
+				vm => vm.LocationsModel.ValidationFailures,
+				vm => vm.ConfigurationModel.ValidationFailures,
+				vm => vm.PluginsModel.ValidationFailures,
+				vm => vm.ServiceModel.ValidationFailures,
+				vm => vm.ClosingModel.ValidationFailures,
+				vm => vm.TabSelectedIndex,
+				(welcome, locations, configuration, plugins, service, install, index) =>
 				{
-					this.ClosingModel.Installed = installed;
+					var firstInvalidScreen = this.Steps.FirstOrDefault(s => !s.IsValid) ?? this.ClosingModel;
+					return firstInvalidScreen;
 				});
-			});
+			observeValidationChanges
+				.Subscribe(selected =>
+				{
+					var step = this.Steps[this.TabSelectedIndex];
+					var failures = step.ValidationFailures;
+					this.CurrentStepValidationFailures = selected.ValidationFailures;
+				});
 
 			this.WhenAny(
-				vm => vm.NoticeModel.IsValid,
-				vm => vm.LocationsModel.IsValid,
-				vm => vm.ConfigurationModel.IsValid,
-				vm => vm.PluginsModel.IsValid,
-				vm => vm.ServiceModel.IsValid,
-				vm => vm.ClosingModel.IsValid,
-				(welcome, locations, configuration, plugins, service, install) =>
-				{
-					var firstInvalidScreen = this.Steps.Select((s, i) => new { s, i }).FirstOrDefault(s => !s.s.IsValid);
-					return firstInvalidScreen?.i ?? (this.Steps.Count - 1);
-				})
+					vm => vm.NoticeModel.IsValid,
+					vm => vm.LocationsModel.IsValid,
+					vm => vm.ConfigurationModel.IsValid,
+					vm => vm.PluginsModel.IsValid,
+					vm => vm.ServiceModel.IsValid,
+					vm => vm.ClosingModel.IsValid,
+					(welcome, locations, configuration, plugins, service, install) =>
+					{
+						var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
+						return firstInvalidScreen?.i ?? (this.Steps.Count - 1);
+					})
 				.Subscribe(selected =>
 				{
 					this.TabSelectionMax = selected;
@@ -148,15 +148,28 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 					this.CurrentStepValidationFailures = this.ActiveStep.ValidationFailures;
 				});
 
+			this.Install = ReactiveCommand.CreateAsyncTask(observeValidationChanges.Select(s => s.IsValid), _ =>
+			{
+				this.TabSelectedIndex += 1;
+				return this.InstallUITask();
+			});
+
+			this.Install.Subscribe(installationObservable =>
+			{
+				installationObservable.Subscribe(installed => { this.ClosingModel.Installed = installed; });
+			});
+
 			this.Refresh();
-			//validate the first stab explicitly on constructing this 
+			//validate the first stab explicitly on constructing this
 			//main viewmodel. WPF triggers a validation already
-			this.ParsedArguments = new ElasticsearchArgumentParser(this.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] { this }).ToList(), args);
+			this.ParsedArguments = new ElasticsearchArgumentParser(
+				this.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] {this}).ToList(), args);
 
 			this.ActiveStep.Validate();
 		}
 
-		public static ElasticsearchInstallationModel Create(IWixStateProvider wixState, ISession session, params string[] args)
+		public static ElasticsearchInstallationModel Create(IWixStateProvider wixState, ISession session,
+			params string[] args)
 		{
 			var javaConfig = JavaConfiguration.Default;
 			var esState = ElasticsearchEnvironmentStateProvider.Default;
@@ -165,10 +178,12 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esState.ConfigDirectory);
 			var jvmConfig = LocalJvmOptionsConfiguration.FromFolder(esState.ConfigDirectory);
-			return new ElasticsearchInstallationModel(wixState, javaConfig, esState, serviceState, pluginState, esConfig, jvmConfig, session, args);
+			return new ElasticsearchInstallationModel(wixState, javaConfig, esState, serviceState, pluginState, esConfig,
+				jvmConfig, session, args);
 		}
 
 		bool javaInstalled;
+
 		public bool JavaInstalled
 		{
 			get { return javaInstalled; }
@@ -176,6 +191,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 		}
 
 		bool javaMisconfigured;
+
 		public bool JavaMisconfigured
 		{
 			get { return javaMisconfigured; }
@@ -183,6 +199,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 		}
 
 		bool badElasticsearchYamlFile;
+
 		public bool BadElasticsearchYamlFile
 		{
 			get { return badElasticsearchYamlFile; }

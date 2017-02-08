@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
+using System.Runtime.Remoting.Messaging;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
 using Elastic.Installer.Domain.Elasticsearch.Model.Config;
 using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
@@ -12,17 +13,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 {
 	public class EditElasticsearchYamlTaskTests : InstallationModelTestBase
 	{
-		[Fact] void PicksUpExistingConfiguration() => WithValidPreflightChecks(s => s
-		 .Elasticsearch(e => e
-			 .ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
-		 )
-		 .FileSystem(fs =>
-		 {
-			 fs.AddDirectory(LocationsModel.DefaultConfigDirectory);
-			 var yaml = Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml");
-			 fs.AddFile(yaml, new MockFileData(@"cluster.name: x"));
-			 return fs;
-		 })
+		[Fact]
+		void PicksUpExistingConfiguration() => WithValidPreflightChecks(s => s
+				.Elasticsearch(e => e
+					.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+				)
+				.FileSystem(fs =>
+				{
+					fs.AddDirectory(LocationsModel.DefaultConfigDirectory);
+					var yaml = Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml");
+					fs.AddFile(yaml, new MockFileData(@"cluster.name: x"));
+					return fs;
+				})
 			)
 			.AssertTask(
 				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
@@ -39,7 +41,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				}
 			);
 
-		[Fact] void WritesExpectedDefauts() => WithValidPreflightChecks()
+		[Fact]
+		void WritesExpectedDefauts() => WithValidPreflightChecks(s => s
+			.Elasticsearch(es => es
+				.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+			)
+			.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					return fs;
+				})
+			)
 			.AssertTask(
 				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
 				(m, t) =>
@@ -67,7 +79,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				}
 			);
 
-		[Fact] void DefaultMaxLocalStorageNodesNotService() => WithValidPreflightChecks()
+		[Fact]
+		void DefaultMaxLocalStorageNodesNotService() => WithValidPreflightChecks(s => s
+			.Elasticsearch(es => es
+				.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+			)
+			.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					return fs;
+				})
+			)
 			.OnStep(m => m.ServiceModel, s => s.InstallAsService = false)
 			.AssertTask(
 				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
@@ -84,7 +106,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				}
 			);
 
-		[Fact] void CustomConfigValues() => WithValidPreflightChecks()
+		[Fact]
+		void CustomConfigValues() => WithValidPreflightChecks(s => s
+			.Elasticsearch(es => es
+				.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+			)
+			.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					return fs;
+				})
+			)
 			.OnStep(m => m.ConfigurationModel, s =>
 			{
 				s.ClusterName = "x";

@@ -25,8 +25,6 @@ namespace Elastic.Installer.Domain.Model
 			nameof(HigherVersionAlreadyInstalled)
 		};
 
-		public abstract IObservable<IStep> ObserveValidationChanges { get; }
-
 		public ISession Session { get; }
 
 		public ReactiveList<IStep> AllSteps { get; protected set; } = new ReactiveList<IStep>();
@@ -80,12 +78,6 @@ namespace Elastic.Installer.Domain.Model
 			this.RefreshCurrentStep.Subscribe(x => { this.Steps[this.TabSelectedIndex].Refresh(); });
 			this.Exit = ReactiveCommand.Create();
 
-			this.Install = ReactiveCommand.CreateAsyncTask(this.ObserveValidationChanges.Select(s => s.IsValid), _ =>
-			{
-				this.TabSelectedIndex += 1;
-				return this.InstallUITask();
-			});
-
 			this.WhenAny(vm => vm.TabSelectedIndex, v => v.GetValue())
 				.Subscribe(i =>
 				{
@@ -93,14 +85,6 @@ namespace Elastic.Installer.Domain.Model
 					if (i == (c - 1)) this.NextButtonText = TextResources.SetupView_ExitText;
 					else if (i == (c - 2)) this.NextButtonText = TextResources.SetupView_InstallText;
 					else this.NextButtonText = TextResources.SetupView_NextText;
-				});
-
-			this.ObserveValidationChanges
-				.Subscribe(selected =>
-				{
-					var step = this.Steps[this.TabSelectedIndex];
-					var failures = step.ValidationFailures;
-					this.CurrentStepValidationFailures = selected.ValidationFailures;
 				});
 
 			this.WhenAnyValue(view => view.ValidationFailures)
