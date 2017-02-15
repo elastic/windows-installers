@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Plugins
 
 		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies) : base(pluginStateProvider)
 		{
-			pluginDependencies.Subscribe((t) =>
+			pluginDependencies.Subscribe(t =>
 			{
 				this._alreadyInstalled = t.Item1;
 				this.InstallDirectory = t.Item2;

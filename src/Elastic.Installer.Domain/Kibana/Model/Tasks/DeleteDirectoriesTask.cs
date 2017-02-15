@@ -1,7 +1,6 @@
 ﻿using Elastic.Installer.Domain.Kibana.Configuration.FileBased;
 using Elastic.Installer.Domain.Kibana.Model.Locations;
 using Elastic.Installer.Domain.Session;
-using System;
 using System.IO.Abstractions;
 using System.Linq;
 

@@ -156,9 +156,10 @@ namespace Elastic.Installer.Domain.Model
 				var viewModelProperties = GetProperties(type);
 				foreach (var p in viewModelProperties)
 				{
-					if (seenNames.Contains(p.Name, StringComparer.OrdinalIgnoreCase))
+					if (!seenNames.Add(p.Name.ToUpperInvariant()))
+					{
 						throw new ArgumentException($"{p.Name} can not be reused as argument option on {type.Name}");
-					seenNames.Add(p.Name.ToUpperInvariant());
+					}
 				}
 			}
 

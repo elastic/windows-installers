@@ -2,6 +2,8 @@
 using Elastic.Installer.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using WixSharp;
 
 namespace Elastic.Installer.Msi
@@ -14,10 +16,15 @@ namespace Elastic.Installer.Msi
 
 		public abstract Dictionary<string, Guid> ProductCode { get; }
 
-		public abstract List<Dir> Files(string path);
-
 		public abstract IEnumerable<string> AllArguments { get; }
 
 		public abstract IEnumerable<ModelArgument> MsiParams { get; }
+
+		public List<Dir> Files(string path) =>
+			Directory.GetDirectories(path)
+				.Where(directory => Directory.EnumerateFileSystemEntries(directory).Any())
+				.Select(Path.GetFileName)
+				.Select(directoryName => new Dir(directoryName, new Files(path + $@"\{directoryName}\*.*")))
+				.ToList();
 	}
 }

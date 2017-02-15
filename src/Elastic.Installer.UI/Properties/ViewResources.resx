@@ -189,7 +189,7 @@
   <data name="ClosingView_SubTitleSuccess" xml:space="preserve">
     <value>What's Next?</value>
   </data>
-  <data name="ClosingView_RunningAtHeader" xml:space="preserve">
+  <data name="ClosingView_ElasticsearchRunningAtHeader" xml:space="preserve">
     <value>Open Elasticsearch in the browser</value>
   </data>
   <data name="ClosingView_FindYourClient" xml:space="preserve">
@@ -202,7 +202,7 @@
     <value>Read "The Definitive Guide" for free online!</value>
   </data>
   <data name="ClosingView_ReadTheDocsOnCloseCheckBox" xml:space="preserve">
-    <value>Open the Elasticsearch documentation after exiting</value>
+    <value>Open the Elastic Stack documentation after exiting</value>
   </data>
   <data name="ClosingView_TitleFailed" xml:space="preserve">
     <value>An error occured during {0}!</value>
@@ -417,7 +417,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
   <data name="LocationsView_Elasticsearch_Help" xml:space="preserve">
     <value>Elasticsearch has several different folders that it needs to have read and/or write access to:
 
-[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are intalled to.
+[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are installed to.
 
 [b]Data[/b]: The directory where Elasticsearch stores your data.
 
@@ -678,7 +678,7 @@ Alternatively, you may choose to not install Elasticsearch as a service and run 
   <data name="LocationsView_Kibana_Help" xml:space="preserve">
     <value>Kibana has several different folders that it needs to have read and/or write access to:
 
-[b]Home[/b]: The directory where the Kibana binaries, plugins, and scripts are intalled to.
+[b]Home[/b]: The directory where the Kibana binaries, plugins, and scripts are installed to.
 
 [b]Logs[/b]: The directory where Kibana will write its log files to.
 </value>
@@ -692,5 +692,8 @@ Alternatively, you may choose to not install Elasticsearch as a service and run 
 This step allows you to configure the Windows user to run the service with, as well as when the service should be started.
 
 Alternatively, you may choose to not install Kibana as a service and run it manually as needed from the command line.</value>
+  </data>
+  <data name="ClosingView_KibanaRunningAtHeader" xml:space="preserve">
+    <value>Open Kibana in the browser</value>
   </data>
 </root>

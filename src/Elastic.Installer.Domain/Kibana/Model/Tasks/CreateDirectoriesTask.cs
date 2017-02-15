@@ -1,11 +1,7 @@
 ﻿using Elastic.Installer.Domain.Session;
 using System.IO;
 using System.IO.Abstractions;
-using System.Security.AccessControl;
-using static System.Security.AccessControl.InheritanceFlags;
-using System.Security.Principal;
-using Elastic.Installer.Domain.Kibana.Model.Tasks;
-using Elastic.Installer.Domain.Kibana.Model;
+using Elastic.Installer.Domain.Kibana.Configuration.FileBased;
 
 namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 {
@@ -16,7 +12,6 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 			: base(model, session, fileSystem) { }
 
 		private const int TotalTicks = 4000;
-		private FileSystemAccessRule _fileAccess;
 
 		protected override bool ExecuteTask()
 		{
@@ -67,7 +62,6 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 				}
 				foreach (var dir in this.FileSystem.Directory.EnumerateDirectories(installConfigDirectory))
 				{
-					var dirName = Path.GetDirectoryName(dir);
 					var to = Path.Combine(configDirectory, dir);
 					//do not overwrite existing directories
 					if (this.FileSystem.Directory.Exists(to)) continue;

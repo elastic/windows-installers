@@ -1,10 +1,10 @@
 ﻿using Elastic.Installer.Domain.Extensions;
-using Elastic.Installer.Domain.Service.Kibana;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Elastic.Installer.Domain.Kibana.Service;
 
 namespace Elastic.Installer.Kibana.Process
 {

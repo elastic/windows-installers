@@ -11,11 +11,10 @@ namespace Elastic.Installer.Msi.Kibana.CustomActions.Uninstall
 	{
 		public override string Name => nameof(KibanaUninstallDirectoriesAction);
 		public override int Order => (int)KibanaCustomActionOrder.UninstallDirectories;
-		public override Step Step => Step.RemoveFiles;
-		public override When When => When.Before;
+		public override Step Step => new Step(nameof(KibanaUninstallServiceAction));
+		public override When When => When.After;
 		public override Condition Condition => new Condition("(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=\"ALL\")");
 		
-
 		[CustomAction]
 		public static ActionResult KibanaUninstallDirectories(Session session) =>
 			session.Handle(() => new DeleteDirectoriesTask(session.ToSetupArguments(KibanaArgumentParser.AllArguments), session.ToISession()).Execute());

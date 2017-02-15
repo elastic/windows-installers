@@ -174,7 +174,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			var javaConfig = JavaConfiguration.Default;
 			var esState = ElasticsearchEnvironmentStateProvider.Default;
 			var serviceState = ServiceStateProvider.FromSession(session, "Elasticsearch");
-			var pluginState = PluginStateProvider.Default;
+			var pluginState = PluginStateProvider.ElasticsearchDefault(session);
 
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esState.ConfigDirectory);
 			var jvmConfig = LocalJvmOptionsConfiguration.FromFolder(esState.ConfigDirectory);

@@ -19,9 +19,16 @@ namespace Elastic.Installer.Domain
 			{ "5.0.0-rc1", new Guid("61847728-349e-4f2a-9965-cf8667d4558c") },
 			{ "5.0.0", new Guid("cf632ca6-8588-4e94-9661-99cafcc974ac") },
 			{ "5.0.1", new Guid("ab0244de-5a08-4812-97da-0c46c2f87eb9") },
+			{ "5.0.2", new Guid("fbca0778-901d-4d2e-bf01-01001cc48e54") },
 			{ "5.1.1", new Guid("82292245-25f0-41c1-88ee-0892b733a7e3") },
-			{ "5.1.2", new Guid("d83a7f89-812f-4c05-9849-82a894696fed") },
-			{ "5.2.0", new Guid("a9e3e9ac-b253-4adf-bb49-76671cf16738") }
+			{ "5.1.2", new Guid("21a99b00-bf06-4440-b35b-0d2e368089ae") },
+			{ "5.2.0", new Guid("c7758e8d-5268-4baa-a6ae-58c8071725ec") },
+			{ "5.2.1", new Guid("d8092759-699f-4889-9edf-92a96857125d") },
+			{ "5.2.2", new Guid("6de3e5d5-bfe7-4422-bacf-ec2982d87122") },
+			{ "5.3.0", new Guid("c954cde9-6960-49a9-a7b4-a065d498d037") },
+			{ "5.3.1", new Guid("f508ab7b-066b-474f-aa0c-44d43c72d264") },
+			{ "5.3.2", new Guid("8bc18570-a189-4304-8c85-1f2d7db3d839") },
+			{ "5.4.0", new Guid("8279eff6-3a85-4b37-ac5a-3c5136bb5465") }
 		};
 
 		public static Dictionary<string, Guid> KibanaProductCodes => new Dictionary<string, Guid>
@@ -29,9 +36,16 @@ namespace Elastic.Installer.Domain
 			{ "5.0.0-rc1", new Guid("23049947-d309-46f1-988b-49f62ed76630") },
 			{ "5.0.0", new Guid("2136a182-7b96-42f3-b23a-42fead9e9b5d") },
 			{ "5.0.1", new Guid("2c8d840a-f91b-4ecb-b66a-02e01ad649c1") },
+			{ "5.0.2", new Guid("44c6b2cc-f1e0-4db1-8f25-8f0b3fde5d29") },
 			{ "5.1.1", new Guid("059d0ca3-6448-4da3-97b6-83662aa754dc") },
-			{ "5.1.2", new Guid("03667a3a-5a75-4f20-8182-95c224ea39da") },
-			{ "5.2.0", new Guid("553e1f72-d328-4cc6-bc89-3a52b356f29d") }
+			{ "5.1.2", new Guid("ad02e1c6-d675-48d1-8fbc-37270e3c0eab") },
+			{ "5.2.0", new Guid("71281af0-9b66-4126-9172-63c9b45a0ef7") },
+			{ "5.2.1", new Guid("6ae97b24-ff8a-4689-8257-3fc86b392f7d") },
+			{ "5.2.2", new Guid("df74fae8-ad4f-4865-af61-d6ee4943d6b0") },
+			{ "5.3.0", new Guid("e098f523-e2e9-436e-a3d8-6e72270305c4") },
+			{ "5.3.1", new Guid("704b40e1-85b2-42d9-bff2-ad27838a24cb") },
+			{ "5.3.2", new Guid("00001dc9-417b-48de-93a4-741dbf930b0b") },
+			{ "5.4.0", new Guid("b6b05d55-e64e-4ed8-8faf-31518777f54d") }
 		};
 
 	}

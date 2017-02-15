@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Elastic.Installer.Msi.Kibana.CustomActions
+﻿namespace Elastic.Installer.Msi.Kibana.CustomActions
 {
 	public enum KibanaCustomActionOrder
 	{
@@ -24,8 +18,8 @@ namespace Elastic.Installer.Msi.Kibana.CustomActions
 		RollbackDirectories = 2,
 		RollbackService = 3,
 
-		UninstallService = 1,
-		UninstallPlugins = 2,
+		UninstallPlugins = 1,
+		UninstallService = 2,
 		UninstallDirectories = 3,
 		UninstallEnvironment = 4
 	}

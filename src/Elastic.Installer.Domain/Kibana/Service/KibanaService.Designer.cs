@@ -1,4 +1,4 @@
-﻿namespace Elastic.Installer.Domain.Service.Kibana
+﻿namespace Elastic.Installer.Domain.Kibana.Service
 {
 	partial class KibanaService
 	{

@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Elastic.Installer.Domain.Shared.Model.Tasks
 {
@@ -21,6 +21,9 @@ namespace Elastic.Installer.Domain.Shared.Model.Tasks
 		protected ISession Session { get; set; }
 
 		protected string[] Args { get; set; }
+
+		protected string[] SanitizedArgs => 
+			Args.Select(a => a.Contains("PASSWORD") ? Regex.Replace(a, "(.*)=(.+)", "$1=<redacted>") : a).ToArray();
 
 		protected string ActionName => this.GetType().FullName;
 
@@ -43,20 +46,16 @@ namespace Elastic.Installer.Domain.Shared.Model.Tasks
 				throw new Exception(errorPrefix + Environment.NewLine + validationFailures);
 			}
 			return this.ExecuteTask();
-
 		}
 
 		public string ValidationFailures(IList<ValidationFailure> f) =>
 			f.Aggregate(new StringBuilder(), (sb, v) =>
 				sb.AppendLine($"{v.PropertyName.ToUpperInvariant().ValidationMessage()}: {v.ErrorMessage}"), sb => sb.ToString());
 
-		protected bool SamePathAs(string pathA, string pathB)
-		{
-			if (!string.IsNullOrEmpty(pathA) && !string.IsNullOrEmpty(pathB))
-				return 0 == string.Compare(Path.GetFullPath(pathA), Path.GetFullPath(pathB), true);
-			else
-				return false;
-		}
+		protected bool SamePathAs(string pathA, string pathB) => 
+			!string.IsNullOrEmpty(pathA) && 
+			!string.IsNullOrEmpty(pathB) && 
+			0 == string.Compare(Path.GetFullPath(pathA), Path.GetFullPath(pathB), true);
 	}
 
 

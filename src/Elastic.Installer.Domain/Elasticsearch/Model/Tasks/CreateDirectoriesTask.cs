@@ -1,7 +1,6 @@
 ﻿using Elastic.Installer.Domain.Session;
 using System.IO;
 using System.IO.Abstractions;
-using System.Security.AccessControl;
 using static System.Security.AccessControl.InheritanceFlags;
 using System.Security.Principal;
 
@@ -14,7 +13,6 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 			: base(model, session, fileSystem) { }
 
 		private const int TotalTicks = 5000;
-		private FileSystemAccessRule _fileAccess;
 
 		protected override bool ExecuteTask()
 		{

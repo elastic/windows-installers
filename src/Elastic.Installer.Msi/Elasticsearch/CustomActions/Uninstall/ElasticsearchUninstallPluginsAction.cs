@@ -19,7 +19,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 		public override Step Step => Step.RemoveFiles;
 		public override When When => When.Before;
 
-		public override Condition Condition => new Condition("UPGRADINGPRODUCTCODE AND (REMOVE=\"ALL\")");
+		public override Condition Condition => new Condition("(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=\"ALL\")");
 
 		[CustomAction]
 		public static ActionResult ElasticsearchUninstallPlugins(Session session) =>

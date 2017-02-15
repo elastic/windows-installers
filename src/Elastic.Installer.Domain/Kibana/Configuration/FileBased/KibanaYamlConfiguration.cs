@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Kibana.Configuration.FileBased
 {
 	public class KibanaYamlConfiguration : YamlConfigurationBase<KibanaYamlSettings>
 	{
-		public KibanaYamlSettings Settings { get { return this.YamlSettings as KibanaYamlSettings; } }
+		public KibanaYamlSettings Settings => this.YamlSettings;
 
 		internal KibanaYamlConfiguration() : base (null, null) { }
 

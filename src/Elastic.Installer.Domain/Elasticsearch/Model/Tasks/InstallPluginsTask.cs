@@ -1,7 +1,5 @@
-﻿using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Session;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
@@ -15,25 +13,25 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
-			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
-			var provider = this.InstallationModel.PluginsModel.PluginStateProvider;
-
 			var plugins = this.InstallationModel.PluginsModel.Plugins.ToList();
 			if (plugins.Count == 0)
 			{
-				this.Session.Log("No plugins to selected to install");
+				this.Session.Log("No plugins selected to install");
 				return true;
 			}
 
-			var totalTicks = plugins.Count * 2000;
+			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
+			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
+			var provider = this.InstallationModel.PluginsModel.PluginStateProvider;
+			var ticksPerPlugin = new[] { 20, 1930, 50 };
+			var totalTicks = plugins.Count * ticksPerPlugin.Sum();
 
 			this.Session.SendActionStart(totalTicks, ActionName, "Installing Elasticsearch plugins", "Elasticsearch plugin: [1]");
 			foreach (var plugin in plugins)
 			{
-				this.Session.SendProgress(20, $"installing {plugin}");
-				provider.Install(installDirectory, configDirectory, plugin, this.Session, 1930);
-				this.Session.SendProgress(50, $"installed {plugin}");
+				this.Session.SendProgress(ticksPerPlugin[0], $"installing {plugin}");
+				provider.Install(ticksPerPlugin[1], installDirectory, configDirectory, plugin);
+				this.Session.SendProgress(ticksPerPlugin[2], $"installed {plugin}");
 			}
 			return true;
 		}

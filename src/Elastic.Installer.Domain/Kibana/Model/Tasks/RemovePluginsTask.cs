@@ -15,10 +15,9 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
-			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
+			var installDirectory = this.InstallationModel.KibanaEnvironmentState.HomeDirectory;
+			var configDirectory = this.InstallationModel.KibanaEnvironmentState.ConfigDirectory;
 			var provider = this.InstallationModel.PluginsModel.PluginStateProvider;
-
 			var plugins = provider.InstalledPlugins(installDirectory, configDirectory);
 
 			if (plugins.Count == 0)
@@ -27,14 +26,16 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 				return true;
 			}
 
-			var totalTicks = plugins.Count * 2000;
-
+			var configFile = Path.Combine(configDirectory, "kibana.yml");
+			var ticksPerPlugin = new[] { 20, 1930, 50 };
+			var totalTicks = plugins.Count * ticksPerPlugin.Sum();
+			
 			this.Session.SendActionStart(totalTicks, ActionName, "Removing existing Kibana plugins", "Kibana plugin: [1]");
 			foreach (var plugin in plugins)
 			{
-				this.Session.SendProgress(20, $"removing {plugin}");
-				provider.Remove(installDirectory, configDirectory, plugin, this.Session, 1930);
-				this.Session.SendProgress(50, $"removed {plugin}");
+				this.Session.SendProgress(ticksPerPlugin[0], $"removing {plugin}");
+				provider.Remove(ticksPerPlugin[1], installDirectory, configDirectory, plugin, "--config", configFile);
+				this.Session.SendProgress(ticksPerPlugin[2], $"removed {plugin}");
 			}
 			return true;
 		}

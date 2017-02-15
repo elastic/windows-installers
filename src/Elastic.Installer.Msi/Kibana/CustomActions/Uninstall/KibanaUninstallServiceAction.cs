@@ -11,8 +11,8 @@ namespace Elastic.Installer.Msi.Kibana.CustomActions.Uninstall
 	{
 		public override string Name => nameof(KibanaUninstallServiceAction);
 		public override int Order => (int)KibanaCustomActionOrder.UninstallService;
-		public override Step Step => Step.RemoveFiles;
-		public override When When => When.Before;
+		public override Step Step => new Step(nameof(KibanaUninstallPluginsAction));
+		public override When When => When.After;
 
 		public override Condition Condition => new Condition("(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=\"ALL\")");
 

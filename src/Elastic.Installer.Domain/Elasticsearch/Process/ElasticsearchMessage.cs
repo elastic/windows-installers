@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Elastic.Installer.Domain.Process;
 using Elastic.Installer.Domain.Process.ObservableWrapper;
 
 namespace Elastic.Installer.Domain

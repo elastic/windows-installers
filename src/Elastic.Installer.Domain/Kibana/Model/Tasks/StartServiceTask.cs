@@ -1,7 +1,6 @@
 ﻿using Elastic.Installer.Domain.Session;
 using System;
 using System.IO.Abstractions;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Kibana.Model.Tasks
@@ -27,11 +26,11 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 			if (!this.InstallationModel.ServiceModel.StartAfterInstall)
 				return true;
 			var seesService = this.ServiceStateProvider.SeesService;
-			this.Session.Log($"Trying to execute StartServiceTask seeing service: " + seesService);
+			this.Session.Log($"Trying to execute StartServiceTask seeing service: {seesService}");
 			if (!seesService) return true;
 			var totalTicks = 1000;
 			this.Session.SendActionStart(totalTicks, ActionName, "Starting Kibana service");
-			this.ServiceStateProvider.StartAndWaitForRunning(TimeSpan.FromSeconds(60), 2000);
+			this.ServiceStateProvider.StartAndWaitForRunning(TimeSpan.FromSeconds(120), 2000);
 			this.Session.SendProgress(1000, "Kibana service started");
 			return true;
 		}

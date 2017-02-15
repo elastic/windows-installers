@@ -61,11 +61,29 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Elasticsearch in the browser.
+        /// </summary>
+        public static string ClosingView_ElasticsearchRunningAtHeader {
+            get {
+                return ResourceManager.GetString("ClosingView_ElasticsearchRunningAtHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find a client for your favorite language.
         /// </summary>
         public static string ClosingView_FindYourClient {
             get {
                 return ResourceManager.GetString("ClosingView_FindYourClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Kibana in the browser.
+        /// </summary>
+        public static string ClosingView_KibanaRunningAtHeader {
+            get {
+                return ResourceManager.GetString("ClosingView_KibanaRunningAtHeader", resourceCulture);
             }
         }
         
@@ -142,7 +160,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open the Elasticsearch documentation after exiting.
+        ///   Looks up a localized string similar to Open the Elastic Stack documentation after exiting.
         /// </summary>
         public static string ClosingView_ReadTheDocsOnCloseCheckBox {
             get {
@@ -156,15 +174,6 @@ namespace Elastic.Installer.UI.Properties {
         public static string ClosingView_ReadTheReference {
             get {
                 return ResourceManager.GetString("ClosingView_ReadTheReference", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open Elasticsearch in the browser.
-        /// </summary>
-        public static string ClosingView_RunningAtHeader {
-            get {
-                return ResourceManager.GetString("ClosingView_RunningAtHeader", resourceCulture);
             }
         }
         
@@ -316,7 +325,7 @@ namespace Elastic.Installer.UI.Properties {
         ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
         ///
-        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important [rest of string was truncated]&quot;;.
+        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important no [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Elasticsearch_Help {
             get {
@@ -359,7 +368,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
         ///
-        ///[b]Base Path[/b]: Enables you to specify a p [rest of string was truncated]&quot;;.
+        ///[b]Base Path[/b]: Enables you to specify a path to  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Kibana_Help {
             get {
@@ -636,7 +645,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Index Name[/b]: Kibana uses an index in Elasticsearch to store saved searches, visualizations and dashboards. Kibana creates a new index if the index doesn’t already exist.
         ///
-        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that t [rest of string was truncated]&quot;;.
+        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that the Kiba [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConnectingView_Kibana_Help {
             get {
@@ -908,7 +917,7 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Elasticsearch has several different folders that it needs to have read and/or write access to:
         ///
-        ///[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are intalled to.
+        ///[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are installed to.
         ///
         ///[b]Data[/b]: The directory where Elasticsearch stores your data.
         ///
@@ -916,7 +925,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Config[/b]: The directory where Elasticsearch will its configuration files.
         ///
-        ///It is best practice to keep your logs, config, and data directories separate from y [rest of string was truncated]&quot;;.
+        ///It is best practice to keep your logs, config, and data directories separate from your home  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string LocationsView_Elasticsearch_Help {
             get {
@@ -954,7 +963,7 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Kibana has several different folders that it needs to have read and/or write access to:
         ///
-        ///[b]Home[/b]: The directory where the Kibana binaries, plugins, and scripts are intalled to.
+        ///[b]Home[/b]: The directory where the Kibana binaries, plugins, and scripts are installed to.
         ///
         ///[b]Logs[/b]: The directory where Kibana will write its log files to.
         ///.

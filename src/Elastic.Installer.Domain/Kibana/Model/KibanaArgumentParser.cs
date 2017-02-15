@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 {
 	public class KibanaArgumentParser : ModelArgumentParser
 	{
-		public static Type[] ExpectedTypes = new[]
+		public static Type[] ExpectedTypes = 
 		{
 			typeof(KibanaInstallationModel),
 			typeof(NoticeModel),
@@ -33,7 +33,7 @@ namespace Elastic.Installer.Domain.Kibana.Model
 
 		public KibanaArgumentParser(IList<IValidatableReactiveObject> models, string[] args) : base(models, args)
 		{
-			if (models.Count != ExpectedTypes.Count())
+			if (models.Count != ExpectedTypes.Length)
 				throw new ArgumentException($"{nameof(models)} should provide an instance of all the expected types");
 		}	
 	}

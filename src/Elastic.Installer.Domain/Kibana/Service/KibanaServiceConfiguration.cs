@@ -1,8 +1,6 @@
-﻿using System;
-using System.ServiceProcess;
-using System.Text;
+﻿using Elastic.Installer.Domain.Service;
 
-namespace Elastic.Installer.Domain.Service.Kibana
+namespace Elastic.Installer.Domain.Kibana.Service
 {
 	public class KibanaServiceConfiguration : ServiceConfiguration { }
 }

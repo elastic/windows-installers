@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Elastic.Installer.Domain.Model;
-using Elastic.Installer.Domain.Properties;
 using ReactiveUI;
 using Elastic.Installer.Domain.Shared.Configuration;
 using FluentValidation;
-using Elastic.Installer.Domain.Shared.Model.Plugins;
 
 namespace Elastic.Installer.Domain.Shared.Model.Plugins
 {
@@ -43,7 +40,7 @@ namespace Elastic.Installer.Domain.Shared.Model.Plugins
 			}
 		}
 
-		public PluginsModelBase(IPluginStateProvider pluginStateProvider)
+		protected PluginsModelBase(IPluginStateProvider pluginStateProvider)
 		{
 			this.Header = "Plugins";
 			this.PluginStateProvider = pluginStateProvider;

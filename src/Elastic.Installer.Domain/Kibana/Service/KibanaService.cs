@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
-using Elastic.Installer.Domain.Process;
 using Elastic.Installer.Domain.Kibana.Process;
 
-namespace Elastic.Installer.Domain.Service.Kibana
+namespace Elastic.Installer.Domain.Kibana.Service
 {
-	public partial class KibanaService : Service
+	public partial class KibanaService : Domain.Service.Service
 	{
-		private KibanaProcess _process;
+		private readonly KibanaProcess _process;
 
 		public KibanaService(IEnumerable<string> args)
 		{

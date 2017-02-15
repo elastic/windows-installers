@@ -1,6 +1,7 @@
 ﻿#I "../../packages/build/FAKE/tools"
 #I "../../packages/build/Fsharp.Data/lib/net40"
-#I "../../packages/build/Fsharp.Configuration/lib/net40"
+#I "../../packages/build/Fsharp.Configuration/lib/net46"
+
 #r "FakeLib.dll"
 #r "Fsharp.Data.dll"
 #r "System.Xml.Linq.dll"

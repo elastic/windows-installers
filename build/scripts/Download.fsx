@@ -80,7 +80,7 @@ module Downloader =
     
     let lastVersion() = 
         // TODO: disallow prereleases for moment. Make build parameter in future
-    let itemIsElasticsearch itemText = 
+        let itemIsElasticsearch itemText = 
             let m = ProductVersionRegex().Match itemText
             m.Success && m.Product.Value = "Elasticsearch" && (isNullOrWhiteSpace m.Prerelease.Value)
     

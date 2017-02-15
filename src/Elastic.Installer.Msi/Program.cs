@@ -1,5 +1,4 @@
-﻿using Elastic.Installer.Domain.Session;
-using Elastic.Installer.Msi.CustomActions;
+﻿using Elastic.Installer.Msi.CustomActions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,23 +6,17 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using WixSharp;
-using Elastic.Installer.Domain.Elasticsearch.Model;
-using Elastic.Installer.Msi.Elasticsearch;
-using Elastic.Installer.Msi.Kibana;
-using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
-using Elastic.Installer.Domain.Model;
-using Elastic.Installer.Domain.Kibana.Model;
 
 namespace Elastic.Installer.Msi
 {
-	class Program
+	public class Program
 	{
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			var productName = args[0].ToLower();
 			var product = GetProduct(productName);
 			var version = args[1];
-			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}"); ;
+			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}");
 
 			// set properties in the MSI so that they don't have to be set on the command line.
 			// The only awkward one is plugins as it has a not empty default value, but an empty
@@ -85,6 +78,7 @@ namespace Elastic.Installer.Msi
 					new Property("ARPNOREPAIR", "yes"),
 					// do not give option to change installation
 					new Property("ARPNOMODIFY", "yes"),
+					// add .NET Framework 4.5 as a dependency
 					new PropertyRef("NETFRAMEWORK45"),
 				}.Concat(staticProperties).ToArray(),
 				LaunchConditions = new List<LaunchCondition>
@@ -111,7 +105,7 @@ namespace Elastic.Installer.Msi
 										{
 											new DirFiles(distributionRoot + @"\*.*")
 										},
-										Dirs = product.Files(distributionRoot).ToArray()
+										Dirs = product.Files(distributionRoot).ToArray(),
 									}
 								}
 							}
@@ -139,7 +133,7 @@ namespace Elastic.Installer.Msi
 			Compiler.BuildMsi(project);
 		}
 
-		static Product GetProduct(string name)
+		private static Product GetProduct(string name)
 		{
 			switch (name.ToLower())
 			{

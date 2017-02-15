@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
 	public abstract class ElasticsearchInstallationTask : InstallationTaskBase
 	{
-		protected ElasticsearchInstallationModel InstallationModel { get { return this.Model as ElasticsearchInstallationModel; } }
+		protected ElasticsearchInstallationModel InstallationModel => this.Model as ElasticsearchInstallationModel;
 
 		protected ElasticsearchInstallationTask(string[] args, ISession session)
 			: this(ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), session, args), session, new FileSystem())

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
+﻿using System.IO.Abstractions;
 using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Domain.Shared.Configuration;
 

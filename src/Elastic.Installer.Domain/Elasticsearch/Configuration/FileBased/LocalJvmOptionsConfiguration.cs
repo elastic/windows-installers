@@ -7,9 +7,9 @@ namespace Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased
 {
 	public class LocalJvmOptionsConfiguration
 	{
-		private string _path;
-		private List<string> _options = new List<string>();
-		private IFileSystem _fileSystem;
+		private readonly string _path;
+		private readonly List<string> _options = new List<string>();
+		private readonly IFileSystem _fileSystem;
 
 		public string Xmx { get; set; }
 		public string Xms { get; set; }
@@ -35,7 +35,6 @@ namespace Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased
 			ulong heap;
 			if (!string.IsNullOrEmpty(this.Xmx) && ulong.TryParse(this.Xmx.Replace("m", ""), out heap))
 				this.ConfiguredHeapSize = heap;
-
 		}
 
 		public void Save()
@@ -57,9 +56,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased
 		public override string ToString() => string.Join(" ", this._options);
 
 		public static LocalJvmOptionsConfiguration FromFolder(string configDirectory) =>
-			string.IsNullOrEmpty(configDirectory)
-			? new LocalJvmOptionsConfiguration(null)
-			: new LocalJvmOptionsConfiguration(Path.Combine(configDirectory, "jvm.options"), null);
+			FromFolder(configDirectory, null);
 
 		public static LocalJvmOptionsConfiguration FromFolder(string configDirectory, IFileSystem fileSystem) =>
 			string.IsNullOrEmpty(configDirectory)

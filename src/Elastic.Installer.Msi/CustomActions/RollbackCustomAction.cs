@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using WixSharp;
+﻿using WixSharp;
 
 namespace Elastic.Installer.Msi.CustomActions
 {

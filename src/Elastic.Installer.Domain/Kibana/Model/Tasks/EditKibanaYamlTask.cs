@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using Elastic.Installer.Domain.Kibana.Configuration.FileBased;
@@ -25,7 +26,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 			var yaml = KibanaYamlConfiguration.FromFolder(locations.ConfigDirectory, this.FileSystem);
 			this.Session.SendProgress(1000, "updating kibana.yml");
 			var settings = yaml.Settings;
-			settings.LoggingDestination = locations.LogsDirectory;
+			settings.LoggingDestination = locations.LogsFile;
 			settings.ServerHost = config.HostName;
 			settings.ServerPort = config.HttpPort;
 			settings.ServerBasePath = config.BasePath;
@@ -39,6 +40,15 @@ namespace Elastic.Installer.Domain.Kibana.Model.Tasks
 			settings.ElasticsearchCert = connecting.ElasticsearchCert;
 			settings.ElasticsearchCA = connecting.ElasticsearchCA;
 			yaml.Save();
+
+			// log file needs to exist for plugin installation
+			if (locations.LogsFile != "stdout" && !this.FileSystem.File.Exists(locations.LogsFile))
+			{
+				var fileInfo = this.FileSystem.FileInfo.FromFileName(locations.LogsFile);
+				fileInfo.Directory.Create();
+				using (this.FileSystem.File.Create(locations.LogsFile)) { }
+			}
+
 			this.Session.SendProgress(1000, "kibana.yml updated");
 			return true;
 		}

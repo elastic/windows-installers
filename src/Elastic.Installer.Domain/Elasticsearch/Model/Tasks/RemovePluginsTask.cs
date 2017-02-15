@@ -1,7 +1,5 @@
-﻿using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Session;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
@@ -28,14 +26,15 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 				return true;
 			}
 
-			var totalTicks = plugins.Count * 2000;
+			var ticksPerPlugin = new[] { 20, 1930, 50 };
+			var totalTicks = plugins.Count * ticksPerPlugin.Sum();
 
 			this.Session.SendActionStart(totalTicks, ActionName, "Removing existing Elasticsearch plugins", "Elasticsearch plugin: [1]");
 			foreach (var plugin in plugins)
 			{
-				this.Session.SendProgress(20, $"removing {plugin}");
-				provider.Remove(installDirectory, configDirectory, plugin, this.Session, 1930);
-				this.Session.SendProgress(50, $"removed {plugin}");
+				this.Session.SendProgress(ticksPerPlugin[0], $"removing {plugin}");
+				provider.Remove(ticksPerPlugin[1], installDirectory, configDirectory, plugin);
+				this.Session.SendProgress(ticksPerPlugin[2], $"removed {plugin}");
 			}
 			return true;
 		}
