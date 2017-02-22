@@ -131,7 +131,7 @@ NUGET
     System.Management.Automation (6.1.7601.17515)
     Zlib.Portable (1.11) - framework: >= netstandard11, portable-net45+sl5+win8, portable-net45+win8, portable-net45+win8+wp8+wpa81
   remote: https://www.myget.org/F/xunit
-    xunit.runner.console (2.2.0-beta3-build3330)
+    xunit.runner.console (2.2.0)
 
 GROUP tests
 NUGET
