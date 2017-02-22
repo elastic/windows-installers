@@ -44,4 +44,4 @@ group build
     nuget System.Management.Automation
 
     source https://www.myget.org/F/xunit/
-    nuget xunit.runner.console 2.2.0-beta3-build3330
+    nuget xunit.runner.console 2.2.0
