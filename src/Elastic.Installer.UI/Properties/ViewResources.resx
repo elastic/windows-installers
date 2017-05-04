@@ -298,7 +298,7 @@
   </data>
   <data name="MainWindow_LicenseInformation" xml:space="preserve">
     <value>Except as otherwise noted, Elasticsearch is distributed and licensed 
- under the Apache 2.0 License.
+under the Apache 2.0 License.
 X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
   </data>
   <data name="MainWindow_ValidationError" xml:space="preserve">

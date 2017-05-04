@@ -415,7 +415,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to .
         /// </summary>
         public static string ConfigurationView_UnicastExplanationLabel {
             get {
@@ -678,7 +678,7 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Elasticsearch has several different folders that it needs to have read and/or write access to:
         ///
-        ///[b]Home[b/]: The directory where the Elasticsearch binaries, plugins, and scripts are intalled to.
+        ///[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are intalled to.
         ///
         ///[b]Data[/b]: The directory where Elasticsearch stores your data.
         ///
@@ -770,7 +770,7 @@ namespace Elastic.Installer.UI.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to Except as otherwise noted, Elasticsearch is distributed and licensed 
-        /// under the Apache 2.0 License.
+        ///under the Apache 2.0 License.
         ///X-Pack is a proprietary plugin that falls under the Elastic EULA..
         /// </summary>
         public static string MainWindow_LicenseInformation {
