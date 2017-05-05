@@ -249,20 +249,24 @@ function Invoke-SilentUninstall {
     return $ExitCode
 }
 
-function Ping-Node([System.Timespan]$Timeout) {
+function Ping-Node([System.Timespan]$Timeout, $Port) {
     if (!$Timeout) {
         $Timeout = New-Timespan -Seconds 3
     }
 
+	if (!$Port) {
+		$Port = "9200"
+	}
+
     $Result = @{
         Success = $false
-        ShieldInstalled = $false
+        XPackSecurityInstalled = $false
     }
 
     $StopWatch = [Diagnostics.Stopwatch]::StartNew()
     do {
         try {
-            $Response = Invoke-RestMethod http://localhost:9200
+            $Response = Invoke-RestMethod "http://localhost:$Port"
             log "Elasticsearch version $($Response.version.number) running"
             $Result.Success = $true
             return $Result
@@ -274,10 +278,10 @@ function Ping-Node([System.Timespan]$Timeout) {
             if ($_) {
                 $Response = $_ | ConvertFrom-Json
                 if ($Response -and $Response.status -and ($Response.status -eq 401)) {
-                    # Shield has been set up on the node and we received an authenticated response back
+                    # X-Pack Security has been set up on the node and we received an authenticated response back
                     log "Elasticsearch is running; received $Code authentication response back: $_" -l Debug
                     $Result.Success = $true
-                    $Result.ShieldInstalled = $true
+                    $Result.XPackSecurityInstalled = $true
                     return $Result
                 }
             }
@@ -285,7 +289,7 @@ function Ping-Node([System.Timespan]$Timeout) {
                 log "code: $Code, description: $Description" -l Warn
             }
         }
-    } until ($StopWatch.Elapsed -gt $timeout)
+    } until ($StopWatch.Elapsed -gt $Timeout)
 
     return $Result
 }
@@ -311,7 +315,13 @@ function Get-TotalPhysicalMemory() {
     return (Get-WmiObject Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1mb
 }
 
-function Add-ShieldCredentials($Username, $Password, $Roles) {
+function Get-ElasticsearchYamlConfiguration() {
+	$EsConfig = Get-MachineEnvironmentVariable "ES_CONFIG"
+    $EsData = Split-Path $EsConfig -Parent | Join-Path -ChildPath "data"
+	return Get-Content "$EsData\elasticsearch.yml"
+}
+
+function Add-XPackSecurityCredentials($Username, $Password, $Roles) {
     if (!$Roles) {
         $Roles = @("superuser")
     }
@@ -334,6 +344,7 @@ function Add-ShieldCredentials($Username, $Password, $Roles) {
 
     $Service | Start-Service
 }
+
 function Merge-Hashtables {
     $Output = @{}
     foreach ($Hashtable in ($Input + $Args)) {

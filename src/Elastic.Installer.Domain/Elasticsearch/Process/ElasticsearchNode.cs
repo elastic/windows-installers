@@ -8,6 +8,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
 using Elastic.Installer.Domain.Process.ObservableWrapper;
+using Microsoft.SqlServer.Server;
 
 namespace Elastic.Installer.Domain.Process
 {
@@ -15,16 +16,17 @@ namespace Elastic.Installer.Domain.Process
 	{
 		private ObservableProcess _process;
 		private IDisposable _processListener;
+		private readonly string[] _libs;
 
-		public string JavaExe { get; private set; }
-		public string ElasticsearchJar { get; private set; }
+		public string JavaExe { get; }
+		public string ElasticsearchJar { get; }
 		public string HomeDirectory { get; private set; }
 		public string ConfigDirectory { get; private set; }
-		public string LibDirectory { get; private set; }
-		public string JavaOptions { get; private set; }
+		public string LibDirectory { get; }
+		public string JavaOptions { get; }
 		public bool Started { get; private set; }
 		public int Port { get; private set; }
-		public IEnumerable<string> AdditionalArguments { get; private set; }
+		public IEnumerable<string> AdditionalArguments { get; }
 		public bool NoColor { get; private set; }
 		private readonly Subject<ManualResetEvent> _blockingSubject = new Subject<ManualResetEvent>();
 
@@ -44,11 +46,12 @@ namespace Elastic.Installer.Domain.Process
 
 			this.LibDirectory = Path.Combine(this.HomeDirectory, "lib");
 			this.JavaOptions = new LocalJvmOptionsConfiguration(Path.Combine(this.ConfigDirectory, "jvm.options")).ToString();
-			this.ElasticsearchJar = Directory.GetFiles(this.LibDirectory).Where(l =>
-			{
-				var fileName = Path.GetFileName(l);
-				return fileName != null && fileName.StartsWith("elasticsearch-");
-			}).FirstOrDefault();
+
+			var libs = new HashSet<string>(Directory.GetFiles(this.LibDirectory));
+			this.ElasticsearchJar = libs.First(f => Path.GetFileName(f).StartsWith("elasticsearch-"));
+			libs.ExceptWith(new [] { this.ElasticsearchJar });
+			this._libs = libs.ToArray();
+
 			var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Machine);
 			if (javaHome == null)
 				throw new Exception("JAVA_HOME is not set!");
@@ -60,7 +63,7 @@ namespace Elastic.Installer.Domain.Process
 		{
 			this.Stop();
 
-			var classPath = $"{this.ElasticsearchJar};{Path.Combine(this.LibDirectory, "*")}";
+			var classPath = $"{this.ElasticsearchJar};{string.Join(";", _libs)}";
 
 			var arguments = JavaOptions.Split(' ')
 				.Concat(new string[]

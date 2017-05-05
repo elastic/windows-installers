@@ -43,7 +43,7 @@ function Context-ElasticsearchService($Expected) {
     }
 }
 
-function Context-PingNode($ShieldInstalled) {
+function Context-PingNode($XPackSecurityInstalled) {
     Context "Ping node" {
         $Response = Ping-Node
 
@@ -51,13 +51,13 @@ function Context-PingNode($ShieldInstalled) {
             $Response.Success | Should Be $true
         }
 
-        $ShieldIsInstalled = "Shield is installed"
-        if (! ($ShieldInstalled)) {
-            $ShieldIsInstalled = "Shield is not installed"
+        $XPackSecurityIsInstalled = "X-Pack Security is installed"
+        if (! ($XPackSecurityInstalled)) {
+            $XPackSecurityIsInstalled = "X-Pack Security is not installed"
         }
 
-        It $ShieldIsInstalled {
-            $Response.ShieldInstalled | Should Be $ShieldInstalled
+        It $XPackSecurityIsInstalled {
+            $Response.XPackSecurityInstalled | Should Be $XPackSecurityInstalled
         }
     }
 }
@@ -191,16 +191,17 @@ function Context-ClusterNameAndNodeName($Expected) {
             ClusterName = "elasticsearch"
             NodeName = $($env:COMPUTERNAME)
             Credentials = ""
+			Port = "9200"
         } $Expected
 
     Context "Cluster name and Node name" {
         if ($Expected.Credentials) {
             $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Expected.Credentials)
             $AuthHeaderValue = [Convert]::ToBase64String($Bytes)
-            $Response = Invoke-RestMethod http://localhost:9200 -Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)}
+            $Response = Invoke-RestMethod "http://localhost:$($Expected.Port)" -Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)}
         }
         else {
-            $Response = Invoke-RestMethod http://localhost:9200
+            $Response = Invoke-RestMethod "http://localhost:$($Expected.Port)"
         }
 
         It "cluster_name should be $($Expected.ClusterName)" {
