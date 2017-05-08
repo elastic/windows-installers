@@ -29,7 +29,7 @@ $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 Set-Location $currentDir
 
 # load utils
-. $currentDir\common\Utils.ps1
+. $currentDir\Common\Utils.ps1
 
 # Change this to have more or less verbose messages
 $solutionDir = $(Get-Item $currentDir).Parent.Parent.Parent.FullName
@@ -61,6 +61,7 @@ log "running $Count test scenarios"
 # copy files needed for each test
 foreach ($dir in $testDirs) {
     log "Running tests in $dir"
+	Copy-Item "$currentDir\Common\Vagrantfile" -Destination $dir -Force
     Invoke-IntegrationTests -location $dir -version $Version
 }
 
