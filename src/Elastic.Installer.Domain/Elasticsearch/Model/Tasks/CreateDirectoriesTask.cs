@@ -13,7 +13,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 		public CreateDirectoriesTask(InstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
 
-		private const int TotalTicks = 4000;
+		private const int TotalTicks = 5000;
 		private FileSystemAccessRule _fileAccess;
 
 		protected override bool ExecuteTask()
@@ -26,7 +26,23 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 
 			CreateConfigDirectory();
 
+			CreatePluginsDirectory();
+
 			return true;
+		}
+
+		private void CreatePluginsDirectory()
+		{
+			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
+			var pluginsDirectory = Path.Combine(installDirectory, "plugins");
+
+			if (!this.FileSystem.Directory.Exists(pluginsDirectory))
+			{
+				this.Session.SendProgress(1000, $"creating plugins directory {pluginsDirectory}");
+				this.FileSystem.Directory.CreateDirectory(pluginsDirectory);
+			}
+			else
+				this.Session.SendProgress(1000, $"using existing plugins directory {pluginsDirectory}");
 		}
 
 		private void CreateLogsDirectory()
@@ -58,7 +74,6 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 			//create new config directory if it does not already exist
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
 			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
-
 			var installConfigDirectory = Path.Combine(installDirectory, "config");
 
 			int actionsTaken = 0;

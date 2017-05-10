@@ -209,3 +209,6 @@ build/scripts/.fake
 # NCrunch
 *.ncrunchproject
 *.ncrunchsolution
+
+# Integration tests
+**/Elastic.Installer.Integration.Tests/Tests/**/Vagrantfile

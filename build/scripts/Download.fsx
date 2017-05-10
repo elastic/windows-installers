@@ -1,4 +1,9 @@
-﻿#I "../../packages/build/FAKE/tools"#I "../../packages/build/Fsharp.Data/lib/net40"#r "FakeLib.dll"#r "Fsharp.Data.dll"#r "System.Xml.Linq.dll"
+﻿#I "../../packages/build/FAKE/tools"
+#I "../../packages/build/Fsharp.Data/lib/net40"
+#r "FakeLib.dll"
+#r "Fsharp.Data.dll"
+#r "System.Xml.Linq.dll"
+
 namespace Scripts
 
 module Downloader = 

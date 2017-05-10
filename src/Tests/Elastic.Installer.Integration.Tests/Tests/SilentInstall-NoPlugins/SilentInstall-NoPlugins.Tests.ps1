@@ -9,7 +9,7 @@ Describe "Silent Install with no plugins" {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=")
 
-    Context-PingNode -ShieldInstalled $false
+    Context-PingNode -XPackSecurityInstalled $false
 
     Context-PluginsInstalled -Expected @{ Plugins=@() }
 
