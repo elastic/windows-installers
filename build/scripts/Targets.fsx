@@ -1,6 +1,4 @@
-﻿// Learn more about F# at http://fsharp.net. See the 'F# Tutorial' project
-// for more guidance on F# programming.
-#I "../../packages/build/FAKE/tools"
+﻿#I "../../packages/build/FAKE/tools"
 #I "../../packages/build/System.Management.Automation/lib/net45"
 #r "FakeLib.dll"
 #r "System.Management.Automation.dll"
@@ -10,23 +8,38 @@
 open System
 open System.IO
 open System.Management.Automation
+open System.Text.RegularExpressions
 open Fake
 open Fake.FileHelper
 open Scripts
 open Scripts.Downloader
 open Fake.Testing.XUnit2
 
-//tracefn "last version is %s" Downloader.lastVersion
-
-let version = getBuildParamOrDefault "version" Downloader.lastVersion
-let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
-
-tracefn "Starting build for version %s" version
-
 let buildDir = "./build/"
 let toolsDir = buildDir @@ "tools/"
 let inDir = buildDir @@ "in/"
 let outDir = buildDir @@ "out/"
+let resultsDir = buildDir @@ "results/"
+
+let version =
+    let extractVersion (fileInfo:FileInfo) = 
+        Regex.Replace(fileInfo.Name, "^elasticsearch\-(.*)\.zip$", "$1")
+    let explicitVersion = getBuildParam "version"
+    if isNullOrEmpty explicitVersion 
+    then 
+        match getBuildParam "release" with
+        | "1" -> 
+            let zips = inDir 
+                       |> directoryInfo 
+                       |> filesInDirMatching "elasticsearch*.zip"
+            match zips.Length with
+            | 0 -> failwithf "No elasticsearch zip file found in %s" inDir
+            | 1 -> extractVersion zips.[0]
+            | _ -> failwithf "Expecting one elasticsearch zip file in %s but found %i" inDir zips.Length
+        | _ -> Downloader.lastVersion()
+    else explicitVersion
+
+tracefn "Starting build for version %s" version
 
 let msiDir = "./src/Elastic.Installer.Msi/"
 let msiBuildDir = msiDir @@ "bin/Release/"
@@ -36,15 +49,10 @@ let esServiceDir = "./src/Elasticsearch/Elastic.Installer.Elasticsearch.Process/
 let esServiceBuildDir = esServiceDir @@ "bin/AnyCPU/Release/"
 
 let integrationTestsDir = FullName "./src/Tests/Elastic.Installer.Integration.Tests"
-
 let unitTestsDir = "src/Tests/Elastic.Installer.Domain.Tests"
 
 Target "Clean" (fun _ ->
-    CleanDirs [
-                msiBuildDir
-                esServiceBuildDir
-                outDir
-              ]
+    CleanDirs [msiBuildDir; esServiceBuildDir; outDir; resultsDir]
 )
 
 Target "DownloadProducts" (fun () ->
@@ -70,7 +78,7 @@ Target "UnitTest" (fun () ->
     |> Log "MsiBuild-Output: "
 
     !! (unitTestBuildDir @@ "*Tests.dll")
-        |> xUnit2 (fun p -> { p with HtmlOutputPath = Some (outDir @@ "xunit.html") })
+        |> xUnit2 (fun p -> { p with HtmlOutputPath = Some (resultsDir @@ "xunit.html") })
 )
 
 Target "PruneFiles" (fun () ->
@@ -80,8 +88,21 @@ Target "PruneFiles" (fun () ->
 
 let signFile file (product : Product) =
     let signToolExe = toolsDir @@ "signtool/signtool.exe"
-    let certificate = Environment.GetEnvironmentVariable("ELASTIC_CERT_FILE", EnvironmentVariableTarget.Machine)
-    let password = Environment.GetEnvironmentVariable("ELASTIC_CERT_PASSWORD", EnvironmentVariableTarget.Machine)
+
+    let certificate =
+        let path = getBuildParam "certificate"
+        if (isNullOrEmpty path) 
+        then Environment.GetEnvironmentVariable("ELASTIC_CERT_FILE", EnvironmentVariableTarget.Machine)
+        elif fileExists path then path
+        else failwithf "Certificate not found at %s" path
+    
+    let password = 
+        let path = getBuildParam "password"
+        if (isNullOrEmpty path) 
+        then Environment.GetEnvironmentVariable("ELASTIC_CERT_PASSWORD", EnvironmentVariableTarget.Machine)
+        elif fileExists path then File.ReadAllText path
+        else failwithf "Password not found at %s" path    
+
     let timestampServer = "http://timestamp.comodoca.com"
     let timeout = TimeSpan.FromMinutes 1.
     let description = System.Globalization.CultureInfo.GetCultureInfo(System.Threading.Thread.CurrentThread.CurrentCulture.Name).TextInfo.ToTitleCase product.Name
@@ -91,7 +112,7 @@ let signFile file (product : Product) =
             info.FileName <- signToolExe
             info.Arguments <- ["sign"; "/f"; certificate; "/p"; password; "/t"; timestampServer; "/d"; description; "/v"; file] |> String.concat " "
          ) <| timeout |> ignore
-    else raise (Exception(sprintf "Failed to sign %s: Certificate not found." file))
+    else failwithf "Failed to sign %s: Certificate not found." file
 
 // TODO need to make this more generic to handle other services eventually
 let buildService (product : Product) sign =
@@ -146,6 +167,7 @@ Target "Release" (fun () ->
 )
 
 Target "Integrate" (fun () ->
+  let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
   let script = sprintf "cd '%s'; %s -Tests %s -Version %s" integrationTestsDir ".\Bootstrapper.ps1" integrationTestsTargets version
   trace (sprintf "Running Powershell script: \"%s\"" script)
   use p = PowerShell.Create()

@@ -68,7 +68,7 @@ module Downloader =
     
     type DownloadFeed = XmlProvider< "https://www.elastic.co/downloads/past-releases/feed" >
     
-    let lastVersion = 
+    let lastVersion() = 
         let feed = DownloadFeed.Load "https://www.elastic.co/downloads/past-releases/feed"
         let firstEsLink = feed.Channel.Items |> Seq.find (fun item -> itemIsElasticsearch item.Title)
         let replaced = Regex.Replace(firstEsLink.Title, "^(?:\s*Elasticsearch\s*)?(\d+\.\d+\.\d+(?:-\w+)?).*$", "$1")
