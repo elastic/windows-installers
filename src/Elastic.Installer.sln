@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E1497696
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.Installer.Msi", "Elastic.Installer.Msi\Elastic.Installer.Msi.csproj", "{8A6EF460-19C3-4676-8D2A-DFF23B326278}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Elastic.Installer.Integration.Tests", "Tests\Elastic.Installer.Integration.Tests\Elastic.Installer.Integration.Tests.xproj", "{E974DBD8-906A-4A20-AC9E-A1B09F725197}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elastic.Installer.Integration.Tests", "Tests\Elastic.Installer.Integration.Tests\Elastic.Installer.Integration.Tests.csproj", "{E974DBD8-906A-4A20-AC9E-A1B09F725197}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

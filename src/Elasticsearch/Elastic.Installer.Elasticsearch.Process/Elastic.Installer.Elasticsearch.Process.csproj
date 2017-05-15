@@ -105,5 +105,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\..\..\packages\Fody\build\$(__paket__Fody_targets).targets" Condition="Exists('..\..\..\packages\Fody\build\$(__paket__Fody_targets).targets')" Label="Paket" />
+  <Import Project="..\..\..\packages\Fody\build\$(__paket__Fody_targets).targets" Condition="Exists('..\..\..\packages\Fody\build\$(__paket__Fody_targets).targets') And '$(NCrunch)' != '1'" Label="Paket" />
 </Project>
