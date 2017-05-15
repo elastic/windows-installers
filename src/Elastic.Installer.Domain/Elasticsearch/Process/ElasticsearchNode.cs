@@ -56,6 +56,9 @@ namespace Elastic.Installer.Domain.Process
 			if (javaHome == null)
 				throw new Exception("JAVA_HOME is not set!");
 			this.JavaExe = Path.Combine(javaHome, @"bin\java.exe");
+
+			if (!File.Exists(this.JavaExe))
+				throw new Exception("JAVA_HOME set but bin\\java.exe is not found using it as the root");
 		}
 
 
