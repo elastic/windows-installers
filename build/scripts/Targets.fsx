@@ -6,6 +6,8 @@
 #load "BuildConfig.fsx"
 
 open System
+open System.Diagnostics
+open System.Text
 open System.IO
 open System.Management.Automation
 open System.Text.RegularExpressions
@@ -87,19 +89,24 @@ Target "PruneFiles" (fun () ->
         if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file))
 
 let signFile file (product : Product) =
-    let signToolExe = toolsDir @@ "signtool/signtool.exe"
 
     let certificate =
         let path = getBuildParam "certificate"
-        if (isNullOrEmpty path) 
-        then Environment.GetEnvironmentVariable("ELASTIC_CERT_FILE", EnvironmentVariableTarget.Machine)
+        if (isNullOrWhiteSpace path) 
+        then 
+            let env = Environment.GetEnvironmentVariable("ELASTIC_CERT_FILE", EnvironmentVariableTarget.Machine)
+            if (isNullOrWhiteSpace env) then failwithf "No ELASTIC_CERT_FILE environment variable set"
+            env
         elif fileExists path then path
         else failwithf "Certificate not found at %s" path
     
     let password = 
         let path = getBuildParam "password"
-        if (isNullOrEmpty path) 
-        then Environment.GetEnvironmentVariable("ELASTIC_CERT_PASSWORD", EnvironmentVariableTarget.Machine)
+        if (isNullOrWhiteSpace path) 
+        then 
+            let env = Environment.GetEnvironmentVariable("ELASTIC_CERT_PASSWORD", EnvironmentVariableTarget.Machine)
+            if (isNullOrWhiteSpace env) then failwithf "No ELASTIC_CERT_PASSWORD environment variable set"
+            env
         elif fileExists path then File.ReadAllText path
         else failwithf "Password not found at %s" path    
 
@@ -107,12 +114,44 @@ let signFile file (product : Product) =
     let timeout = TimeSpan.FromMinutes 1.
     let description = System.Globalization.CultureInfo.GetCultureInfo(System.Threading.Thread.CurrentThread.CurrentCulture.Name).TextInfo.ToTitleCase product.Name
 
-    if certificate <> null && password <> null
-    then ExecProcess(fun info ->
-            info.FileName <- signToolExe
-            info.Arguments <- ["sign"; "/f"; certificate; "/p"; password; "/t"; timestampServer; "/d"; description; "/v"; file] |> String.concat " "
-         ) <| timeout |> ignore
-    else failwithf "Failed to sign %s: Certificate not found." file
+    let sign () =
+        let signToolExe = toolsDir @@ "signtool/signtool.exe"
+        let args = ["sign"; "/f"; certificate; "/p"; password; "/t"; timestampServer; "/d"; description; "/v"; file] |> String.concat " "
+        let redactedArgs = args.Replace(password, "<redacted>")
+
+        use proc = new Process()
+        proc.StartInfo.UseShellExecute <- false
+        proc.StartInfo.FileName <- signToolExe
+        proc.StartInfo.Arguments <- args
+        platformInfoAction proc.StartInfo             
+        proc.StartInfo.RedirectStandardOutput <- true
+        proc.StartInfo.RedirectStandardError <- true
+        if isMono then
+            proc.StartInfo.StandardOutputEncoding <- Encoding.UTF8
+            proc.StartInfo.StandardErrorEncoding  <- Encoding.UTF8
+        proc.ErrorDataReceived.Add(fun d ->
+            if d.Data <> null then traceError d.Data)
+        proc.OutputDataReceived.Add(fun d ->
+            if d.Data <> null then trace d.Data)
+
+        try
+            tracefn "%s %s" proc.StartInfo.FileName redactedArgs
+            start proc
+        with exn -> failwithf "Start of process %s failed. %s" proc.StartInfo.FileName exn.Message
+        proc.BeginErrorReadLine()
+        proc.BeginOutputReadLine()
+        if not <| proc.WaitForExit(int timeout.TotalMilliseconds) then
+            try
+                proc.Kill()
+            with exn ->
+                traceError
+                <| sprintf "Could not kill process %s  %s after timeout." proc.StartInfo.FileName redactedArgs
+            failwithf "Process %s %s timed out." proc.StartInfo.FileName redactedArgs
+        proc.WaitForExit()
+        proc.ExitCode
+
+    let exitCode = sign()
+    if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" description exitCode
 
 // TODO need to make this more generic to handle other services eventually
 let buildService (product : Product) sign =
