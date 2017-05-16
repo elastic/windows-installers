@@ -10,6 +10,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 	public class MemoryTests : InstallationModelTestBase
 	{
 		private readonly InstallationModelTester _model;
+		private readonly ulong _smallHeapSize = ConfigurationModel.DefaultHeapSize / 2;
 
 		public MemoryTests()
 		{
@@ -70,13 +71,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 				)
 				.FileSystem(f =>
 				{
-					f.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "jvm.options"), new MockFileData(@"-Xmx2000m"));
+					f.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "jvm.options"), new MockFileData($@"-Xmx{_smallHeapSize}m"));
 					return f;
 				})
 			)
 			.OnStep(m => m.ConfigurationModel, step =>
 			{
-				step.SelectedMemory.Should().Be(2000);
+				step.SelectedMemory.Should().Be(_smallHeapSize);
 			})
 			.IsValidOnFirstStep();
 	}
