@@ -44,7 +44,7 @@ Test-AtlasToken
 Test-HyperV
 
 $installer = Get-Installer -location $buildOutDir
-if (!$installer) {
+if ($installer -eq $null) {
     log "No installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
     Exit
 }

@@ -128,10 +128,10 @@ NUGET
     FSharp.Configuration (0.6.2)
     FSharp.Data (2.3.2)
       Zlib.Portable (>= 1.11) - framework: >= netstandard11, portable-net45+sl5+win8, portable-net45+win8, portable-net45+win8+wp8+wpa81
+    FSharp.Text.RegexProvider (1.0)
     System.Management.Automation (6.1.7601.17515)
+    xunit.runner.console (2.2)
     Zlib.Portable (1.11) - framework: >= netstandard11, portable-net45+sl5+win8, portable-net45+win8, portable-net45+win8+wp8+wpa81
-  remote: https://www.myget.org/F/xunit
-    xunit.runner.console (2.2.0)
 
 GROUP tests
 NUGET
