@@ -192,19 +192,19 @@ let buildMsi (product : Product) sign =
 
 Target "BuildServices" (fun () ->
     buildService Product.Elasticsearch false esServiceDir esServiceBuildDir esBinDir
-    buildService Product.Kibana false kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
+    // buildService Product.Kibana false kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
 )
 
 Target "BuildInstallers" (fun () ->
     buildMsi Product.Elasticsearch false
-    buildMsi Product.Kibana false
+    // buildMsi Product.Kibana false
 )
 
 Target "Sign" (fun () ->
     buildService Product.Elasticsearch true esServiceDir esServiceBuildDir esBinDir
-    buildService Product.Kibana true kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
+    // buildService Product.Kibana true kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
     buildMsi Product.Elasticsearch true
-    buildMsi Product.Kibana true
+    // buildMsi Product.Kibana true
 )
 
 Target "Release" (fun () ->
