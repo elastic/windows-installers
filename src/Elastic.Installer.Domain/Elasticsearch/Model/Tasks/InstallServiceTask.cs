@@ -2,19 +2,20 @@
 using System.IO.Abstractions;
 using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Session;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class InstallServiceTask : InstallationTask
+	public class InstallServiceTask : ElasticsearchInstallationTask
 	{
 		private IServiceStateProvider ServiceStateProvider { get; }
 
 		public InstallServiceTask(string[] args, ISession session) : base(args, session)
 		{
-			this.ServiceStateProvider = new ServiceStateProvider(session);
+			this.ServiceStateProvider = new ServiceStateProvider(session, "Elasticsearch");
 		}
 
-		public InstallServiceTask(InstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
+		public InstallServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
 			: base(model, session, fileSystem)
 		{
 			this.ServiceStateProvider = serviceConfig;

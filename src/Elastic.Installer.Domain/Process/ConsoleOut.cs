@@ -1,4 +1,4 @@
-namespace Elastic.Installer.Domain.Process.ObservableWrapper
+namespace Elastic.Installer.Domain.Process
 {
 	public class ConsoleOut
 	{

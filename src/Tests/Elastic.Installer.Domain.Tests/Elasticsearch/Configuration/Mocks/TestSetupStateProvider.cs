@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Session;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 {

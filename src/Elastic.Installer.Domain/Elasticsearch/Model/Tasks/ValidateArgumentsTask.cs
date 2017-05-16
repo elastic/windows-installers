@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class ValidateArgumentsTask : InstallationTask
+	public class ValidateArgumentsTask : ElasticsearchInstallationTask
 	{
 		public ValidateArgumentsTask(string[] args, ISession session) : base(args, session) { }
 
 		protected override bool ExecuteTask()
 		{
-			this.Session.Log("Passed Args:\r\n" + string.Join(", ", this.Args));
-			this.Session.Log("ViewModelState:\r\n" + this.InstallationModel.ToString());
+			this.Session.Log("Passed Args:\r\n" + string.Join(", ", this.SanitizedArgs));
+			this.Session.Log("ViewModelState:\r\n" + this.InstallationModel);
 			if (!this.InstallationModel.IsValid || this.InstallationModel.Steps.Any(s => !s.IsValid))
 			{
 				var errorPrefix = $"Cannot continue installation because of the following errors";

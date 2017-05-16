@@ -4,14 +4,14 @@ using System.Reactive.Concurrency;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Elastic.Installer.UI;
 using ReactiveUI;
 using Elastic.Installer.Domain.Session;
 using Semver;
 using System.Reactive.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Model;
-using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
+using Elastic.Installer.UI.Elasticsearch;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Shared.Model.Closing;
 
 namespace Elastic.Installer.Elasticsearch.DevHost
 {
@@ -30,7 +30,7 @@ namespace Elastic.Installer.Elasticsearch.DevHost
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
 			var wix = new DemoWixStateProvider();
-			var model = InstallationModel.Create(wix, new NoopSession());
+			var model = ElasticsearchInstallationModel.Create(wix, new NoopSession());
 
 			var window = new MainWindow(model, new ManualResetEvent(false));
 			model.InstallUITask = async () =>

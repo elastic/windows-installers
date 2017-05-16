@@ -8,10 +8,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 {
 	public class InstallationModelArgumentsTestsBase : InstallationModelTestBase
 	{
-		protected void Argument<T>(string key, T value, Action<InstallationModel> assert) =>
+		protected void Argument<T>(string key, T value, Action<ElasticsearchInstallationModel> assert) =>
 			this.Argument(key, value, (s, v) => assert(s));
 
-		protected void Argument<T>(string key, T value, Action<InstallationModel, T> assert)
+		protected void Argument<T>(string key, T value, Action<ElasticsearchInstallationModel, T> assert)
 		{
 			var model = WithValidPreflightChecks().InstallationModel;
 			string msiParams = AssertParser(model, key, value, assert);
@@ -21,7 +21,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		}
 
-		protected void Argument<T>(string key, T value, string msiParam, Action<InstallationModel, T> assert)
+		protected void Argument<T>(string key, T value, string msiParam, Action<ElasticsearchInstallationModel, T> assert)
 		{
 			var model = WithValidPreflightChecks().InstallationModel;
 			string msiParams = AssertParser(model, key, value, assert);
@@ -29,7 +29,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		}
 
-		private string AssertParser<T>(InstallationModel model, string key, T value, Action<InstallationModel, T> assert)
+		private string AssertParser<T>(ElasticsearchInstallationModel model, string key, T value, Action<ElasticsearchInstallationModel, T> assert)
 		{
 			var args = new[] { $"{key.Split('.').Last()}={value}" };
 			var models = model.Steps.Cast<IValidatableReactiveObject>().Concat(new[] { model }).ToList();

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using SharpYaml.Serialization;
+using Elastic.Installer.Domain.Shared.Configuration.FileBased;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased
 {
-	public class ElasticsearchYamlSettings : Dictionary<string, object>
+	public class ElasticsearchYamlSettings : Dictionary<string, object>, IYamlSettings
 	{
 		[YamlMember("cluster.name", SerializeMemberMode.Content)]
 		[DefaultValue(null)]

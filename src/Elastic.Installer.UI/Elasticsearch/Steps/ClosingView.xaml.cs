@@ -8,6 +8,7 @@ using Elastic.Installer.UI.Controls;
 using Elastic.Installer.UI.Properties;
 using FluentValidation.Results;
 using ReactiveUI;
+using Elastic.Installer.Domain.Shared.Model.Closing;
 
 namespace Elastic.Installer.UI.Elasticsearch.Steps
 {
@@ -30,12 +31,12 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 		protected override void InitializeBindings()
 		{
 			this.Bind(ViewModel, vm => vm.OpenDocumentationAfterInstallation, v => v.ReadTheDocsOnCloseCheckBox.IsChecked);
-			this.BindCommand(ViewModel, vm => vm.OpenElasticsearch, v => v.OpenElasticsearch, nameof(OpenElasticsearch.Click));
+			this.BindCommand(ViewModel, vm => vm.OpenProduct, v => v.OpenElasticsearch, nameof(OpenElasticsearch.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenGettingStarted, v => v.OpenGettingStarted, nameof(OpenGettingStarted.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenReference, v => v.OpenReference, nameof(OpenReference.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenFindYourClient, v => v.OpenFindYourClient, nameof(OpenFindYourClient.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenInstallationLog, v => v.OpenInstallationLog, nameof(OpenInstallationLog.Click));
-			this.BindCommand(ViewModel, vm => vm.OpenElasticsearchLog, v => v.OpenElasticsearchLog, nameof(OpenElasticsearchLog.Click));
+			this.BindCommand(ViewModel, vm => vm.OpenProductLog, v => v.OpenElasticsearchLog, nameof(OpenElasticsearchLog.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenIssues, v => v.OpenIssues, nameof(OpenIssues.Click));
 
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
@@ -43,11 +44,11 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			var host = "http://localhost:9200";
 			this.ViewModel.Host.Subscribe(h => host = h);
-			this.ViewModel.OpenElasticsearch.Subscribe(x => Process.Start(host));
+			this.ViewModel.OpenProduct.Subscribe(x => Process.Start(host));
 
 			string elasticsearchLog = null;
-			this.ViewModel.ElasticsearchLog.Subscribe(l => elasticsearchLog = l);
-			this.ViewModel.OpenElasticsearchLog.Subscribe(x => Process.Start(elasticsearchLog));
+			this.ViewModel.ProductLog.Subscribe(l => elasticsearchLog = l);
+			this.ViewModel.OpenProductLog.Subscribe(x => Process.Start(elasticsearchLog));
 
 			this.ViewModel.OpenReference.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/reference/{majorMinor}/index.html"));
 			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/guide/index.html"));
@@ -92,7 +93,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			{
 				case ClosingResult.Success:
 					this.GridSuccess.Visibility = Visibility.Visible;
-					this.ResultTitleLabel.Content = string.Format(ViewResources.ClosingView_TitleSuccess, installedOrUpgradedLanguage);
+					this.ResultTitleLabel.Content = string.Format(ViewResources.ClosingView_TitleSuccess, "Elasticsearch", installedOrUpgradedLanguage);
 					this.ResultParagraphLabel.Visibility = Visibility.Hidden;
 					this.OpenElasticsearch.Visibility = 
 						this.ViewModel.ServiceStateProvider.Running ? Visibility.Visible : Visibility.Collapsed;

@@ -60,13 +60,13 @@ IF /I "%1"=="release" (
 
 	  if NOT [%3]==[] (
 		set CERTIFICATE="%3"
-	  )
+    ) 
 	  if NOT [%4]==[] (
 		set PASSWORD="%4"
-	  )
-    ) 
+  )
+)
   )
 )
 
-
+ECHO build.bat: target=%TARGET% version=%VERSION% testtargets=%TESTTARGETS% release=%RELEASE%
 "packages\build\FAKE\tools\Fake.exe" "build\\scripts\\Targets.fsx" "target=%TARGET%" "version=%VERSION%" "testtargets=%TESTTARGETS%" "release=%RELEASE%" "certificate=%CERTIFICATE%" "password=%PASSWORD%"

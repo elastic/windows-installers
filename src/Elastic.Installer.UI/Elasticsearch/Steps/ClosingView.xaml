@@ -60,13 +60,13 @@
         <Button Grid.Row="1" Grid.Column="0" x:Name="OpenElasticsearch"  Style="{DynamicResource Link}"
              FontWeight="Bold"
              Margin="6, 12, 0,0"
-             Content="{x:Static resx:ViewResources.ClosingView_RunningAtHeader}" 
+             Content="{x:Static resx:ViewResources.ClosingView_ElasticsearchRunningAtHeader}" 
            HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <Button Grid.Row="2" Grid.Column="0" x:Name="OpenGettingStarted"  Style="{DynamicResource Link}" 
              FontWeight="Bold" 
              Margin="6, 12, 0,0"
-             Content="{x:Static resx:ViewResources.ClosingView_ReadGettingStarted}"
+             Content="{x:Static resx:ViewResources.ClosingView_ReadDefinitiveGuide}"
              HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <Button Grid.Row="3" Grid.Column="0" x:Name="OpenReference"  Style="{DynamicResource Link}" 
@@ -134,8 +134,8 @@
 
         <Label Grid.Row="0" x:Name="PreemptReasonLabel"
                HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
-        
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding PrequisiteFailures}">
+
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding PrerequisiteFailures}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding StringFormat='• {0}'}" />

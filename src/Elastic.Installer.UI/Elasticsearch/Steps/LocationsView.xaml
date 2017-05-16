@@ -43,7 +43,7 @@
       <TextBox x:Name="InstallDirectoryTextBox" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="5,0,5,0" />
       <Button x:Name="InstallDirectoryBrowseButton" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_InstallDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
 
-      <CheckBox x:Name="CustomLocationsCheckBox" Grid.Row="2" Grid.ColumnSpan="3" Content="{x:Static resx:ViewResources.LocationsView_CustomLocationsCheckBox}" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontWeight="SemiBold" Margin="5,0,0,0"/>
+      <CheckBox x:Name="CustomLocationsCheckBox" Grid.Row="2" Grid.ColumnSpan="3" Content="{x:Static resx:ViewResources.LocationsView_ElasticsearchCustomLocationsCheckBox}" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontWeight="SemiBold" Margin="5,0,0,0"/>
 
       <Label x:Name="DataDirectoryLabel" Grid.Row="3" Grid.Column="0" Content="{x:Static resx:ViewResources.LocationsView_DataDirectoryLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
       <TextBox x:Name="DataDirectoryTextBox" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="0,0,5,0" />

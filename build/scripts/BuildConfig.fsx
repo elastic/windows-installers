@@ -1,6 +1,7 @@
 ﻿#I "../../packages/build/FAKE/tools"
 #I "../../packages/build/Fsharp.Data/lib/net40"
-#I "../../packages/build/Fsharp.Configuration/lib/net40"
+#I "../../packages/build/Fsharp.Configuration/lib/net46"
+
 #r "FakeLib.dll"
 #r "Fsharp.Data.dll"
 #r "System.Xml.Linq.dll"
@@ -29,13 +30,13 @@ namespace Elastic.Installer.Domain
 	public static class ProductGuids
 	{
 """
-        WriteStringToFile true file (sprintf "		public static Guid ElasticsearchUpgradeCode => new Guid(\"%s\");\r\n" config.elasticsearch.upgrade_code)
-        WriteStringToFile true file (sprintf "		public static Guid KibanaUpgradeCode => new Guid(\"%s\");" config.kibana.upgrade_code)
+        WriteStringToFile true file (sprintf "		public static Guid ElasticsearchUpgradeCode => new Guid(\"%A\");\r\n" config.elasticsearch.upgrade_code)
+        WriteStringToFile true file (sprintf "		public static Guid KibanaUpgradeCode => new Guid(\"%A\");" config.kibana.upgrade_code)
         WriteStringToFile true file  """
 		public static Dictionary<string, Guid> ElasticsearchProductCodes => new Dictionary<string, Guid>
 		{
 """
-        let dictValues = config.elasticsearch.known_versions |> Seq.map (fun v -> sprintf "			{ \"%s\", new Guid(\"%s\") }" v.version v.guid)
+        let dictValues = config.elasticsearch.known_versions |> Seq.map (fun v -> sprintf "			{ \"%s\", new Guid(\"%A\") }" v.version v.guid)
         let guids = dictValues |> String.concat ",\r\n"
         WriteStringToFile true file  guids
         WriteStringToFile true file """
@@ -46,7 +47,7 @@ namespace Elastic.Installer.Domain
 		public static Dictionary<string, Guid> KibanaProductCodes => new Dictionary<string, Guid>
 		{
 """
-        let dictValues = config.kibana.known_versions |> Seq.map (fun v -> sprintf "			{ \"%s\", new Guid(\"%s\") }" v.version v.guid)
+        let dictValues = config.kibana.known_versions |> Seq.map (fun v -> sprintf "			{ \"%s\", new Guid(\"%A\") }" v.version v.guid)
         let guids = dictValues |> String.concat ",\r\n"
         WriteStringToFile true file  guids
         WriteStringToFile true file """
@@ -69,7 +70,7 @@ namespace Elastic.Installer.Domain
             match esVersionFind with 
             | Some guid -> guid.guid
             | _ ->
-                let newGuid = Guid.NewGuid().ToString()
+                let newGuid = Guid.NewGuid()
                 let newVersion = new TypedConfig.elasticsearch_Type.known_versions_Item_Type(version=version, guid=newGuid)
                 config.elasticsearch.known_versions.Add newVersion
                 newGuid
@@ -79,7 +80,7 @@ namespace Elastic.Installer.Domain
             match kibanaVersionFind with 
             | Some guid -> guid.guid
             | _ ->
-                let newGuid = Guid.NewGuid().ToString()
+                let newGuid = Guid.NewGuid()
                 let newVersion = new TypedConfig.kibana_Type.known_versions_Item_Type(version=version, guid=newGuid)
                 config.kibana.known_versions.Add newVersion
                 newGuid

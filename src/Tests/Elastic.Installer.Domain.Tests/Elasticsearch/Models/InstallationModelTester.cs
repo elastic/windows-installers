@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
 using Elastic.Installer.Domain.Elasticsearch.Model;
 using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
@@ -14,12 +12,14 @@ using Elastic.Installer.Domain.Session;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using FluentAssertions;
 using FluentValidation.Results;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 {
 	public class InstallationModelTester
 	{
-		public InstallationModel InstallationModel { get; }
+		public ElasticsearchInstallationModel InstallationModel { get; }
 		public JavaConfiguration JavaConfig { get; }
 		public ElasticsearchYamlConfiguration EsConfig { get; }
 		public LocalJvmOptionsConfiguration JvmConfig { get; }
@@ -61,13 +61,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			this.JavaConfig = new JavaConfiguration(javaState);
 			this.EsConfig = ElasticsearchYamlConfiguration.FromFolder(esState.ConfigDirectory, fileSystem);
 			this.JvmConfig = LocalJvmOptionsConfiguration.FromFolder(esState.ConfigDirectory, fileSystem);
-			this.InstallationModel = new InstallationModel(
+			this.InstallationModel = new ElasticsearchInstallationModel(
 				wixState, JavaConfig, esState, serviceState, pluginState,  EsConfig, JvmConfig, session, args);
 			this.FileSystem = fileSystem;
 		}
 
 		public InstallationModelTester IsInvalidOnStep(
-			Func<InstallationModel, IValidatableReactiveObject> selector,
+			Func<ElasticsearchInstallationModel, IValidatableReactiveObject> selector,
 			Action<IList<ValidationFailure>> validateErrors = null
 			)
 		{
@@ -80,8 +80,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			var firstStep = this.InstallationModel.Steps.First();
 			this.InstallationModel.ActiveStep.Should().Be(firstStep);
 
-			this.InstallationModel.PrequisiteFailures.Should().NotBeEmpty();
-			validateErrors?.Invoke(this.InstallationModel.PrequisiteFailures);
+			this.InstallationModel.PrerequisiteFailures.Should().NotBeEmpty();
+			validateErrors?.Invoke(this.InstallationModel.PrerequisiteFailures);
 
 			return this;
 		}
@@ -136,7 +136,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			return this;
 		}
 
-		public InstallationModelTester IsValidOnStep(Func<InstallationModel, IValidatableReactiveObject> selector)
+		public InstallationModelTester IsValidOnStep(Func<ElasticsearchInstallationModel, IValidatableReactiveObject> selector)
 		{
 			var step = selector(this.InstallationModel);
 			return IsValidOnStep(step);
@@ -191,7 +191,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 
 		public InstallationModelTester OnStep<TStep>(
-			Func<InstallationModel, TStep> selector,
+			Func<ElasticsearchInstallationModel, TStep> selector,
 			Action<TStep> modify
 			)
 			where TStep : IValidatableReactiveObject
@@ -213,8 +213,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			)
 		);
 
-		public void AssertTask<TTask>(Func<InstallationModel, ISession, MockFileSystem, TTask> createTask, Action<InstallationModel, InstallationModelTester> assert)
-			where TTask : InstallationTask
+		public void AssertTask<TTask>(Func<ElasticsearchInstallationModel, ISession, MockFileSystem, TTask> createTask, Action<ElasticsearchInstallationModel, InstallationModelTester> assert)
+			where TTask : ElasticsearchInstallationTask
 		{
 			var task = createTask(this.InstallationModel, new NoopSession(), this.FileSystem);
 			Action a = () => task.Execute();

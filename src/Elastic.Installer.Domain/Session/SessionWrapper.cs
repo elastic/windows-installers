@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Deployment.WindowsInstaller;
 
 namespace Elastic.Installer.Domain.Session
 {
@@ -41,6 +40,6 @@ namespace Elastic.Installer.Domain.Session
 				Log($"{string.Join(" ", actionDataTemplateParameters.Select((v, i) => $"[{i}] {v}"))}");
 		}
 
-		public bool Uninstalling => string.Equals(this.Get<string>("REMOVE") == "All", StringComparison.OrdinalIgnoreCase);
+		public bool Uninstalling => string.Equals(this.Get<string>("REMOVE"), "All", StringComparison.OrdinalIgnoreCase);
 	}
 }

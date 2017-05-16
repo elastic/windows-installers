@@ -2,18 +2,19 @@
 using System;
 using System.IO.Abstractions;
 using Elastic.Installer.Domain.Elasticsearch.Configuration;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class StopServiceTask : InstallationTask
+	public class StopServiceTask : ElasticsearchInstallationTask
 	{
 		private IServiceStateProvider ServiceStateProvider { get; }
 
 		public StopServiceTask(string[] args, ISession session) : base(args, session)
 		{
-			this.ServiceStateProvider = new ServiceStateProvider(session);
+			this.ServiceStateProvider = new ServiceStateProvider(session, "Elasticsearch");
 		}
-		public StopServiceTask(InstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
+		public StopServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
 			: base(model, session, fileSystem)
 		{
 			this.ServiceStateProvider = serviceConfig;

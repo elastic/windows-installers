@@ -184,12 +184,12 @@
     <value>Unicast Hosts</value>
   </data>
   <data name="ClosingView_TitleSuccess" xml:space="preserve">
-    <value>Elasticsearch {0} successfully!</value>
+    <value>{0} {1} successfully!</value>
   </data>
   <data name="ClosingView_SubTitleSuccess" xml:space="preserve">
     <value>What's Next?</value>
   </data>
-  <data name="ClosingView_RunningAtHeader" xml:space="preserve">
+  <data name="ClosingView_ElasticsearchRunningAtHeader" xml:space="preserve">
     <value>Open Elasticsearch in the browser</value>
   </data>
   <data name="ClosingView_FindYourClient" xml:space="preserve">
@@ -198,11 +198,11 @@
   <data name="ClosingView_ReadTheReference" xml:space="preserve">
     <value>Read the {0} API reference</value>
   </data>
-  <data name="ClosingView_ReadGettingStarted" xml:space="preserve">
+  <data name="ClosingView_ReadDefinitiveGuide" xml:space="preserve">
     <value>Read "The Definitive Guide" for free online!</value>
   </data>
   <data name="ClosingView_ReadTheDocsOnCloseCheckBox" xml:space="preserve">
-    <value>Open the Elasticsearch documentation after exiting</value>
+    <value>Open the Elastic Stack documentation after exiting</value>
   </data>
   <data name="ClosingView_TitleFailed" xml:space="preserve">
     <value>An error occured during {0}!</value>
@@ -240,7 +240,7 @@
   <data name="LocationsView_ConfigDirectoryLabel" xml:space="preserve">
     <value>Configuration directory</value>
   </data>
-  <data name="LocationsView_CustomLocationsCheckBox" xml:space="preserve">
+  <data name="LocationsView_ElasticsearchCustomLocationsCheckBox" xml:space="preserve">
     <value>Place logs, data, and config in the same directory</value>
   </data>
   <data name="LocationsView_CustomLocationsRadioButton" xml:space="preserve">
@@ -394,7 +394,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
   <data name="NoticeView_RunAsServiceHeaderLabel" xml:space="preserve">
     <value>Install as a service</value>
   </data>
-  <data name="ConfigurationView_Help" xml:space="preserve">
+  <data name="ConfigurationView_Elasticsearch_Help" xml:space="preserve">
     <value>This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We're only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
 
 
@@ -414,10 +414,10 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 
 [b]Transport port[/b]: The port to use for node-to-node communication over the Elasticsearch transport protocol.</value>
   </data>
-  <data name="LocationsView_Help" xml:space="preserve">
+  <data name="LocationsView_Elasticsearch_Help" xml:space="preserve">
     <value>Elasticsearch has several different folders that it needs to have read and/or write access to:
 
-[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are intalled to.
+[b]Home[/b]: The directory where the Elasticsearch binaries, plugins, and scripts are installed to.
 
 [b]Data[/b]: The directory where Elasticsearch stores your data.
 
@@ -428,16 +428,17 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 It is best practice to keep your logs, config, and data directories separate from your home directory.  This keeps your data and configuration safe from overwriting when upgrading to newer versions of Elasticsearch.</value>
   </data>
   <data name="MainWindow_Help" xml:space="preserve">
-    <value>Heya! Welcome the Elasticsearch Windows intaller.
+    <value>Heya! Welcome the {0} Windows intaller.
 
-This installer will walk you through various steps to help you conifigure and install Elasticsearch on your system.  To make things easier, we've gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you'll definitely want to change.</value>
+This installer will walk you through various steps to help you conifigure and install {0} on your system.  To make things easier, we've gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you'll definitely want to change.</value>
+    <comment>{0} = Product name</comment>
   </data>
-  <data name="PluginsView_Help" xml:space="preserve">
+  <data name="PluginsView_Elasticsearch_Help" xml:space="preserve">
     <value>Plugins are a way to enhance the basic Elasticsearch functionality in a custom manner.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), native scripts, custom discovery and more.
 
 We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually.</value>
   </data>
-  <data name="ServiceView_Help" xml:space="preserve">
+  <data name="ServiceView_Elasticsearch_Help" xml:space="preserve">
     <value>By default, Elasticsearch will be installed as a service.
 
 This step allows you to configure the Windows user to run the service with, as well as when the service should be started.
@@ -571,5 +572,128 @@ Alternatively, you may choose to not install Elasticsearch as a service and run 
   </data>
   <data name="SilentSetup__Uninstall" xml:space="preserve">
     <value>Uninstall Elasticsearch</value>
+  </data>
+  <data name="LocationsView_KibanaCustomLocationsCheckBox" xml:space="preserve">
+    <value>Place logs in the same directory</value>
+  </data>
+  <data name="ClosingView_ReadGettingStarted" xml:space="preserve">
+    <value>Read the "Getting Started" guide</value>
+  </data>
+  <data name="ConfigurationView_AllowAnonymousAccessLabel" xml:space="preserve">
+    <value>Allow anonymous access</value>
+  </data>
+  <data name="ConfigurationView_BasePathLabel" xml:space="preserve">
+    <value>Base Path</value>
+  </data>
+  <data name="ConfigurationView_DefaultRouteLabel" xml:space="preserve">
+    <value>Default Route</value>
+  </data>
+  <data name="ConfigurationView_HostNameLabel" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="ConfigurationView_RoutingLabel" xml:space="preserve">
+    <value>Routing</value>
+  </data>
+  <data name="ConfigurationView_SecurityLabel" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="ConfigurationView_ServerCertLabel" xml:space="preserve">
+    <value>Server Certificate</value>
+  </data>
+  <data name="ConfigurationView_ServerKeyLabel" xml:space="preserve">
+    <value>Server Key</value>
+  </data>
+  <data name="ConfigurationView_ServerLabel" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="ConfigurationView_ServerNameLabel" xml:space="preserve">
+    <value>Server Name</value>
+  </data>
+  <data name="ConnectingView_CertificatesLabel" xml:space="preserve">
+    <value>Certificates</value>
+  </data>
+  <data name="ConnectingView_CredentialsLabel" xml:space="preserve">
+    <value>Credentials</value>
+  </data>
+  <data name="ConnectingView_ElasticsearchCALabel" xml:space="preserve">
+    <value>Elasticsearch CA</value>
+  </data>
+  <data name="ConnectingView_ElasticsearchCertLabel" xml:space="preserve">
+    <value>Elasticsearch Cert</value>
+  </data>
+  <data name="ConnectingView_ElasticsearchKeyLabel" xml:space="preserve">
+    <value>Elasticsearch Key</value>
+  </data>
+  <data name="ConnectingView_ElasticsearchLabel" xml:space="preserve">
+    <value>Elasticsearch</value>
+  </data>
+  <data name="ConnectingView_IndexNameLabel" xml:space="preserve">
+    <value>Index Name</value>
+  </data>
+  <data name="ConnectingView_PasswordLabel" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ConnectingView_UrlLabel" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="ConnectingView_UsernameLabel" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="ConfigurationView_BrowseButton" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="ConnectingView_BrowseButton" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="ConfigurationView_Kibana_Help" xml:space="preserve">
+    <value>This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We're only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
+
+
+[b]Host[/b]: This setting specifies the host of the back end server.
+
+[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
+
+[b]Base Path[/b]: Enables you to specify a path to mount Kibana at if you are running behind a proxy. This only affects the URLs generated by Kibana, your proxy is expected to remove the basePath value before forwarding requests to Kibana. This setting cannot end in a slash.
+
+[b]Default Route[/b]: This setting specifies the default route when opening Kibana. You can use this setting to modify the landing page when opening Kibana.
+
+[b]Server Key[/b] and [b]Server Certificate[/b]: Paths to the PEM-format SSL certificate and SSL key files, respectively. These files enable SSL for outgoing requests from the Kibana server to the browser.
+
+[b]Allow anonymous access[/b]: If authentication is enabled, setting this to true allows unauthenticated users to access the Kibana server status API and status page.</value>
+  </data>
+  <data name="ConnectingView_Kibana_Help" xml:space="preserve">
+    <value>This step allows you to specify some settings for connecting to your Elasticsearch cluster.
+
+
+[b]URL[/b]: The URL of the Elasticsearch instance to use for all your queries.
+
+[b]Index Name[/b]: Kibana uses an index in Elasticsearch to store saved searches, visualizations and dashboards. Kibana creates a new index if the index doesn’t already exist.
+
+[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that the Kibana server uses to perform maintenance on the Kibana index at startup. Your Kibana users still need to authenticate with Elasticsearch, which is proxied through the Kibana server.
+
+[b]Elasticsearch Cert[/b] and [b]Elasticsearch Key[/b]: Optional settings that provide the paths to the PEM-format SSL certificate and key files. These files validate that your Elasticsearch backend uses the same key files.
+
+[b]Elasticsearch CA[/b]: Optional setting that enables you to specify a path to the PEM file for the certificate authority for your Elasticsearch instance.</value>
+  </data>
+  <data name="LocationsView_Kibana_Help" xml:space="preserve">
+    <value>Kibana has several different folders that it needs to have read and/or write access to:
+
+[b]Home[/b]: The directory where the Kibana binaries, plugins, and scripts are installed to.
+
+[b]Logs[/b]: The directory where Kibana will write its log files to.
+</value>
+  </data>
+  <data name="PluginsView_Kibana_Help" xml:space="preserve">
+    <value>Plugins are a way to enhance the basic Kibana functionality in a custom manner.  We've only listed the official Kibanas plugins here, but there are many more community plugins that can be installed manually.</value>
+  </data>
+  <data name="ServiceView_Kibana_Help" xml:space="preserve">
+    <value>By default, Kibana will be installed as a service.
+
+This step allows you to configure the Windows user to run the service with, as well as when the service should be started.
+
+Alternatively, you may choose to not install Kibana as a service and run it manually as needed from the command line.</value>
+  </data>
+  <data name="ClosingView_KibanaRunningAtHeader" xml:space="preserve">
+    <value>Open Kibana in the browser</value>
   </data>
 </root>

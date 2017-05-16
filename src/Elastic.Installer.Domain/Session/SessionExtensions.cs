@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elastic.Installer.Domain.Elasticsearch.Model;
 using Elastic.Installer.Domain.Extensions;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -11,29 +10,28 @@ namespace Elastic.Installer.Domain.Session
 	{
 		public static ISession ToISession(this Microsoft.Deployment.WindowsInstaller.Session session) => new SessionWrapper(session);
 
-		private static volatile string[] CachedSetupArguments;
-		private static object _lock = new object { };
+		private static volatile string[] _cachedSetupArguments;
+		private static readonly object Lock = new object();
 
-		public static string[] ToSetupArguments(this Microsoft.Deployment.WindowsInstaller.Session session)
+		public static string[] ToSetupArguments(this Microsoft.Deployment.WindowsInstaller.Session session, IEnumerable<string> allArguments)
 		{
 			if (session == null) return new string[] { };
-			if (CachedSetupArguments != null) return CachedSetupArguments;
-			lock (_lock)
+			if (_cachedSetupArguments != null) return _cachedSetupArguments;
+			lock (Lock)
 			{
-				if (CachedSetupArguments != null) return CachedSetupArguments;
+				if (_cachedSetupArguments != null) return _cachedSetupArguments;
 
-				var allProperties = InstallationModelArgumentParser.AllArguments;
 				var arguments = new List<string>();
-				foreach (var p in allProperties)
+				foreach (var p in allArguments)
 				{
 					string v;
 					if (session.TryGetValue(p, out v))
 						arguments.Add($"{p}={v}");
 				}
-				CachedSetupArguments = arguments.ToArray();
+				_cachedSetupArguments = arguments.ToArray();
 			}
 
-			return CachedSetupArguments;
+			return _cachedSetupArguments;
 		}
 
 		public static bool TryGetValue(this Microsoft.Deployment.WindowsInstaller.Session session, string property, out string value)

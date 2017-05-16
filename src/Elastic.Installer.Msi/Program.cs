@@ -1,5 +1,4 @@
-﻿using Elastic.Installer.Domain.Session;
-using Elastic.Installer.Msi.CustomActions;
+﻿using Elastic.Installer.Msi.CustomActions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,33 +6,26 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using WixSharp;
-using Elastic.Installer.Domain.Elasticsearch.Model;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
-using Elastic.Installer.Msi.Elasticsearch;
-using Elastic.Installer.Msi.Kibana;
 
 namespace Elastic.Installer.Msi
 {
-	class Program
+	public class Program
 	{
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			var productName = args[0].ToLower();
 			var product = GetProduct(productName);
 			var version = args[1];
-			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}"); ;
-
+			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}");
 
 			// set properties in the MSI so that they don't have to be set on the command line.
 			// The only awkward one is plugins as it has a not empty default value, but an empty
 			// string can be passed to not install any plugins
-			var model = InstallationModel.Create(new NoopWixStateProvider(), new NoopSession());
-			var setupParams = model.ToMsiParams();
+			var setupParams = product.MsiParams;
 			var staticProperties = setupParams
 				.Where(v => v.Attribute.IsStatic)
 				.Select(a => new Property(a.Key, a.Value)
 			);
-
 			// Only set dynamic property if MSI is not installed and value is empty 
 			var dynamicProperties = setupParams
 				.Where(v => v.Attribute.IsDynamic)
@@ -77,6 +69,8 @@ namespace Elastic.Installer.Msi
 				InstallScope = InstallScope.perMachine,
 				Properties = new[]
 				{
+					// used by the embedded UI to create the correct installation model
+					new Property("ElasticProduct", productName),
 					// make it easy to reference current version within MSI process
 					new Property("CurrentVersion", version),
 					new Property("MsiLogging", "voicewarmup"),
@@ -84,6 +78,7 @@ namespace Elastic.Installer.Msi
 					new Property("ARPNOREPAIR", "yes"),
 					// do not give option to change installation
 					new Property("ARPNOMODIFY", "yes"),
+					// add .NET Framework 4.5 as a dependency
 					new PropertyRef("NETFRAMEWORK45"),
 				}.Concat(staticProperties).ToArray(),
 				LaunchConditions = new List<LaunchCondition>
@@ -110,7 +105,7 @@ namespace Elastic.Installer.Msi
 										{
 											new DirFiles(distributionRoot + @"\*.*")
 										},
-										Dirs = product.Files(distributionRoot).ToArray()
+										Dirs = product.Files(distributionRoot).ToArray(),
 									}
 								}
 							}
@@ -132,20 +127,20 @@ namespace Elastic.Installer.Msi
 
 			const string wixLocation = @"..\..\packages\WixSharp.wix.bin\tools\bin";
 			if (!Directory.Exists(wixLocation))
-			  throw new Exception($"The directory '{wixLocation}' could not be found");
+				throw new Exception($"The directory '{wixLocation}' could not be found");
 			Compiler.WixLocation = wixLocation;
 			Compiler.BuildWxs(project, $@"_Generated\{productName.ToLower()}.wxs", Compiler.OutputType.MSI);
 			Compiler.BuildMsi(project);
 		}
 
-		static Product GetProduct(string name)
+		private static Product GetProduct(string name)
 		{
 			switch (name.ToLower())
 			{
 				case "elasticsearch":
-					return new ElasticsearchProduct();
+					return new Elasticsearch.Elasticsearch();
 				case "kibana":
-					return new KibanaProduct();
+					return new Kibana.Kibana();
 				default:
 					throw new ArgumentException($"Unknown product: {name}");
 			}

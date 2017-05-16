@@ -61,6 +61,15 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Base Path.
+        /// </summary>
+        public static string ConfigurationModelValidator_BasePath {
+            get {
+                return ResourceManager.GetString("ConfigurationModelValidator_BasePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cluster name must be set..
         /// </summary>
         public static string ConfigurationModelValidator_ClusterName_NotEmpty {
@@ -70,11 +79,29 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Route.
+        /// </summary>
+        public static string ConfigurationModelValidator_DefaultRoute {
+            get {
+                return ResourceManager.GetString("ConfigurationModelValidator_DefaultRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HTTP and transport cannot be bound to the same port: {0}.
         /// </summary>
         public static string ConfigurationModelValidator_EqualPorts {
             get {
                 return ResourceManager.GetString("ConfigurationModelValidator_EqualPorts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A host name must be specified..
+        /// </summary>
+        public static string ConfigurationModelValidator_HostNameMustNotBeEmpty {
+            get {
+                return ResourceManager.GetString("ConfigurationModelValidator_HostNameMustNotBeEmpty", resourceCulture);
             }
         }
         
@@ -125,6 +152,15 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} is not a valid route format.  Routes cannot start or end with &apos;/`..
+        /// </summary>
+        public static string ConfigurationModelValidator_RouteFormatMustBeValid {
+            get {
+                return ResourceManager.GetString("ConfigurationModelValidator_RouteFormatMustBeValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The selected memory is less than 250mb.
         ///Elasticsearch generally works better the more memory you allocate to it..
         /// </summary>
@@ -150,6 +186,24 @@ namespace Elastic.Installer.Domain.Properties {
         public static string ConfigurationModelValidator_TransportPortMinimum {
             get {
                 return ResourceManager.GetString("ConfigurationModelValidator_TransportPortMinimum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A URL to Elasticsearch must be specified..
+        /// </summary>
+        public static string ConnectingModelValidator_ElasticsearchUrlMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ConnectingModelValidator_ElasticsearchUrlMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An index must be specified..
+        /// </summary>
+        public static string ConnectingModelValidator_IndexMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ConnectingModelValidator_IndexMustBeSpecified", resourceCulture);
             }
         }
         
@@ -792,7 +846,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a propietary plugin that falls under the Elastic EULA. A 30 day fully featured trial is provided upon first installation..
+        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. A 30 day fully featured trial license is provided upon first installation..
         /// </summary>
         public static string PluginsModel_XPack {
             get {

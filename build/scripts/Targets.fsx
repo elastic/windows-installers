@@ -1,5 +1,6 @@
 ﻿#I "../../packages/build/FAKE/tools"
 #I "../../packages/build/System.Management.Automation/lib/net45"
+
 #r "FakeLib.dll"
 #r "System.Management.Automation.dll"
 #load "Download.fsx"
@@ -47,9 +48,14 @@ tracefn "Starting build for version %s" version
 let msiDir = "./src/Elastic.Installer.Msi/"
 let msiBuildDir = msiDir @@ "bin/Release/"
 
+// TODO move these directory properties to Product
 let esBinDir = inDir @@ "elasticsearch-" + version @@ "/bin/"
 let esServiceDir = "./src/Elasticsearch/Elastic.Installer.Elasticsearch.Process/"
 let esServiceBuildDir = esServiceDir @@ "bin/AnyCPU/Release/"
+
+let kibanaBinDir = inDir @@ "kibana-" + version @@ "/bin/";
+let kibanaServiceDir = "./src/Kibana/Elastic.Installer.Kibana.Process/"
+let kibanaServiceBuildDir = kibanaServiceDir @@ "bin/AnyCPU/Release/"
 
 let integrationTestsDir = FullName "./src/Tests/Elastic.Installer.Integration.Tests"
 let unitTestsDir = "src/Tests/Elastic.Installer.Domain.Tests"
@@ -61,13 +67,15 @@ Target "Clean" (fun _ ->
 )
 
 Target "DownloadProducts" (fun () ->
-  Downloader.downloadProduct Product.Elasticsearch version
-  //Downloader.downloadProduct Product.Kibana version
-)
+  if (not (Directory.Exists (Product.Elasticsearch.ExtractedDirectory version)))
+  then 
+    Downloader.downloadProduct Product.Elasticsearch version
+    Downloader.unzipProduct Product.Elasticsearch version
 
-Target "UnzipProducts" (fun () ->
-  Downloader.unzipProduct Product.Elasticsearch version
-  //Downloader.unzipProduct Product.Kibana version
+  if (not (Directory.Exists (Product.Kibana.ExtractedDirectory version)))
+  then 
+    Downloader.downloadProduct Product.Kibana version
+    Downloader.unzipProduct Product.Kibana version
 )
 
 Target "PatchGuids" (fun () ->
@@ -86,10 +94,15 @@ Target "UnitTest" (fun () ->
         |> xUnit2 (fun p -> { p with HtmlOutputPath = Some (resultsDir @@ "xunit.html") })
 )
 
+let prune files directory =
+  let keep = files |> Seq.map (fun n -> directory @@ n)
+  for file in System.IO.Directory.EnumerateFiles(directory) do
+        if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file)
+        
 Target "PruneFiles" (fun () ->
-  let keep = ["elasticsearch-plugin.bat"] |> Seq.map (fun n -> esBinDir @@ n)
-  for file in System.IO.Directory.EnumerateFiles(esBinDir) do
-        if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file))
+    prune ["elasticsearch-plugin.bat"] esBinDir
+    prune ["kibana-plugin.bat"] kibanaBinDir
+)
 
 let signFile file (product : Product) =
     let getBuildParamOrEnvVariable param variable (valueFromFile:string -> string)  =
@@ -147,15 +160,14 @@ let signFile file (product : Product) =
     let exitCode = sign()
     if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" description exitCode
 
-// TODO need to make this more generic to handle other services eventually
-let buildService (product : Product) sign =
-    !! (esServiceDir @@ "*.csproj")
-    |> MSBuildRelease esServiceBuildDir "Build"
+let buildService (product : Product) sign serviceDir serviceBuildDir serviceBinDir =
+    !! (serviceDir @@ "*.csproj")
+    |> MSBuildRelease serviceBuildDir "Build"
     |> Log "ServiceBuild-Output: "
-
-    let elasticsearchService = esBinDir @@ "elasticsearch.exe"
-    CopyFile elasticsearchService (esServiceBuildDir @@ "Elastic.Installer.Elasticsearch.Process.exe")
-    if sign then signFile elasticsearchService product |> ignore
+    let serviceAssembly = serviceBuildDir @@ (sprintf "Elastic.Installer.%s.Process.exe" product.Name)
+    let service = serviceBinDir @@ (sprintf "%s.exe" product.Name)
+    CopyFile service serviceAssembly
+    if sign then signFile service product |> ignore
 
 let buildMsi (product : Product) sign =
     !! (msiDir @@ "*.csproj")
@@ -179,20 +191,20 @@ let buildMsi (product : Product) sign =
     if sign then signFile finalMsi product |> ignore
 
 Target "BuildServices" (fun () ->
-    buildService Product.Elasticsearch false
-    //buildService Product.Kibana false
+    buildService Product.Elasticsearch false esServiceDir esServiceBuildDir esBinDir
+    buildService Product.Kibana false kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
 )
 
 Target "BuildInstallers" (fun () ->
     buildMsi Product.Elasticsearch false
-    //buildMsi Product.Kibana false
+    buildMsi Product.Kibana false
 )
 
 Target "Sign" (fun () ->
-    buildService Product.Elasticsearch true
-    //buildService Product.Kibana true
+    buildService Product.Elasticsearch true esServiceDir esServiceBuildDir esBinDir
+    buildService Product.Kibana true kibanaServiceDir kibanaServiceBuildDir kibanaBinDir
     buildMsi Product.Elasticsearch true
-    //buildMsi Product.Kibana false
+    buildMsi Product.Kibana true
 )
 
 Target "Release" (fun () ->
@@ -219,7 +231,6 @@ Target "Integrate" (fun () ->
 
 "Clean"
   =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
-  ==> "UnzipProducts"
   ==> "PatchGuids"
   ==> "PruneFiles"
   ==> "UnitTest"

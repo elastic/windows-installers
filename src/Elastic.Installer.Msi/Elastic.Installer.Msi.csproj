@@ -46,26 +46,42 @@
   <ItemGroup>
     <Compile Include="CustomActions\CustomAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\ElasticsearchCustomActionOrder.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallConfigurationAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallDirectoriesAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallEnvironmentAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallJvmOptionsAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallPluginsAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallServiceAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallStartServiceAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\InstallStopServiceAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchConfigurationAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchDirectoriesAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchEnvironmentAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchOptionsAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchPluginsAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceInstallAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceStartAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceStopAction.cs" />
     <Compile Include="CustomActions\RollbackCustomAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Rollback\RollbackDirectoriesAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Rollback\RollbackEnvironmentAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Rollback\RollbackServiceAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Rollback\ElasticsearchRollbackDirectoriesAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Rollback\ElasticsearchRollbackEnvironmentAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Rollback\ElasticsearchRollbackServiceAction.cs" />
     <Compile Include="CustomActions\UninstallCustomAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Uninstall\UninstallDirectoriesAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Uninstall\UninstallEnvironmentAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Uninstall\UninstallPluginsAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Uninstall\UninstallServiceAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\ValidateArgumentsAction.cs" />
-    <Compile Include="Elasticsearch\ElasticsearchProduct.cs" />
-    <Compile Include="Kibana\KibanaProduct.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallDirectoriesAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallEnvironmentAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallPluginsAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallServiceAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\ElasticsearchValidateArgumentsAction.cs" />
+    <Compile Include="Elasticsearch\Elasticsearch.cs" />
+    <Compile Include="Kibana\CustomActions\Install\KibanaServiceStopAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\KibanaEnvironmentAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\KibanaServiceStartAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\KibanaServiceInstallAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\KibanaPluginsAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\KibanaConfigurationAction.cs" />
+    <Compile Include="Kibana\CustomActions\Install\KibanaDirectoriesAction.cs" />
+    <Compile Include="Kibana\CustomActions\KibanaCustomActionOrder.cs" />
+    <Compile Include="Kibana\CustomActions\Rollback\KibanaRollbackDirectoriesAction.cs" />
+    <Compile Include="Kibana\CustomActions\Rollback\KibanaRollbackEnvironmentAction.cs" />
+    <Compile Include="Kibana\CustomActions\Rollback\KibanaRollbackServiceAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\KibanaUninstallDirectoriesAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\KibanaUninstallEnvironmentAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\KibanaUninstallPluginsAction.cs" />
+    <Compile Include="Kibana\CustomActions\Uninstall\KibanaUninstallServiceAction.cs" />
+    <Compile Include="Kibana\CustomActions\KibanaValidateArgumentsAction.cs" />
+    <Compile Include="Kibana\Kibana.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,6 +89,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="paket.references" />
+    <None Include="_Generated\kibana.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\elasticsearch.ico" />
@@ -80,7 +97,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="_Generated\elasticsearch.wxs" />
-    <Content Include="_Generated\kibana.wxs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elastic.Installer.Domain\Elastic.Installer.Domain.csproj">

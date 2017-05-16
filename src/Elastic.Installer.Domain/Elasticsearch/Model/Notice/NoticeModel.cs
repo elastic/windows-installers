@@ -4,10 +4,10 @@ using System.Text;
 using ReactiveUI;
 using Semver;
 using Elastic.Installer.Domain.Properties;
-using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
-using Elastic.Installer.Domain.Elasticsearch.Configuration;
 using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
 using Elastic.Installer.Domain.Model;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
+using Elastic.Installer.Domain.Shared.Configuration;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Notice
 {

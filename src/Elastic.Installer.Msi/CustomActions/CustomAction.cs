@@ -2,12 +2,19 @@
 using System.Linq;
 using WixSharp;
 using System;
-using Elastic.Installer.Domain.Elasticsearch.Model;
+using System.Collections.Generic;
 
 namespace Elastic.Installer.Msi.CustomActions
 {
 	public abstract class CustomAction
 	{
+		protected IEnumerable<string> AllArguments { get; }
+
+		protected CustomAction(IEnumerable<string> allArguments)
+		{
+			this.AllArguments = allArguments;
+		}
+
 		public abstract Type ProductType { get; }
 
 		public abstract int Order { get; }
@@ -44,15 +51,16 @@ namespace Elastic.Installer.Msi.CustomActions
 				Sequence = this.Sequence,
 				Execute = this.Execute,
 				Impersonate = !this.NeedsElevatedPrivileges,
-				UsesProperties = string.Join(",", InstallationModelArgumentParser.AllArguments
-					.Concat(new string[] { "UILevel", "INSTALLDIRECTORY.bin", "VERSION" }))
+				UsesProperties = string.Join(",", this.AllArguments.Concat(new string[] { "UILevel", "INSTALLDIRECTORY.bin", "VERSION" }))
 			};
 		}
 	}
 
 	public abstract class CustomAction<TProduct> : CustomAction
-		where TProduct : Product
+		where TProduct : Product, new()
 	{
+		protected CustomAction() : base(new TProduct().AllArguments) { }
+
 		public override Type ProductType => typeof(TProduct);
 	}
 }

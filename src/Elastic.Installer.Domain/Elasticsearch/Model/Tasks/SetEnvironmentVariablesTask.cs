@@ -4,10 +4,10 @@ using System.IO.Abstractions;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 {
-	public class SetEnvironmentVariablesTask : InstallationTask
+	public class SetEnvironmentVariablesTask : ElasticsearchInstallationTask
 	{
 		public SetEnvironmentVariablesTask(string[] args, ISession session) : base(args, session) { }
-		public SetEnvironmentVariablesTask(InstallationModel model, ISession session, IFileSystem fileSystem)
+		public SetEnvironmentVariablesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
 
 		protected override bool ExecuteTask()
