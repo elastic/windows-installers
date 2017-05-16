@@ -11,6 +11,7 @@ open System.Text
 open System.IO
 open System.Management.Automation
 open System.Text.RegularExpressions
+open Microsoft.FSharp.Reflection
 open Fake
 open Fake.FileHelper
 open Scripts
@@ -55,6 +56,8 @@ let unitTestsDir = "src/Tests/Elastic.Installer.Domain.Tests"
 
 Target "Clean" (fun _ ->
     CleanDirs [msiBuildDir; esServiceBuildDir; outDir; resultsDir]
+    [| Product.Elasticsearch; Product.Kibana |] 
+    |> Array.iter(fun p -> CleanDirs [outDir @@ p.Name])
 )
 
 Target "DownloadProducts" (fun () ->
@@ -89,30 +92,21 @@ Target "PruneFiles" (fun () ->
         if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file))
 
 let signFile file (product : Product) =
-
-    let certificate =
-        let path = getBuildParam "certificate"
+    let getBuildParamOrEnvVariable param variable (valueFromFile:string -> string)  =
+        let path = getBuildParam param
         if (isNullOrWhiteSpace path) 
         then 
-            let env = Environment.GetEnvironmentVariable("ELASTIC_CERT_FILE", EnvironmentVariableTarget.Machine)
-            if (isNullOrWhiteSpace env) then failwithf "No ELASTIC_CERT_FILE environment variable set"
+            let env = Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Machine)
+            if (isNullOrWhiteSpace env) then failwithf "No %s environment variable set" variable
             env
-        elif fileExists path then path
-        else failwithf "Certificate not found at %s" path
-    
-    let password = 
-        let path = getBuildParam "password"
-        if (isNullOrWhiteSpace path) 
-        then 
-            let env = Environment.GetEnvironmentVariable("ELASTIC_CERT_PASSWORD", EnvironmentVariableTarget.Machine)
-            if (isNullOrWhiteSpace env) then failwithf "No ELASTIC_CERT_PASSWORD environment variable set"
-            env
-        elif fileExists path then File.ReadAllText path
-        else failwithf "Password not found at %s" path    
-
+        elif fileExists path then valueFromFile path
+        else failwithf "%s not found at %s" param path
+            
+    let certificate = getBuildParamOrEnvVariable "certificate" "ELASTIC_CERT_FILE" <| (fun f -> f)
+    let password = getBuildParamOrEnvVariable "password" "ELASTIC_CERT_PASSWORD" <| File.ReadAllText
     let timestampServer = "http://timestamp.comodoca.com"
     let timeout = TimeSpan.FromMinutes 1.
-    let description = System.Globalization.CultureInfo.GetCultureInfo(System.Threading.Thread.CurrentThread.CurrentCulture.Name).TextInfo.ToTitleCase product.Name
+    let description = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase product.Name
 
     let sign () =
         let signToolExe = toolsDir @@ "signtool/signtool.exe"
@@ -179,7 +173,7 @@ let buildMsi (product : Product) sign =
                  ) <| timeout
 
     if result <> 0 then raise (Exception())
-    let finalMsi = (outDir @@ (sprintf "%s-%s.msi" product.Name version))
+    let finalMsi = (outDir @@ product.Name @@ (sprintf "%s-%s.msi" product.Name version))
     CopyFile finalMsi (msiDir @@ (sprintf "%s.msi" product.Name))
 
     if sign then signFile finalMsi product |> ignore

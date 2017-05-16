@@ -167,16 +167,18 @@ function Invoke-IntegrationTests($location, $version) {
     vagrant destroy -f
 }
 
-function Get-Installer([string] $location) {
-    $exe = "elasticsearch*.msi"
-    if ($location) {
-        $exePath = Join-Path -Path $location -ChildPath $exe
-        Write-Log "get windows installer from $exePath" -l Debug
-        return Get-ChildItem -Path $exePath
-    }
-    else {
-        return Get-ChildItem .\..\out\$exe
-    }
+function Get-Installer([string] $location, $product) {
+	if (!$product) {
+		$product = "elasticsearch"
+	}
+
+	if (!$location) {
+		$location = ".\..\out"
+	}
+
+	$exePath = "$location\$product\$product*.msi"
+	Write-Log "get windows installer from $exePath" -l Debug        
+	return Get-ChildItem $exePath
 }
 
 function Add-Quotes (
