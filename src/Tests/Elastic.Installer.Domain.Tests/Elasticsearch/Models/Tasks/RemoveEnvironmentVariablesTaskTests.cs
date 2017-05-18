@@ -13,7 +13,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				(m, s, fs) =>
 				{
 					var task = new RemoveEnvironmentVariablesTask(m, s, fs);
-					var state = m.ElasticsearchEnvironmentState as MockElasticsearchEnvironmentStateProvider;
+					var state = m.ElasticsearchEnvironmentConfiguration.StateProvider as MockElasticsearchEnvironmentStateProvider;
 					state.LastSetEsConfig = "some value";
 					state.LastSetEsHome = "some value";
 					return task;
@@ -32,7 +32,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				(m, s, fs) =>
 				{
 					var task = new RemoveEnvironmentVariablesTask(m, s, fs);
-					var state = m.ElasticsearchEnvironmentState as MockElasticsearchEnvironmentStateProvider;
+					var state = m.ElasticsearchEnvironmentConfiguration.StateProvider as MockElasticsearchEnvironmentStateProvider;
 					state.LastSetEsConfig = "some previous value";
 					state.LastSetEsHome = "some previous value";
 					return task;

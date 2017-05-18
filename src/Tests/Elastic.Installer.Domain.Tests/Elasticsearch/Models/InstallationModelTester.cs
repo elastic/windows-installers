@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
+using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
 using Elastic.Installer.Domain.Elasticsearch.Model;
 using Elastic.Installer.Domain.Elasticsearch.Model.Closing;
@@ -59,10 +60,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			this.EsState = esState;
 			this.PluginState = pluginState;
 			this.JavaConfig = new JavaConfiguration(javaState);
-			this.EsConfig = ElasticsearchYamlConfiguration.FromFolder(esState.ConfigDirectory, fileSystem);
-			this.JvmConfig = LocalJvmOptionsConfiguration.FromFolder(esState.ConfigDirectory, fileSystem);
+			var elasticsearchConfiguration = new ElasticsearchEnvironmentConfiguration(esState);
+			this.EsConfig = ElasticsearchYamlConfiguration.FromFolder(elasticsearchConfiguration.ConfigDirectory, fileSystem);
+			this.JvmConfig = LocalJvmOptionsConfiguration.FromFolder(elasticsearchConfiguration.ConfigDirectory, fileSystem);
 			this.InstallationModel = new ElasticsearchInstallationModel(
-				wixState, JavaConfig, esState, serviceState, pluginState,  EsConfig, JvmConfig, session, args);
+				wixState, JavaConfig, elasticsearchConfiguration, serviceState, pluginState,  EsConfig, JvmConfig, session, args);
 			this.FileSystem = fileSystem;
 		}
 

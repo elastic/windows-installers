@@ -66,8 +66,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 
 		[Fact] void RespectsJvmOptsFile() => WithValidPreflightChecks(s => s
 				.Elasticsearch(e => e
-					.HomeDirectoryEnvironmentVariable(LocationsModel.DefaultProgramFiles)
-					.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+					.EsHomeMachineVariable(LocationsModel.DefaultProgramFiles)
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
 				.FileSystem(f =>
 				{

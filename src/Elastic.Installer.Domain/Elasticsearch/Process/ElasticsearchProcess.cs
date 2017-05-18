@@ -15,10 +15,16 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 		private bool NoColor { get; set; }
 
 		public ElasticsearchProcess(IEnumerable<string> args)
-			: this(null, null, null, new ElasticsearchEnvironmentStateProvider(), JavaConfiguration.Default, args)
+			: this(null, null, null, ElasticsearchEnvironmentConfiguration.Default, JavaConfiguration.Default, args)
 		{}
 
-		public ElasticsearchProcess(IObservableProcess process, IConsoleOutHandler consoleOutHandler, IFileSystem fileSystem, IElasticsearchEnvironmentStateProvider env, JavaConfiguration java, IEnumerable<string> args)
+		public ElasticsearchProcess(
+			IObservableProcess process,
+			IConsoleOutHandler consoleOutHandler,
+			IFileSystem fileSystem,
+			ElasticsearchEnvironmentConfiguration env,
+			JavaConfiguration java,
+			IEnumerable<string> args)
 			: base(process, consoleOutHandler ?? new ElasticsearchConsoleOutHandler(process?.UserInteractive ?? false), fileSystem)
 		{
 			var homeDirectory = (env.HomeDirectory ?? FileSystem.Directory.GetParent(".").FullName).TrimEnd('\\');
@@ -35,7 +41,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 
 			this.ProcessExe = java.JavaExecutable;
 			if (!fileSystem.File.Exists(this.ProcessExe))
-				throw new Exception($"Java executable not found, this could be because of a faulty JAVA_HOME variable: ${this.ProcessExe}");
+				throw new Exception($"Java executable not found, this could be because of a faulty JAVA_HOME variable: {this.ProcessExe}");
 
 			this.Arguments = this.CreateObservableProcessArguments(parsedArguments);
 		}
@@ -56,10 +62,14 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 		protected sealed override IEnumerable<string> CreateObservableProcessArguments(IEnumerable<string> args)
 		{
 			var libFolder = Path.Combine(this.HomeDirectory, "lib");
+			if (!FileSystem.Directory.Exists(libFolder))
+				throw new Exception($"Expected a 'lib' directory inside: {this.HomeDirectory}");
+
 			var jars = new HashSet<string>(FileSystem.Directory.GetFiles(libFolder));
 
 			var elasticsearchJar = jars.FirstOrDefault(f => Path.GetFileName(f).StartsWith("elasticsearch-"));
-			//TODO throw if null;
+			if (elasticsearchJar == null)
+				throw new Exception($"No elasticsearch jar found in: {libFolder}");
 
 			jars.ExceptWith(new [] { elasticsearchJar });
 

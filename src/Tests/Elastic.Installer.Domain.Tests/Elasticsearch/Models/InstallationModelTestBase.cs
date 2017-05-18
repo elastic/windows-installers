@@ -19,8 +19,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		protected InstallationModelTester WithExistingElasticsearchYaml(string yamlContents)  =>
 			InstallationModelTester.ValidPreflightChecks(s=>s
 				.Elasticsearch(e=>e
-					.HomeDirectoryEnvironmentVariable(LocationsModel.DefaultProgramFiles)
-					.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+					.EsHomeMachineVariable(LocationsModel.DefaultProgramFiles)
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
 				.FileSystem(f=>
 				{

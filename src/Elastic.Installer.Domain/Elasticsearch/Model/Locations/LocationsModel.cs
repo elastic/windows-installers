@@ -38,17 +38,17 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Locations
 		public static readonly string DefaultConfigDirectory = Path.Combine(DefaultWritableDirectory, Config);
 
 		private bool _refreshing;
-		private readonly IElasticsearchEnvironmentStateProvider _environmentStateProvider;
+		private readonly ElasticsearchEnvironmentConfiguration _elasticsearchEnvironmentConfiguration;
 		private readonly ElasticsearchYamlConfiguration _yamlConfiguration;
 
 		public LocationsModel(
-			IElasticsearchEnvironmentStateProvider environmentStateProvider, 
+			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration,
 			ElasticsearchYamlConfiguration yamlConfiguration, 
 			VersionConfiguration versionConfig)
 		{
 			this.IsRelevant = !versionConfig.AlreadyInstalled;
 			this.Header = "Locations";
-			this._environmentStateProvider = environmentStateProvider;
+			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
 
 			this.Refresh();
@@ -108,13 +108,13 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Locations
 		public void SetDefaultLocations()
 		{
 			this._refreshing = true;
-			this.InstallDir = this._environmentStateProvider.HomeDirectory ?? DefaultInstallationDirectory;
-			this.ConfigDirectory = this._environmentStateProvider.ConfigDirectory ?? DefaultConfigDirectory;
+			this.InstallDir = this._elasticsearchEnvironmentConfiguration.HomeDirectory ?? DefaultInstallationDirectory;
+			this.ConfigDirectory = this._elasticsearchEnvironmentConfiguration.ConfigDirectory ?? DefaultConfigDirectory;
 			this.DataDirectory = this._yamlConfiguration?.Settings?.DataPath ?? DefaultDataDirectory;
 			this.LogsDirectory = this._yamlConfiguration?.Settings?.LogsPath ?? DefaultLogsDirectory;
 
-			var home = this._environmentStateProvider.HomeDirectory ?? DefaultInstallationDirectory;
-			var config = this._environmentStateProvider.ConfigDirectory ?? DefaultConfigDirectory;
+			var home = this._elasticsearchEnvironmentConfiguration.HomeDirectory ?? DefaultInstallationDirectory;
+			var config = this._elasticsearchEnvironmentConfiguration.ConfigDirectory ?? DefaultConfigDirectory;
 			var data = this._yamlConfiguration?.Settings?.DataPath ?? DefaultDataDirectory;
 			var logs = this._yamlConfiguration?.Settings?.LogsPath ?? DefaultLogsDirectory;
 

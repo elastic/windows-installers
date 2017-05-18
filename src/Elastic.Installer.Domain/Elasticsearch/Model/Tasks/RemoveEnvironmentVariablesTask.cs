@@ -16,7 +16,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 
 			this.Session.SendActionStart(1000, ActionName, "Removing environment variables", "[1]");
 
-			var esState = this.InstallationModel.ElasticsearchEnvironmentState;
+			var esState = this.InstallationModel.ElasticsearchEnvironmentConfiguration;
 			esState.SetEsHomeEnvironmentVariable(null);
 			esState.SetEsConfigEnvironmentVariable(null);
 			this.Session.SendProgress(1000, "Environment variables removed");

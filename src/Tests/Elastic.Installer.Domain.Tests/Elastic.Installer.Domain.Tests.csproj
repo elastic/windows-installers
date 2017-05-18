@@ -107,7 +107,8 @@
     <Compile Include="Elasticsearch\Models\Tasks\RemoveEnvironmentVariablesTaskTests.cs" />
     <Compile Include="Elasticsearch\Process\ConsoleSession.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchProcessTester.cs" />
-    <Compile Include="Elasticsearch\Process\ProcessTests.cs" />
+    <Compile Include="Elasticsearch\Process\Paths\ElasticsearchHomeAndBinaryTests.cs" />
+    <Compile Include="Elasticsearch\Process\Paths\JavaHomeAndBinaryTests.cs" />
     <Compile Include="Elasticsearch\Process\TestableElasticsearchConsoleOutHandler.cs" />
     <Compile Include="Elasticsearch\Process\TestableElasticsearchObservableProcess.cs" />
     <Compile Include="Kibana\Configuration\KibanaYamlFileTests.cs" />

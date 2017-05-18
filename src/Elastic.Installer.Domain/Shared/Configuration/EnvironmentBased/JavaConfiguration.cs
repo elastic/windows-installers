@@ -16,8 +16,8 @@ namespace Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased
 
 		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin\java.exe");
 		public string JavaHomeCanonical => new [] {
-				_stateProvider.JavaHomeMachine,
 				_stateProvider.JavaHomeCurrentUser,
+				_stateProvider.JavaHomeMachine,
 				_stateProvider.JavaHomeRegistry
 			}
 			.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));

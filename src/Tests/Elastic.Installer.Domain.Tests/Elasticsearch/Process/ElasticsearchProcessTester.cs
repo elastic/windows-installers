@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
+using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Process;
 using Elastic.Installer.Domain.Elasticsearch.Model.Locations;
 using Elastic.Installer.Domain.Session;
@@ -31,26 +32,86 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 				this.ObservableProcess,
 				this.OutHandler,
 				state.FileSystemState,
-				state.ElasticsearchState,
+				state.ElasticsearchConfigState,
 				state.JavaConfigState, null);
 		}
 
 		public static ElasticsearchProcessTester AllDefaults() => new ElasticsearchProcessTester(s=>s
-			.Elasticsearch(e=>e.HomeDirectoryEnvironmentVariable(DefaultEsHome))
+			.Elasticsearch(e=>e.EsHomeMachineVariable(DefaultEsHome))
 			.Java(j=>j.JavaHomeMachine(DefaultJavaHome))
 			.ConsoleSession(ConsoleSession.Valid)
 			.FileSystem(s.FileSystemDefaults)
 		);
+
+		public static ElasticsearchProcessTester JavaChangesOnly(Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> javaState) => new ElasticsearchProcessTester(s=>s
+			.Elasticsearch(e=>e.EsHomeMachineVariable(DefaultEsHome))
+			.Java(javaState)
+			.ConsoleSession(ConsoleSession.Valid)
+			.FileSystem(s.FileSystemDefaults)
+		);
+
+		public static ElasticsearchProcessTester Create(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup) =>
+			new ElasticsearchProcessTester(setup);
+
+		public static void CreateThrows(
+			Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup,
+			Action<Exception> assert)
+		{
+
+			var created = false;
+			try
+			{
+				var elasticsearchProcessTester = new ElasticsearchProcessTester(setup);
+				created = true;
+			}
+			catch (Exception e)
+			{
+				assert(e);
+			}
+			if (created)
+				throw new Exception("Process tester expected elasticsearch.exe to throw an exception");
+		}
 
 		public void Start(Action<ElasticsearchProcessTester> assert)
 		{
 			this.Process.Start();
 			assert(this);
 		}
+
+		public void StartThrows(Action<Exception,ElasticsearchProcessTester> assert)
+		{
+			var started = false;
+			try
+			{
+				this.Process.Start();
+				started = true;
+			}
+			catch (Exception e)
+			{
+				assert(e, this);
+			}
+			if (started)
+				throw new Exception("Process tester expected elasticsearch.exe to throw an exception");
+		}
 	}
 
 	public class ElasticsearchProcessTesterStateProvider
 	{
+		public MockJavaEnvironmentStateProvider JavaState { get; private set; }
+		public JavaConfiguration JavaConfigState { get; private set; }
+
+		public MockElasticsearchEnvironmentStateProvider ElasticsearchState { get; private set; }
+		public ElasticsearchEnvironmentConfiguration ElasticsearchConfigState { get; private set; }
+
+		public ElasticsearchProcessTesterStateProvider()
+		{
+			this.JavaState = new MockJavaEnvironmentStateProvider();
+			this.JavaConfigState = new JavaConfiguration(this.JavaState);
+
+			this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
+			this.ElasticsearchConfigState = new ElasticsearchEnvironmentConfiguration(this.ElasticsearchState);
+		}
+
 		public ElasticsearchProcessTesterStateProvider Java(Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> setter)
 		{
 			this.JavaState = setter(new MockJavaEnvironmentStateProvider());
@@ -61,6 +122,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		public ElasticsearchProcessTesterStateProvider Elasticsearch(Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> setter)
 		{
 			this.ElasticsearchState = setter(new MockElasticsearchEnvironmentStateProvider());
+			this.ElasticsearchConfigState = new ElasticsearchEnvironmentConfiguration(this.ElasticsearchState);
 			return this;
 		}
 
@@ -70,11 +132,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			return this;
 		}
 
-		public MockFileSystem FileSystemDefaults(MockFileSystem fs)
+		public MockFileSystem FileSystemDefaults(MockFileSystem fs) => AddJavaExe(AddElasticsearchLibs(fs));
+
+		public MockFileSystem AddJavaExe(MockFileSystem fs)
 		{
 			var java = new JavaConfiguration(this.JavaState);
 			fs.AddFile(java.JavaExecutable, new MockFileData(""));
-			var libFolder = Path.Combine(this.ElasticsearchState.HomeDirectory, @"lib");
+			return fs;
+		}
+		public MockFileSystem AddElasticsearchLibs(MockFileSystem fs)
+		{
+			var libFolder = Path.Combine(this.ElasticsearchConfigState.HomeDirectory, @"lib");
 			fs.AddDirectory(libFolder);
 			fs.AddFile(Path.Combine(libFolder, @"elasticsearch-5.0.0.jar"), new MockFileData(""));
 			fs.AddFile(Path.Combine(libFolder, @"dep1.jar"), new MockFileData(""));
@@ -103,9 +171,5 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 		public MockFileSystem FileSystemState { get; private set; } = new MockFileSystem();
 
-		public MockElasticsearchEnvironmentStateProvider ElasticsearchState { get; private set; } = new MockElasticsearchEnvironmentStateProvider();
-
-		public MockJavaEnvironmentStateProvider JavaState { get; private set; } = new MockJavaEnvironmentStateProvider();
-		public JavaConfiguration JavaConfigState { get; private set; }
 	}
 }

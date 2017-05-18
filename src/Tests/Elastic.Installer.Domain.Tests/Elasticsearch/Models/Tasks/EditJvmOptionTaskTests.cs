@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 		[Fact]
 		void PicksUpExistingConfiguration() => WithValidPreflightChecks(s => s
 				.Elasticsearch(e => e
-					.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
 				.FileSystem(fs =>
 				{
@@ -43,7 +43,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 		[Fact]
 		void WritesExpectedDefaults() => WithValidPreflightChecks(s => s
 				.Elasticsearch(es => es
-					.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
 				.FileSystem(fs =>
 				{
@@ -70,7 +70,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 		[Fact]
 		void WritesConfiguredMemory() => WithValidPreflightChecks(s => s
 				.Elasticsearch(es => es
-					.ConfigDirectoryEnvironmentVariable(LocationsModel.DefaultConfigDirectory)
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
 				.FileSystem(fs =>
 				{

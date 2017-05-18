@@ -8,7 +8,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased
 {
 	public class ElasticsearchYamlConfiguration : YamlConfigurationBase<ElasticsearchYamlSettings>
 	{
-		public ElasticsearchYamlSettings Settings { get { return this.YamlSettings as ElasticsearchYamlSettings; } }
+		public ElasticsearchYamlSettings Settings => this.YamlSettings;
 
 		public ElasticsearchYamlConfiguration(string path) : base(path, null) { }
 		public ElasticsearchYamlConfiguration(string path, IFileSystem fileSystem) : base(path, fileSystem) { }
