@@ -44,11 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildConfig.fsx" />
+    <None Include="Commandline.fsx" />
     <None Include="Targets.fsx" />
     <None Include="config.yaml" />
     <None Include="Build.fsx" />
     <None Include="Products.fsx" />
-    <None Include="Versioning.fsx" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

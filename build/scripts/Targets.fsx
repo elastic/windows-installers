@@ -4,9 +4,9 @@
 #r "FakeLib.dll"
 #r "System.Management.Automation.dll"
 #load "Products.fsx"
-#load "Versioning.fsx"
 #load "Build.fsx"
 #load "BuildConfig.fsx"
+#load "Commandline.fsx"
 
 open System
 open System.Diagnostics
@@ -23,31 +23,35 @@ open Products
 open Products.Products
 open Products.Paths
 open Build.Builder
-open Versioning
+open Commandline
 
-let version = Versioning.Version
-tracefn "Starting build for version %s" version
+let productsToBuild = Commandline.parse()
+
+let productDescriptions = productsToBuild
+                          |> List.map(fun p -> sprintf "%s %s" p.Name p.Version.FullVersion)
+                          |> String.concat Environment.NewLine
+
+tracefn "Starting build of products:%s%s" Environment.NewLine productDescriptions
 
 Target "Clean" (fun _ ->
     CleanDirs [MsiBuildDir; OutDir; ResultsDir]
-    Products.All |> Array.iter(fun p -> CleanDirs [OutDir @@ p.Name; p.ServiceBinDir])
+    productsToBuild
+    |> List.iter(fun p -> CleanDirs [OutDir @@ p.Name; p.ServiceBinDir])
 )
 
 Target "DownloadProducts" (fun () ->
-  if directoryExists (Elasticsearch.ExtractedDirectory version) |> not
-  then 
-    Product.Download Elasticsearch version
-    Product.Unzip Elasticsearch version
-
-  if directoryExists (Kibana.ExtractedDirectory version) |> not
-  then 
-    Product.Download Kibana version
-    Product.Unzip Kibana version
+    productsToBuild
+    |> List.iter (fun p ->
+          if directoryExists p.ExtractedDirectory |> not
+          then
+            p.Download()
+            p.Unzip()
+    )
 )
 
 Target "PatchGuids" (fun () ->
-    tracefn "Making sure a guid exists for v%s" version
-    BuildConfig.versionGuid version |> ignore
+    tracefn "Making sure a guids exist for %s %s" Environment.NewLine productDescriptions
+    BuildConfig.versionGuid productsToBuild
 )
 
 Target "UnitTest" (fun () ->
@@ -67,25 +71,16 @@ Target "PruneFiles" (fun () ->
         for file in System.IO.Directory.EnumerateFiles(directory) do
             if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file)
 
-    prune ["elasticsearch-plugin.bat"] (Elasticsearch.BinDir version)
-    prune ["kibana-plugin.bat"] (Kibana.BinDir version)
+    productsToBuild
+    |> List.iter(fun p -> prune [sprintf "%s-plugin.bat" p.Name] p.BinDir)
 )
 
 Target "BuildServices" (fun () ->
-    BuildService Elasticsearch false
-    // BuildService Kibana false
+    productsToBuild |> List.iter (fun p -> BuildService p)
 )
 
 Target "BuildInstallers" (fun () ->
-    BuildMsi Elasticsearch false
-    // BuildMsi Kibana false
-)
-
-Target "Sign" (fun () ->
-    BuildService Elasticsearch true
-    // BuildService Kibana true
-    BuildMsi Elasticsearch true
-    // BuildMsi Kibana true
+    productsToBuild |> List.iter (fun p -> BuildMsi p)
 )
 
 Target "Release" (fun () ->
@@ -93,6 +88,8 @@ Target "Release" (fun () ->
 )
 
 Target "Integrate" (fun () ->
+    // TODO: Get the version for each different project
+    let version = productsToBuild.Head.Version.FullVersion
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
     let script = sprintf "cd '%s'; %s -Tests %s -Version %s" Paths.IntegrationTestsDir ".\Bootstrapper.ps1" integrationTestsTargets version
     trace (sprintf "Running Powershell script: '%s'" script)
@@ -114,13 +111,10 @@ Target "Integrate" (fun () ->
   =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
   ==> "PatchGuids"
   ==> "PruneFiles"
-  ==> "UnitTest"
+  =?> ("UnitTest", (not ((getBuildParam "skiptests") = "1")))
   ==> "BuildServices"
   ==> "BuildInstallers"
-  ==> "Integrate"
-
-"UnitTest"
-  ==> "Sign"
+  =?> ("Integrate", (not ((getBuildParam "skiptests") = "1")))
   ==> "Release"
 
 RunTargetOrDefault "BuildInstallers"
