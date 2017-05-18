@@ -50,6 +50,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			.FileSystem(s.FileSystemDefaults)
 		);
 
+		public static ElasticsearchProcessTester ElasticsearchChangesOnly(Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> esState) => new ElasticsearchProcessTester(s=>s
+			.Elasticsearch(esState)
+			.Java(j=>j.JavaHomeMachine(DefaultJavaHome))
+			.ConsoleSession(ConsoleSession.Valid)
+			.FileSystem(s.FileSystemDefaults)
+		);
+
 		public static ElasticsearchProcessTester Create(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup) =>
 			new ElasticsearchProcessTester(setup);
 
@@ -142,7 +149,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		}
 		public MockFileSystem AddElasticsearchLibs(MockFileSystem fs)
 		{
-			var libFolder = Path.Combine(this.ElasticsearchConfigState.HomeDirectory, @"lib");
+			var f = fs.Directory.GetParent(".").FullName;
+			var libFolder = Path.Combine(this.ElasticsearchConfigState.HomeDirectory ?? f, @"lib");
 			fs.AddDirectory(libFolder);
 			fs.AddFile(Path.Combine(libFolder, @"elasticsearch-5.0.0.jar"), new MockFileData(""));
 			fs.AddFile(Path.Combine(libFolder, @"dep1.jar"), new MockFileData(""));

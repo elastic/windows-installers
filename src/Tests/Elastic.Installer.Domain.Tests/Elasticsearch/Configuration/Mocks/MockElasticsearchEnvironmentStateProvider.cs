@@ -6,6 +6,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 	{
 		private string _esHomeMachine;
 		private string _esHomeUser;
+		private string _esExecutable;
 		private string _esConfigMachine;
 		private string _esConfigUser;
 
@@ -22,6 +23,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			this._esHomeUser = esHome;
 			return this;
 		}
+		public MockElasticsearchEnvironmentStateProvider ElasticsearchExecutable(string executable)
+		{
+			this._esExecutable = executable;
+			return this;
+		}
 
 		public MockElasticsearchEnvironmentStateProvider EsConfigMachineVariable(string esConfig)
 		{
@@ -36,6 +42,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 		public string HomeDirectoryUserVariable => this._esHomeUser;
 		public string HomeDirectoryMachineVariable => this._esHomeMachine;
+		public string RunningExecutableLocation => this._esExecutable;
 		public string ConfigDirectoryUserVariable => this._esConfigUser;
 		public string ConfigDirectoryMachineVariable => this._esConfigMachine;
 

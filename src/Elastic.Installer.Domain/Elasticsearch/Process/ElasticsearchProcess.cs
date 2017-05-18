@@ -27,8 +27,10 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 			IEnumerable<string> args)
 			: base(process, consoleOutHandler ?? new ElasticsearchConsoleOutHandler(process?.UserInteractive ?? false), fileSystem)
 		{
-			var homeDirectory = (env.HomeDirectory ?? FileSystem.Directory.GetParent(".").FullName).TrimEnd('\\');
-			var configDirectory = (env.ConfigDirectory ?? Path.Combine(homeDirectory, "config")).TrimEnd('\\');
+			var homeDirectory = env.HomeDirectory?.TrimEnd('\\')
+				?? throw new Exception("No ES_HOME variable set and no home directory could be inferred from the executable location");
+			var configDirectory = env.ConfigDirectory?.TrimEnd('\\')
+				?? throw new Exception("ES_CONFIG was not explicitly set nor could it be determined from ES_HOME or the current executable location");
 
 			this.HomeDirectory = homeDirectory;
 			this.ConfigDirectory = configDirectory;
