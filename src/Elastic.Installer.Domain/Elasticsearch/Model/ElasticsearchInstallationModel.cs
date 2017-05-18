@@ -168,8 +168,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			this.ActiveStep.Validate();
 		}
 
-		public static ElasticsearchInstallationModel Create(IWixStateProvider wixState, ISession session,
-			params string[] args)
+		public static ElasticsearchInstallationModel Create(IWixStateProvider wixState, ISession session, params string[] args)
 		{
 			var javaConfig = JavaConfiguration.Default;
 			var esState = ElasticsearchEnvironmentStateProvider.Default;

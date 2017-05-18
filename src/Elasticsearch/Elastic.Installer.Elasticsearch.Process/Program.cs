@@ -16,7 +16,7 @@ namespace Elastic.Installer.Elasticsearch.Process
 			{
 				e.ToEventLog("Elasticsearch");
 				if (Environment.UserInteractive)
-					e.ToConsole("An exception occurred while trying to start the service.");
+					e.ToConsole("An exception occurred while trying to start elasticsearch.");
 			}
 		}
 	}

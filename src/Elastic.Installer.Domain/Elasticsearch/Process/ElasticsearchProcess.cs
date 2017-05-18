@@ -1,134 +1,121 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
+using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
-using Elastic.Installer.Domain.Process.ObservableWrapper;
-using Microsoft.SqlServer.Server;
+using Elastic.Installer.Domain.Process;
+using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 
-namespace Elastic.Installer.Domain.Process
+namespace Elastic.Installer.Domain.Elasticsearch.Process
 {
 	public class ElasticsearchProcess : ProcessBase
 	{
-		private readonly string[] _libs;
-		public string ElasticsearchJar { get; private set; }
-		public string LibDirectory { get; private set; }
-		
-		public string JavaOptions { get; private set; }
-		public int Port { get; private set; }
-		public bool NoColor { get; private set; }
+		private bool NoColor { get; set; }
 
-		public ElasticsearchProcess() : this(null) { }
+		public ElasticsearchProcess(IEnumerable<string> args)
+			: this(null, null, null, new ElasticsearchEnvironmentStateProvider(), JavaConfiguration.Default, args)
+		{}
 
-		public ElasticsearchProcess(IEnumerable<string> args) : base(args)
+		public ElasticsearchProcess(IObservableProcess process, IConsoleOutHandler consoleOutHandler, IFileSystem fileSystem, IElasticsearchEnvironmentStateProvider env, JavaConfiguration java, IEnumerable<string> args)
+			: base(process, consoleOutHandler ?? new ElasticsearchConsoleOutHandler(process?.UserInteractive ?? false), fileSystem)
 		{
-			this.HomeDirectory = (this.HomeDirectory
-				?? Environment.GetEnvironmentVariable("ES_HOME", EnvironmentVariableTarget.Machine)
-				?? Directory.GetParent(".").FullName).TrimEnd('\\');
+			var homeDirectory = (env.HomeDirectory ?? FileSystem.Directory.GetParent(".").FullName).TrimEnd('\\');
+			var configDirectory = (env.ConfigDirectory ?? Path.Combine(homeDirectory, "config")).TrimEnd('\\');
 
-			this.ConfigDirectory = (this.ConfigDirectory
-				?? Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.Machine)
-				?? Path.Combine(this.HomeDirectory, "config")).TrimEnd('\\');
+			this.HomeDirectory = homeDirectory;
+			this.ConfigDirectory = configDirectory;
 
-			this.LibDirectory = Path.Combine(this.HomeDirectory, "lib");
-			this.JavaOptions = new LocalJvmOptionsConfiguration(Path.Combine(this.ConfigDirectory, "jvm.options")).ToString();
+			var parsedArguments = this.ParseArguments(args);
 
-			var libs = new HashSet<string>(Directory.GetFiles(this.LibDirectory));
-			this.ElasticsearchJar = libs.First(f => Path.GetFileName(f).StartsWith("elasticsearch-"));
-			libs.ExceptWith(new [] { this.ElasticsearchJar });
-			this._libs = libs.ToArray();
-
-			var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Machine);
+			var javaHome = java.JavaHomeCanonical;
 			if (javaHome == null)
-				throw new Exception("JAVA_HOME is not set!");
+				throw new Exception("JAVA_HOME is not set and no Java installation could be found in the windows registry!");
 
-			this.ProcessExe = Path.Combine(javaHome, @"bin\java.exe");
+			this.ProcessExe = java.JavaExecutable;
+			if (!fileSystem.File.Exists(this.ProcessExe))
+				throw new Exception($"Java executable not found, this could be because of a faulty JAVA_HOME variable: ${this.ProcessExe}");
 
-			if (!File.Exists(this.ProcessExe))
-				throw new Exception("JAVA_HOME set but bin\\java.exe is not found using it as the root");
+			this.Arguments = this.CreateObservableProcessArguments(parsedArguments);
 		}
 
-		protected override List<string> GetArguments()
+		protected override void HandleMessage(ConsoleOut c)
 		{
-			this.Stop();
+			if (!ElasticsearchConsoleOutParser.TryParse(c,
+				out string date, out string level, out string section, out string node, out string message, out bool started)) return;
 
-			var classPath = $"{this.ElasticsearchJar};{string.Join(";", _libs)}";
+			if (this.Started || string.IsNullOrWhiteSpace(message)) return;
 
-			var arguments = JavaOptions.Split(' ')
-				.Concat(new string[]
+			if (!started) return;
+			this.BlockingSubject.OnNext(this.StartedHandle);
+			this.Started = true;
+			this.StartedHandle.Set();
+		}
+
+		protected sealed override IEnumerable<string> CreateObservableProcessArguments(IEnumerable<string> args)
+		{
+			var libFolder = Path.Combine(this.HomeDirectory, "lib");
+			var jars = new HashSet<string>(FileSystem.Directory.GetFiles(libFolder));
+
+			var elasticsearchJar = jars.FirstOrDefault(f => Path.GetFileName(f).StartsWith("elasticsearch-"));
+			//TODO throw if null;
+
+			jars.ExceptWith(new [] { elasticsearchJar });
+
+			var libs = jars.ToArray();
+
+			var javaOpts = new LocalJvmOptionsConfiguration(Path.Combine(this.ConfigDirectory, "jvm.options"));
+			var classPath = $"{elasticsearchJar};{string.Join(";", libs)}";
+
+			var arguments = javaOpts.Options
+				.Concat(new []
 				{
 					$"-Delasticsearch",
 					$"-Des.path.home=\"{this.HomeDirectory}\"",
 					$"-cp \"{classPath}\" org.elasticsearch.bootstrap.Elasticsearch",
 					$"-E path.conf=\"{this.ConfigDirectory}\""
 				})
-				.Concat(this.AdditionalArguments)
+				.Concat(args)
 				.ToList();
 
 			return arguments;
 		}
 
-		protected override void HandleMessage(ConsoleOut message)
+		protected sealed override IEnumerable<string> ParseArguments(IEnumerable<string> args)
 		{
-			var s = new ElasticsearchMessage(this.Started, message.Data);
-			if (this.Started || string.IsNullOrWhiteSpace(s.Message)) return;
-
-			string version; int? pid; int port;
-			if (s.TryParseNodeInfo(out version, out pid))
-			{
-			}
-			else if (s.TryGetPortNumber(out port))
-				this.Port = port;
-			else if (s.TryGetStartedConfirmation())
-			{
-				this.BlockingSubject.OnNext(this.StartedHandle);
-				this.Started = true;
-				this.StartedHandle.Set();
-			}
-		}
-
-		protected override List<string> ParseArguments(IEnumerable<string> args)
-		{
+			if (args == null) return Enumerable.Empty<string>();
 			var newArgs = new List<string>();
-			if (args == null)
-				return newArgs;
 			var esFlag = false;
 			foreach (var arg in args)
 			{
-				if (arg == "-E")
+				switch (arg)
 				{
-					esFlag = true;
-					continue;
+					case "-E": //to support both -Eoption and -E option
+						esFlag = true;
+						continue;
+					case "--no-color":
+						this.NoColor = true;
+						break;
+					default:
+						if (arg.StartsWith("path.conf"))
+							this.ConfigDirectory = ParseKeyValue(arg);
+						else if (arg.StartsWith("path.home"))
+							this.HomeDirectory = ParseKeyValue(arg);
+						else
+							newArgs.Add(esFlag ? $"-E {arg}" : arg);
+						break;
 				}
-
-				if (arg == "--no-color")
-					this.NoColor = true;
-				else if (arg.StartsWith("path.conf"))
-					this.ConfigDirectory = ParseKeyValue(arg);
-				else if (arg.StartsWith("path.home"))
-					this.HomeDirectory = ParseKeyValue(arg);
-				else
-					newArgs.Add(esFlag ? $"-E {arg}" : arg);
-
 				esFlag = false;
 			}
 			return newArgs;
 		}
 
-		private string ParseKeyValue(string arg)
+		private static string ParseKeyValue(string arg)
 		{
-			var kv = arg.Split('=');
-			if (kv.Length != 2)
-				return null;
-			return kv[1];
+			var kv = arg.Split(new [] {'='}, 2, StringSplitOptions.RemoveEmptyEntries);
+			return kv.Length != 2 ? null : kv[1];
 		}
 
-		protected override void WriteError(string message) => ElasticsearchConsole.WriteLine(ConsoleColor.Red, message);
-
-		protected override void WriteSuccess(string message) => ElasticsearchConsole.WriteLine(message);
 	}
 }

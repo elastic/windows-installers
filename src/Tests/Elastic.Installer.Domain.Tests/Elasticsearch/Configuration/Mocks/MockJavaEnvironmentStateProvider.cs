@@ -1,5 +1,7 @@
 ﻿
 
+using System.IO;
+using System.Linq;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
@@ -12,6 +14,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		string IJavaEnvironmentStateProvider.JavaHomeMachine => _javaHomeMachine;
 		private string _javaHomeRegistry;
 		string IJavaEnvironmentStateProvider.JavaHomeRegistry => _javaHomeRegistry;
+
+		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin\java.exe");
+		private IJavaEnvironmentStateProvider _t => this;
+		public string JavaHomeCanonical => new [] {_t.JavaHomeMachine, _t.JavaHomeCurrentUser, _t.JavaHomeRegistry}
+			.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
 
 		public void SetJavaHomeEnvironmentVariable(string javaHome) { }
 

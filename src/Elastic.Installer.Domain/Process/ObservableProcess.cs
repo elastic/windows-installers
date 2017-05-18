@@ -1,66 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
-namespace Elastic.Installer.Domain.Process.ObservableWrapper
+namespace Elastic.Installer.Domain.Process
 {
 	public class ObservableProcess : IObservableProcess
 	{
-		public ObservableProcess(string bin, params string[] args)
-		{
-			this.Binary = bin;
-			this.Arguments = string.Join(" ", args);
-
-			this.Process = new System.Diagnostics.Process
-			{
-				EnableRaisingEvents = true,
-				StartInfo =
-				{
-					FileName = this.Binary,
-					Arguments = this.Arguments,
-					CreateNoWindow = true,
-					UseShellExecute = false,
-					RedirectStandardOutput = true,
-					RedirectStandardError = true,
-					RedirectStandardInput = false
-				}
-			};
-		}
+		public System.Diagnostics.Process Process { get; private set; }
+		private readonly object _lock = new object();
 
 		private bool Started { get; set; }
+		public bool UserInteractive => Environment.UserInteractive;
+		public TimeSpan WaitForStarted => TimeSpan.FromMinutes(2);
 
-		public int? ExitCode { get; private set; }
+		private IObservable<ConsoleOut> OutStream { get; set; }
 
-		public string Binary { get; }
-
-		public System.Diagnostics.Process Process { get; }
-
-		public string Arguments { get; }
-
-		public IObservable<ConsoleOut> Start()
+		public IObservable<ConsoleOut> Start(string binary, IEnumerable<string> args)
 		{
-			return Observable.Create<ConsoleOut>(observer =>
+			if (this.Started) return OutStream ?? Observable.Empty<ConsoleOut>();
+			lock(_lock)
 			{
-				// listen to stdout and stderr
-				var stdOut = this.Process.CreateStandardOutputObservable();
-				var stdErr = this.Process.CreateStandardErrorObservable();
+				if (this.Started) return OutStream ?? Observable.Empty<ConsoleOut>();
+                this.Process = new System.Diagnostics.Process
+                {
+                    EnableRaisingEvents = true,
+                    StartInfo =
+                    {
+                        FileName = binary,
+                        Arguments = string.Join(" ", args),
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = false
+                    }
+                };
+                this.OutStream = Observable.Create<ConsoleOut>(observer =>
+                {
+                    // listen to stdout and stderr
+                    var stdOut = this.Process.CreateStandardOutputObservable();
+                    var stdErr = this.Process.CreateStandardErrorObservable();
 
-				var stdOutSubscription = stdOut.Subscribe(observer);
-				var stdErrSubscription = stdErr.Subscribe(observer);
+                    var stdOutSubscription = stdOut.Subscribe(observer);
+                    var stdErrSubscription = stdErr.Subscribe(observer);
 
-				var processExited = Observable.FromEventPattern(h => this.Process.Exited += h, h => this.Process.Exited -= h);
-				var processError = CreateProcessExitSubscription(this.Process, processExited, observer);
+                    var processExited = Observable.FromEventPattern(h => this.Process.Exited += h, h => this.Process.Exited -= h);
+                    var processError = CreateProcessExitSubscription(this.Process, processExited, observer);
 
-				if (!this.Process.Start())
-					throw new Exception($"Failed to start observable process: {this.Binary}");
+                    if (!this.Process.Start())
+                        throw new Exception($"Failed to start observable process: {binary}");
 
-				this.Process.BeginOutputReadLine();
-				this.Process.BeginErrorReadLine();
-				this.Started = true;
+                    this.Process.BeginOutputReadLine();
+                    this.Process.BeginErrorReadLine();
+                    this.Started = true;
 
-				return new CompositeDisposable(stdOutSubscription, stdErrSubscription, processError);
-			});
+                    return new CompositeDisposable(stdOutSubscription, stdErrSubscription, processError);
+                });
+				return this.OutStream;
+
+			}
 		}
 
 		private IDisposable CreateProcessExitSubscription(System.Diagnostics.Process process, IObservable<EventPattern<object>> processExited, IObserver<ConsoleOut> observer)
@@ -69,7 +69,6 @@ namespace Elastic.Installer.Domain.Process.ObservableWrapper
 			{
 				try
 				{
-					this.ExitCode = process?.ExitCode;
 					if (process?.ExitCode > 0)
 					{
 						observer.OnError(new Exception(
@@ -79,27 +78,24 @@ namespace Elastic.Installer.Domain.Process.ObservableWrapper
 				}
 				finally
 				{
-					this.Started = false;
-					process?.Close();
+					this.Stop();
 				}
 			});
 		}
 
 		public void Stop()
 		{
-			if (this.Started)
-			{
-				try
-				{
-					this.Process?.Kill();
-					this.Process?.WaitForExit(2000);
-					this.Process?.Close();
-				}
-				catch (Exception)
-				{
-				}
-			}
-			this.Started = false;
+            try
+            {
+                this.Process?.Kill();
+                this.Process?.WaitForExit(2000);
+                this.Process?.Close();
+            }
+            finally
+            {
+	            this.Started = false;
+	            this.OutStream = null;
+            }
 		}
 
 		public void Dispose() => this.Stop();

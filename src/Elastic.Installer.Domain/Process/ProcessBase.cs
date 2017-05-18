@@ -1,6 +1,6 @@
-﻿using Elastic.Installer.Domain.Process.ObservableWrapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -11,100 +11,81 @@ namespace Elastic.Installer.Domain.Process
 {
 	public abstract class ProcessBase : IDisposable
 	{
-		protected ObservableProcess Process;
+		protected IFileSystem FileSystem { get; }
+		private readonly IConsoleOutHandler _handler;
+		private readonly IObservableProcess _process;
 
-		protected ManualResetEvent StartedHandle { get; set; } = new ManualResetEvent(false);
+		protected string ProcessExe { get; set; }
+		protected IEnumerable<string> Arguments { private get; set; }
+		protected bool Started { get; set; }
+		protected string HomeDirectory { get; set; }
+		protected string ConfigDirectory { get; set; }
 
+		protected ManualResetEvent StartedHandle { get; } = new ManualResetEvent(false);
 		protected readonly Subject<ManualResetEvent> BlockingSubject = new Subject<ManualResetEvent>();
+		protected CompositeDisposable Disposables { get; private set; } = new CompositeDisposable();
 
-		protected CompositeDisposable Disposables { get; set; } = new CompositeDisposable();
-
-		protected virtual List<string> ParseArguments(IEnumerable<string> args) => args?.ToList();
-
-		protected virtual List<string> GetArguments() => this.AdditionalArguments;
-
-		public string ProcessExe { get; protected set; }
-
-		public bool Started { get; protected set; }
-
-		public string HomeDirectory { get; protected set; }
-
-		public string ConfigDirectory { get; protected set; }
-
-		public List<string> AdditionalArguments { get; protected set; }
-
-		protected ProcessBase(IEnumerable<string> args)
+		protected ProcessBase(IObservableProcess process, IConsoleOutHandler handler, IFileSystem fileSystem)
 		{
-			this.AdditionalArguments = ParseArguments(args);
+			this.FileSystem = fileSystem ?? new FileSystem();
+			this._process = process ?? new ObservableProcess();
+			this._handler = handler ?? new ConsoleOutHandler();
 		}
+
+		/// <summary>
+		/// Yield the actual arguments to the wrapped process
+		/// </summary>
+		/// <param name="arguments">The sanitized list of arguments to the outer process</param>
+		protected abstract IEnumerable<string> CreateObservableProcessArguments(IEnumerable<string> arguments);
+
+		/// <summary>
+		/// Arguments to the process itself
+		/// </summary>
+		/// <param name="arguments">Sanitized list of arguments</param>
+		protected abstract IEnumerable<string> ParseArguments(IEnumerable<string> arguments);
 
 		public virtual void Start()
 		{
-			if (this.IsRunning())
-				this.Stop();
+			this.Stop();
 
-			var arguments = this.GetArguments();
+			var bin = this.ProcessExe;
+			var args = this.Arguments;
 
-			this.Process = new ObservableProcess(this.ProcessExe, arguments.ToArray());
-
-			var observable = Observable.Create<ConsoleOut>(observer =>
-				{
-					this.Disposables.Add(this.Process.Start().Subscribe(observer));
-					return Disposable.Empty;
-				})
-				.Publish(); //promote to connectable observable
-
-			this.Disposables.Add(observable.Connect());
-
-			if (Environment.UserInteractive)
+			var observable = this._process.Start(bin, args).Publish();
+			if (this._process.UserInteractive)
 			{
 				//subscribe to all messages and write them to console
-				this.Disposables.Add(observable.Subscribe(c =>
-				{
-					if (c.Error) WriteError(c.Data);
-					else WriteSuccess(c.Data);
-				}));
+				this.Disposables.Add(observable.Subscribe(this._handler.Write));
 			}
 
 			//subscribe as long we are not in started state and attempt to read console out for this confirmation
 			this.Disposables.Add(observable
-					.TakeWhile(c => !this.Started)
-					.Subscribe(this.HandleMessage)
+				.TakeWhile(c => !this.Started)
+				.Subscribe(this.Handle)
 			);
 
-			var timeout = TimeSpan.FromSeconds(120);
-			if (!this.StartedHandle.WaitOne(timeout, true))
-			{
-				this.Stop();
-				throw new Exception($"Could not start process within ({timeout}): {this.ProcessExe} {string.Join(" ", arguments)}");
-			}
+			this.Disposables.Add(observable.Connect());
+
+			var timeout = this._process.WaitForStarted;
+			if (this.StartedHandle.WaitOne(timeout, true)) return;
+
+			this.Stop();
+			throw new Exception($"Could not start process within ({timeout}): {bin} {string.Join(" ", args)}");
 		}
 
-		private bool IsRunning()
+		public void Stop()
 		{
-			try
-			{
-				System.Diagnostics.Process.GetProcessById(this.Process.Process.Id);
-				return true;
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
-
-		public virtual void Stop()
-		{
-			this.Process?.Dispose();
+			this._process?.Dispose();
 			this.Disposables?.Dispose();
 			this.Disposables = new CompositeDisposable();
 		}
 
+		private void Handle(ConsoleOut message)
+		{
+			this._handler.Handle(message);
+			this.HandleMessage(message);
+		}
 		protected virtual void HandleMessage(ConsoleOut message) { }
-
-		protected virtual void WriteError(string message) => Console.WriteLine(message);
-
-		protected virtual void WriteSuccess(string message) => Console.WriteLine(message);
 
 		public void Dispose() => this.Stop();
 	}

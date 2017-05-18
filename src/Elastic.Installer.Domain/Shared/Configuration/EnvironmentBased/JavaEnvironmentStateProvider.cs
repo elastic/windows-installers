@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using Microsoft.Win32;
 
 namespace Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased

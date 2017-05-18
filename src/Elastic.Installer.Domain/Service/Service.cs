@@ -23,7 +23,12 @@ namespace Elastic.Installer.Domain.Service
 		public abstract string Name { get; }
 		public virtual void StartInteractive() => this.OnStart(null);
 		public virtual void StopInteractive() => this.OnStop();
-		public abstract void WriteToConsole(ConsoleColor color, string value);
+		public void WriteToConsole(ConsoleColor color, string value)
+		{
+			Console.ForegroundColor = color;
+			Console.WriteLine(value);
+			Console.ResetColor();
+		}
 
 		[DllImport("Kernel32")]
 		public static extern bool SetConsoleCtrlHandler(ConsoleCtrlHandler Handler, bool Add);
@@ -32,7 +37,9 @@ namespace Elastic.Installer.Domain.Service
 
 		public void Run()
 		{
-			if (Environment.UserInteractive)
+			if (!Environment.UserInteractive)
+				Run(this);
+			else
 			{
 				WarnIfAlreadyRunningAsAService();
 
@@ -48,21 +55,15 @@ namespace Elastic.Installer.Domain.Service
 				this.StartInteractive();
 				handle.WaitOne();
 			}
-			else
-			{
-				Run(this);
-			}
 		}
 
 		private void WarnIfAlreadyRunningAsAService()
 		{
 			var service = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.Equals(this.Name));
-			if (service != null && service.Status != ServiceControllerStatus.Stopped)
-			{
-				var status = Enum.GetName(typeof(ServiceControllerStatus), service.Status);
-				ElasticsearchConsole.WriteLine(ConsoleColor.Blue,
-					$"{this.Name} is already running as a service and currently: {status}.");
-			}
+			if (service == null || service.Status == ServiceControllerStatus.Stopped) return;
+
+			var status = Enum.GetName(typeof(ServiceControllerStatus), service.Status);
+			this.WriteToConsole(ConsoleColor.Blue, $"{this.Name} is already running as a service and currently: {status}.");
 		}
 	}
 }
