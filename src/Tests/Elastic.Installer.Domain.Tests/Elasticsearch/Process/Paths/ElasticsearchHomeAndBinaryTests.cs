@@ -18,7 +18,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 		private static string EsHomeArg(string home) => $"-Des.path.home=\"{home}\"";
 
 		[Fact] public void DefaultEsHomeIsPassedAsArgumentToJava() => AllDefaults()
-			.Start(p => { p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsHomeArg(DefaultEsHome)); });
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
+					.And.Contain(EsHomeArg(DefaultEsHome));
+			});
 
 		[Fact] public void MissingElasticsearchLibFolderThrows() => CreateThrows(s => s
 				.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
@@ -44,18 +48,30 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				.EsHomeMachineVariable(EsHomeMachine)
 				.ElasticsearchExecutable(Executable)
 			)
-			.Start(p => { p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsHomeArg(EsHomeUser)); });
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
+					.And.Contain(EsHomeArg(EsHomeUser));
+			});
 
 		[Fact] public void MachineVariableWinsFromInferredExecutableLocation() => ElasticsearchChangesOnly(e => e
 				.EsHomeMachineVariable(EsHomeMachine)
 				.ElasticsearchExecutable(Executable)
 			)
-			.Start(p => { p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsHomeArg(EsHomeMachine)); });
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
+					.And.Contain(EsHomeArg(EsHomeMachine));
+			});
 
 		[Fact] public void DefaultsEsHomeToExecutableParentLocation() => ElasticsearchChangesOnly(e => e
 				.ElasticsearchExecutable(Executable)
 			)
-			.Start(p => { p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsHomeArg(_executableParentFolder)); });
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
+					.And.Contain(EsHomeArg(_executableParentFolder));
+			});
 
 		[Fact] public void ArgumentPassedOnCommandLineWins() =>
 			ElasticsearchChangesOnly(
