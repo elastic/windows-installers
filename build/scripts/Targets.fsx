@@ -114,7 +114,9 @@ Target "Integrate" (fun () ->
   =?> ("UnitTest", (not ((getBuildParam "skiptests") = "1")))
   ==> "BuildServices"
   ==> "BuildInstallers"
-  =?> ("Integrate", (not ((getBuildParam "skiptests") = "1")))
   ==> "Release"
+
+"BuildInstallers"
+  ==> "Integrate"
 
 RunTargetOrDefault "BuildInstallers"
