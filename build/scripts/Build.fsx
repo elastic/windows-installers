@@ -1,8 +1,6 @@
 ﻿#I "../../packages/build/FAKE/tools"
-#I "../../packages/build/System.Management.Automation/lib/net45"
 
 #r "FakeLib.dll"
-#r "System.Management.Automation.dll"
 #load "Products.fsx"
 #load "BuildConfig.fsx"
 

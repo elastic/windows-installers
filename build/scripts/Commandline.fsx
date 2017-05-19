@@ -1,10 +1,8 @@
 #I @"../../packages/build/FAKE/tools"
-#I @"../../packages/semver/lib/net452"
 #I @"../../packages/build/Fsharp.Data/lib/net40"
 #I @"../../packages/build/FSharp.Text.RegexProvider/lib/net40"
 
 #r @"FakeLib.dll"
-#r @"Semver.dll"
 #r "Fsharp.Data.dll"
 #r "Fsharp.Text.RegexProvider.dll"
 #r "System.Xml.Linq.dll"
@@ -36,6 +34,10 @@ Targets:
   - cleans build output folders
 * unittest
   - build and unit test
+* downloadproducts
+  - downloads the product zip files if not already downloaded
+* unzipproducts
+  - unzips product zip files if not already unzipped
 * release [products] [version] [certFile] [passwordFile]
   - create a release versions of each MSI by building and then signing the service executable and installer for each.
   - when certFile and passwordFile are specified, these will be used for signing otherwise the values in ELASTIC_CERT_FILE
@@ -53,6 +55,7 @@ optional comma separated collection of products to build. can use
 * all
     - build all products
 * e
+* es
 * elasticsearch
     - build elasticsearch
 * k
@@ -134,6 +137,7 @@ when not specified
         | "test"
         | "clean"
         | "downloadproducts"
+        | "unzipproducts"
         | "patchguids"
         | "unittest"
         | "prunefiles"
@@ -161,6 +165,7 @@ when not specified
             | "all"
             | "a" -> All
             | "e"
+            | "es"
             | "elasticsearch" -> [Elasticsearch]
             | "k"
             | "kibana" -> [Kibana]

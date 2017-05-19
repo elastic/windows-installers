@@ -1,11 +1,6 @@
 ﻿#I "../../packages/build/FAKE/tools"
-#I "../../packages/build/Fsharp.Data/lib/net40"
-#I "../../packages/build/FSharp.Text.RegexProvider/lib/net40"
 
 #r "FakeLib.dll"
-#r "Fsharp.Data.dll"
-#r "Fsharp.Text.RegexProvider.dll"
-#r "System.Xml.Linq.dll"
 
 open System
 open System.Diagnostics
@@ -37,6 +32,7 @@ module Paths =
     let ArtifactDownloadsUrl = "https://artifacts.elastic.co/downloads"
 
 module Products =
+    open Paths
 
     type Product =
         | Elasticsearch
@@ -62,7 +58,6 @@ module Products =
     }
 
     type ProductVersion(product:Product, version:Version) =
-
         member this.Product = product;
         member this.Version = version;
         member this.Name = product.Name
@@ -71,42 +66,45 @@ module Products =
         member this.DownloadUrl =
             match product with
             | Elasticsearch ->
-                sprintf "%s/elasticsearch/elasticsearch-%s.zip" Paths.ArtifactDownloadsUrl this.Version.FullVersion
-            | Kibana -> sprintf "%s/kibana/kibana-%s-windows-x86.zip" Paths.ArtifactDownloadsUrl this.Version.FullVersion
+                sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl this.Version.FullVersion
+            | Kibana -> sprintf "%s/kibana/kibana-%s-windows-x86.zip" ArtifactDownloadsUrl this.Version.FullVersion
 
         member this.ZipFile =
-            Paths.InDir |> CreateDir
-            Paths.InDir
+            InDir |> CreateDir
+            InDir
             |> Path.GetFullPath
             |> fun f -> Path.Combine(f, sprintf "%s-%s.zip" this.Name this.Version.FullVersion)
 
         member this.ExtractedDirectory =
-            Paths.InDir |> CreateDir
-            Paths.InDir
+            InDir |> CreateDir
+            InDir
             |> Path.GetFullPath
             |> fun f -> Path.Combine(f, sprintf "%s-%s" this.Name this.Version.FullVersion)
 
-        member this.BinDir = Paths.InDir @@ sprintf "%s-%s/bin/" this.Name this.Version.FullVersion
+        member this.BinDir = InDir @@ sprintf "%s-%s/bin/" this.Name this.Version.FullVersion
 
         member this.ServiceDir =
-            Paths.SrcDir @@ this.Title @@ sprintf "Elastic.Installer.%s.Process/" this.Title
+            SrcDir @@ this.Title @@ sprintf "Elastic.Installer.%s.Process/" this.Title
 
         member this.ServiceBinDir = this.ServiceDir @@ "bin/AnyCPU/Release/"
 
         member this.Unzip () =
-            tracefn "Unzipping %s %s" this.Name this.Version.FullVersion
-            Unzip Paths.InDir this.ZipFile
-            match this.Product with
-                | Kibana ->
-                    let original = sprintf "kibana-%s-windows-x86" this.Version.FullVersion
-                    if directoryExists original = false then
-                        Rename (Paths.InDir @@ (sprintf "kibana-%s" this.Version.FullVersion)) (Paths.InDir @@ original)
-                | _ -> ()
+            if directoryExists this.ExtractedDirectory |> not && fileExists this.ZipFile
+            then
+                tracefn "Unzipping %s %s" this.Name this.Version.FullVersion
+                Unzip InDir this.ZipFile
+                match this.Product with
+                    | Kibana ->
+                        let original = sprintf "kibana-%s-windows-x86" this.Version.FullVersion
+                        if directoryExists original |> not then
+                            Rename (InDir @@ (sprintf "kibana-%s" this.Version.FullVersion)) (InDir @@ original)
+                    | _ -> ()
+            else tracefn "Extracted directory %s already exists" this.ExtractedDirectory
 
         member this.Download () =
             let locations = (this.DownloadUrl, this.ZipFile)
             match locations with
-            | (_, downloaded) when File.Exists downloaded ->
+            | (_, downloaded) when fileExists downloaded ->
                 tracefn "Already downloaded %s %s" this.Name this.Version.FullVersion
             | _ ->
                 tracefn "Downloading %s %s" this.Name this.Version.FullVersion

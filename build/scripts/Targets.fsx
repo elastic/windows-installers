@@ -28,10 +28,10 @@ open Commandline
 let productsToBuild = Commandline.parse()
 
 let productDescriptions = productsToBuild
-                          |> List.map(fun p -> sprintf "%s %s" p.Name p.Version.FullVersion)
+                          |> List.map(fun p -> sprintf "%s %s" p.Title p.Version.FullVersion)
                           |> String.concat Environment.NewLine
 
-tracefn "Starting build of products:%s%s" Environment.NewLine productDescriptions
+traceHeader (sprintf "Products:%s%s%s" Environment.NewLine Environment.NewLine productDescriptions)
 
 Target "Clean" (fun _ ->
     CleanDirs [MsiBuildDir; OutDir; ResultsDir]
@@ -41,12 +41,11 @@ Target "Clean" (fun _ ->
 
 Target "DownloadProducts" (fun () ->
     productsToBuild
-    |> List.iter (fun p ->
-          if directoryExists p.ExtractedDirectory |> not
-          then
-            p.Download()
-            p.Unzip()
-    )
+    |> List.iter (fun p -> p.Download())
+)
+
+Target "UnzipProducts" (fun () ->
+    productsToBuild |> List.iter (fun p -> p.Unzip())
 )
 
 Target "PatchGuids" (fun () ->
@@ -84,7 +83,7 @@ Target "BuildInstallers" (fun () ->
 )
 
 Target "Release" (fun () ->
-    trace "Building in release mode.  All files will be signed."
+    trace "Build in Release mode. Services and MSIs will be signed."
 )
 
 Target "Integrate" (fun () ->
@@ -109,6 +108,7 @@ Target "Integrate" (fun () ->
 
 "Clean"
   =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
+  ==> "UnzipProducts"
   ==> "PatchGuids"
   ==> "PruneFiles"
   =?> ("UnitTest", (not ((getBuildParam "skiptests") = "1")))
