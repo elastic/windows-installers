@@ -50,7 +50,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased
 			StateProvider = stateProvider ?? new ElasticsearchEnvironmentStateProvider();
 		}
 
-		public string HomeDirectoryInferred
+		private string HomeDirectoryInferred
 		{
 			get
 			{

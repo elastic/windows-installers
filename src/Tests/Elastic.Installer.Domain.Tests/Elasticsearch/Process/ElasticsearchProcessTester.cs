@@ -18,8 +18,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		public TestableElasticsearchConsoleOutHandler OutHandler { get; set; }
 		public TestableElasticsearchObservableProcess ObservableProcess { get; set; }
 
-		public static string DefaultJavaHome {get;} = @"C:\Java";
-		public static  string DefaultEsHome {get;}= LocationsModel.DefaultInstallationDirectory;
+		public static string DefaultJavaHome { get; } = @"C:\Java";
+		public static string DefaultEsHome { get; } = LocationsModel.DefaultInstallationDirectory;
 
 		private ElasticsearchProcessTester(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup)
 		{
@@ -33,29 +33,40 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 				this.OutHandler,
 				state.FileSystemState,
 				state.ElasticsearchConfigState,
-				state.JavaConfigState, null);
+				state.JavaConfigState, state.ProcessArgs);
 		}
 
-		public static ElasticsearchProcessTester AllDefaults() => new ElasticsearchProcessTester(s=>s
-			.Elasticsearch(e=>e.EsHomeMachineVariable(DefaultEsHome))
-			.Java(j=>j.JavaHomeMachine(DefaultJavaHome))
+		public static ElasticsearchProcessTester AllDefaults(params string[] args) => new ElasticsearchProcessTester(s => s
+			.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
+			.Java(j => j.JavaHomeMachine(DefaultJavaHome))
 			.ConsoleSession(ConsoleSession.Valid)
 			.FileSystem(s.FileSystemDefaults)
+			.ProcessArguments(args)
 		);
 
-		public static ElasticsearchProcessTester JavaChangesOnly(Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> javaState) => new ElasticsearchProcessTester(s=>s
-			.Elasticsearch(e=>e.EsHomeMachineVariable(DefaultEsHome))
+		public static ElasticsearchProcessTester JavaChangesOnly(
+			Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> javaState) => new ElasticsearchProcessTester(s => s
+			.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
 			.Java(javaState)
 			.ConsoleSession(ConsoleSession.Valid)
 			.FileSystem(s.FileSystemDefaults)
 		);
 
-		public static ElasticsearchProcessTester ElasticsearchChangesOnly(Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> esState) => new ElasticsearchProcessTester(s=>s
-			.Elasticsearch(esState)
-			.Java(j=>j.JavaHomeMachine(DefaultJavaHome))
-			.ConsoleSession(ConsoleSession.Valid)
-			.FileSystem(s.FileSystemDefaults)
-		);
+		public static ElasticsearchProcessTester ElasticsearchChangesOnly(
+			Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> esState,
+			params string[] args) => ElasticsearchChangesOnly(null, esState, args);
+
+		public static ElasticsearchProcessTester ElasticsearchChangesOnly(
+			string homeDirectoryForFileSystem,
+			Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> esState,
+			params string[] args) =>
+			new ElasticsearchProcessTester(s => s
+				.Elasticsearch(esState)
+				.Java(j => j.JavaHomeMachine(DefaultJavaHome))
+				.ConsoleSession(ConsoleSession.Valid)
+				.FileSystem(fs=> s.AddJavaExe(s.AddElasticsearchLibs(fs, homeDirectoryForFileSystem)))
+				.ProcessArguments(args)
+			);
 
 		public static ElasticsearchProcessTester Create(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup) =>
 			new ElasticsearchProcessTester(setup);
@@ -64,7 +75,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup,
 			Action<Exception> assert)
 		{
-
 			var created = false;
 			try
 			{
@@ -85,7 +95,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			assert(this);
 		}
 
-		public void StartThrows(Action<Exception,ElasticsearchProcessTester> assert)
+		public void StartThrows(Action<Exception, ElasticsearchProcessTester> assert)
 		{
 			var started = false;
 			try
@@ -126,7 +136,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			return this;
 		}
 
-		public ElasticsearchProcessTesterStateProvider Elasticsearch(Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> setter)
+		public ElasticsearchProcessTesterStateProvider Elasticsearch(
+			Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> setter)
 		{
 			this.ElasticsearchState = setter(new MockElasticsearchEnvironmentStateProvider());
 			this.ElasticsearchConfigState = new ElasticsearchEnvironmentConfiguration(this.ElasticsearchState);
@@ -147,10 +158,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			fs.AddFile(java.JavaExecutable, new MockFileData(""));
 			return fs;
 		}
-		public MockFileSystem AddElasticsearchLibs(MockFileSystem fs)
+
+		public MockFileSystem AddElasticsearchLibs(MockFileSystem fs) => this.AddElasticsearchLibs(fs, null);
+		public MockFileSystem AddElasticsearchLibs(MockFileSystem fs, string home)
 		{
-			var f = fs.Directory.GetParent(".").FullName;
-			var libFolder = Path.Combine(this.ElasticsearchConfigState.HomeDirectory ?? f, @"lib");
+			var libFolder = Path.Combine(home ?? this.ElasticsearchConfigState.HomeDirectory, @"lib");
 			fs.AddDirectory(libFolder);
 			fs.AddFile(Path.Combine(libFolder, @"elasticsearch-5.0.0.jar"), new MockFileData(""));
 			fs.AddFile(Path.Combine(libFolder, @"dep1.jar"), new MockFileData(""));
@@ -165,9 +177,16 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			this.ConsoleSessionState = session;
 			return this;
 		}
+
 		public ElasticsearchProcessTesterStateProvider Interactive(bool interactive = true)
 		{
 			this.InteractiveEnvironment = interactive;
+			return this;
+		}
+
+		public ElasticsearchProcessTesterStateProvider ProcessArguments(params string[] args)
+		{
+			this.ProcessArgs = args;
 			return this;
 		}
 
@@ -175,9 +194,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 		public bool InteractiveEnvironment { get; private set; }
 
+		public string[] ProcessArgs { get; private set; }
+
 		public ConsoleSession ConsoleSessionState { get; private set; } = new ConsoleSession();
 
 		public MockFileSystem FileSystemState { get; private set; } = new MockFileSystem();
-
 	}
 }

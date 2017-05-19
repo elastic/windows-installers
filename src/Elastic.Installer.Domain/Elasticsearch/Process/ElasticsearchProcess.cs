@@ -86,7 +86,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 					$"-Delasticsearch",
 					$"-Des.path.home=\"{this.HomeDirectory}\"",
 					$"-cp \"{classPath}\" org.elasticsearch.bootstrap.Elasticsearch",
-					$"-E path.conf=\"{this.ConfigDirectory}\""
+					$"-Epath.conf=\"{this.ConfigDirectory}\""
 				})
 				.Concat(args)
 				.ToList();
@@ -101,21 +101,29 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 			var esFlag = false;
 			foreach (var arg in args)
 			{
-				switch (arg)
+				var a = arg;
+				if (arg == "-E")
 				{
-					case "-E": //to support both -Eoption and -E option
-						esFlag = true;
-						continue;
+					esFlag = true;
+					continue;
+				}
+				if (arg.StartsWith("-E"))
+				{
+					esFlag = true;
+					a = arg.Remove(0, 2);
+				}
+				switch (a)
+				{
 					case "--no-color":
 						this.NoColor = true;
 						break;
 					default:
-						if (arg.StartsWith("path.conf"))
-							this.ConfigDirectory = ParseKeyValue(arg);
-						else if (arg.StartsWith("path.home"))
-							this.HomeDirectory = ParseKeyValue(arg);
+						if (esFlag && a.StartsWith("path.conf"))
+							this.ConfigDirectory = ParseKeyValue(a);
+						else if (esFlag && a.StartsWith("path.home"))
+							this.HomeDirectory = ParseKeyValue(a);
 						else
-							newArgs.Add(esFlag ? $"-E {arg}" : arg);
+							newArgs.Add(esFlag ? $"-E{a}" : a);
 						break;
 				}
 				esFlag = false;
