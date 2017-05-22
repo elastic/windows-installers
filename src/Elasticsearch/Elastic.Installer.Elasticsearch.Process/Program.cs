@@ -10,13 +10,14 @@ namespace Elastic.Installer.Elasticsearch.Process
 		{
 			try
 			{
-				using (var service = new ElasticsearchService(args)) service.Run();
+				using (var service = new ElasticsearchService(args))
+					service.Run();
 			}
 			catch (Exception e)
 			{
-				e.ToEventLog("Elasticsearch");
 				if (Environment.UserInteractive)
 					e.ToConsole("An exception occurred while trying to start elasticsearch.");
+				e.ToEventLog("Elasticsearch");
 			}
 		}
 	}

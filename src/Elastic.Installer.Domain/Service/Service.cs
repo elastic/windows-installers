@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Service
 	public interface IService : IDisposable
 	{
 		string Name { get; }
-		void StartInteractive();
+		void StartInteractive(ManualResetEvent handle);
 		void StopInteractive();
 		void Run();
 		void WriteToConsole(ConsoleColor color, string value);
@@ -21,7 +21,7 @@ namespace Elastic.Installer.Domain.Service
 	public abstract class Service : ServiceBase, IService
 	{
 		public abstract string Name { get; }
-		public virtual void StartInteractive() => this.OnStart(null);
+		public virtual void StartInteractive(ManualResetEvent handle) => this.OnStart(null);
 		public virtual void StopInteractive() => this.OnStop();
 		public void WriteToConsole(ConsoleColor color, string value)
 		{
@@ -46,13 +46,13 @@ namespace Elastic.Installer.Domain.Service
 				var handle = new ManualResetEvent(false);
 				_consoleCtrlHandler += new ConsoleCtrlHandler(c =>
 				{
-					this.WriteToConsole(ConsoleColor.Red, $"Stopping {this.Name}...");
+					this.WriteToConsole(ConsoleColor.Cyan, $"Stop requested, stopping {this.Name}...");
 					this.StopInteractive();
 					handle.Set();
-					return false;
+					return true;
 				});
 				SetConsoleCtrlHandler(_consoleCtrlHandler, true);
-				this.StartInteractive();
+				this.StartInteractive(handle);
 				handle.WaitOne();
 			}
 		}

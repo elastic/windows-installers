@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 		private bool NoColor { get; set; }
 
 		public ElasticsearchProcess(IEnumerable<string> args)
-			: this(null, null, null, ElasticsearchEnvironmentConfiguration.Default, JavaConfiguration.Default, args)
+			: this(new ObservableProcess(), null, null, ElasticsearchEnvironmentConfiguration.Default, JavaConfiguration.Default, args)
 		{}
 
 		public ElasticsearchProcess(
@@ -28,9 +28,9 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 			: base(process, consoleOutHandler ?? new ElasticsearchConsoleOutHandler(process?.UserInteractive ?? false), fileSystem)
 		{
 			var homeDirectory = env.HomeDirectory?.TrimEnd('\\')
-				?? throw new Exception("No ES_HOME variable set and no home directory could be inferred from the executable location");
+				?? throw new StartupException("No ES_HOME variable set and no home directory could be inferred from the executable location");
 			var configDirectory = env.ConfigDirectory?.TrimEnd('\\')
-				?? throw new Exception("ES_CONFIG was not explicitly set nor could it be determined from ES_HOME or the current executable location");
+				?? throw new StartupException("ES_CONFIG was not explicitly set nor could it be determined from ES_HOME or the current executable location");
 
 			this.HomeDirectory = homeDirectory;
 			this.ConfigDirectory = configDirectory;
@@ -39,11 +39,11 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 
 			var javaHome = java.JavaHomeCanonical;
 			if (javaHome == null)
-				throw new Exception("JAVA_HOME is not set and no Java installation could be found in the windows registry!");
+				throw new StartupException("JAVA_HOME is not set and no Java installation could be found in the windows registry!");
 
 			this.ProcessExe = java.JavaExecutable;
-			if (!fileSystem.File.Exists(this.ProcessExe))
-				throw new Exception($"Java executable not found, this could be because of a faulty JAVA_HOME variable: {this.ProcessExe}");
+			if (!this.FileSystem.File.Exists(this.ProcessExe))
+				throw new StartupException($"Java executable not found, this could be because of a faulty JAVA_HOME variable: {this.ProcessExe}");
 
 			this.Arguments = this.CreateObservableProcessArguments(parsedArguments);
 		}
@@ -65,13 +65,13 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 		{
 			var libFolder = Path.Combine(this.HomeDirectory, "lib");
 			if (!FileSystem.Directory.Exists(libFolder))
-				throw new Exception($"Expected a 'lib' directory inside: {this.HomeDirectory}");
+				throw new StartupException($"Expected a 'lib' directory inside: {this.HomeDirectory}");
 
 			var jars = new HashSet<string>(FileSystem.Directory.GetFiles(libFolder));
 
 			var elasticsearchJar = jars.FirstOrDefault(f => Path.GetFileName(f).StartsWith("elasticsearch-"));
 			if (elasticsearchJar == null)
-				throw new Exception($"No elasticsearch jar found in: {libFolder}");
+				throw new StartupException($"No elasticsearch jar found in: {libFolder}");
 
 			jars.ExceptWith(new [] { elasticsearchJar });
 

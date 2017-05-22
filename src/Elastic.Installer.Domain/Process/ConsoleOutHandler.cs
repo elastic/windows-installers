@@ -9,9 +9,9 @@ namespace Elastic.Installer.Domain.Process
 		public virtual void Write(ConsoleOut consoleOut)
 		{
 			if (consoleOut.Error)
-				Console.Error.Write(consoleOut.Data);
+				Console.Error.WriteLine(consoleOut.Data);
 			else
-				Console.Write(consoleOut.Data);
+				Console.WriteLine(consoleOut.Data);
 		}
 	}
 }

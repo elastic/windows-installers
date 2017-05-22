@@ -15,6 +15,8 @@ namespace Elastic.Installer.Domain.Process
 		private readonly IConsoleOutHandler _handler;
 		private readonly IObservableProcess _process;
 
+		public ManualResetEvent CompletedHandle { get; set; }
+
 		protected string ProcessExe { get; set; }
 		protected IEnumerable<string> Arguments { private get; set; }
 		protected bool Started { get; set; }
@@ -55,13 +57,15 @@ namespace Elastic.Installer.Domain.Process
 			if (this._process.UserInteractive)
 			{
 				//subscribe to all messages and write them to console
-				this.Disposables.Add(observable.Subscribe(this._handler.Write));
+				this.Disposables.Add(
+					observable.Subscribe(this._handler.Write, HandleException, HandleCompleted));
 			}
 
-			//subscribe as long we are not in started state and attempt to read console out for this confirmation
+			//subscribe as long we are not in started state and attempt to read console
+			//out for this confirmation
 			this.Disposables.Add(observable
 				.TakeWhile(c => !this.Started)
-				.Subscribe(this.Handle)
+				.Subscribe(this.Handle, HandleException, HandleCompletedHandler)
 			);
 
 			this.Disposables.Add(observable.Connect());
@@ -70,7 +74,7 @@ namespace Elastic.Installer.Domain.Process
 			if (this.StartedHandle.WaitOne(timeout, true)) return;
 
 			this.Stop();
-			throw new Exception($"Could not start process within ({timeout}): {bin} {string.Join(" ", args)}");
+			throw new StartupException($"Could not start process within ({timeout}): {bin} {string.Join(" ", args)}");
 		}
 
 		public void Stop()
@@ -78,6 +82,23 @@ namespace Elastic.Installer.Domain.Process
 			this._process?.Dispose();
 			this.Disposables?.Dispose();
 			this.Disposables = new CompositeDisposable();
+		}
+
+		private void HandleException(Exception e)
+		{
+			this.CompletedHandle?.Set();
+			this.StartedHandle.Set();
+		}
+		private void HandleCompleted()
+		{
+			this.CompletedHandle?.Set();
+		}
+		private void HandleCompletedHandler()
+		{
+			//somehow our console out snooper did not see a started
+			//but the process observable complete make sure we call the OnCompleteHandle
+			if (!this.Started) this.CompletedHandle?.Set();
+			this.StartedHandle.Set();
 		}
 
 		private void Handle(ConsoleOut message)

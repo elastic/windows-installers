@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Elastic.Installer.Domain.Elasticsearch.Process;
 using Elastic.Installer.Domain.Process;
@@ -29,6 +30,13 @@ namespace Elastic.Installer.Domain.Service.Elasticsearch
 		{
 			//todo merge args?
 			this._node = new ElasticsearchProcess(this._args);
+			this._node.Start();
+		}
+
+		public override void StartInteractive(ManualResetEvent handle)
+		{
+			this._node = new ElasticsearchProcess(this._args);
+			this._node.CompletedHandle = handle;
 			this._node.Start();
 		}
 

@@ -30,7 +30,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 [2016-09-26T11:43:22,180][INFO ][o.e.n.Node               ] [readonly-node-a9c5f4] starting ...
 */
 		private static readonly Regex ConsoleLineParser =
-			new Regex(@"\[(?<date>.*?)\]\[(?<level>.*?)\]\[(?<section>.*?)\] \[(?<node>.*?)\] (?<message>.+)");
+			new Regex(@"\[(?<date>.*?)\]\[(?<level>.*?)\](?:\[(?<section>.*?)\])?(?: \[(?<node>.*?)\])? (?<message>.+)");
 
 		public static bool TryParse(ConsoleOut c,
 			out string date, out string level, out string section, out string node, out string message, out bool started)

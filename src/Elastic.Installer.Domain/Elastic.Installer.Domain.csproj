@@ -121,6 +121,7 @@
     <Compile Include="Process\ConsoleOutHandler.cs" />
     <Compile Include="Process\IConsoleOutHandler.cs" />
     <Compile Include="Process\ProcessBase.cs" />
+    <Compile Include="Process\StartupException.cs" />
     <Compile Include="Service\Service.cs">
       <SubType>Component</SubType>
     </Compile>
