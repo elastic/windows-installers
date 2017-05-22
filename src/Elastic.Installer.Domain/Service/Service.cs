@@ -6,6 +6,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Elastic.Installer.Domain.Process;
 
 namespace Elastic.Installer.Domain.Service
 {
@@ -63,7 +64,8 @@ namespace Elastic.Installer.Domain.Service
 			if (service == null || service.Status == ServiceControllerStatus.Stopped) return;
 
 			var status = Enum.GetName(typeof(ServiceControllerStatus), service.Status);
-			this.WriteToConsole(ConsoleColor.Blue, $"{this.Name} is already running as a service and currently: {status}.");
+
+			throw new StartupException($"{this.Name} is already running as a service and currently: {status}.");
 		}
 	}
 }
