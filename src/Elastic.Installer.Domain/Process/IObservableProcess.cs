@@ -9,6 +9,7 @@ namespace Elastic.Installer.Domain.Process
 		void Stop();
 
 		bool UserInteractive { get; }
+		int LastExitCode { get; }
 
 		TimeSpan WaitForStarted { get; }
 	}

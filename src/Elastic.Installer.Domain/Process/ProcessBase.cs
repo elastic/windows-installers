@@ -15,6 +15,8 @@ namespace Elastic.Installer.Domain.Process
 		private readonly IConsoleOutHandler _handler;
 		private readonly IObservableProcess _process;
 
+		public int? LastExitCode => this._process?.LastExitCode;
+
 		protected string ProcessExe { get; set; }
 		protected IEnumerable<string> Arguments { private get; set; }
 		protected bool Started { get; set; }
@@ -64,14 +66,14 @@ namespace Elastic.Installer.Domain.Process
 			if (this._process.UserInteractive)
 			{
 				//subscribe to all messages and write them to console
-				this.Disposables.Add(observable.Subscribe(this._handler.Write));
+				this.Disposables.Add(observable.Subscribe(this._handler.Write, delegate { }, delegate { }));
 			}
 
 			//subscribe as long we are not in started state and attempt to read console
 			//out for this confirmation
 			this.Disposables.Add(observable
 				.TakeWhile(c => !this.Started)
-				.Subscribe(this.Handle)
+				.Subscribe(this.Handle, delegate { }, delegate { })
 			);
 			this.Disposables.Add(observable.Subscribe(delegate { }, HandleException, HandleCompleted));
 			this.Disposables.Add(observable.Connect());

@@ -17,6 +17,7 @@ namespace Elastic.Installer.Domain.Process
 
 		private System.Diagnostics.Process Process { get; set; }
 		private bool Started { get; set; }
+		public int LastExitCode { get; private set; }
 		public bool UserInteractive => Environment.UserInteractive;
 		public TimeSpan WaitForStarted => TimeSpan.FromMinutes(2);
 
@@ -61,8 +62,10 @@ namespace Elastic.Installer.Domain.Process
 			{
 				try
 				{
+					this.LastExitCode = process?.ExitCode ?? 0;
 					if (process?.ExitCode > 0)
 					{
+
 						observer.OnError(new StartupException(
 							$"Process '{process.StartInfo.FileName}' terminated with error code {process.ExitCode}"));
 					}

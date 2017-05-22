@@ -18,6 +18,8 @@ namespace Elastic.Installer.Domain.Service.Elasticsearch
 		private ElasticsearchProcess _node;
 		private readonly string[] _args;
 
+		public int? LastExitCode => _node?.LastExitCode;
+
 		public ElasticsearchService(IEnumerable<string> args)
 		{
 			InitializeComponent();

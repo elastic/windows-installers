@@ -11,6 +11,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 	{
 		private readonly ConsoleSession _session;
 		public bool UserInteractive { get; }
+		public int LastExitCode { get; }
 		public TimeSpan WaitForStarted => TimeSpan.FromSeconds(.2);
 
 		public bool StopCalled { get; private set; }
