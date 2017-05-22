@@ -79,6 +79,7 @@ namespace Elastic.Installer.Domain.Process
 
 		public void Stop()
 		{
+
 			this._process?.Dispose();
 			this.Disposables?.Dispose();
 			this.Disposables = new CompositeDisposable();
