@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Threading;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased;
 using Elastic.Installer.Domain.Process;
@@ -14,8 +15,14 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 	{
 		private bool NoColor { get; set; }
 
-		public ElasticsearchProcess(IEnumerable<string> args)
-			: this(new ObservableProcess(), null, null, ElasticsearchEnvironmentConfiguration.Default, JavaConfiguration.Default, args)
+		public ElasticsearchProcess(ManualResetEvent completedHandle, IEnumerable<string> args)
+			: this(
+				new ObservableProcess(),
+				null,
+				null,
+				ElasticsearchEnvironmentConfiguration.Default,
+				JavaConfiguration.Default,
+				completedHandle,args)
 		{}
 
 		public ElasticsearchProcess(
@@ -24,8 +31,13 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 			IFileSystem fileSystem,
 			ElasticsearchEnvironmentConfiguration env,
 			JavaConfiguration java,
+			ManualResetEvent completedHandle,
 			IEnumerable<string> args)
-			: base(process, consoleOutHandler ?? new ElasticsearchConsoleOutHandler(process?.UserInteractive ?? false), fileSystem)
+			: base(
+				process,
+				consoleOutHandler ?? new ElasticsearchConsoleOutHandler(process?.UserInteractive ?? false),
+				fileSystem,
+				completedHandle)
 		{
 			var homeDirectory = env.HomeDirectory?.TrimEnd('\\')
 				?? throw new StartupException("No ES_HOME variable set and no home directory could be inferred from the executable location");

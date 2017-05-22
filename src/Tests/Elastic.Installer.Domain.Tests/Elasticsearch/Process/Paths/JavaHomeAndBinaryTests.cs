@@ -48,7 +48,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 
 		[Fact] public void NoJavaHomeShouldThrowException() => CreateThrows(s => s
 			.Elasticsearch(e=>e.EsHomeMachineVariable(DefaultEsHome))
-			.ConsoleSession(ConsoleSession.Valid)
+			.ConsoleSession(ConsoleSession.StartedSession)
 			.Java(j=>j)
 			, e =>
 			{
@@ -57,7 +57,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 
 		[Fact] public void JavaHomeSetButExecutableNotFoundThrows() => CreateThrows(s => s
 			.Elasticsearch(e=>e.EsHomeMachineVariable(DefaultEsHome))
-			.ConsoleSession(ConsoleSession.Valid)
+			.ConsoleSession(ConsoleSession.StartedSession)
 			.Java(j=>j.JavaHomeCurrentUser(JavaHomeUser))
 			.FileSystem(s.AddElasticsearchLibs)
 			, e =>

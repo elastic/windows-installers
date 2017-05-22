@@ -11,13 +11,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 	{
 		private readonly ConsoleSession _session;
 		public bool UserInteractive { get; }
-		public TimeSpan WaitForStarted => TimeSpan.FromSeconds(2);
+		public TimeSpan WaitForStarted => TimeSpan.FromSeconds(.2);
 
 		public bool StopCalled { get; private set; }
 		public bool StartCalled { get; private set; }
 		public bool DisposeCalled { get; private set; }
 		public string BinaryCalled { get; private set; }
 		public string[] ArgsCalled { get; private set; }
+
+		public static string EndProcess { get; } = "-END-";
+		public static string ThrowException { get; } = "-EXCEPTION-";
+		public static string ThrowStartupException { get; } = "-STARTUP EXCEPTION-";
 
 		public TestableElasticsearchObservableProcess(ConsoleSession session, bool interactive = true)
 		{
@@ -39,7 +43,15 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 			return Observable.Create<ConsoleOut>(o => {
 				foreach (var c in this._session)
-					o.OnNext(c);
+				{
+					if (c.Data == EndProcess)
+						o.OnCompleted();
+					else if (c.Data == ThrowException)
+						o.OnError(new Exception("Process did something funky here"));
+					else if (c.Data == ThrowStartupException)
+						o.OnError(new StartupException("Process did something funky here"));
+					else o.OnNext(c);
+				}
 				return Disposable.Empty;
 			});
 		}

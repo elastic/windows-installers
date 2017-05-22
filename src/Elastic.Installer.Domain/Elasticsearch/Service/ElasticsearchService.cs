@@ -29,14 +29,13 @@ namespace Elastic.Installer.Domain.Service.Elasticsearch
 		protected override void OnStart(string[] args)
 		{
 			//todo merge args?
-			this._node = new ElasticsearchProcess(this._args);
+			this._node = new ElasticsearchProcess(null, this._args);
 			this._node.Start();
 		}
 
 		public override void StartInteractive(ManualResetEvent handle)
 		{
-			this._node = new ElasticsearchProcess(this._args);
-			this._node.CompletedHandle = handle;
+			this._node = new ElasticsearchProcess(handle, this._args);
 			this._node.Start();
 		}
 

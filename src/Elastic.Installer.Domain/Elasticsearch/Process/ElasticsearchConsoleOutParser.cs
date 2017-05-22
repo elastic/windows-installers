@@ -52,7 +52,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Process
 
 		private static bool TryGetStartedConfirmation(string section, string message)
 		{
-			var inNodeSection = section != "o.e.n.Node" || section != "node";
+			var inNodeSection = section == "o.e.n.Node" || section == "node";
 			return inNodeSection && message == "started";
 		}
 	}

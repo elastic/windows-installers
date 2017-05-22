@@ -15,23 +15,29 @@ namespace Elastic.Installer.Domain.Process
 		private readonly IConsoleOutHandler _handler;
 		private readonly IObservableProcess _process;
 
-		public ManualResetEvent CompletedHandle { get; set; }
-
 		protected string ProcessExe { get; set; }
 		protected IEnumerable<string> Arguments { private get; set; }
 		protected bool Started { get; set; }
 		protected string HomeDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 
-		protected ManualResetEvent StartedHandle { get; } = new ManualResetEvent(false);
+		protected ManualResetEvent StartedHandle { get; private set; }
+		public ManualResetEvent CompletedHandle { get; private set; }
+
+		//TODO not needed?
 		protected readonly Subject<ManualResetEvent> BlockingSubject = new Subject<ManualResetEvent>();
 		protected CompositeDisposable Disposables { get; private set; } = new CompositeDisposable();
 
-		protected ProcessBase(IObservableProcess process, IConsoleOutHandler handler, IFileSystem fileSystem)
+		protected ProcessBase(
+			IObservableProcess process,
+			IConsoleOutHandler handler,
+			IFileSystem fileSystem,
+			ManualResetEvent completedHandle = null)
 		{
 			this.FileSystem = fileSystem ?? new FileSystem();
 			this._process = process ?? new ObservableProcess();
 			this._handler = handler ?? new ConsoleOutHandler();
+			this.CompletedHandle = completedHandle;
 		}
 
 		/// <summary>
@@ -49,6 +55,7 @@ namespace Elastic.Installer.Domain.Process
 		public virtual void Start()
 		{
 			this.Stop();
+			this.StartedHandle = new ManualResetEvent(false);
 
 			var bin = this.ProcessExe;
 			var args = this.Arguments;
@@ -57,17 +64,16 @@ namespace Elastic.Installer.Domain.Process
 			if (this._process.UserInteractive)
 			{
 				//subscribe to all messages and write them to console
-				this.Disposables.Add(
-					observable.Subscribe(this._handler.Write, HandleException, HandleCompleted));
+				this.Disposables.Add(observable.Subscribe(this._handler.Write));
 			}
 
 			//subscribe as long we are not in started state and attempt to read console
 			//out for this confirmation
 			this.Disposables.Add(observable
 				.TakeWhile(c => !this.Started)
-				.Subscribe(this.Handle, HandleException, HandleCompletedHandler)
+				.Subscribe(this.Handle)
 			);
-
+			this.Disposables.Add(observable.Subscribe(delegate { }, HandleException, HandleCompleted));
 			this.Disposables.Add(observable.Connect());
 
 			var timeout = this._process.WaitForStarted;
@@ -79,7 +85,7 @@ namespace Elastic.Installer.Domain.Process
 
 		public void Stop()
 		{
-
+			this.CompletedHandle?.Reset();
 			this._process?.Dispose();
 			this.Disposables?.Dispose();
 			this.Disposables = new CompositeDisposable();
@@ -89,17 +95,11 @@ namespace Elastic.Installer.Domain.Process
 		{
 			this.CompletedHandle?.Set();
 			this.StartedHandle.Set();
+			throw e;
 		}
 		private void HandleCompleted()
 		{
 			this.CompletedHandle?.Set();
-		}
-		private void HandleCompletedHandler()
-		{
-			//somehow our console out snooper did not see a started
-			//but the process observable complete make sure we call the OnCompleteHandle
-			if (!this.Started) this.CompletedHandle?.Set();
-			this.StartedHandle.Set();
 		}
 
 		private void Handle(ConsoleOut message)

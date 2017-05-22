@@ -5,10 +5,24 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 {
 	public class ConsoleSession : List<ConsoleOut>
 	{
-		public void Add(string o) => this.Add(ConsoleOut.Out(o));
-		public void Add(char x, string o) => this.Add(ConsoleOut.Out(o));
+		public ConsoleSession() { }
+		public ConsoleSession(ConsoleSession session)
+		{
+			this.AddRange(session);
+		}
 
-		public static ConsoleSession Valid => new ConsoleSession
+
+		public void Add(string o)
+		{
+			this.Add(ConsoleOut.Out(o));
+
+		}
+		public void Add(char x, string o)
+		{
+			this.Add(ConsoleOut.Out(o));
+		}
+
+		public static ConsoleSession BeforeStartedSession => new ConsoleSession
 		{
 			{"[x][INFO ][o.e.e.NodeEnvironment    ] [N] using [1] data paths, mounts [[BOOTCAMP (C:)]], net usable_space [27.7gb], net total_space [129.7gb], spins? [unknown], types [NTFS]"},
 			{"[x][INFO ][o.e.e.NodeEnvironment    ] [N] heap size [1.9gb], compressed ordinary object pointers [true]"},
@@ -31,6 +45,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			{"[x][WARN ][d.m.attachment           ] [N] plugin has been deprecated and will be replaced by [ingest-attachment] plugin."},
 			{"[x][INFO ][o.e.n.Node               ] [N] initialized"},
 			{"[x][INFO ][o.e.n.Node               ] [N] starting ..."},
+		};
+		public static ConsoleSession StartedSession => new ConsoleSession(BeforeStartedSession)
+		{
 			{"[x][INFO ][o.e.n.Node               ] [N] started"},
 		};
 	}
