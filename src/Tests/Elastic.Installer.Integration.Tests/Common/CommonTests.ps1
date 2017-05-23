@@ -1,3 +1,15 @@
+$pester = "Pester"
+if(-not(Get-Module -Name $pester)) 
+{ 
+	if(Get-Module -Name $pester -ListAvailable) { 
+       	Import-Module -Name $pester 
+    }  
+	else { 
+		PowerShellGet\Install-Module $pester -Force
+		Import-Module $pester
+	}
+}
+
 function Context-ElasticsearchService($Expected) {
     $Expected = Merge-Hashtables @{
             Status="Running"

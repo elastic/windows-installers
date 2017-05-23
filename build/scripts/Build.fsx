@@ -8,7 +8,6 @@ open System
 open System.Diagnostics
 open System.Text
 open System.IO
-open System.Management.Automation
 open System.Text.RegularExpressions
 open Microsoft.FSharp.Reflection
 open Fake

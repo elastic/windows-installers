@@ -90,10 +90,11 @@ Target "Integrate" (fun () ->
     // TODO: Get the version for each different project
     let version = productsToBuild.Head.Version.FullVersion
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
-    let script = sprintf "cd '%s'; %s -Tests %s -Version %s" Paths.IntegrationTestsDir ".\Bootstrapper.ps1" integrationTestsTargets version
+    let vagrantProvider = getBuildParamOrDefault "vagrantprovider" "local"
+    let script = sprintf "cd '%s'; %s -Tests %s -Version %s -VagrantProvider %s" Paths.IntegrationTestsDir ".\Bootstrapper.ps1" integrationTestsTargets version vagrantProvider
     trace (sprintf "Running Powershell script: '%s'" script)
     use p = PowerShell.Create()
-    let output = new PSDataCollection<PSObject>()
+    use output = new PSDataCollection<PSObject>()
     output.DataAdded.Add(fun data -> trace (sprintf "%O" output.[data.Index]))
     p.Streams.Verbose.DataAdded.Add(fun data -> trace (sprintf "%O" p.Streams.Verbose.[data.Index]))
     p.Streams.Debug.DataAdded.Add(fun data -> trace (sprintf "%O" p.Streams.Debug.[data.Index]))
