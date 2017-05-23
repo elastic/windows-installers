@@ -739,4 +739,7 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   <data name="MainWindow_DocumentationLink" xml:space="preserve">
     <value>https://www.elastic.co/guide/index.html</value>
   </data>
+  <data name="ClosingView_KibanaRunningAtHeaderWithCredentials" xml:space="preserve">
+    <value>Open Kibana in the browser (User name: elastic, Password: changeme)</value>
+  </data>
 </root>

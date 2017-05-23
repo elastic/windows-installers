@@ -43,6 +43,13 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.OpenReference.Content = string.Format(ViewResources.ClosingView_ReadTheReference, majorMinor);
+		
+			this.ViewModel.InstallXPack.Subscribe(x =>
+			{
+				this.OpenElasticsearch.Content = x
+					? ViewResources.ClosingView_ElasticsearchRunningAtHeaderWithCredentials
+					: ViewResources.ClosingView_ElasticsearchRunningAtHeader;
+			});
 
 			var host = "http://localhost:9200";
 			this.ViewModel.Host.Subscribe(h => host = h);

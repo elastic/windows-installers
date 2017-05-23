@@ -32,7 +32,7 @@
               <RowDefinition Height="Auto" />
               <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <CheckBox Grid.Row="0" Content="{Binding DisplayName}" IsChecked="{Binding Selected}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" />
+            <CheckBox Grid.Row="0" Content="{Binding DisplayName}" IsChecked="{Binding Selected, Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" />
             <TextBlock Grid.Row="1" Text="{Binding Description}" HorizontalAlignment="Stretch" TextWrapping="Wrap" Margin="28, 0, 0 ,10"/>
           </Grid>
         </DataTemplate>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using Elastic.Installer.Domain.Model;
 using ReactiveUI;
 using Semver;
@@ -16,8 +17,9 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Closing
 			IObservable<string> hostName,
 			IObservable<string> wixLogFile,
 			IObservable<string> elasticsearchLog,
+			IObservable<bool> installXPack,
 			IServiceStateProvider serviceStateProvider) 
-			: base(currentVersion, isUpgrade, hostName, wixLogFile, elasticsearchLog, serviceStateProvider)
+			: base(currentVersion, isUpgrade, hostName, wixLogFile, elasticsearchLog, installXPack, serviceStateProvider)
 		{
 			this.OpenFindYourClient = ReactiveCommand.Create();
 			this.Refresh();

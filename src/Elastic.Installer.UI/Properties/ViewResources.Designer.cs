@@ -169,6 +169,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Kibana in the browser (User name: elastic, Password: changeme).
+        /// </summary>
+        public static string ClosingView_KibanaRunningAtHeaderWithCredentials {
+            get {
+                return ResourceManager.GetString("ClosingView_KibanaRunningAtHeaderWithCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open the Elasticsearch log file.
         /// </summary>
         public static string ClosingView_OpenElasticsearchLog {
