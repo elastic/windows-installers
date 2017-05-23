@@ -158,8 +158,6 @@ when not specified
 
     let private (|IsProductList|_|) candidate =
         let products = splitStr "," candidate
-        let allowedValues = [| "all"; "a"; "elasticsearch"; "e"; "kibana"; "k" |]
-
         let productFromValue value =
             match value with
             | "all"

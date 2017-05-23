@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceProcess;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Elastic.Installer.Domain.Service
 {
@@ -28,7 +25,7 @@ namespace Elastic.Installer.Domain.Service
 				.AppendLine($"- {nameof(StartMode)} = {Enum.GetName(typeof(ServiceStartMode), StartMode)}")
 				.AppendLine($"- {nameof(ServiceAccount)} = {Enum.GetName(typeof(ServiceAccount), ServiceAccount)}")
 				.AppendLine($"- {nameof(UserName)} = {UserName}")
-				.AppendLine($"- {nameof(Password)} = {Password}")
+				.AppendLine($"- {nameof(Password)} = {!string.IsNullOrWhiteSpace(Password)}")
 				.AppendLine($"- {nameof(EventLogSource)} = {EventLogSource}")
 				.AppendLine($"- {nameof(HomeDirectory)} = {HomeDirectory}")
 				.AppendLine($"- {nameof(ConfigDirectory)} = {ConfigDirectory}")

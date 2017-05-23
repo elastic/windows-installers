@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using Elastic.Installer.Domain.Model;
 using ReactiveUI;
@@ -23,8 +24,8 @@ namespace Elastic.Installer.Domain.Shared.Model.Plugins
 
 		public ReactiveList<Plugin> AvailablePlugins
 		{
-			get { return _plugins; }
-			set { this.RaiseAndSetIfChanged(ref _plugins, value); }
+			get => _plugins;
+			set => this.RaiseAndSetIfChanged(ref _plugins, value);
 		}
 
 		[StaticArgument(nameof(Plugins))]
@@ -35,8 +36,8 @@ namespace Elastic.Installer.Domain.Shared.Model.Plugins
 			{
 				foreach (var p in AvailablePlugins) p.Selected = false;
 				if (value == null) return;
-				var plugins = AvailablePlugins.Where(p => value.Contains(p.Url)).ToList();
-				foreach (var p in plugins) p.Selected = true;
+				foreach (var p in AvailablePlugins.Where(p => value.Contains(p.Url)))
+					p.Selected = true;
 			}
 		}
 

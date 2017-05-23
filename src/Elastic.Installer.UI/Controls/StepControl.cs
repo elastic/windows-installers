@@ -16,8 +16,8 @@ namespace Elastic.Installer.UI.Controls
 	{
 		object IViewFor.ViewModel
 		{
-			get { return ViewModel; }
-			set { ViewModel = (TViewModel)value; }
+			get => ViewModel;
+			set => ViewModel = (TViewModel)value;
 		}
 		
 		public abstract TViewModel ViewModel { get; set; }

@@ -19,7 +19,7 @@ namespace Elastic.Installer.Domain.Model
 	{
 		protected readonly IWixStateProvider _wixStateProvider;
 
-		protected virtual string[] PrerequisiteProperties => new string[]
+		protected virtual string[] PrerequisiteProperties => new[]
 		{
 			nameof(SameVersionAlreadyInstalled),
 			nameof(HigherVersionAlreadyInstalled)
@@ -37,12 +37,12 @@ namespace Elastic.Installer.Domain.Model
 		public ReactiveCommand<object> RefreshCurrentStep { get; }
 		public ReactiveCommand<object> ShowCurrentStepErrors { get; set; }
 		public ReactiveCommand<object> ShowLicenseBlurb { get; set; }
-		public ReactiveCommand<object> Exit { get; private set; }
+		public ReactiveCommand<object> Exit { get; }
 		public ReactiveCommand<IObservable<ClosingResult>> Install { get; protected set; }
 		public Func<Task<IObservable<ClosingResult>>> InstallUITask { get; set; }
 		public ModelArgumentParser ParsedArguments { get; protected set; }
 
-		public InstallationModelBase(
+		protected InstallationModelBase(
 			IWixStateProvider wixStateProvider,
 			ISession session,
 			string[] args
@@ -50,8 +50,7 @@ namespace Elastic.Installer.Domain.Model
 		{
 			this.Session = session;
 
-			if (wixStateProvider == null) throw new ArgumentNullException(nameof(wixStateProvider));
-			this._wixStateProvider = wixStateProvider;
+			this._wixStateProvider = wixStateProvider ?? throw new ArgumentNullException(nameof(wixStateProvider));
 
 			this.NextButtonText = TextResources.SetupView_NextText;
 
@@ -64,7 +63,7 @@ namespace Elastic.Installer.Domain.Model
 				this.TabSelectedIndex = Math.Min(this.Steps.Count - 1, this.TabSelectedIndex + 1);
 			});
 
-			var canMoveBackwards = this.WhenAny(vm => vm.TabSelectedIndex, (i) => i.GetValue() > 0);
+			var canMoveBackwards = this.WhenAny(vm => vm.TabSelectedIndex, i => i.GetValue() > 0);
 			this.Back = ReactiveCommand.Create(canMoveBackwards);
 			this.Back.Subscribe(i =>
 			{
@@ -99,50 +98,50 @@ namespace Elastic.Installer.Domain.Model
 		string nextButtonText;
 		public string NextButtonText
 		{
-			get { return nextButtonText; }
-			private set { this.RaiseAndSetIfChanged(ref nextButtonText, value); }
+			get => nextButtonText;
+			private set => this.RaiseAndSetIfChanged(ref nextButtonText, value);
 		}
 
 		string msiLogFileLocation;
 		public string MsiLogFileLocation
 		{
-			get { return msiLogFileLocation; }
-			set { this.RaiseAndSetIfChanged(ref msiLogFileLocation, value); }
+			get => msiLogFileLocation;
+			set => this.RaiseAndSetIfChanged(ref msiLogFileLocation, value);
 		}
 
 		int tabSelectionMax;
 		public int TabSelectionMax
 		{
-			get { return tabSelectionMax; }
-			protected set { this.RaiseAndSetIfChanged(ref tabSelectionMax, value); }
+			get => tabSelectionMax;
+			protected set => this.RaiseAndSetIfChanged(ref tabSelectionMax, value);
 		}
 
 		int tabSelectedIndex;
 		public int TabSelectedIndex
 		{
-			get { return tabSelectedIndex; }
-			set { this.RaiseAndSetIfChanged(ref tabSelectedIndex, value); }
+			get => tabSelectedIndex;
+			set => this.RaiseAndSetIfChanged(ref tabSelectedIndex, value);
 		}
 
 		private IList<ValidationFailure> currentValidationFailures = new List<ValidationFailure>();
 		public IList<ValidationFailure> CurrentStepValidationFailures
 		{
-			get { return currentValidationFailures; }
-			protected set { this.RaiseAndSetIfChanged(ref currentValidationFailures, value); }
+			get => currentValidationFailures;
+			protected set => this.RaiseAndSetIfChanged(ref currentValidationFailures, value);
 		}
 
 		bool sameVersionAlreadyInstalled;
 		public bool SameVersionAlreadyInstalled
 		{
-			get { return sameVersionAlreadyInstalled; }
-			set { this.RaiseAndSetIfChanged(ref sameVersionAlreadyInstalled, value); }
+			get => sameVersionAlreadyInstalled;
+			set => this.RaiseAndSetIfChanged(ref sameVersionAlreadyInstalled, value);
 		}
 
 		bool higherVersionAlreadyInstalled;
 		public bool HigherVersionAlreadyInstalled
 		{
-			get { return higherVersionAlreadyInstalled; }
-			set { this.RaiseAndSetIfChanged(ref higherVersionAlreadyInstalled, value); }
+			get => higherVersionAlreadyInstalled;
+			set => this.RaiseAndSetIfChanged(ref higherVersionAlreadyInstalled, value);
 		}
 
 		public string ToMsiParamsString() => this.ParsedArguments.ToMsiParamsString();

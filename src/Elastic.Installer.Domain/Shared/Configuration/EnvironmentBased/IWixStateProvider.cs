@@ -58,10 +58,8 @@ namespace Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased
 		Prerelease
 	}
 
-
 	public enum InstallationDirection
 	{
 		None, Up, Down
 	}
-
 }

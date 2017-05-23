@@ -4,6 +4,7 @@ using System.Windows;
 using Elastic.Installer.Domain.Elasticsearch.Model.Notice;
 using Elastic.Installer.Domain.Properties;
 using Elastic.Installer.UI.Controls;
+using Elastic.Installer.UI.Properties;
 using ReactiveUI;
 
 namespace Elastic.Installer.UI.Elasticsearch.Steps
@@ -11,13 +12,12 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 	public partial class NoticeView : StepControl<NoticeModel, NoticeView>
 	{
 		public static readonly DependencyProperty ViewModelProperty =
-			DependencyProperty.Register("ViewModel", typeof(NoticeModel), typeof(NoticeView),
-				new PropertyMetadata(null, ViewModelPassed));
+			DependencyProperty.Register(nameof(ViewModel), typeof(NoticeModel), typeof(NoticeView), new PropertyMetadata(null, ViewModelPassed));
 
 		public override NoticeModel ViewModel
 		{
-			get { return (NoticeModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (NoticeModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		public NoticeView()
@@ -36,7 +36,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnUpgrades, v => v.ReadMoreOnUpgrades, nameof(ReadMoreOnUpgrades.Click));
-			this.ViewModel.ReadMoreOnUpgrades.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/reference/{majorMinor}/setup-upgrade.html"));
+			this.ViewModel.ReadMoreOnUpgrades.Subscribe(x => Process.Start(string.Format(ViewResources.NoticeView_Elasticsearch_ReadMoreOnUpgrades, majorMinor)));
 
 			this.WhenAny(view => view.ViewModel.AlreadyInstalled, v=>v.GetValue())
 				.Subscribe(v => {
@@ -51,7 +51,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					this.RunAsServiceHeaderLabel.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
 					this.RunAsServiceLabel.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
 				});
-
 		}
 	}
 }

@@ -63,15 +63,15 @@ namespace Elastic.Installer.Domain.Kibana.Model.Notice
 		bool? alreadyInstalled;
 		public bool AlreadyInstalled
 		{
-			get { return alreadyInstalled.GetValueOrDefault(); }
-			private set { this.RaiseAndSetIfChanged(ref alreadyInstalled, value); }
+			get => alreadyInstalled.GetValueOrDefault();
+			private set => this.RaiseAndSetIfChanged(ref alreadyInstalled, value);
 		}
 
 		bool? installedAsService;
 		public bool InstalledAsService
 		{
-			get { return installedAsService.GetValueOrDefault(); }
-			private set { this.RaiseAndSetIfChanged(ref installedAsService, value); }
+			get => installedAsService.GetValueOrDefault();
+			private set => this.RaiseAndSetIfChanged(ref installedAsService, value);
 		}
 
 		public sealed override void Refresh() { }

@@ -22,8 +22,8 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 		public override ConfigurationModel ViewModel
 		{
-			get { return (ConfigurationModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (ConfigurationModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		private readonly Brush _defaultBrush;
@@ -95,13 +95,13 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			}
 		}
 
-		private string FormatMb(ulong megabytes)
+		private static string FormatMb(ulong megabytes)
 		{
 			const int scale = 1024;
-			string[] orders = new string[] { "GB", "MB" };
-			ulong max = (ulong)Math.Pow(scale, orders.Length - 1);
+			var orders = new [] { "GB", "MB" };
+			var max = (ulong)Math.Pow(scale, orders.Length - 1);
 
-			foreach (string order in orders)
+			foreach (var order in orders)
 			{
 				if (megabytes > max)
 					return $"{decimal.Divide(megabytes, max):##.##} {order}";

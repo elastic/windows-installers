@@ -3,9 +3,6 @@ using Elastic.Installer.Domain.Shared.Configuration;
 using Elastic.Installer.Domain.Shared.Model.Plugins;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Elastic.Installer.Domain.Elasticsearch.Model.Plugins
 {
@@ -16,7 +13,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Plugins
 		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, bool, string, string>> pluginDependencies)
 			: base(pluginStateProvider)
 		{
-			pluginDependencies.Subscribe((t) =>
+			pluginDependencies.Subscribe(t =>
 			{
 				this._includeSuggest = t.Item1;
 				this.AlreadyInstalled = t.Item2;

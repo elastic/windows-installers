@@ -45,8 +45,8 @@ namespace Elastic.Installer.UI.Kibana
 	{
 		object IViewFor.ViewModel
 		{
-			get { return ViewModel; }
-			set { ViewModel = (KibanaInstallationModel)value; }
+			get => ViewModel;
+			set => ViewModel = (KibanaInstallationModel)value;
 		}
 
 		public KibanaInstallationModel ViewModel { get; set; }
@@ -260,7 +260,7 @@ namespace Elastic.Installer.UI.Kibana
 			this.ViewModel.Exit.Subscribe(x =>
 			{
 				if (this.ViewModel.ClosingModel.OpenDocumentationAfterInstallation)
-					Process.Start("https://www.elastic.co/guide/index.html");
+					Process.Start(ViewResources.MainWindow_DocumentationLink);
 				this.Close();
 			});
 
@@ -284,10 +284,6 @@ namespace Elastic.Installer.UI.Kibana
 		{
 			//disable all tabs, whether the installer succeeds or fails the only allowed action afterwards is exiting.
 			this.ViewModel.TabSelectedIndex = this.ViewModel.Steps.Count - 1;
-		}
-
-		private void RecheckPrequisites()
-		{
 		}
 
 		private void PromptPrerequisiteFailures(IList<ValidationFailure> failures)
@@ -352,7 +348,7 @@ namespace Elastic.Installer.UI.Kibana
 			base.OnInitialized(e);
 
 			this.WhenAnyValue(view => view.ViewModel.PrerequisiteFailures)
-				.Subscribe(failures => PromptPrerequisiteFailures(failures));
+				.Subscribe(PromptPrerequisiteFailures);
 		}
 
 		public void AnimateLogo() => this.AnimateCells("Yellow", "Pink", "Blue", "Torqoise");

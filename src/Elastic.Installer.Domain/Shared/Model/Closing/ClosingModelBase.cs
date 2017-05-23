@@ -54,23 +54,23 @@ namespace Elastic.Installer.Domain.Shared.Model.Closing
 		ClosingResult? installed;
 		public ClosingResult? Installed
 		{
-			get { return installed; }
-			set { this.RaiseAndSetIfChanged(ref installed, value); }
+			get => installed;
+			set => this.RaiseAndSetIfChanged(ref installed, value);
 		}
 
 		bool openDocs;
 		[Argument(nameof(OpenDocumentationAfterInstallation))]
 		public bool OpenDocumentationAfterInstallation
 		{
-			get { return openDocs; }
-			set { this.RaiseAndSetIfChanged(ref openDocs, value); }
+			get => openDocs;
+			set => this.RaiseAndSetIfChanged(ref openDocs, value);
 		}
 
 		IEnumerable<string> prerequisiteFailureMessages;
 		public IEnumerable<string> PrerequisiteFailureMessages
 		{
-			get { return prerequisiteFailureMessages; }
-			set { this.RaiseAndSetIfChanged(ref prerequisiteFailureMessages, value); }
+			get => prerequisiteFailureMessages;
+			set => this.RaiseAndSetIfChanged(ref prerequisiteFailureMessages, value);
 		}
 	}
 }
