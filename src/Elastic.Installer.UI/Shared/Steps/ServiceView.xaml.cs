@@ -17,8 +17,8 @@ namespace Elastic.Installer.UI.Shared.Steps
 
 		public override ServiceModel ViewModel
 		{
-			get { return (ServiceModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (ServiceModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 		
 		private readonly Brush _defaultBrush;

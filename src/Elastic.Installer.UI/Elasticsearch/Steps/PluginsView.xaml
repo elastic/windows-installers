@@ -16,7 +16,7 @@
                VerticalContentAlignment="Stretch" 
                Background="Transparent"
                BorderBrush="Transparent"
-              ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                ItemsSource="{Binding Path=Plugins}"
                HorizontalContentAlignment="Stretch">
 

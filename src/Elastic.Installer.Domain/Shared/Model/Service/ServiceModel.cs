@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
@@ -42,7 +40,7 @@ namespace Elastic.Installer.Domain.Shared.Model.Service
 					this.UseNetworkService = false;
 				});
 
-			this.WhenAny(vm => vm.InstallAsService, (i) => i.Value)
+			this.WhenAny(vm => vm.InstallAsService, i => i.Value)
 				.Subscribe(b =>
 				{
 					if (!b)
@@ -87,77 +85,77 @@ namespace Elastic.Installer.Domain.Shared.Model.Service
 		[StaticArgument(nameof(InstallAsService))]
 		public bool InstallAsService
 		{
-			get { return installAsService; }
-			set { this.RaiseAndSetIfChanged(ref installAsService, value); }
+			get => installAsService;
+			set => this.RaiseAndSetIfChanged(ref installAsService, value);
 		}
 
 		bool startAfterInstall = true;
 		[StaticArgument(nameof(StartAfterInstall))]
 		public bool StartAfterInstall
 		{
-			get { return startAfterInstall; }
-			set { this.RaiseAndSetIfChanged(ref startAfterInstall, value); }
+			get => startAfterInstall;
+			set => this.RaiseAndSetIfChanged(ref startAfterInstall, value);
 		}
 
 		bool startWhenWindowsStarts = true;
 		[StaticArgument(nameof(StartWhenWindowsStarts))]
 		public bool StartWhenWindowsStarts
 		{
-			get { return startWhenWindowsStarts; }
-			set { this.RaiseAndSetIfChanged(ref startWhenWindowsStarts, value); }
+			get => startWhenWindowsStarts;
+			set => this.RaiseAndSetIfChanged(ref startWhenWindowsStarts, value);
 		}
 
 		bool useLocalSystem = true;
 		[StaticArgument(nameof(UseLocalSystem))]
 		public bool UseLocalSystem
 		{
-			get { return useLocalSystem; }
-			set { this.RaiseAndSetIfChanged(ref useLocalSystem, value); }
+			get => useLocalSystem;
+			set => this.RaiseAndSetIfChanged(ref useLocalSystem, value);
 		}
 
 		bool useExistingUser;
 		[Argument(nameof(UseExistingUser))]
 		public bool UseExistingUser
 		{
-			get { return useExistingUser; }
-			set { this.RaiseAndSetIfChanged(ref useExistingUser, value); }
+			get => useExistingUser;
+			set => this.RaiseAndSetIfChanged(ref useExistingUser, value);
 		}
 
 		bool useNetworkService;
 		[StaticArgument(nameof(UseNetworkService))]
 		public bool UseNetworkService
 		{
-			get { return useNetworkService; }
-			set { this.RaiseAndSetIfChanged(ref useNetworkService, value); }
+			get => useNetworkService;
+			set => this.RaiseAndSetIfChanged(ref useNetworkService, value);
 		}
 
 		string user;
 		[Argument(nameof(User))]
 		public string User
 		{
-			get { return user; }
-			set { this.RaiseAndSetIfChanged(ref user, value); }
+			get => user;
+			set => this.RaiseAndSetIfChanged(ref user, value);
 		}
 
 		string password;
 		[Argument(nameof(Password))]
 		public string Password
 		{
-			get { return password; }
-			set { this.RaiseAndSetIfChanged(ref password, value); }
+			get => password;
+			set => this.RaiseAndSetIfChanged(ref password, value);
 		}
 		bool manualValidationPassed;
 		public bool ManualValidationPassed
 		{
-			get { return manualValidationPassed; }
-			set { this.RaiseAndSetIfChanged(ref manualValidationPassed, value); }
+			get => manualValidationPassed;
+			set => this.RaiseAndSetIfChanged(ref manualValidationPassed, value);
 		}
 
 		bool validatingCredentials;
 		public bool ValidatingCredentials
 		{
-			get { return validatingCredentials; }
-			set { this.RaiseAndSetIfChanged(ref validatingCredentials, value); }
+			get => validatingCredentials;
+			set => this.RaiseAndSetIfChanged(ref validatingCredentials, value);
 		}
 
 		public override string ToString()

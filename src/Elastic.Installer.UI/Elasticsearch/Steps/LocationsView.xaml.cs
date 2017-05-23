@@ -14,12 +14,12 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 	public partial class LocationsView : StepControl<LocationsModel, LocationsView>
 	{
 		public static readonly DependencyProperty ViewModelProperty =
-			DependencyProperty.Register("ViewModel", typeof(LocationsModel), typeof(LocationsView), new PropertyMetadata(null, ViewModelPassed));
+			DependencyProperty.Register(nameof(ViewModel), typeof(LocationsModel), typeof(LocationsView), new PropertyMetadata(null, ViewModelPassed));
 
 		public override LocationsModel ViewModel
 		{
-			get { return (LocationsModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (LocationsModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		private readonly Brush _defaultBrush;

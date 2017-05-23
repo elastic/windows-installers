@@ -139,7 +139,7 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 		[Argument(nameof(PlaceWritableLocationsInSamePath))]
 		public bool PlaceWritableLocationsInSamePath
 		{
-			get { return placeWriteableLocationsInSamePath; }
+			get => placeWriteableLocationsInSamePath;
 			set {
 				this.RaiseAndSetIfChanged(ref placeWriteableLocationsInSamePath, value); 
 				this.SetWritableLocationsToInstallDirectory(value);
@@ -150,15 +150,15 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 		bool configureLocations;
 		public bool ConfigureLocations
 		{
-			get { return configureLocations; }
-			set { this.RaiseAndSetIfChanged(ref configureLocations, value); }
+			get => configureLocations;
+			set => this.RaiseAndSetIfChanged(ref configureLocations, value);
 		}
 
 		string installDirectory;
 		[Argument(nameof(InstallDir))]
 		public string InstallDir
 		{
-			get { return installDirectory; }
+			get => installDirectory;
 			set {
 				this.RaiseAndSetIfChanged(ref installDirectory, value);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
@@ -169,16 +169,16 @@ namespace Elastic.Installer.Domain.Kibana.Model.Locations
 		[SetPropertyActionArgument(nameof(ConfigDirectory), DefaultConfigDirectoryArgument)]
 		public string ConfigDirectory
 		{
-			get { return configDirectory; }
-			set { this.RaiseAndSetIfChanged(ref configDirectory, value); }
+			get => configDirectory;
+			set => this.RaiseAndSetIfChanged(ref configDirectory, value);
 		}
 
 		string logsDirectory;
 		[SetPropertyActionArgument(nameof(LogsDirectory), DefaultLogsDirectoryArgument)]
 		public string LogsDirectory
 		{
-			get { return logsDirectory; }
-			set { this.RaiseAndSetIfChanged(ref logsDirectory, value); }
+			get => logsDirectory;
+			set => this.RaiseAndSetIfChanged(ref logsDirectory, value);
 		}
 
 		public string LogsFile => LogsDirectory.Equals("stdout", StringComparison.OrdinalIgnoreCase) 

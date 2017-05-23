@@ -22,8 +22,8 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 		public override ConfigurationModel ViewModel
 		{
-			get { return (ConfigurationModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (ConfigurationModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		public ConfigurationView()

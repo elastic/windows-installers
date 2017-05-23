@@ -14,13 +14,15 @@ namespace Elastic.Installer.UI.Kibana.Steps
 {
 	public partial class ClosingView : StepControl<ClosingModel, ClosingView>
 	{
+		private static readonly SolidColorBrush FailedBrush = new SolidColorBrush(Color.FromRgb(234, 69, 139));
+
 		public static readonly DependencyProperty ViewModelProperty =
-			DependencyProperty.Register("ViewModel", typeof(ClosingModel), typeof(ClosingView), new PropertyMetadata(null, ViewModelPassed));
+			DependencyProperty.Register(nameof(ViewModel), typeof(ClosingModel), typeof(ClosingView), new PropertyMetadata(null, ViewModelPassed));
 
 		public override ClosingModel ViewModel
 		{
-			get { return (ClosingModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (ClosingModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		public ClosingView()
@@ -40,12 +42,12 @@ namespace Elastic.Installer.UI.Kibana.Steps
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.OpenReference.Content = string.Format(ViewResources.ClosingView_ReadTheReference, majorMinor);
 
-			var host = "http://localhost:9200";
+			var host = "http://localhost:5601";
 			this.ViewModel.Host.Subscribe(h => host = h);
 			this.ViewModel.OpenProduct.Subscribe(x => Process.Start(host));
 
-			this.ViewModel.OpenReference.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/kibana/{majorMinor}/index.html"));
-			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/kibana/{majorMinor}/getting-started.html"));
+			this.ViewModel.OpenReference.Subscribe(x => Process.Start(string.Format(ViewResources.ClosingView_Kibana_OpenReference, majorMinor)));
+			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start(string.Format(ViewResources.ClosingView_Kibana_OpenGettingStarted, majorMinor)));
 
 			string wixLog = null;
 			this.ViewModel.WixLogFile.Subscribe(l =>
@@ -58,17 +60,11 @@ namespace Elastic.Installer.UI.Kibana.Steps
 				if (wixLog != null) Process.Start(wixLog);
 			});
 
-			this.ViewModel.OpenIssues.Subscribe(x => Process.Start("https://github.com/elastic/windows-installers/issues"));
+			this.ViewModel.OpenIssues.Subscribe(x => Process.Start(ViewResources.ClosingView_GithubIssues));
 
 			this.WhenAnyValue(view => view.ViewModel.Installed)
-				.Subscribe(x =>
-				{
-					this.UpdateGrids(x);
-				});
+				.Subscribe(this.UpdateGrids);
 		}
-
-		private static SolidColorBrush FailedBrush = new SolidColorBrush(Color.FromRgb(234, 69, 139));
-		private static SolidColorBrush PreemptedBrush = new SolidColorBrush(Color.FromRgb(234, 69, 139));
 
 		private void UpdateGrids(ClosingResult? result)
 		{
@@ -79,8 +75,13 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 			if (!result.HasValue) result = ClosingResult.Cancelled;
 
-			var installationOrUpgradeLanguage = this.ViewModel.IsUpgrade ? "upgrade" : "installation";
-			var installedOrUpgradedLanguage = this.ViewModel.IsUpgrade ? "upgraded" : "installed";
+			var installationOrUpgradeLanguage = this.ViewModel.IsUpgrade
+				? ViewResources.ClosingView_UpgradeText
+				: ViewResources.ClosingView_InstallationText;
+
+			var installedOrUpgradedLanguage = this.ViewModel.IsUpgrade
+				? ViewResources.ClosingView_UpgradedText
+				: ViewResources.ClosingView_InstalledText;
 
 			switch (result.Value)
 			{

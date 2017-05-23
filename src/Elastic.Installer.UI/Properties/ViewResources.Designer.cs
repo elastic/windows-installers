@@ -61,6 +61,33 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/elasticsearch/client/index.html.
+        /// </summary>
+        public static string ClosingView_Elasticsearch_OpenFindYourClient {
+            get {
+                return ResourceManager.GetString("ClosingView_Elasticsearch_OpenFindYourClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/elasticsearch/guide/index.html.
+        /// </summary>
+        public static string ClosingView_Elasticsearch_OpenGettingStarted {
+            get {
+                return ResourceManager.GetString("ClosingView_Elasticsearch_OpenGettingStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/elasticsearch/reference/{0}/index.html.
+        /// </summary>
+        public static string ClosingView_Elasticsearch_OpenReference {
+            get {
+                return ResourceManager.GetString("ClosingView_Elasticsearch_OpenReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Elasticsearch in the browser.
         /// </summary>
         public static string ClosingView_ElasticsearchRunningAtHeader {
@@ -70,11 +97,65 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Elasticsearch in the browser (User name: elastic, Password: changeme).
+        /// </summary>
+        public static string ClosingView_ElasticsearchRunningAtHeaderWithCredentials {
+            get {
+                return ResourceManager.GetString("ClosingView_ElasticsearchRunningAtHeaderWithCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find a client for your favorite language.
         /// </summary>
         public static string ClosingView_FindYourClient {
             get {
                 return ResourceManager.GetString("ClosingView_FindYourClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://github.com/elastic/windows-installers/issues.
+        /// </summary>
+        public static string ClosingView_GithubIssues {
+            get {
+                return ResourceManager.GetString("ClosingView_GithubIssues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to installation.
+        /// </summary>
+        public static string ClosingView_InstallationText {
+            get {
+                return ResourceManager.GetString("ClosingView_InstallationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to installed.
+        /// </summary>
+        public static string ClosingView_InstalledText {
+            get {
+                return ResourceManager.GetString("ClosingView_InstalledText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/kibana/{0}/getting-started.html.
+        /// </summary>
+        public static string ClosingView_Kibana_OpenGettingStarted {
+            get {
+                return ResourceManager.GetString("ClosingView_Kibana_OpenGettingStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/kibana/{0}/index.html.
+        /// </summary>
+        public static string ClosingView_Kibana_OpenReference {
+            get {
+                return ResourceManager.GetString("ClosingView_Kibana_OpenReference", resourceCulture);
             }
         }
         
@@ -228,6 +309,24 @@ namespace Elastic.Installer.UI.Properties {
         public static string ClosingView_TitleSuccess {
             get {
                 return ResourceManager.GetString("ClosingView_TitleSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to upgraded.
+        /// </summary>
+        public static string ClosingView_UpgradedText {
+            get {
+                return ResourceManager.GetString("ClosingView_UpgradedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to upgrade.
+        /// </summary>
+        public static string ClosingView_UpgradeText {
+            get {
+                return ResourceManager.GetString("ClosingView_UpgradeText", resourceCulture);
             }
         }
         
@@ -1002,6 +1101,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/index.html.
+        /// </summary>
+        public static string MainWindow_DocumentationLink {
+            get {
+                return ResourceManager.GetString("MainWindow_DocumentationLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Heya! Welcome the {0} Windows intaller.
         ///
         ///This installer will walk you through various steps to help you conifigure and install {0} on your system.  To make things easier, we&apos;ve gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you&apos;ll definitely want to change..
@@ -1146,6 +1254,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string MainWindow_ValidationErrors {
             get {
                 return ResourceManager.GetString("MainWindow_ValidationErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/elasticsearch/reference/{0}/setup-upgrade.html.
+        /// </summary>
+        public static string NoticeView_Elasticsearch_ReadMoreOnUpgrades {
+            get {
+                return ResourceManager.GetString("NoticeView_Elasticsearch_ReadMoreOnUpgrades", resourceCulture);
             }
         }
         

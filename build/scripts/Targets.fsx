@@ -49,7 +49,7 @@ Target "UnzipProducts" (fun () ->
 )
 
 Target "PatchGuids" (fun () ->
-    tracefn "Making sure a guids exist for %s %s" Environment.NewLine productDescriptions
+    tracefn "Making sure guids exist for %s %s" Environment.NewLine productDescriptions
     BuildConfig.versionGuid productsToBuild
 )
 
@@ -61,7 +61,7 @@ Target "UnitTest" (fun () ->
     |> Log "MsiBuild-Output: "
 
     !! (unitTestBuildDir @@ "*Tests.dll")
-        |> xUnit2 (fun p -> { p with HtmlOutputPath = Some (ResultsDir @@ "xunit.html") })
+    |> xUnit2 (fun p -> { p with HtmlOutputPath = Some (ResultsDir @@ "xunit.html") })
 )
 
 Target "PruneFiles" (fun () ->

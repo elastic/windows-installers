@@ -62,9 +62,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			string[] args
 		) : base(wixStateProvider, session, args)
 		{
-			if (javaConfiguration == null) throw new ArgumentNullException(nameof(javaConfiguration));
-
-			this.JavaConfiguration = javaConfiguration;
+			this.JavaConfiguration = javaConfiguration ?? throw new ArgumentNullException(nameof(javaConfiguration));
 			this.ElasticsearchEnvironmentState = environmentStateProvider;
 			this._yamlConfiguration = yamlConfiguration;
 
@@ -76,7 +74,6 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 			this.NoticeModel = new NoticeModel(versionConfig, serviceStateProvider, this.LocationsModel);
 			this.ServiceModel = new ServiceModel(serviceStateProvider, versionConfig);
 			this.ConfigurationModel = new ConfigurationModel(yamlConfiguration, localJvmOptions);
-
 
 			var pluginDependencies = this.WhenAnyValue(
 				vm => vm.ConfigurationModel.IngestNode,
@@ -156,7 +153,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 
 			this.Install.Subscribe(installationObservable =>
 			{
-				installationObservable.Subscribe(installed => { this.ClosingModel.Installed = installed; });
+				installationObservable.Subscribe(installed => this.ClosingModel.Installed = installed);
 			});
 
 			this.Refresh();
@@ -186,24 +183,24 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model
 
 		public bool JavaInstalled
 		{
-			get { return javaInstalled; }
-			set { this.RaiseAndSetIfChanged(ref javaInstalled, value); }
+			get => javaInstalled;
+			set => this.RaiseAndSetIfChanged(ref javaInstalled, value);
 		}
 
 		bool javaMisconfigured;
 
 		public bool JavaMisconfigured
 		{
-			get { return javaMisconfigured; }
-			set { this.RaiseAndSetIfChanged(ref javaMisconfigured, value); }
+			get => javaMisconfigured;
+			set => this.RaiseAndSetIfChanged(ref javaMisconfigured, value);
 		}
 
 		bool badElasticsearchYamlFile;
 
 		public bool BadElasticsearchYamlFile
 		{
-			get { return badElasticsearchYamlFile; }
-			set { this.RaiseAndSetIfChanged(ref badElasticsearchYamlFile, value); }
+			get => badElasticsearchYamlFile;
+			set => this.RaiseAndSetIfChanged(ref badElasticsearchYamlFile, value);
 		}
 
 		public override void Refresh()

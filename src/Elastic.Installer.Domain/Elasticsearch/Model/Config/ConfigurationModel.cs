@@ -94,8 +94,8 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Config
 		}
 
 		public Func<Task<string>> AddUnicastNodeUITask { get; set; }
-		public ReactiveCommand<string> AddUnicastNode { get; private set; }
-		public ReactiveCommand<object> RemoveUnicastNode { get; private set; }
+		public ReactiveCommand<string> AddUnicastNode { get; }
+		public ReactiveCommand<object> RemoveUnicastNode { get; }
 
 		// ReactiveUI conventions do not change
 		// ReSharper disable InconsistentNaming
@@ -104,62 +104,62 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Config
 		[Argument(nameof(UnicastNodes))]
 		public ReactiveList<string> UnicastNodes
 		{
-			get { return unicastNodes; }
+			get => unicastNodes;
 			set { this.RaiseAndSetIfChanged(ref unicastNodes, new ReactiveList<string>(value?.Where(n => !string.IsNullOrEmpty(n)).Select(n => n.Trim()).ToList())); }
 		}
 
 		string selectedUnicastNode;
 		public string SelectedUnicastNode
 		{
-			get { return this.selectedUnicastNode; }
-			set { this.RaiseAndSetIfChanged(ref this.selectedUnicastNode, value); }
+			get => this.selectedUnicastNode;
+			set => this.RaiseAndSetIfChanged(ref this.selectedUnicastNode, value);
 		}
 
 		string clusterName;
 		[StaticArgument(nameof(ClusterName))]
 		public string ClusterName
 		{
-			get { return this.clusterName; }
-			set { this.RaiseAndSetIfChanged(ref this.clusterName, value); }
+			get => this.clusterName;
+			set => this.RaiseAndSetIfChanged(ref this.clusterName, value);
 		}
 
 		string nodeName;
 		[SetPropertyActionArgument(nameof(NodeName), "[%COMPUTERNAME]")]
 		public string NodeName
 		{
-			get { return nodeName; }
-			set { this.RaiseAndSetIfChanged(ref this.nodeName, value); }
+			get => nodeName;
+			set => this.RaiseAndSetIfChanged(ref this.nodeName, value);
 		}
 
 		bool masterNode;
 		[StaticArgument(nameof(MasterNode))]
 		public bool MasterNode
 		{
-			get { return this.masterNode; }
-			set { this.RaiseAndSetIfChanged(ref this.masterNode, value); }
+			get => this.masterNode;
+			set => this.RaiseAndSetIfChanged(ref this.masterNode, value);
 		}
 
 		bool dataNode;
 		[StaticArgument(nameof(DataNode))]
 		public bool DataNode
 		{
-			get { return this.dataNode; }
-			set { this.RaiseAndSetIfChanged(ref this.dataNode, value); }
+			get => this.dataNode;
+			set => this.RaiseAndSetIfChanged(ref this.dataNode, value);
 		}
 
 		bool ingestNode;
 		[StaticArgument(nameof(IngestNode))]
 		public bool IngestNode
 		{
-			get { return this.ingestNode; }
-			set { this.RaiseAndSetIfChanged(ref this.ingestNode, value); }
+			get => this.ingestNode;
+			set => this.RaiseAndSetIfChanged(ref this.ingestNode, value);
 		}
 
 		ulong totalPhysicalMemory;
 		public ulong TotalPhysicalMemory
 		{
-			get { return this.totalPhysicalMemory; }
-			set { this.RaiseAndSetIfChanged(ref this.totalPhysicalMemory, value); }
+			get => this.totalPhysicalMemory;
+			set => this.RaiseAndSetIfChanged(ref this.totalPhysicalMemory, value);
 		}
 
 		readonly ObservableAsPropertyHelper<ulong> maxSelectedMemory;
@@ -170,40 +170,40 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Config
 		[Argument(nameof(SelectedMemory))]
 		public ulong SelectedMemory
 		{
-			get { return this.selectedMemory; }
-			set { this.RaiseAndSetIfChanged(ref this.selectedMemory, value); }
+			get => this.selectedMemory;
+			set => this.RaiseAndSetIfChanged(ref this.selectedMemory, value);
 		}
 
 		bool lockMemory;
 		[StaticArgument(nameof(LockMemory))]
 		public bool LockMemory
 		{
-			get { return this.lockMemory; }
-			set { this.RaiseAndSetIfChanged(ref this.lockMemory, value); }
+			get => this.lockMemory;
+			set => this.RaiseAndSetIfChanged(ref this.lockMemory, value);
 		}
 
 		int minimumMasterNodes;
 		[Argument(nameof(MinimumMasterNodes))]
 		public int MinimumMasterNodes
 		{
-			get { return this.minimumMasterNodes; }
-			set { this.RaiseAndSetIfChanged(ref this.minimumMasterNodes, value); }
+			get => this.minimumMasterNodes;
+			set => this.RaiseAndSetIfChanged(ref this.minimumMasterNodes, value);
 		}
 
 		string networkHost;
 		[Argument(nameof(NetworkHost))]
 		public string NetworkHost
 		{
-			get { return this.networkHost; }
-			set { this.RaiseAndSetIfChanged(ref this.networkHost, value); }
+			get => this.networkHost;
+			set => this.RaiseAndSetIfChanged(ref this.networkHost, value);
 		}
 
 		int? httpPort;
 		[StaticArgument(nameof(HttpPort))]
 		public int? HttpPort
 		{
-			get { return this.httpPort; }
-			set { this.RaiseAndSetIfChanged(ref this.httpPort, value); }
+			get => this.httpPort;
+			set => this.RaiseAndSetIfChanged(ref this.httpPort, value);
 		}
 
 		int? transportPort;
@@ -211,8 +211,8 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Config
 		[StaticArgument(nameof(TransportPort))]
 		public int? TransportPort
 		{
-			get { return this.transportPort; }
-			set { this.RaiseAndSetIfChanged(ref this.transportPort, value); }
+			get => this.transportPort;
+			set => this.RaiseAndSetIfChanged(ref this.transportPort, value);
 		}
 		
 		public override string ToString()

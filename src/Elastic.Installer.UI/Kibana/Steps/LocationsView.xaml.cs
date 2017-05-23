@@ -14,12 +14,12 @@ namespace Elastic.Installer.UI.Kibana.Steps
 	public partial class LocationsView : StepControl<LocationsModel, LocationsView>
 	{
 		public static readonly DependencyProperty ViewModelProperty =
-			DependencyProperty.Register("ViewModel", typeof(LocationsModel), typeof(LocationsView), new PropertyMetadata(null, ViewModelPassed));
+			DependencyProperty.Register(nameof(ViewModel), typeof(LocationsModel), typeof(LocationsView), new PropertyMetadata(null, ViewModelPassed));
 
 		public override LocationsModel ViewModel
 		{
-			get { return (LocationsModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (LocationsModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		private readonly Brush _defaultBrush;
@@ -73,20 +73,21 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 		protected void BrowseForFolder(string defaultLocation, Action<string> setter)
 		{
+			var dlg = new CommonOpenFileDialog
+			{
+				IsFolderPicker = true,
+				InitialDirectory = defaultLocation,
+				AddToMostRecentlyUsedList = false,
+				AllowNonFileSystemItems = false,
+				DefaultDirectory = defaultLocation,
+				EnsureFileExists = true,
+				EnsurePathExists = true,
+				EnsureReadOnly = false,
+				EnsureValidNames = true,
+				Multiselect = false,
+				ShowPlacesList = true
+			};
 
-			var dlg = new CommonOpenFileDialog();
-			dlg.IsFolderPicker = true;
-			dlg.InitialDirectory = defaultLocation;
-
-			dlg.AddToMostRecentlyUsedList = false;
-			dlg.AllowNonFileSystemItems = false;
-			dlg.DefaultDirectory = defaultLocation;
-			dlg.EnsureFileExists = true;
-			dlg.EnsurePathExists = true;
-			dlg.EnsureReadOnly = false;
-			dlg.EnsureValidNames = true;
-			dlg.Multiselect = false;
-			dlg.ShowPlacesList = true;
 			var result = dlg.ShowDialog();
 			if (result == CommonFileDialogResult.Ok) setter(dlg.FileName);
 		}

@@ -13,7 +13,6 @@ namespace Elastic.Installer.Domain.Model
 		string Header { get; }
 	}
 
-
 	public abstract class StepBase<TModel, TModelValidator> : ValidatableReactiveObjectBase<TModel, TModelValidator>, IStep
 		where TModel : ValidatableReactiveObjectBase<TModel, TModelValidator>
 		where TModelValidator : AbstractValidator<TModel>, new()
@@ -21,20 +20,20 @@ namespace Elastic.Installer.Domain.Model
 		bool isRelevant = true;
 		public bool IsRelevant
 		{
-			get { return isRelevant; }
-			protected set { this.RaiseAndSetIfChanged(ref isRelevant, value); }
+			get => isRelevant;
+			protected set => this.RaiseAndSetIfChanged(ref isRelevant, value);
 		}
 		bool isSelected = true;
 		public bool IsSelected
 		{
-			get { return isSelected; }
-			set { this.RaiseAndSetIfChanged(ref isSelected, value); }
+			get => isSelected;
+			set => this.RaiseAndSetIfChanged(ref isSelected, value);
 		}
 		string header = string.Empty;
 		public string Header
 		{
-			get { return header; }
-			protected set { this.RaiseAndSetIfChanged(ref header, value); }
+			get => header;
+			protected set => this.RaiseAndSetIfChanged(ref header, value);
 		}
 	}
 }

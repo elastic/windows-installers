@@ -20,8 +20,8 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 		public override ConnectingModel ViewModel
 		{
-			get { return (ConnectingModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (ConnectingModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		public ConnectingView()
@@ -41,7 +41,6 @@ namespace Elastic.Installer.UI.Kibana.Steps
 
 		protected override void UpdateValidState(bool isValid, IList<ValidationFailure> failures)
 		{
-
 		}
 	}
 }

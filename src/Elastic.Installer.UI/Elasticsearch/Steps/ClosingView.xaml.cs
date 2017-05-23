@@ -14,13 +14,15 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 {
 	public partial class ClosingView : StepControl<ClosingModel, ClosingView>
 	{
+		private static readonly SolidColorBrush FailedBrush = new SolidColorBrush(Color.FromRgb(234, 69, 139));
+
 		public static readonly DependencyProperty ViewModelProperty =
-			DependencyProperty.Register("ViewModel", typeof(ClosingModel), typeof(ClosingView), new PropertyMetadata(null, ViewModelPassed));
+			DependencyProperty.Register(nameof(ViewModel), typeof(ClosingModel), typeof(ClosingView), new PropertyMetadata(null, ViewModelPassed));
 
 		public override ClosingModel ViewModel
 		{
-			get { return (ClosingModel)GetValue(ViewModelProperty); }
-			set { SetValue(ViewModelProperty, value); }
+			get => (ClosingModel)GetValue(ViewModelProperty);
+			set => SetValue(ViewModelProperty, value);
 		}
 
 		public ClosingView()
@@ -49,33 +51,27 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			string elasticsearchLog = null;
 			this.ViewModel.ProductLog.Subscribe(l => elasticsearchLog = l);
 			this.ViewModel.OpenProductLog.Subscribe(x => Process.Start(elasticsearchLog));
-
-			this.ViewModel.OpenReference.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/reference/{majorMinor}/index.html"));
-			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start($"https://www.elastic.co/guide/en/elasticsearch/guide/index.html"));
-			this.ViewModel.OpenFindYourClient.Subscribe(x => Process.Start("https://www.elastic.co/guide/en/elasticsearch/client/index.html"));
+			this.ViewModel.OpenReference.Subscribe(x => Process.Start(string.Format(ViewResources.ClosingView_Elasticsearch_OpenReference, majorMinor)));
+			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start(ViewResources.ClosingView_Elasticsearch_OpenGettingStarted));
+			this.ViewModel.OpenFindYourClient.Subscribe(x => Process.Start(ViewResources.ClosingView_Elasticsearch_OpenFindYourClient));
 
 			string wixLog = null;
 			this.ViewModel.WixLogFile.Subscribe(l =>
 			{
 				wixLog = l;
-				this.OpenInstallationLog.Visibility = string.IsNullOrWhiteSpace(l) ? Visibility.Collapsed : Visibility.Visible;
+				this.OpenInstallationLog.Visibility = string.IsNullOrWhiteSpace(l) 
+					? Visibility.Collapsed 
+					: Visibility.Visible;
 			});
 			this.ViewModel.OpenInstallationLog.Subscribe(x =>
 			{
 				if (wixLog != null) Process.Start(wixLog);
 			});
 
-			this.ViewModel.OpenIssues.Subscribe(x => Process.Start("https://github.com/elastic/elasticsearch-windows-installer/issues"));
+			this.ViewModel.OpenIssues.Subscribe(x => Process.Start(ViewResources.ClosingView_GithubIssues));
 
-			this.WhenAnyValue(view => view.ViewModel.Installed)
-				.Subscribe(x =>
-				{
-					this.UpdateGrids(x);
-				});
+			this.WhenAnyValue(view => view.ViewModel.Installed).Subscribe(this.UpdateGrids);
 		}
-
-		private static SolidColorBrush FailedBrush = new SolidColorBrush(Color.FromRgb(234, 69, 139));
-		private static SolidColorBrush PreemptedBrush = new SolidColorBrush(Color.FromRgb(234, 69, 139));
 
 		private void UpdateGrids(ClosingResult? result)
 		{
@@ -86,8 +82,13 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			if (!result.HasValue) result = ClosingResult.Cancelled;
 
-			var installationOrUpgradeLanguage = this.ViewModel.IsUpgrade ? "upgrade" : "installation";
-			var installedOrUpgradedLanguage = this.ViewModel.IsUpgrade ? "upgraded" : "installed";
+			var installationOrUpgradeLanguage = this.ViewModel.IsUpgrade 
+				? ViewResources.ClosingView_UpgradeText 
+				: ViewResources.ClosingView_InstallationText;
+
+			var installedOrUpgradedLanguage = this.ViewModel.IsUpgrade 
+				? ViewResources.ClosingView_UpgradedText 
+				: ViewResources.ClosingView_InstalledText;
 
 			switch (result.Value)
 			{

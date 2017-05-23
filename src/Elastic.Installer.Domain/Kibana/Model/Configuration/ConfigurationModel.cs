@@ -24,64 +24,64 @@ namespace Elastic.Installer.Domain.Kibana.Model.Configuration
 		[StaticArgument(nameof(HostName))]
 		public string HostName
 		{
-			get { return this.hostName; }
-			set { this.RaiseAndSetIfChanged(ref this.hostName, value); }
+			get => this.hostName;
+			set => this.RaiseAndSetIfChanged(ref this.hostName, value);
 		}
 			
 		int port;
 		[StaticArgument(nameof(HttpPort))]
 		public int HttpPort
 		{
-			get { return this.port; }
-			set { this.RaiseAndSetIfChanged(ref this.port, value); }
+			get => this.port;
+			set => this.RaiseAndSetIfChanged(ref this.port, value);
 		}
 
 		string serverName;
 		[StaticArgument(nameof(ServerName))]
 		public string ServerName
 		{
-			get { return this.serverName; }
-			set { this.RaiseAndSetIfChanged(ref this.serverName, value); }
+			get => this.serverName;
+			set => this.RaiseAndSetIfChanged(ref this.serverName, value);
 		}
 
 		string basePath;
 		[StaticArgument(nameof(BasePath))]
 		public string BasePath
 		{
-			get { return this.basePath; }
-			set { this.RaiseAndSetIfChanged(ref this.basePath, value); }
+			get => this.basePath;
+			set => this.RaiseAndSetIfChanged(ref this.basePath, value);
 		}
 
 		string defaultRoute;
 		[StaticArgument(nameof(DefaultRoute))]
 		public string DefaultRoute
 		{
-			get { return this.defaultRoute; }
-			set { this.RaiseAndSetIfChanged(ref this.defaultRoute, value); }
+			get => this.defaultRoute;
+			set => this.RaiseAndSetIfChanged(ref this.defaultRoute, value);
 		}
 
 		string serverKey;
 		[StaticArgument(nameof(ServerKey))]
 		public string ServerKey
 		{
-			get { return this.serverKey; }
-			set { this.RaiseAndSetIfChanged(ref this.serverKey, value); }
+			get => this.serverKey;
+			set => this.RaiseAndSetIfChanged(ref this.serverKey, value);
 		}
 
 		string serverCertificate;
 		[StaticArgument(nameof(ServerCertificate))]
 		public string ServerCertificate
 		{
-			get { return this.serverCertificate; }
-			set { this.RaiseAndSetIfChanged(ref this.serverCertificate, value); }
+			get => this.serverCertificate;
+			set => this.RaiseAndSetIfChanged(ref this.serverCertificate, value);
 		}
 
 		bool allowAnonymousAccess;
 		[StaticArgument(nameof(AllowAnonymousAccess))]
 		public bool AllowAnonymousAccess
 		{
-			get { return this.allowAnonymousAccess; }
-			set { this.RaiseAndSetIfChanged(ref this.allowAnonymousAccess, value); }
+			get => this.allowAnonymousAccess;
+			set => this.RaiseAndSetIfChanged(ref this.allowAnonymousAccess, value);
 		}
 
 		public override void Refresh()

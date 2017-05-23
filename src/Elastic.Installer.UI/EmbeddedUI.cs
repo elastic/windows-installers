@@ -69,7 +69,7 @@ namespace Elastic.Installer.UI
 		public void Shutdown()
 		{
 			this._mainWindow.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-				new Action(async delegate ()
+				new Action(async delegate
 				{
 					await this._mainWindow.EnableExit();
 				}));
@@ -87,7 +87,7 @@ namespace Elastic.Installer.UI
 
 			string product;
 			if (!this._session.TryGetValue("ElasticProduct", out product))
-				throw new Exception("ProductName not found in session state.");
+				throw new Exception("ElasticProduct not found in session state.");
 
 			this._mainWindow = GetMainWindow(product, new WixStateProvider(GetProduct(product), version), new SessionWrapper(_session));
 
@@ -117,13 +117,13 @@ namespace Elastic.Installer.UI
 			}
 		}
 
-		private Product GetProduct(string name)
+		private static Product GetProduct(string product)
 		{
-			switch(name.ToLowerInvariant())
+			switch(product)
 			{
 				case "elasticsearch": return Product.Elasticsearch;
 				case "kibana": return Product.Kibana;
-				default: throw new ArgumentException($"Unknown product name {name}");
+				default: throw new ArgumentException($"Unknown product name {product}");
 			}
 		}
 	}

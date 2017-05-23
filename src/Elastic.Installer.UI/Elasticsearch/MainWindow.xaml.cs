@@ -33,7 +33,6 @@ using Elastic.Installer.Domain.Extensions;
 using Elastic.Installer.UI.Elasticsearch.Steps;
 using Elastic.Installer.Domain.Shared.Model.Service;
 using Elastic.Installer.UI.Shared.Steps;
-using Elastic.Installer.Domain.Shared.Model.Plugins;
 using Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Shared.Model.Closing;
 using Elastic.Installer.Domain.Elasticsearch.Model.Plugins;
@@ -47,8 +46,8 @@ namespace Elastic.Installer.UI.Elasticsearch
 	{
 		object IViewFor.ViewModel
 		{
-			get { return ViewModel; }
-			set { ViewModel = (ElasticsearchInstallationModel)value; }
+			get => ViewModel;
+			set => ViewModel = (ElasticsearchInstallationModel)value;
 		}
 
 		public ElasticsearchInstallationModel ViewModel { get; set; }
@@ -260,7 +259,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 			this.ViewModel.Exit.Subscribe(x =>
 			{
 				if (this.ViewModel.ClosingModel.OpenDocumentationAfterInstallation)
-					Process.Start("https://www.elastic.co/guide/index.html");
+					Process.Start(ViewResources.MainWindow_DocumentationLink);
 				this.Close();
 			});
 
@@ -360,7 +359,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 			base.OnInitialized(e);
 
 			this.WhenAnyValue(view => view.ViewModel.PrerequisiteFailures)
-				.Subscribe(failures => PromptPrerequisiteFailures(failures));
+				.Subscribe(PromptPrerequisiteFailures);
 		}
 
 		public void AnimateLogo() => this.AnimateCells("Yellow", "Pink", "Blue", "Torqoise");
@@ -380,8 +379,6 @@ namespace Elastic.Installer.UI.Elasticsearch
 				Storyboard.SetTarget(animation, cell);
 				animation.Begin();
 			}
-
-
 		}
 	}
 }

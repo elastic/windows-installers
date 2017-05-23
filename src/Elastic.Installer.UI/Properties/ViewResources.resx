@@ -189,8 +189,8 @@
   <data name="ClosingView_SubTitleSuccess" xml:space="preserve">
     <value>What's Next?</value>
   </data>
-  <data name="ClosingView_ElasticsearchRunningAtHeader" xml:space="preserve">
-    <value>Open Elasticsearch in the browser</value>
+  <data name="ClosingView_ElasticsearchRunningAtHeaderWithCredentials" xml:space="preserve">
+    <value>Open Elasticsearch in the browser (User name: elastic, Password: changeme)</value>
   </data>
   <data name="ClosingView_FindYourClient" xml:space="preserve">
     <value>Find a client for your favorite language</value>
@@ -695,5 +695,48 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   </data>
   <data name="ClosingView_KibanaRunningAtHeader" xml:space="preserve">
     <value>Open Kibana in the browser</value>
+  </data>
+  <data name="ClosingView_ElasticsearchRunningAtHeader" xml:space="preserve">
+    <value>Open Elasticsearch in the browser</value>
+  </data>
+  <data name="ClosingView_Elasticsearch_OpenFindYourClient" xml:space="preserve">
+    <value>https://www.elastic.co/guide/en/elasticsearch/client/index.html</value>
+  </data>
+  <data name="ClosingView_Elasticsearch_OpenGettingStarted" xml:space="preserve">
+    <value>https://www.elastic.co/guide/en/elasticsearch/guide/index.html</value>
+  </data>
+  <data name="ClosingView_Elasticsearch_OpenReference" xml:space="preserve">
+    <value>https://www.elastic.co/guide/en/elasticsearch/reference/{0}/index.html</value>
+    <comment>{0} = major minor version</comment>
+  </data>
+  <data name="ClosingView_GithubIssues" xml:space="preserve">
+    <value>https://github.com/elastic/windows-installers/issues</value>
+  </data>
+  <data name="ClosingView_InstallationText" xml:space="preserve">
+    <value>installation</value>
+  </data>
+  <data name="ClosingView_InstalledText" xml:space="preserve">
+    <value>installed</value>
+  </data>
+  <data name="ClosingView_Kibana_OpenGettingStarted" xml:space="preserve">
+    <value>https://www.elastic.co/guide/en/kibana/{0}/getting-started.html</value>
+    <comment>{0} = major minor version</comment>
+  </data>
+  <data name="ClosingView_Kibana_OpenReference" xml:space="preserve">
+    <value>https://www.elastic.co/guide/en/kibana/{0}/index.html</value>
+    <comment>{0} = major minor version</comment>
+  </data>
+  <data name="ClosingView_UpgradedText" xml:space="preserve">
+    <value>upgraded</value>
+  </data>
+  <data name="ClosingView_UpgradeText" xml:space="preserve">
+    <value>upgrade</value>
+  </data>
+  <data name="NoticeView_Elasticsearch_ReadMoreOnUpgrades" xml:space="preserve">
+    <value>https://www.elastic.co/guide/en/elasticsearch/reference/{0}/setup-upgrade.html</value>
+    <comment>{0} = major minor version</comment>
+  </data>
+  <data name="MainWindow_DocumentationLink" xml:space="preserve">
+    <value>https://www.elastic.co/guide/index.html</value>
   </data>
 </root>
