@@ -69,8 +69,8 @@ module Builder =
     let BuildService (product : ProductVersion) =
         !! (product.ServiceDir @@ "*.csproj")
         |> MSBuildRelease product.ServiceBinDir "Build"
-        |> Log "ServiceBuild-Output: "
-        let serviceAssembly = product.ServiceBinDir @@ (sprintf "Elastic.Installer.%s.Process.exe" product.Title)
+        |> ignore
+        let serviceAssembly = product.ServiceBinDir @@ (sprintf "Elastic.ProcessHosts.%s.exe" product.Title)
         let service = product.BinDir @@ (sprintf "%s.exe" product.Name)
         CopyFile service serviceAssembly
         Sign service product
@@ -78,7 +78,7 @@ module Builder =
     let BuildMsi (product : ProductVersion) =
         !! (MsiDir @@ "*.csproj")
         |> MSBuildRelease MsiBuildDir "Build"
-        |> Log "MsiBuild-Output: "
+        |> ignore
 
         let exitCode = ExecProcess (fun info ->
                         info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir

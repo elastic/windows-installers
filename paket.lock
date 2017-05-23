@@ -84,7 +84,7 @@ NUGET
       System.Runtime.Serialization.Formatters (>= 4.3) - framework: >= netstandard13
       System.Runtime.Serialization.Primitives (>= 4.3) - framework: netstandard10, >= netstandard13
       System.Xml.XmlDocument (>= 4.3) - framework: >= netstandard13
-    NuGet.CommandLine (3.5)
+    NuGet.CommandLine (4.1)
     reactiveui (6.3.1) - framework: >= net45
       reactiveui-core (6.3.1)
     reactiveui-core (6.3.1) - framework: >= net45
@@ -645,7 +645,7 @@ GROUP build
 NUGET
   remote: https://www.nuget.org/api/v2
     FAKE (4.61.2)
-    FSharp.Configuration (1.1)
+    FSharp.Configuration (1.2)
     FSharp.Data (2.3.3)
       Zlib.Portable (>= 1.11) - framework: >= netstandard11, portable-net45+sl5+win8, portable-net45+win8, portable-net45+win8+wp8+wpa81
     FSharp.Text.RegexProvider (1.0)
