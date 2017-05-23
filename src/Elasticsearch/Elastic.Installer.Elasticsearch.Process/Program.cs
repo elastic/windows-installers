@@ -49,6 +49,7 @@ namespace Elastic.Installer.Elasticsearch.Process
 		private static bool SendCtrlCTo(int processId)
 		{
 			if (!ProcessIdIsElasticsearch(processId)) return false;
+
 			FreeConsole();
 			if (!AttachConsole((uint) processId)) return false;
 			SetConsoleCtrlHandler(null, true);

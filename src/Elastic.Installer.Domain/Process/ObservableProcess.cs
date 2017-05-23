@@ -63,7 +63,10 @@ namespace Elastic.Installer.Domain.Process
 				try
 				{
 					this.LastExitCode = process?.ExitCode ?? 0;
-					if (process?.ExitCode > 0)
+
+					//if process does not terminated with 0 (no errors) or 130 (cancellation requested on java.exe)
+					//throw an exception that bubbles back out to Program (elasticsearch.exe)
+					if (this.LastExitCode > 0 && this.LastExitCode != 130)
 					{
 
 						observer.OnError(new StartupException(

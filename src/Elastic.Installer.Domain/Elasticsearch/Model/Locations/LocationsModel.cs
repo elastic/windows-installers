@@ -108,13 +108,15 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Locations
 		public void SetDefaultLocations()
 		{
 			this._refreshing = true;
-			this.InstallDir = this._elasticsearchEnvironmentConfiguration.HomeDirectory ?? DefaultInstallationDirectory;
-			this.ConfigDirectory = this._elasticsearchEnvironmentConfiguration.ConfigDirectory ?? DefaultConfigDirectory;
+
+			//todo duplication?
+			this.InstallDir = this._elasticsearchEnvironmentConfiguration.TargetInstallationDirectory ?? DefaultInstallationDirectory;
+			this.ConfigDirectory = this._elasticsearchEnvironmentConfiguration.TargetInstallationConfigDirectory ?? DefaultConfigDirectory;
 			this.DataDirectory = this._yamlConfiguration?.Settings?.DataPath ?? DefaultDataDirectory;
 			this.LogsDirectory = this._yamlConfiguration?.Settings?.LogsPath ?? DefaultLogsDirectory;
 
-			var home = this._elasticsearchEnvironmentConfiguration.HomeDirectory ?? DefaultInstallationDirectory;
-			var config = this._elasticsearchEnvironmentConfiguration.ConfigDirectory ?? DefaultConfigDirectory;
+			var home = this._elasticsearchEnvironmentConfiguration.TargetInstallationDirectory ?? DefaultInstallationDirectory;
+			var config = this._elasticsearchEnvironmentConfiguration.TargetInstallationConfigDirectory ?? DefaultConfigDirectory;
 			var data = this._yamlConfiguration?.Settings?.DataPath ?? DefaultDataDirectory;
 			var logs = this._yamlConfiguration?.Settings?.LogsPath ?? DefaultLogsDirectory;
 

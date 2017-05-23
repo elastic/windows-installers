@@ -62,6 +62,20 @@ namespace Elastic.Installer.Domain.Elasticsearch.Configuration.EnvironmentBased
 			}
 		}
 
+		public string TargetInstallationDirectory => new []
+			{
+				StateProvider.HomeDirectoryUserVariable,
+				StateProvider.HomeDirectoryMachineVariable,
+			}
+			.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
+
+		public string TargetInstallationConfigDirectory => new []
+			{
+				StateProvider.ConfigDirectoryUserVariable,
+				StateProvider.ConfigDirectoryMachineVariable,
+			}
+			.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
+
 		public string HomeDirectory => new []
 			{
 				StateProvider.HomeDirectoryUserVariable,
