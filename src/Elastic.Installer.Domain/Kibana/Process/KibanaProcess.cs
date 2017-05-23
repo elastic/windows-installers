@@ -12,19 +12,14 @@ namespace Elastic.Installer.Domain.Kibana.Process
 {
 	public class KibanaProcess : ProcessBase
 	{
-		public string JsPath { get; set; }
+		private string JsPath { get; }
+		private string ConfigFile { get; }
+		private string LogFile { get; }
 
-		public string ConfigFile { get; set; }
+		private string Host { get; set; }
+		private int? Port { get; set; }
 
-		public string Host { get; set; }
-
-		public string LogFile { get; set; }
-
-		public int? Port { get; set; }
-
-		public KibanaProcess() : this(null) { }
-
-		public KibanaProcess(IEnumerable<string> args) : base(args)
+		public KibanaProcess(IEnumerable<string> args) : base(null, null, null)
 		{
 			this.HomeDirectory = (this.HomeDirectory
 				?? Environment.GetEnvironmentVariable(KibanaEnvironmentVariables.KIBANA_HOME_ENV_VAR, EnvironmentVariableTarget.Machine)
@@ -40,11 +35,13 @@ namespace Elastic.Installer.Domain.Kibana.Process
 
 			var yamlConfig = KibanaYamlConfiguration.FromFolder(this.ConfigDirectory);
 			this.LogFile = yamlConfig.Settings.LoggingDestination;
+			var parsedArguments = this.ParseArguments(args);
+			this.Arguments = this.CreateObservableProcessArguments(parsedArguments);
 		}
 
-		protected override List<string> GetArguments()
+		protected sealed override IEnumerable<string> CreateObservableProcessArguments(IEnumerable<string> args)
 		{
-			var arguments = this.AdditionalArguments.Concat(new[]
+			var arguments = args.Concat(new[]
 			{
 				"--no-warnings",
 				$"\"{this.JsPath}\"",
@@ -55,11 +52,10 @@ namespace Elastic.Installer.Domain.Kibana.Process
 			return arguments;
 		}
 
-		protected override List<string> ParseArguments(IEnumerable<string> args)
+		protected sealed override IEnumerable<string> ParseArguments(IEnumerable<string> args)
 		{
+			if (args == null) return Enumerable.Empty<string>();
 			var newArgs = new List<string>();
-			if (args == null)
-				return newArgs;
 			var nextArgIsConfigPath = false;
 			foreach (var arg in args)
 			{
@@ -114,15 +110,12 @@ namespace Elastic.Installer.Domain.Kibana.Process
 			var message = new KibanaMessage(consoleOut.Data);
 			if (this.Started || string.IsNullOrWhiteSpace(message.Message)) return;
 	
-			string host; int? port;
-		    if (message.TryGetStartedConfirmation(out host, out port))
-		    {
-			    this.Host = host;
-			    this.Port = port;
-				this.BlockingSubject.OnNext(this.StartedHandle);
-				this.Started = true;
-				this.StartedHandle.Set();
-			}
+			if (!message.TryGetStartedConfirmation(out string host, out int? port)) return;
+			this.Host = host;
+			this.Port = port;
+			this.BlockingSubject.OnNext(this.StartedHandle);
+			this.Started = true;
+			this.StartedHandle.Set();
 		}
 	}
 }

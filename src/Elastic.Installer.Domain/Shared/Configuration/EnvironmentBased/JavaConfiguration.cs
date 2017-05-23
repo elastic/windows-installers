@@ -1,4 +1,7 @@
-﻿namespace Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased
+﻿using System.IO;
+using System.Linq;
+
+namespace Elastic.Installer.Domain.Shared.Configuration.EnvironmentBased
 {
 	public class JavaConfiguration 
 	{
@@ -11,10 +14,15 @@
 			_stateProvider = stateProvider ?? new JavaEnvironmentStateProvider();
 		}
 
-		public bool JavaInstalled => 
-			!string.IsNullOrEmpty(_stateProvider.JavaHomeMachine)
-			|| !string.IsNullOrEmpty(_stateProvider.JavaHomeCurrentUser)
-			|| !string.IsNullOrEmpty(_stateProvider.JavaHomeRegistry);
+		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin\java.exe");
+		public string JavaHomeCanonical => new [] {
+				_stateProvider.JavaHomeCurrentUser,
+				_stateProvider.JavaHomeMachine,
+				_stateProvider.JavaHomeRegistry
+			}
+			.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
+
+		public bool JavaInstalled => !string.IsNullOrEmpty(this.JavaHomeCanonical);
 
 		public bool JavaMisconfigured 
 		{

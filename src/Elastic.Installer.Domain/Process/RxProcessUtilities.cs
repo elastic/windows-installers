@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
-namespace Elastic.Installer.Domain.Process.ObservableWrapper
+namespace Elastic.Installer.Domain.Process
 {
 
 	public static class RxProcessUtilities

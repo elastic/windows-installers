@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
@@ -10,6 +11,9 @@ namespace Elastic.Installer.Domain.Elasticsearch.Configuration.FileBased
 		private readonly string _path;
 		private readonly List<string> _options = new List<string>();
 		private readonly IFileSystem _fileSystem;
+
+		public ReadOnlyCollection<string> Options =>
+			new ReadOnlyCollection<string>(this._options ?? new List<string>());
 
 		public string Xmx { get; set; }
 		public string Xms { get; set; }

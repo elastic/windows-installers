@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 
 		[Fact] void InstallationDirectoryReflectsES_HOME() => WithValidPreflightChecks(s => s
 			.Elasticsearch(e => e
-				.HomeDirectoryEnvironmentVariable(_customHome)
+				.EsHomeMachineVariable(_customHome)
 			))
 			.OnStep(m => m.LocationsModel, step =>
 			{
@@ -22,7 +22,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 
 		[Fact] void ConfigDirectoryReflectsES_CONFIG() => WithValidPreflightChecks(s => s
 			.Elasticsearch(e => e
-				.ConfigDirectoryEnvironmentVariable(_customConfig)
+				.EsConfigMachineVariable(_customConfig)
 			))
 			.OnStep(m => m.LocationsModel, step =>
 			{
@@ -33,8 +33,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 
 		[Fact] void DataDirectoryIsReadFromElasticsearchYaml() => WithValidPreflightChecks(s => s
 			.Elasticsearch(e => e
-				.HomeDirectoryEnvironmentVariable(_customHome)
-				.ConfigDirectoryEnvironmentVariable(_customConfig)
+				.EsHomeMachineVariable(_customHome)
+				.EsConfigMachineVariable(_customConfig)
 			)
 			.FileSystem(f=>
 			{
@@ -50,8 +50,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 
 		[Fact] void LogsDirectoryIsReadFromElasticsearchYaml() => WithValidPreflightChecks(s => s
 			.Elasticsearch(e => e
-				.HomeDirectoryEnvironmentVariable(_customHome)
-				.ConfigDirectoryEnvironmentVariable(_customConfig)
+				.EsHomeMachineVariable(_customHome)
+				.EsConfigMachineVariable(_customConfig)
 			)
 			.FileSystem(f=>
 			{

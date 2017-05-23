@@ -6,13 +6,14 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Elastic.Installer.Domain.Process;
 
 namespace Elastic.Installer.Domain.Service
 {
 	public interface IService : IDisposable
 	{
 		string Name { get; }
-		void StartInteractive();
+		void StartInteractive(ManualResetEvent handle);
 		void StopInteractive();
 		void Run();
 		void WriteToConsole(ConsoleColor color, string value);
@@ -21,9 +22,14 @@ namespace Elastic.Installer.Domain.Service
 	public abstract class Service : ServiceBase, IService
 	{
 		public abstract string Name { get; }
-		public virtual void StartInteractive() => this.OnStart(null);
+		public virtual void StartInteractive(ManualResetEvent handle) => this.OnStart(null);
 		public virtual void StopInteractive() => this.OnStop();
-		public abstract void WriteToConsole(ConsoleColor color, string value);
+		public void WriteToConsole(ConsoleColor color, string value)
+		{
+			Console.ForegroundColor = color;
+			Console.WriteLine(value);
+			Console.ResetColor();
+		}
 
 		[DllImport("Kernel32")]
 		public static extern bool SetConsoleCtrlHandler(ConsoleCtrlHandler Handler, bool Add);
@@ -32,37 +38,34 @@ namespace Elastic.Installer.Domain.Service
 
 		public void Run()
 		{
-			if (Environment.UserInteractive)
+			if (!Environment.UserInteractive)
+				Run(this);
+			else
 			{
 				WarnIfAlreadyRunningAsAService();
 
 				var handle = new ManualResetEvent(false);
 				_consoleCtrlHandler += new ConsoleCtrlHandler(c =>
 				{
-					this.WriteToConsole(ConsoleColor.Red, $"Stopping {this.Name}...");
+					this.WriteToConsole(ConsoleColor.Cyan, $"Stop requested, stopping {this.Name}...");
 					this.StopInteractive();
 					handle.Set();
-					return false;
+					return true;
 				});
 				SetConsoleCtrlHandler(_consoleCtrlHandler, true);
-				this.StartInteractive();
+				this.StartInteractive(handle);
 				handle.WaitOne();
-			}
-			else
-			{
-				Run(this);
 			}
 		}
 
 		private void WarnIfAlreadyRunningAsAService()
 		{
 			var service = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName.Equals(this.Name));
-			if (service != null && service.Status != ServiceControllerStatus.Stopped)
-			{
-				var status = Enum.GetName(typeof(ServiceControllerStatus), service.Status);
-				ElasticsearchConsole.WriteLine(ConsoleColor.Blue,
-					$"{this.Name} is already running as a service and currently: {status}.");
-			}
+			if (service == null || service.Status == ServiceControllerStatus.Stopped) return;
+
+			var status = Enum.GetName(typeof(ServiceControllerStatus), service.Status);
+
+			throw new StartupException($"{this.Name} is already running as a service and currently: {status}.");
 		}
 	}
 }

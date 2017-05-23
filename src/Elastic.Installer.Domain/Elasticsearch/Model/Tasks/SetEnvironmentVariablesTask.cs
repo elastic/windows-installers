@@ -23,7 +23,7 @@ namespace Elastic.Installer.Domain.Elasticsearch.Model.Tasks
 			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
 
-			var esState = this.InstallationModel.ElasticsearchEnvironmentState;
+			var esState = this.InstallationModel.ElasticsearchEnvironmentConfiguration;
 			esState.SetEsHomeEnvironmentVariable(installDirectory);
 			esState.SetEsConfigEnvironmentVariable(configDirectory);
 			this.Session.SendProgress(1000, "Environment variables set");

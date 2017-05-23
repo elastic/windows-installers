@@ -19,7 +19,5 @@ namespace Elastic.Installer.Domain.Kibana.Service
 		protected override void OnStart(string[] args) => this._process.Start();
 
 		protected override void OnStop() => this._process.Stop();
-
-		public override void WriteToConsole(ConsoleColor color, string value) => Console.WriteLine(value);
 	}
 }

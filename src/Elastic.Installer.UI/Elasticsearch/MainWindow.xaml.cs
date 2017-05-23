@@ -288,7 +288,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 		private void RecheckPrequisites()
 		{
 			var javaState = new JavaEnvironmentStateProvider();
-			var esState = new ElasticsearchEnvironmentStateProvider();
+			var esState = ElasticsearchEnvironmentConfiguration.Default;
 			var javaConfig = new JavaConfiguration(javaState);
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esState.ConfigDirectory);
 
