@@ -5,6 +5,7 @@ using ReactiveUI;
 using Semver;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,18 +16,20 @@ namespace Elastic.Installer.Domain.Shared.Model.Closing
 		where TModel : ValidatableReactiveObjectBase<TModel, TModelValidator>
 		where TModelValidator : AbstractValidator<TModel>, new()
 	{
-		public ClosingModelBase(
+		protected ClosingModelBase(
 			SemVersion currentVersion,
 			bool isUpgrade,
 			IObservable<string> hostName,
 			IObservable<string> wixLogFile,
 			IObservable<string> productLog,
+			IObservable<bool> installXPack,
 			IServiceStateProvider serviceStateProvider)
 		{
 			this.Header = "";
 			this.CurrentVersion = currentVersion;
 			this.Host = hostName;
-			this.IsUpgrade = IsUpgrade;
+			this.InstallXPack = installXPack;
+			this.IsUpgrade = isUpgrade;
 			this.WixLogFile = wixLogFile;
 			this.ServiceStateProvider = serviceStateProvider;	
 			this.OpenReference = ReactiveCommand.Create();
@@ -50,6 +53,7 @@ namespace Elastic.Installer.Domain.Shared.Model.Closing
 		public ReactiveCommand<object> OpenProduct { get; protected set; }
 		public IObservable<string> ProductLog { get; protected set; }
 		public IObservable<string> Host { get; protected set; }
+		public IObservable<bool> InstallXPack { get; protected set; }
 
 		ClosingResult? installed;
 		public ClosingResult? Installed

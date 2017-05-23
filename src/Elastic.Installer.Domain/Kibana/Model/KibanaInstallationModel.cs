@@ -67,8 +67,12 @@ namespace Elastic.Installer.Domain.Kibana.Model
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
 			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 			var observeKibanaLog = this.WhenAnyValue(vm => vm.LocationsModel.KibanaLog);
+			var observeInstallXPack = this.PluginsModel.AvailablePlugins.ItemChanged
+				.Where(x => x.PropertyName == nameof(Plugin.Selected) && x.Sender.PluginType == PluginType.XPack)
+				.Select(x => x.Sender.Selected);
+
 			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog,
-				observeKibanaLog, serviceStateProvider);
+				observeKibanaLog, observeInstallXPack, serviceStateProvider);
 
 			this.AllSteps = new ReactiveList<IStep>
 			{

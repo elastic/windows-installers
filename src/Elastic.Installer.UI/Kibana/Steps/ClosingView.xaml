@@ -60,7 +60,7 @@
         <Button Grid.Row="1" Grid.Column="0" x:Name="OpenKibana"  Style="{DynamicResource Link}"
              FontWeight="Bold"
              Margin="6, 12, 0,0"
-             Content="{x:Static resx:ViewResources.ClosingView_KibanaRunningAtHeader}" 
+             Content="{x:Static resx:ViewResources.ClosingView_KibanaRunningAtHeaderWithCredentials}" 
            HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <Button Grid.Row="2" Grid.Column="0" x:Name="OpenGettingStarted"  Style="{DynamicResource Link}" 

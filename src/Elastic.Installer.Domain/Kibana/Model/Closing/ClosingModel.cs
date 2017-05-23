@@ -15,9 +15,10 @@ namespace Elastic.Installer.Domain.Kibana.Model.Closing
 			bool isUpgrade,
 			IObservable<string> hostName, 
 			IObservable<string> wixLogFile, 
-			IObservable<string> kibanaLog, 
+			IObservable<string> kibanaLog,
+			IObservable<bool> installXPack, 
 			IServiceStateProvider serviceStateProvider)
-			: base(currentVersion, isUpgrade, hostName, wixLogFile, kibanaLog, serviceStateProvider)
+			: base(currentVersion, isUpgrade, hostName, wixLogFile, kibanaLog, installXPack, serviceStateProvider)
 		{
 			this.Refresh();
 		}
