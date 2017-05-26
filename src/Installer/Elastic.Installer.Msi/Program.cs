@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using WixSharp;
+using static System.Reflection.Assembly;
 
 namespace Elastic.Installer.Msi
 {
@@ -57,7 +58,7 @@ namespace Elastic.Installer.Msi
 				OutFileName = productName,
 				Version = new Version(version.Split('-')[0]),
 				Actions = dynamicProperties
-					.Concat(System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
+					.Concat(GetExecutingAssembly().GetTypes()
 					.Where(t => t != typeof(CustomAction) && typeof(CustomAction).IsAssignableFrom(t) && !t.IsAbstract)
 					.Select(t => (CustomAction)Activator.CreateInstance(t))
 					.Where(c => c.ProductType == product.GetType())

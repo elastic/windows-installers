@@ -43,8 +43,7 @@ namespace Elastic.Installer.Msi.CustomActions
 				Name = this.Name,
 				Id = this.Name,
 				MethodName = this.Name.Replace("Action", ""),
-				RefAssemblies =
-					new[] { Combine(GetDirectoryName(GetExecutingAssembly().Location), "Elastic.Installer.Domain.dll") },
+				RefAssemblies = new[] { Combine(GetDirectoryName(GetExecutingAssembly().Location), "Elastic.InstallerHosts.dll") },
 				Return = this.Return,
 				When = this.When,
 				Step = this.Step,
