@@ -176,6 +176,12 @@ when not specified
             |> List.distinct
             |> Some
         else None
+    
+    let private (|IsVagrantProvider|_|) candidate =
+        match candidate with 
+        | "local"
+        | "azure" -> Some candidate
+        | _ -> None
 
     let private certAndPasswordFromEnvVariables () =
         trace "getting signing cert and password from environment variables"
@@ -231,21 +237,55 @@ when not specified
                            certAndPasswordFromFile certFile passwordFile
                            All |> List.map (ProductVersion.CreateFromProduct versionFromInDir)
 
+                       | ["integrate"; IsProductList products; IsVersion version; IsVagrantProvider provider; testTargets] ->
+                           setBuildParam "testtargets" testTargets
+                           setBuildParam "vagrantprovider" provider
+                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
                        | ["integrate"; IsProductList products; IsVersion version; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           
+                       | ["integrate"; IsProductList products; IsVersion version; IsVagrantProvider provider] ->
+                           setBuildParam "vagrantprovider" provider
+                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
                        | ["integrate"; IsProductList products; IsVersion version] ->
                            products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           
+                       | ["integrate"; IsVersion version; IsVagrantProvider provider; testTargets] ->
+                           setBuildParam "testtargets" testTargets
+                           setBuildParam "vagrantprovider" provider
+                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)                       
                        | ["integrate"; IsVersion version; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           
+                       | ["integrate"; IsProductList products; IsVagrantProvider provider; testTargets] ->
+                           setBuildParam "testtargets" testTargets
+                           setBuildParam "vagrantprovider" provider
+                           products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)                           
                        | ["integrate"; IsProductList products; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
+                       
+                       | ["integrate"; IsProductList products; IsVagrantProvider provider] ->
+                           setBuildParam "vagrantprovider" provider
+                           products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion) 
                        | ["integrate"; IsProductList products] ->
                            products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
+                           
+                           
+                       | ["integrate"; IsVersion version; IsVagrantProvider provider] ->
+                           setBuildParam "vagrantprovider" provider
+                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)                       
                        | ["integrate"; IsVersion version] ->
                            All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                       | ["integrate"; IsVagrantProvider provider; testTargets] ->
+                           setBuildParam "testtargets" testTargets
+                           setBuildParam "vagrantprovider" provider
+                           All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)      
+                       | ["integrate"; IsVagrantProvider provider] ->
+                           setBuildParam "vagrantprovider" provider
+                           All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)                
                        | ["integrate"; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)

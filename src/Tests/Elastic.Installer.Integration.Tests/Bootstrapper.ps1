@@ -22,7 +22,12 @@ Param(
     [string] $Tests="*",
 
     [Parameter(Mandatory=$true)]
-    [string] $Version
+	[ValidatePattern("\d+\.\d+\.\d+((?:\-[\w\-]+))?")]
+    [string] $Version,
+
+	[Parameter(Mandatory=$false)]
+	[ValidateSet("local", "azure")] 
+	[string] $VagrantProvider="local"
 )
 
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
@@ -31,7 +36,6 @@ Set-Location $currentDir
 # load utils
 . $currentDir\Common\Utils.ps1
 
-# Change this to have more or less verbose messages
 $solutionDir = $(Get-Item $currentDir).Parent.Parent.Parent.FullName
 $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"
 
@@ -39,30 +43,46 @@ $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"
 # Preconditions
 ###############
 
-Add-Vagrant
-Test-AtlasToken
-Test-HyperV
-
 $installer = Get-Installer -location $buildOutDir
 if ($installer -eq $null) {
     log "No installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
-    Exit
+    Exit 1
+}
+
+$testDirs = Get-ChildItem "Tests\$Tests" -Directory
+$testCount = $($testDirs | measure).Count
+
+if ($testCount -eq 0) {
+	log "No tests found matching pattern $Tests" -l Error
+	Exit 0
+}
+
+Add-Vagrant
+
+if ($VagrantProvider -eq "local") {
+	Test-AtlasToken
+	Test-HyperV
+} 
+else {
+	Add-VagrantAzureProvider
+	Add-VagrantAzureBox
 }
 
 ###########
 # Run Tests
 ###########
 
-$testDirs = Get-ChildItem "Tests\$Tests" -Dir
-$Count = $($testDirs | measure).Count
+log "running $testcount test scenario(s)"
+foreach ($dir in $testdirs) {  
+    log "running tests in $dir"
+	Copy-Item "$currentdir\common\vagrantfile" -destination $dir -force
 
-log "running $Count test scenarios"
-
-# copy files needed for each test
-foreach ($dir in $testDirs) {
-    log "Running tests in $dir"
-	Copy-Item "$currentDir\Common\Vagrantfile" -Destination $dir -Force
-    Invoke-IntegrationTests -location $dir -version $Version
+    if ($vagrantprovider -eq "local") {
+	    Invoke-IntegrationTestsOnLocal -Location $dir -Version $version
+    } 
+    else {
+	    Invoke-IntegrationTestsOnAzure -Location $dir -Version $version
+    }
 }
 
 Set-Location $currentDir

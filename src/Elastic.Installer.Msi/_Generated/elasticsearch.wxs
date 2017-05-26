@@ -57,40 +57,6 @@
                 <File Id="log4j2.properties" Source="..\..\build\in\elasticsearch-5.4.0\config\log4j2.properties" />
               </Component>
 
-              <Directory Id="INSTALLDIR.config.scripts" Name="scripts">
-
-                <Component Id="scripts.EmptyDirectory" Guid="daaa2cba-a1ed-4f29-afbf-5478b5fde9df" KeyPath="yes" Win64="yes">
-                  <CreateFolder />
-                  <RemoveFolder Id="INSTALLDIR.config.scripts" On="uninstall" />
-                </Component>
-
-              </Directory>
-            </Directory>
-
-            <Directory Id="INSTALLDIR.data" Name="data">
-              <Directory Id="INSTALLDIR.data.nodes" Name="nodes">
-                <Directory Id="INSTALLDIR.data.nodes.0" Name="0">
-
-                  <Component Id="Component.node.lock" Guid="daaa2cba-a1ed-4f29-afbf-5478ba2a6e90" Win64="yes">
-                    <RemoveFile Id="node.lock" Name="node.lock" On="both" />
-                    <File Id="node.lock" Source="..\..\build\in\elasticsearch-5.4.0\data\nodes\0\node.lock" />
-                  </Component>
-
-                  <Directory Id="INSTALLDIR.data.nodes.0._state" Name="_state">
-
-                    <Component Id="Component.global_32.st" Guid="daaa2cba-a1ed-4f29-afbf-5478d077c260" Win64="yes">
-                      <RemoveFile Id="global_32.st" Name="global_32.st" On="both" />
-                      <File Id="global_32.st" Source="..\..\build\in\elasticsearch-5.4.0\data\nodes\0\_state\global-32.st" />
-                    </Component>
-
-                    <Component Id="Component.node_33.st" Guid="daaa2cba-a1ed-4f29-afbf-5478f91efdf9" Win64="yes">
-                      <RemoveFile Id="node_33.st" Name="node_33.st" On="both" />
-                      <File Id="node_33.st" Source="..\..\build\in\elasticsearch-5.4.0\data\nodes\0\_state\node-33.st" />
-                    </Component>
-
-                  </Directory>
-                </Directory>
-              </Directory>
             </Directory>
 
             <Directory Id="INSTALLDIR.lib" Name="lib">
@@ -263,30 +229,6 @@
               <Component Id="Component.t_digest_3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547811092469" Win64="yes">
                 <RemoveFile Id="t_digest_3.0.jar" Name="t_digest_3.0.jar" On="both" />
                 <File Id="t_digest_3.0.jar" Source="..\..\build\in\elasticsearch-5.4.0\lib\t-digest-3.0.jar" />
-              </Component>
-
-            </Directory>
-
-            <Directory Id="INSTALLDIR.logs" Name="logs">
-
-              <Component Id="Component.elasticsearch.log" Guid="daaa2cba-a1ed-4f29-afbf-5478362f6985" Win64="yes">
-                <RemoveFile Id="elasticsearch.log" Name="elasticsearch.log" On="both" />
-                <File Id="elasticsearch.log" Source="..\..\build\in\elasticsearch-5.4.0\logs\elasticsearch.log" />
-              </Component>
-
-              <Component Id="Component.elasticsearch_deprecation.log" Guid="daaa2cba-a1ed-4f29-afbf-5478f4eec352" Win64="yes">
-                <RemoveFile Id="elasticsearch_deprecation.log" Name="elasticsearch_deprecation.log" On="both" />
-                <File Id="elasticsearch_deprecation.log" Source="..\..\build\in\elasticsearch-5.4.0\logs\elasticsearch_deprecation.log" />
-              </Component>
-
-              <Component Id="Component._...rch_index_indexing_slowlog.log" Guid="daaa2cba-a1ed-4f29-afbf-54784b273286" Win64="yes">
-                <RemoveFile Id="_...rch_index_indexing_slowlog.log" Name="_...rch_index_indexing_slowlog.log" On="both" />
-                <File Id="_...rch_index_indexing_slowlog.log" Source="..\..\build\in\elasticsearch-5.4.0\logs\elasticsearch_index_indexing_slowlog.log" />
-              </Component>
-
-              <Component Id="Component._...earch_index_search_slowlog.log" Guid="daaa2cba-a1ed-4f29-afbf-547806071344" Win64="yes">
-                <RemoveFile Id="_...earch_index_search_slowlog.log" Name="_...earch_index_search_slowlog.log" On="both" />
-                <File Id="_...earch_index_search_slowlog.log" Source="..\..\build\in\elasticsearch-5.4.0\logs\elasticsearch_index_search_slowlog.log" />
               </Component>
 
             </Directory>
@@ -593,12 +535,6 @@
               </Directory>
             </Directory>
           </Directory>
-
-          <Component Id="Elastic" Guid="daaa2cba-a1ed-4f29-afbf-54789d7bb99d" KeyPath="yes" Win64="yes">
-            <CreateFolder />
-            <RemoveFolder Id="Elastic" On="uninstall" />
-          </Component>
-
         </Directory>
       </Directory>
     </Directory>
@@ -686,10 +622,6 @@
       <ComponentRef Id="Component.elasticsearch.yml" />
       <ComponentRef Id="Component.jvm.options" />
       <ComponentRef Id="Component.log4j2.properties" />
-      <ComponentRef Id="scripts.EmptyDirectory" />
-      <ComponentRef Id="Component.node.lock" />
-      <ComponentRef Id="Component.global_32.st" />
-      <ComponentRef Id="Component.node_33.st" />
       <ComponentRef Id="Component.elasticsearch_5.4.0.jar" />
       <ComponentRef Id="Component.HdrHistogram_2.1.9.jar" />
       <ComponentRef Id="Component.hppc_0.7.1.jar" />
@@ -724,10 +656,6 @@
       <ComponentRef Id="Component.snakeyaml_1.15.jar" />
       <ComponentRef Id="Component.spatial4j_0.6.jar" />
       <ComponentRef Id="Component.t_digest_3.0.jar" />
-      <ComponentRef Id="Component.elasticsearch.log" />
-      <ComponentRef Id="Component.elasticsearch_deprecation.log" />
-      <ComponentRef Id="Component._...rch_index_indexing_slowlog.log" />
-      <ComponentRef Id="Component._...earch_index_search_slowlog.log" />
       <ComponentRef Id="Component.aggs_matrix_stats_5.4.0.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties" />
       <ComponentRef Id="Component.ingest_common_5.4.0.jar" />
@@ -780,7 +708,6 @@
       <ComponentRef Id="Component.plugin_descriptor.properties.9" />
       <ComponentRef Id="Component.plugin_security.policy.5" />
       <ComponentRef Id="Component.transport_netty4_5.4.0.jar" />
-      <ComponentRef Id="Elastic" />
     </Feature>
 
     <InstallExecuteSequence>

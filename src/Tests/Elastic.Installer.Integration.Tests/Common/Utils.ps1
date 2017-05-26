@@ -26,7 +26,7 @@ function Write-Log {
         $DebugPreference = 'Continue'
     }
     Process {
-        $FormattedDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        $FormattedDate = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ssZ")
         $LogMessage = "[$FormattedDate] [$($Level.ToUpper().PadRight(7, ' '))] $Message"
         switch ($Level)
         {
@@ -43,7 +43,7 @@ function Write-Log {
                 Write-Debug $LogMessage
             }
             'Default' {
-                Write-Host $LogMessage
+                Write-Output $LogMessage
             }
         }
 
@@ -77,6 +77,23 @@ function Set-ProductionMode() {
     $Global:DebugPreference = "SilentlyContinue"
     $Global:VerbosePreference = "SilentlyContinue"
     Set-StrictMode -Off
+}
+
+function ReplaceInFile($File, $Replacements) {
+    $content = Get-Content $File
+    
+    foreach($key in $Replacements.Keys) {
+        $content = $content.Replace($key, $Replacements.$key)
+    }
+
+    Set-Content -Path $File -Value $content
+}
+
+function Get-RandomName($Count=60) {
+    $start = -join ([char][int]((97..122) | Get-Random))
+    $middle = -join (0..$Count|%{[char][int]((97..122) + (48..57) +(45) | Get-Random)})
+    $end = -join ([char][int]((97..122) + (48..57) | Get-Random))
+    return $start + $middle + $end
 }
 
 function Get-ProgramFilesFolder() {
@@ -134,6 +151,42 @@ function Add-Vagrant() {
     Add-Cygpath
 }
 
+function Add-VagrantAzureProvider() {
+	$vagrantAzurePlugin = "vagrant-azure"
+	$plugins = vagrant plugin list
+	foreach ($plugin in $plugins) { 
+		if ($plugin.Contains($vagrantAzurePlugin)) {
+			log "$vagrantAzurePlugin plugin is already installed" -l Debug
+			return
+		}
+	}
+    
+    $pluginVersion = "2.0.0.pre8"
+
+	vagrant plugin install $vagrantAzurePlugin --plugin-version $pluginVersion
+
+    $vagrantAzureRunInstanceFile = [Environment]::ExpandEnvironmentVariables("%USERPROFILE%\.vagrant.d\gems\2.2.5\gems\vagrant-azure-$pluginVersion\lib\vagrant-azure\action\run_instance.rb")
+    $replacements = @{
+        'env[:ui].info(" -- Subscription Id: #{config.subscription_id}")' = 'env[:ui].info(" -- Subscription Id: <redacted>")'
+        'env[:ui].info(" -- Admin Username: #{admin_user_name}")' = 'env[:ui].info(" -- Admin Username: <redacted>")'
+    }
+
+    ReplaceInFile -File $vagrantAzureRunInstanceFile -Replacements $replacements
+}
+
+function Add-VagrantAzureBox() {
+	$vagrantAzureBox = "azure"
+	$boxes = vagrant box list
+	foreach ($box in $boxes) { 
+		if ($box.Contains($vagrantAzureBox)) {
+			log "$vagrantAzureBox box exists" -l Debug
+			return
+		}
+	}
+
+	vagrant box add $vagrantAzureBox https://github.com/azure/vagrant-azure/raw/v2.0/dummy.box --provider azure
+}
+
 function Add-Git() {
     $gitpath = where.exe git
     if (!$gitpath) {
@@ -158,13 +211,80 @@ function Add-Cygpath() {
     }
 }
 
-function Invoke-IntegrationTests($location, $version) {
-    cd $location
-    vagrant up
-    # run the pester bootstrapper on the target machine, from the target machine's synced folder.
-    # TODO: Get other streams written back to host e.g. error stream, debug stream, etc.
-    vagrant powershell -c "C:\common\PesterBootstrap.ps1 -Version $version"
-    vagrant destroy -f
+function Get-WinRmSession($DnsName) {
+	# using self-signed cert so skip certificate checks
+	$sessionOptions = New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck
+	$securePassword = ConvertTo-SecureString -AsPlainText -Force -String $env:AZURE_ADMIN_PASSWORD
+	$credentials = New-Object -Typename System.Management.Automation.PSCredential -ArgumentList $env:AZURE_ADMIN_USERNAME, $securePassword
+	
+	$session = New-PSSession -ComputerName "$DnsName.westeurope.cloudapp.azure.com" `
+				-Credential $credentials -UseSSL -SessionOption $SessionOptions -ErrorAction "stop" 
+	
+    return $session
+}
+
+function Copy-SyncedFoldersToRemote($Session) {	
+	$syncFolders = @{
+		"./../../Common/" = "/common"
+      	"./../../../../../build/out/" = "/out"
+      	"./" = "/vagrant"
+	}
+	
+	foreach($syncFolderKey in $syncFolders.Keys) {
+		Copy-Item -Path $syncFolderKey -Destination "C:$($syncFolders.$syncFolderKey)" -Recurse -Force -ToSession $Session
+	}
+}
+
+function Copy-SyncedFoldersFromRemote($Session) {
+	$syncFolders = @{
+		"/vagrant/*.log" = "."
+      	"/out/*.xml" = "./../../../../../build/out"
+	}
+	
+	foreach($syncFolderKey in $syncFolders.Keys) {
+		Copy-Item -Path "C:$syncFolderKey" -Destination "$($syncFolders.$syncFolderKey)" -Recurse -Force -FromSession $session
+	}
+}
+
+function Invoke-IntegrationTestsOnLocal($Location, $Version, $VagrantProvider) {
+    cd $Location  
+    $testDirName = Split-Path $Location -Leaf
+    
+    vagrant destroy local -f
+    vagrant up local    
+    vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+    vagrant destroy local -f
+}
+
+function Invoke-IntegrationTestsOnAzure($Location, $Version) {
+    cd $Location
+
+    $dnsName = Get-RandomName
+    $testDirName = Split-Path $Location -Leaf
+    $resourceGroupName = $testDirName + "-" + (Get-RandomName -Count $(59 - $testDirName.Length))
+
+    $replacements = @{
+        "AZURE_DNS_NAME" = $dnsName
+        "AZURE_RESOURCE_GROUP_NAME" = $resourceGroupName
+    }
+
+    ReplaceInFile -File "Vagrantfile" -Replacements $replacements
+
+    vagrant destroy azure -f
+    vagrant up azure
+    
+    $session = Get-WinRmSession -DnsName $dnsName
+    Copy-SyncedFoldersToRemote -Session $session
+    	
+	vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+    	
+    Copy-SyncedFoldersFromRemote -Session $session
+    Remove-PSSession $session
+
+    # don't wait for the destruction
+    ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }
+   
+    vagrant destroy azure -f
 }
 
 function Get-Installer([string] $location, $product) {
@@ -223,7 +343,7 @@ function Invoke-SilentInstall {
     $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/i $Exe /qn /l install.log $QuotedArgs" -Wait -PassThru).ExitCode
 
     if ($ExitCode) {
-        Write-Host "last exit code not zero: $ExitCode"
+        Write-Output "last exit code not zero: $ExitCode"
         log "last exit code not zero: $ExitCode" -l Error
     }
 

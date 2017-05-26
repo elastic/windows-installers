@@ -3,16 +3,12 @@
 #r "FakeLib.dll"
 
 open System
-open System.Diagnostics
 open System.Globalization
 open System.Text
 open System.IO
 open System.Text.RegularExpressions
-open Microsoft.FSharp.Reflection
 open Fake
 open Fake.FileHelper
-open FSharp.Data
-open FSharp.Text.RegexProvider
 
 module Paths =
 
