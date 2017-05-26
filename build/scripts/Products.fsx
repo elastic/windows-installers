@@ -19,11 +19,12 @@ module Paths =
     let ResultsDir = BuildDir @@ "results/"
 
     let SrcDir = "./src/"
-    let MsiDir = SrcDir @@ "Elastic.Installer.Msi/"
+    let ProcessHostsDir = SrcDir @@ "ProcessHosts/"
+    let MsiDir = SrcDir @@ "Installer/Elastic.Installer.Msi/"
     let MsiBuildDir = MsiDir @@ "bin/Release/"
 
     let IntegrationTestsDir = FullName "./src/Tests/Elastic.Installer.Integration.Tests"
-    let UnitTestsDir = "src/Tests/Elastic.Installer.Domain.Tests"
+    let UnitTestsDir = "src/Tests/Elastic.Domain.Tests"
 
     let ArtifactDownloadsUrl = "https://artifacts.elastic.co/downloads"
 
@@ -80,7 +81,7 @@ module Products =
         member this.BinDir = InDir @@ sprintf "%s-%s/bin/" this.Name this.Version.FullVersion
 
         member this.ServiceDir =
-            SrcDir @@ this.Title @@ sprintf "Elastic.Installer.%s.Process/" this.Title
+            ProcessHostsDir @@ sprintf "Elastic.ProcessHosts.%s/" this.Title
 
         member this.ServiceBinDir = this.ServiceDir @@ "bin/AnyCPU/Release/"
 

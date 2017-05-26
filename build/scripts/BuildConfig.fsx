@@ -22,7 +22,7 @@ module BuildConfig =
 
     //ugly :)
     let private writeProductGuids = fun(config: TypedConfig) ->
-        let file = __SOURCE_DIRECTORY__ </> "../../src/Elastic.Installer.Domain" </> "ProductGuids.cs"
+        let file = __SOURCE_DIRECTORY__ </> "../../src/Installer/Elastic.Installer.Domain" </> "ProductGuids.cs"
         WriteStringToFile false file """using System;
 using System.Collections.Generic;
 

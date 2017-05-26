@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Weavers>
+	<!-- this could potentially be smarter in its selection since it'll include
+	the already packed Elastic.InstallerHosts and its dependencies multiple times. -->
+	<Costura IncludeDebugSymbols='false'/>
+</Weavers>

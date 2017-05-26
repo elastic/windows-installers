@@ -1,0 +1,150 @@
+﻿<controls:StepControl  x:Class="Elastic.Installer.UI.Elasticsearch.Steps.ClosingView"
+             x:TypeArguments="closing:ClosingModel, steps:ClosingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
+             xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
+             xmlns:closing="clr-namespace:Elastic.Installer.Domain.Model.Elasticsearch.Closing;assembly=Elastic.Installer.Domain"
+             xmlns:steps="clr-namespace:Elastic.Installer.UI.Elasticsearch.Steps"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="600">
+
+  <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0" Grid.Column="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="ResultTitleLabel" 
+             HorizontalAlignment="Left" FontSize="34" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+
+      <TextBox Grid.Row="1" Grid.Column="0" x:Name="ResultParagraphLabel" 
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" 
+               TextWrapping="Wrap"
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
+               ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+    </Grid>
+    <StackPanel Grid.Row="1" Grid.Column="0">
+      <Grid x:Name="GridSuccess" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+             Content="{x:Static resx:ViewResources.ClosingView_SubTitleSuccess}" 
+           HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+   
+        <Button Grid.Row="1" Grid.Column="0" x:Name="OpenElasticsearch"  Style="{DynamicResource Link}"
+             FontWeight="Bold"
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.ClosingView_ElasticsearchRunningAtHeaderWithCredentials}" 
+           HorizontalAlignment="Left" VerticalAlignment="Top" />
+        
+        <Button Grid.Row="2" Grid.Column="0" x:Name="OpenGettingStarted"  Style="{DynamicResource Link}" 
+             FontWeight="Bold" 
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.ClosingView_ReadDefinitiveGuide}"
+             HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Button Grid.Row="3" Grid.Column="0" x:Name="OpenReference"  Style="{DynamicResource Link}" 
+             FontWeight="Bold" 
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.ClosingView_ReadTheReference}"
+             HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Button Grid.Row="4" Grid.Column="0" x:Name="OpenFindYourClient"  Style="{DynamicResource Link}" 
+             FontWeight="Bold" 
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.ClosingView_FindYourClient}" 
+             HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ReadTheDocsOnCloseCheckBox"
+                  Content="{x:Static resx:ViewResources.ClosingView_ReadTheDocsOnCloseCheckBox}" FontSize="18" 
+                  Margin="6 20 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+  </Grid>
+      <Grid x:Name="GridFailed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SubTitleFailed"
+               Content="{x:Static resx:ViewResources.ClosingView_SubTitleFailed}" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+
+        <Button Grid.Row="1" Grid.Column="0" x:Name="OpenInstallationLog"  Style="{DynamicResource Link}"
+             FontWeight="Bold"
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.ClosingView_OpenInstallationLog}" 
+             HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <Button Grid.Row="2" Grid.Column="0" x:Name="OpenElasticsearchLog"  Style="{DynamicResource Link}"
+             FontWeight="Bold"
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.ClosingView_OpenElasticsearchLog}" 
+             HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
+        <Button Grid.Row="3" Grid.Column="0" x:Name="OpenIssues"  Style="{DynamicResource Link}" 
+             FontWeight="Bold" 
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.ClosingView_OpenIssues}"
+             HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+      </Grid>
+      <Grid x:Name="GridCancelled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      </Grid>
+      <Grid x:Name="GridPreempted" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" x:Name="PreemptReasonLabel"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding PrerequisiteFailures}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding StringFormat='• {0}'}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+
+      </Grid>
+    </StackPanel>
+
+  </Grid>
+</controls:StepControl>

@@ -1,0 +1,86 @@
+﻿<controls:StepControl x:Class="Elastic.Installer.UI.Kibana.Steps.ConnectingView"
+             x:TypeArguments="connecting:ConnectingModel, steps:ConnectingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
+             xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:steps="clr-namespace:Elastic.Installer.UI.Kibana.Steps"
+             xmlns:connecting="clr-namespace:Elastic.Installer.Domain.Model.Kibana.Connecting;assembly=Elastic.Installer.Domain"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance d:Type=connecting:ConnectingModel }"
+             d:DesignHeight="500" d:DesignWidth="900">
+
+  <Grid>
+    <Grid.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceDictionary Source="pack://application:,,,/Elastic.Installer.UI;component/ResourceDictionary.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+    </Grid.Resources>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ElasticsearchLabel" Content="{x:Static resx:ViewResources.ConnectingView_ElasticsearchLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150" />
+        <ColumnDefinition Width="400" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="UrlLabel" Content="{x:Static resx:ViewResources.ConnectingView_UrlLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="0" Grid.Column="1" x:Name="UrlTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <Label Grid.Row="1" Grid.Column="0" x:Name="IndexLabel" Content="{x:Static resx:ViewResources.ConnectingView_IndexNameLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+      <TextBox Grid.Row="1" Grid.Column="1" x:Name="IndexTextBox" HorizontalAlignment="Stretch" Height="30" TextWrapping="Wrap" VerticalAlignment="Center" />
+    </Grid>
+    <Label Grid.Row="2" Grid.Column="0" x:Name="CredentialsLabel" Content="{x:Static resx:ViewResources.ConnectingView_CredentialsLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
+    <Grid Grid.Row="3">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150" />
+        <ColumnDefinition Width="400" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="UsernameLabel" Content="{x:Static resx:ViewResources.ConnectingView_UsernameLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="0" Grid.Column="1" x:Name="UsernameTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <Label Grid.Row="1" Grid.Column="0" x:Name="PasswordLabel" Content="{x:Static resx:ViewResources.ConnectingView_PasswordLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="PasswordTextBox" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+    </Grid>
+    <Label Grid.Row="4" Grid.Column="0" x:Name="CertificatesLabel" Content="{x:Static resx:ViewResources.ConnectingView_CertificatesLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"   Style="{DynamicResource DescriptionHeaderStyle}"/>
+    <Grid Grid.Row="5">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="100"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+        <RowDefinition Height="35"/>
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="ElasticsearchCertificateLabel" Content="{x:Static resx:ViewResources.ConnectingView_ElasticsearchCertLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="0" Grid.Column="1" x:Name="ElasticsearchCertificateTextBox" HorizontalAlignment="Stretch" Height="30" Margin="0,0,5,0" VerticalAlignment="Center" />
+      <Button Grid.Row="0" Grid.Column="2" x:Name="ElasticsearchCertificateBrowseButton" Content="{x:Static resx:ViewResources.ConnectingView_BrowseButton}" Height="30" VerticalAlignment="Center" />
+      <Label Grid.Row="1" Grid.Column="0" x:Name="ElasticsearchKeyLabel" Content="{x:Static resx:ViewResources.ConnectingView_ElasticsearchKeyLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="1" Grid.Column="1" x:Name="ElasticsearchKeyTextbox" HorizontalAlignment="Stretch" Height="30" Margin="0,0,5,0"  VerticalAlignment="Center" />
+      <Button Grid.Row="1" Grid.Column="2" x:Name="ElasticsearchKeyBrowseButton" Content="{x:Static resx:ViewResources.ConfigurationView_BrowseButton}" Height="30" VerticalAlignment="Center" />
+      <Label Grid.Row="2" Grid.Column="0" x:Name="ElasticsearchCALabel" Content="{x:Static resx:ViewResources.ConnectingView_ElasticsearchCALabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox Grid.Row="2" Grid.Column="1" x:Name="ElasticsearchCATextBox" HorizontalAlignment="Stretch" Height="30" Margin="0,0,5,0"  VerticalAlignment="Center" />
+      <Button Grid.Row="2" Grid.Column="2" x:Name="ElasticsearchCABrowseButton" Content="{x:Static resx:ViewResources.ConnectingView_BrowseButton}" Height="30" VerticalAlignment="Center" />
+    </Grid>
+  </Grid>
+</controls:StepControl>
