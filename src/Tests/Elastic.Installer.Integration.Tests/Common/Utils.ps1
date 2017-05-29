@@ -291,6 +291,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
 	catch {
 		$ErrorMessage = $_.Exception.ToString()
 		log $ErrorMessage -l Error
+		Exit 1
 	}
 	finally {
 		# don't wait for the destruction
