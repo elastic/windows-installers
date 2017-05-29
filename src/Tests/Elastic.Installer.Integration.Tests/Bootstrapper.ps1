@@ -30,13 +30,13 @@ Param(
 	[string] $VagrantProvider="local"
 )
 
-$ErrorActionPreference = "Stop"
-
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 Set-Location $currentDir
 
 # load utils
 . $currentDir\Common\Utils.ps1
+
+Set-DebugMode
 
 $solutionDir = $(Get-Item $currentDir).Parent.Parent.Parent.FullName
 $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"

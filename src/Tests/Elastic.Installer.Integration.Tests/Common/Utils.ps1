@@ -111,7 +111,7 @@ function Set-RemoteSignedExecutionPolicy() {
 }
 
 function Add-Chocolatey() {
-    $choco = where.exe choco
+    $choco = where.exe choco 2>$null
     if (!$choco) {
         log "chocolatey not installed on machine. installing now" -l Debug
         Set-RemoteSignedExecutionPolicy
@@ -140,7 +140,7 @@ function Test-HyperV() {
 }
 
 function Add-Vagrant() {
-    $vagrant = where.exe vagrant
+    $vagrant = where.exe vagrant 2>$null
     if (!$vagrant) {
         log "vagrant not installed on machine. installing now" -l Debug
         Add-Chocolatey
@@ -188,7 +188,7 @@ function Add-VagrantAzureBox() {
 }
 
 function Add-Git() {
-    $gitpath = where.exe git
+    $gitpath = where.exe git 2>$null
     if (!$gitpath) {
         log "git not installed on machine. installing now" -l Debug
         Add-Chocolatey
@@ -199,7 +199,7 @@ function Add-Git() {
 
 # required to be in the PATH for Vagrant
 function Add-Cygpath() {
-    $cygpath = where.exe cygpath
+    $cygpath = where.exe cygpath 2>$null
     if (!$cygpath) {
         Add-Git
         $gitpath = where.exe git
