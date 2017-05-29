@@ -244,7 +244,7 @@ function Copy-SyncedFoldersFromRemote($Session) {
 	}
 	
 	foreach($syncFolderKey in $syncFolders.Keys) {
-		Copy-Item -Path "C:$syncFolderKey" -Destination "$($syncFolders.$syncFolderKey)" -Recurse -Force -FromSession $session
+		Copy-Item -Path "C:$syncFolderKey" -Destination "$($syncFolders.$syncFolderKey)" -Recurse -Force -FromSession $Session
 	}
 }
 
@@ -274,15 +274,23 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
     vagrant destroy azure -f
 
 	try {
+		log "Bring vagrant azure up"
 		vagrant up azure
-		
+		log "vagrant azure up and running"
+		log "Get WinRM session"
 		$session = Get-WinRmSession -DnsName $dnsName
+		log "Copy test files to remote machine"
 		Copy-SyncedFoldersToRemote -Session $session
-			
+		log "Run Pester bootstrap"	
 		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
-			
+		log "Copy test results back to local machine"	
 		Copy-SyncedFoldersFromRemote -Session $session
+		log "Remove WinRM session"
 		Remove-PSSession $session
+	}
+	catch {
+		$ErrorMessage = $_.Exception.ToString()
+		log $ErrorMessage -l Error
 	}
 	finally {
 		# don't wait for the destruction
