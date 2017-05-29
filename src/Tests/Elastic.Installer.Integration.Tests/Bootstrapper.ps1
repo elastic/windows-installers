@@ -30,6 +30,8 @@ Param(
 	[string] $VagrantProvider="local"
 )
 
+$ErrorActionPreference = "Stop"
+
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 Set-Location $currentDir
 
@@ -43,7 +45,7 @@ $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"
 # Preconditions
 ###############
 
-$installer = Get-Installer -location $buildOutDir
+$installer = Get-Installer -location $buildOutDir -Version $Version
 if ($installer -eq $null) {
     log "No installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
     Exit 1
@@ -73,15 +75,15 @@ else {
 ###########
 
 log "running $testcount test scenario(s)"
-foreach ($dir in $testdirs) {  
+foreach ($dir in $testDirs) {  
     log "running tests in $dir"
-	Copy-Item "$currentdir\common\vagrantfile" -destination $dir -force
+	Copy-Item "$currentDir\common\Vagrantfile" -Destination $dir -Force
 
-    if ($vagrantprovider -eq "local") {
-	    Invoke-IntegrationTestsOnLocal -Location $dir -Version $version
+    if ($VagrantProvider -eq "local") {
+	    Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version
     } 
     else {
-	    Invoke-IntegrationTestsOnAzure -Location $dir -Version $version
+	    Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version
     }
 }
 

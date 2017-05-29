@@ -212,13 +212,15 @@ function Add-Cygpath() {
 }
 
 function Get-WinRmSession($DnsName) {
+	$computerName = "$DnsName.westeurope.cloudapp.azure.com"
+	log "Create WinRM session to $computerName"
 	# using self-signed cert so skip certificate checks
 	$sessionOptions = New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck
 	$securePassword = ConvertTo-SecureString -AsPlainText -Force -String $env:AZURE_ADMIN_PASSWORD
 	$credentials = New-Object -Typename System.Management.Automation.PSCredential -ArgumentList $env:AZURE_ADMIN_USERNAME, $securePassword
 	
-	$session = New-PSSession -ComputerName "$DnsName.westeurope.cloudapp.azure.com" `
-				-Credential $credentials -UseSSL -SessionOption $SessionOptions -ErrorAction "stop" 
+	$session = New-PSSession -ComputerName $computerName `
+				-Credential $credentials -UseSSL -SessionOption $SessionOptions -ErrorAction "Stop" 
 	
     return $session
 }
@@ -269,43 +271,50 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
     }
 
     ReplaceInFile -File "Vagrantfile" -Replacements $replacements
-
     vagrant destroy azure -f
-    vagrant up azure
-    
-    $session = Get-WinRmSession -DnsName $dnsName
-    Copy-SyncedFoldersToRemote -Session $session
-    	
-	vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
-    	
-    Copy-SyncedFoldersFromRemote -Session $session
-    Remove-PSSession $session
 
-    # don't wait for the destruction
-    ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }
-   
-    vagrant destroy azure -f
+	try {
+		vagrant up azure
+		
+		$session = Get-WinRmSession -DnsName $dnsName
+		Copy-SyncedFoldersToRemote -Session $session
+			
+		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+			
+		Copy-SyncedFoldersFromRemote -Session $session
+		Remove-PSSession $session
+	}
+	finally {
+		# don't wait for the destruction
+		ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }
+	   
+		vagrant destroy azure -f
+    }
 }
 
-function Get-Installer([string] $location, $product) {
-	if (!$product) {
-		$product = "elasticsearch"
+function Get-Installer([string] $Location, $Product, $Version) {
+	if (!$Product) {
+		$Product = "elasticsearch"
 	}
 
-	if (!$location) {
-		$location = ".\..\out"
+	if (!$Location) {
+		$Location = ".\..\out"
 	}
 
-	$exePath = "$location\$product\$product*.msi"
-	Write-Log "get windows installer from $exePath" -l Debug        
-	return Get-ChildItem $exePath
+	$exePath = "$Location\$Product\$Product-$Version.msi"
+	log "get windows installer from $exePath" -l Debug   
+
+    if (!(Test-Path $exePath)) {
+        log "No installer found at $exePath" -l Error
+    }
+     
+	return Get-Item $exePath
 }
 
 function Add-Quotes (
         [System.Collections.ArrayList]
         [Parameter(Position=0)]
-        $Exeargs)
-{
+        $Exeargs) {
 
     if (!$Exeargs) {
         return New-Object "System.Collections.ArrayList"
