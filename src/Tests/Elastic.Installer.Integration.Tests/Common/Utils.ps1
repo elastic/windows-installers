@@ -211,21 +211,32 @@ function Add-Cygpath() {
     }
 }
 
+function Invoke-IntegrationTestsOnLocal($Location, $Version, $VagrantProvider) {
+    cd $Location  
+    $testDirName = Split-Path $Location -Leaf
+    vagrant destroy local -f
+
+	try {
+		vagrant up local    
+		vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+	}
+	finally {
+		vagrant destroy local -f
+	}
+}
+
 function Get-WinRmSession($DnsName) {
-	$computerName = "$DnsName.westeurope.cloudapp.azure.com"
-	log "Create WinRM session to $computerName"
+	$name = "$DnsName.westeurope.cloudapp.azure.com"
 	# using self-signed cert so skip certificate checks
 	$sessionOptions = New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck
 	$securePassword = ConvertTo-SecureString -AsPlainText -Force -String $env:AZURE_ADMIN_PASSWORD
 	$credentials = New-Object -Typename System.Management.Automation.PSCredential -ArgumentList $env:AZURE_ADMIN_USERNAME, $securePassword
-	
-	$session = New-PSSession -ComputerName $computerName `
-				-Credential $credentials -UseSSL -SessionOption $SessionOptions -ErrorAction "Stop" 
-	
-    return $session
+
+	return New-PSSession -ComputerName $name -Credential $credentials `
+            -UseSSL -SessionOption $SessionOptions -ErrorAction "Stop"
 }
 
-function Copy-SyncedFoldersToRemote($Session) {	
+function Copy-SyncedFoldersToRemote([System.Management.Automation.Runspaces.PSSession]$Session) {	
 	$syncFolders = @{
 		"./../../Common/" = "/common"
       	"./../../../../../build/out/" = "/out"
@@ -237,7 +248,7 @@ function Copy-SyncedFoldersToRemote($Session) {
 	}
 }
 
-function Copy-SyncedFoldersFromRemote($Session) {
+function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PSSession]$Session) {
 	$syncFolders = @{
 		"/vagrant/*.log" = "."
       	"/out/*.xml" = "./../../../../../build/out"
@@ -248,19 +259,8 @@ function Copy-SyncedFoldersFromRemote($Session) {
 	}
 }
 
-function Invoke-IntegrationTestsOnLocal($Location, $Version, $VagrantProvider) {
-    cd $Location  
-    $testDirName = Split-Path $Location -Leaf
-    
-    vagrant destroy local -f
-    vagrant up local    
-    vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
-    vagrant destroy local -f
-}
-
 function Invoke-IntegrationTestsOnAzure($Location, $Version) {
     cd $Location
-
     $dnsName = Get-RandomName
     $testDirName = Split-Path $Location -Leaf
     $resourceGroupName = $testDirName + "-" + (Get-RandomName -Count $(59 - $testDirName.Length))
@@ -274,18 +274,12 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
     vagrant destroy azure -f
 
 	try {
-		log "Bring vagrant azure up"
 		vagrant up azure
-		log "vagrant azure up and running"
-		log "Get WinRM session"
-		$session = Get-WinRmSession -DnsName $dnsName
-		log "Copy test files to remote machine"
+		$session = [System.Management.Automation.Runspaces.PSSession](Get-WinRmSession -DnsName $dnsName)
 		Copy-SyncedFoldersToRemote -Session $session
 		log "Run Pester bootstrap"	
 		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
-		log "Copy test results back to local machine"	
 		Copy-SyncedFoldersFromRemote -Session $session
-		log "Remove WinRM session"
 		Remove-PSSession $session
 	}
 	catch {
@@ -295,8 +289,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
 	}
 	finally {
 		# don't wait for the destruction
-		ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }
-	   
+		ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }   
 		vagrant destroy azure -f
     }
 }
