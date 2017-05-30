@@ -39,6 +39,21 @@ module Products =
             match this with
             | Elasticsearch -> "elasticsearch"
             | Kibana -> "kibana"
+            
+        member this.AssemblyTitle =
+            match this with
+            | Elasticsearch -> "Elasticsearch, you know for search!"
+            | Kibana -> "kibana"
+            
+        member this.AssemblyDescription =
+            match this with
+            | Elasticsearch -> "Elasticsearch is a distributed, RESTful search and analytics engine capable of solving a growing number of use cases. As the heart of the Elastic Stack, it centrally stores your data so you can discover the expected and uncover the unexpected."
+            | Kibana -> "kibana"
+            
+        member this.AssemblyGuid =
+            match this with
+            | Elasticsearch -> "d4fb307f-cb1d-4026-bd28-ca1d0016d709"
+            | Kibana -> "ffb9da32-12fa-4c9d-a5bd-06cddae74fd4"
 
         member this.Title =
             CultureInfo.InvariantCulture.TextInfo.ToTitleCase this.Name

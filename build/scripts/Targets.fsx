@@ -67,11 +67,19 @@ Target "UnitTest" (fun () ->
 Target "PruneFiles" (fun () ->
     let prune files directory =
         let keep = files |> Seq.map (fun n -> directory @@ n)
-        for file in System.IO.Directory.EnumerateFiles(directory) do
-            if keep |> Seq.exists (fun n -> n <> file) then System.IO.File.Delete(file)
-
+        Directory.EnumerateFiles(directory) 
+        |> Seq.except keep
+        |> Seq.iter File.Delete
+        
     productsToBuild
-    |> List.iter(fun p -> prune [sprintf "%s-plugin.bat" p.Name] p.BinDir)
+    |> List.iter(fun p -> 
+        prune [
+            sprintf "%s-plugin.bat" p.Name;
+            sprintf "%s-translog.bat" p.Name;
+            sprintf "%s-keystore.bat" p.Name
+            ] 
+            p.BinDir
+      )
 )
 
 Target "BuildServices" (fun () ->

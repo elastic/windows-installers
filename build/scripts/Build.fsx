@@ -11,7 +11,9 @@ open System.IO
 open System.Text.RegularExpressions
 open Microsoft.FSharp.Reflection
 open Fake
+open Fake.AssemblyInfoFile
 open Fake.FileHelper
+open Fake.Git
 open Fake.Testing.XUnit2
 open Products.Products
 open Products.Paths
@@ -65,12 +67,29 @@ module Builder =
 
             let exitCode = sign()
             if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" product.Title exitCode
-
+    
+    let patchAssemblyInformation (product: ProductVersion) = 
+        let version = product.Version.ToString()
+        let commitHash = Information.getCurrentHash()
+        let file = product.ServiceDir @@ "Properties" @@ "AssemblyInfo.cs"
+        CreateCSharpAssemblyInfo file
+            [Attribute.Title product.Product.AssemblyTitle
+             Attribute.Description product.Product.AssemblyDescription
+             Attribute.Guid product.Product.AssemblyGuid
+             Attribute.Product product.Product.Title
+             Attribute.Metadata("GitBuildHash", commitHash) 
+             Attribute.Company  "Elasticsearch BV"
+             Attribute.Copyright "Apache License, version 2 (ALv2). Copyright Elasticsearch."
+             Attribute.Trademark (sprintf "%s is a trademark of Elasticsearch BV, registered in the U.S. and in other countries." product.Product.Title)
+             Attribute.Version  version
+             Attribute.FileVersion version]
+    
     let BuildService (product : ProductVersion) =
+        patchAssemblyInformation product 
         !! (product.ServiceDir @@ "*.csproj")
         |> MSBuildRelease product.ServiceBinDir "Build"
         |> ignore
-        let serviceAssembly = product.ServiceBinDir @@ (sprintf "Elastic.ProcessHosts.%s.exe" product.Title)
+        let serviceAssembly = product.ServiceBinDir @@ (sprintf "%s.exe" product.Name)
         let service = product.BinDir @@ (sprintf "%s.exe" product.Name)
         CopyFile service serviceAssembly
         Sign service product
