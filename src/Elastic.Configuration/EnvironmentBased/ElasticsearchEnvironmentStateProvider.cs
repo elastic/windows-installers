@@ -8,13 +8,16 @@ namespace Elastic.Configuration.EnvironmentBased
 
 	public interface IElasticsearchEnvironmentStateProvider
 	{
+		string RunningExecutableLocation { get; }
+		
 		string HomeDirectoryUserVariable { get; }
 		string HomeDirectoryMachineVariable { get; }
-		string RunningExecutableLocation { get; }
+		
 
 		string ConfigDirectoryUserVariable { get; }
 		string ConfigDirectoryMachineVariable { get; }
 
+		string GetEnvironmentVariable(string variable);
 
 		void SetEsHomeEnvironmentVariable(string esHome);
 		void SetEsConfigEnvironmentVariable(string esConfig);
@@ -30,6 +33,11 @@ namespace Elastic.Configuration.EnvironmentBased
 
 		public string ConfigDirectoryUserVariable => Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.User);
 		public string ConfigDirectoryMachineVariable => Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.Machine);
+
+		public string GetEnvironmentVariable(string variable) =>
+			Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Machine)
+			?? Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.User)
+			?? Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Process);
 
 		public void SetEsHomeEnvironmentVariable(string esHome) =>
 			Environment.SetEnvironmentVariable("ES_HOME", esHome, EnvironmentVariableTarget.Machine);
@@ -98,6 +106,8 @@ namespace Elastic.Configuration.EnvironmentBased
 				return string.IsNullOrEmpty(homeDir) ? null : Path.Combine(homeDir, "config");
 			}
         }
+
+		public string GetEnvironmentVariable(string variable) => this.StateProvider.GetEnvironmentVariable(variable);
 
 		public void SetEsHomeEnvironmentVariable(string esHome) => StateProvider.SetEsHomeEnvironmentVariable(esHome);
 

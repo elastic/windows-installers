@@ -1,4 +1,7 @@
-﻿using Elastic.Configuration.EnvironmentBased;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using Elastic.Configuration.EnvironmentBased;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 {
@@ -9,10 +12,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		private string _esExecutable;
 		private string _esConfigMachine;
 		private string _esConfigUser;
+		private Dictionary<string, string> _mockVariables = new Dictionary<string, string>();
 
 		public string LastSetEsHome { get; set; }
 		public string LastSetEsConfig { get; set; }
 
+		public string GetEnvironmentVariable(string variable) => _mockVariables.TryGetValue(variable, out string v) ? v : null;
+
+		public MockElasticsearchEnvironmentStateProvider EnvironmentVariables(Dictionary<string, string> variables)
+		{
+			this._mockVariables = variables;
+			return this;
+		}
 		public MockElasticsearchEnvironmentStateProvider EsHomeMachineVariable(string esHome)
 		{
 			this._esHomeMachine = esHome;
