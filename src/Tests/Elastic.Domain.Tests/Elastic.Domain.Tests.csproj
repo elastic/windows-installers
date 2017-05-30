@@ -110,6 +110,7 @@
     <Compile Include="Elasticsearch\Process\ElasticsearchProcessTesterStateProvider.cs" />
     <Compile Include="Elasticsearch\Process\Observing\HandlerTests.cs" />
     <Compile Include="Elasticsearch\Process\Observing\WriterTests.cs" />
+    <Compile Include="Elasticsearch\Process\Paths\BadEnvironmentVariablesTests.cs" />
     <Compile Include="Elasticsearch\Process\Paths\ElasticsearchConfigFolderTests.cs" />
     <Compile Include="Elasticsearch\Process\Paths\ElasticsearchHomeAndBinaryTests.cs" />
     <Compile Include="Elasticsearch\Process\Paths\JavaHomeAndBinaryTests.cs" />

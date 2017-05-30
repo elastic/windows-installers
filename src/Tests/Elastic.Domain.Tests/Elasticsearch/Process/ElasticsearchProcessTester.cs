@@ -4,6 +4,7 @@ using System.Threading;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using Elastic.ProcessHosts.Elasticsearch.Process;
+using Elastic.ProcessHosts.Process;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 {
@@ -16,7 +17,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		public static string DefaultJavaHome { get; } = @"C:\Java";
 		public static string DefaultEsHome { get; } = LocationsModel.DefaultInstallationDirectory;
 
-		private ElasticsearchProcessTester(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup)
+		public ElasticsearchProcessTester(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup)
 		{
 			var state = setup(new ElasticsearchProcessTesterStateProvider());
 
@@ -73,9 +74,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 				.ProcessArguments(args)
 			);
 
-		public static ElasticsearchProcessTester Create(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup) =>
-			new ElasticsearchProcessTester(setup);
-
 		public static void CreateThrows(
 			Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup,
 			Action<Exception> assert)
@@ -93,7 +91,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			if (created)
 				throw new Exception("Process tester expected elasticsearch.exe to throw an exception");
 		}
-
+		
 		public void Start(Action<ElasticsearchProcessTester> assert)
 		{
 			this.Process.Start();
