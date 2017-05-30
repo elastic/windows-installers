@@ -10,6 +10,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 	{
 		private readonly string _executableParentFolder = @"C:\Alternative\Elasticsearch (x86)\weird location";
 		private string Executable => Path.Combine(_executableParentFolder, @"bin\elasticsearch.exe");
+		private const string EsConfProcess = @"c:\Elasticsearch\Process";
 		private const string EsConfUser = @"c:\Elasticsearch\UserConfig";
 		private const string EsConfMachine = @"c:\Elasticsearch\MachineConfig";
 		private const string EsConfCommandLine = @"c:\Elasticsearch\ArgCommandLine";
@@ -24,6 +25,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsConfArg(DefaultEsConf));
 			});
 
+		[Fact] public void ProcessVariableWinsFromUserVariable() => ElasticsearchChangesOnly(e=>e
+				.EsConfigProcessVariable(EsConfProcess)
+				.EsConfigUserVariable(EsConfUser)
+				.EsConfigMachineVariable(EsConfMachine)
+				.ElasticsearchExecutable(Executable)
+			)
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsConfArg(EsConfProcess));
+			});
+		
 		[Fact] public void UserVariableWinsFromMachineVariable() => ElasticsearchChangesOnly(e=>e
 				.EsConfigUserVariable(EsConfUser)
 				.EsConfigMachineVariable(EsConfMachine)

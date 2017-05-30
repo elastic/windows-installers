@@ -11,6 +11,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 
 		private readonly string _executableParentFolder = @"C:\Alternative\Elasticsearch (x86)\weird location";
 		private string Executable => Path.Combine(_executableParentFolder, @"bin\elasticsearch.exe");
+		private const string EsHomeProcess = @"c:\Elasticsearch\Process";
 		private const string EsHomeUser = @"c:\Elasticsearch\User";
 		private const string EsHomeMachine = @"c:\Elasticsearch\Machine";
 		private const string EsHomeCommandLine = @"c:\Elasticsearch\CommandLine";
@@ -43,6 +44,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				})
 			, e => { e.Message.Should().Contain("No elasticsearch jar found in:"); });
 
+		
+		[Fact] public void ProcessVariableWinsFromUserVariable() => ElasticsearchChangesOnly(e => e
+				.EsHomeProcessVariable(EsHomeProcess)
+				.EsHomeUserVariable(EsHomeUser)
+				.EsHomeMachineVariable(EsHomeMachine)
+				.ElasticsearchExecutable(Executable)
+			)
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
+					.And.Contain(EsHomeArg(EsHomeProcess));
+			});
 		[Fact] public void UserVariableWinsFromMachineVariable() => ElasticsearchChangesOnly(e => e
 				.EsHomeUserVariable(EsHomeUser)
 				.EsHomeMachineVariable(EsHomeMachine)
