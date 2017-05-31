@@ -42,4 +42,4 @@ if(-not(Get-Module -Name $pester))
 	}
 }
 
-Invoke-Pester -Path '$($drive)vagrant\*' -OutputFile $path -OutputFormat "NUnitXml"
+Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile $path -OutputFormat "NUnitXml"

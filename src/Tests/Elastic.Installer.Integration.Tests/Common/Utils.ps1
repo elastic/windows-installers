@@ -236,27 +236,31 @@ function Get-WinRmSession($DnsName) {
             -UseSSL -SessionOption $SessionOptions -ErrorAction "Stop"
 }
 
-function Copy-SyncedFoldersToRemote([System.Management.Automation.Runspaces.PSSession]$Session) {	
-	$syncFolders = @{
-		"./../../Common/" = "/common"
-      	"./../../../../../build/out/" = "/out"
-      	"./" = "/vagrant"
+function Copy-SyncedFoldersToRemote([System.Management.Automation.Runspaces.PSSession]$Session, [HashTable]$SyncFolders) {	
+	if (!$SyncFolders) {
+		$SyncFolders = @{
+			"./../../Common/" = "/common"
+      		"./../../../../../build/out/" = "/out"
+      		"./" = "/vagrant"
+		}
 	}
 	
-	foreach($syncFolderKey in $syncFolders.Keys) {
-		Copy-Item -Path $syncFolderKey -Destination "C:$($syncFolders.$syncFolderKey)" -Recurse -Force -ToSession $Session
+	foreach($syncFolderKey in $SyncFolders.Keys) {
+		Copy-Item -Path $syncFolderKey -Destination "C:$($SyncFolders.$syncFolderKey)" -Recurse -Force -ToSession $Session
 	}
 }
 
-function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PSSession]$Session, $TestDirName) {
-	$syncFolders = @{
-		"/vagrant/install.log" = "./../../../../../build/out/$TestDirName-install.log"
-		"/vagrant/uninstall.log" = "./../../../../../build/out/$TestDirName-uninstall.log"
-      	"/out/*.xml" = "./../../../../../build/out"
+function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PSSession]$Session, $TestDirName, [HashTable]$SyncFolders) {
+	if (!$SyncFolders) {
+		$SyncFolders = @{
+			"/vagrant/install.log" = "./../../../../../build/out/$TestDirName-install.log"
+			"/vagrant/uninstall.log" = "./../../../../../build/out/$TestDirName-uninstall.log"
+      		"/out/*.xml" = "./../../../../../build/out"
+		}
 	}
 	
-	foreach($syncFolderKey in $syncFolders.Keys) {
-		Copy-Item -Path "C:$syncFolderKey" -Destination "$($syncFolders.$syncFolderKey)" -Recurse -Force -FromSession $Session -ErrorAction Ignore
+	foreach($syncFolderKey in $SyncFolders.Keys) {
+		Copy-Item -Path "C:$syncFolderKey" -Destination "$($SyncFolders.$syncFolderKey)" -Recurse -Force -FromSession $Session
 	}
 }
 
@@ -272,9 +276,9 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
     }
 
     ReplaceInFile -File "Vagrantfile" -Replacements $replacements
-    vagrant destroy azure -f
-
+    
 	try {
+		vagrant destroy azure -f
 		vagrant up azure
 		$session = [System.Management.Automation.Runspaces.PSSession](Get-WinRmSession -DnsName $dnsName)
 		Copy-SyncedFoldersToRemote -Session $session
@@ -291,8 +295,31 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
 	finally {
 		# don't wait for the destruction
 		ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }   
-		#vagrant destroy azure -f
+		vagrant destroy azure -f
     }
+}
+
+function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $Session) {
+	$currentLocation = Get-Location   
+	$testDirName = Split-Path $Location -Leaf
+	try {
+		$SyncFolders = @{
+      		"./" = "/vagrant"
+		}
+		cd $Location
+		Invoke-Command -ScriptBlock {Remove-Item "C:\vagrant" -Recurse -Force -ErrorAction Ignore} -Session $Session
+		Copy-SyncedFoldersToRemote -Session $Session -SyncFolders $SyncFolders
+		log "Run Pester bootstrap"	
+		cd $currentLocation
+		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+		cd $Location
+		Copy-SyncedFoldersFromRemote -Session $Session -TestDirName $testDirName	
+		cd $currentLocation
+	}
+	catch {
+		$ErrorMessage = $_.Exception.ToString()
+		log $ErrorMessage -l Error
+	}
 }
 
 function Get-Installer([string] $Location, $Product, $Version) {

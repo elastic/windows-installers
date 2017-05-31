@@ -27,7 +27,7 @@ build <target> [products] [version] [params] [skiptests]
 Targets:
 
 * buildinstallers
-  - default target if non provided. Builds installers for products
+  - default target if none provided. Builds installers for products
 * buildservices
   - Builds services for products
 * clean
@@ -38,11 +38,11 @@ Targets:
   - downloads the product zip files if not already downloaded
 * unzipproducts
   - unzips product zip files if not already unzipped
-* release [products] [version] [certFile] [passwordFile]
+* release [Products] [Version] [CertFile] [PasswordFile]
   - create a release versions of each MSI by building and then signing the service executable and installer for each.
-  - when certFile and passwordFile are specified, these will be used for signing otherwise the values in ELASTIC_CERT_FILE
-    and ELASTIC_CERT_PASSWORD will be used
-* integrate [products] [version] [testtargets] [skiptests]  -
+  - when CertFile and PasswordFile are specified, these will be used for signing otherwise the values in ELASTIC_CERT_FILE
+    and ELASTIC_CERT_PASSWORD environment variables will be used
+* integrate [Products] [Version] [VagrantProvider] [TestTargets] [skiptests]  -
   - run integration tests. Can filter tests by wildcard [testtargets]
 * help or ?
   - show this usage summary
@@ -70,6 +70,25 @@ be downloaded and extracted to build/in directory if it doesn't already exist.
 when not specified
     - for build targets other than release, the latest non-prelease version of each product will be downloaded
     - for release, the build/in directory will be checked and a single version found there will be used
+
+TestTargets:
+
+Wildcard pattern for integration tests to target within test directories 
+in <root>/src/Tests/Elastic.Installer.Integration.Tests/Tests.
+
+When not specified, defaults to *
+
+VagrantProvider:
+
+The provider that vagrant should use to bring up vagrant boxes
+    - local: use Virtualbox on the localhost
+    - azure: use Azure provider to provision a machine on Azure for each integration test scenario
+    - quick-azure: use Azure provider to provision a single machine on Azure on which to run all integration tests
+
+skiptests:
+
+Whether to skip unit tests.
+
 """
 
     [<Literal>]
@@ -180,7 +199,8 @@ when not specified
     let private (|IsVagrantProvider|_|) candidate =
         match candidate with 
         | "local"
-        | "azure" -> Some candidate
+        | "azure" 
+        | "quick-azure" -> Some candidate
         | _ -> None
 
     let private certAndPasswordFromEnvVariables () =

@@ -7,13 +7,20 @@
 .Example
     Execute tests in all directories
 
-    .\Bootstrapper.ps1
+    .\Bootstrapper.ps1 -Version 5.4.0
 .Example
-    Execute only tests in directories that end in "NoPlugins"
+    Execute only tests in directories that end in "NoPlugins" on a local vagrant box
 
-    .\Bootstrapper.ps1 "*NoPlugins"
+    .\Bootstrapper.ps1 "*NoPlugins" -Version 5.4.0 -VagrantProvider local
 .Parameter Tests
     is a wildcard to describe the test directories in .\Tests which contain tests to run
+.Parameter Version
+	the version of the product under test
+.Parameter VagrantProvider
+	the vagrant provider to use:
+	- local = local vagrant box with virtualbox provider
+	- azure = vagrant box created within Azure with azure provider. A box is created for each test scenario
+	- quickazure = vagrant box created within Azure with azure provider. One box is created and all tests are run on it in sequence
 #>
 [CmdletBinding()]
 Param(
@@ -26,12 +33,12 @@ Param(
     [string] $Version,
 
 	[Parameter(Mandatory=$false)]
-	[ValidateSet("local", "azure")] 
+	[ValidateSet("local", "azure", "quick-azure")] 
 	[string] $VagrantProvider="local"
 )
 
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
-Set-Location $currentDir
+cd $currentDir
 
 # load utils
 . $currentDir\Common\Utils.ps1
@@ -53,7 +60,6 @@ if ($installer -eq $null) {
 
 $testDirs = Get-ChildItem "Tests\$Tests" -Directory
 $testCount = $($testDirs | measure).Count
-
 if ($testCount -eq 0) {
 	log "No tests found matching pattern $Tests" -l Error
 	Exit 0
@@ -75,16 +81,61 @@ else {
 ###########
 
 log "running $testcount test scenario(s)"
-foreach ($dir in $testDirs) {  
-    log "running tests in $dir"
-	Copy-Item "$currentDir\common\Vagrantfile" -Destination $dir -Force
 
-    if ($VagrantProvider -eq "local") {
-	    Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version
-    } 
-    else {
-	    Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version
+# run all tests on one vagrant box
+if ($VagrantProvider -eq "quick-azure") {
+	try {
+		Copy-Item "$currentDir\common\Vagrantfile" -Destination $currentDir -Force
+		$dnsName = Get-RandomName
+		$testDirName = "Quick-Tests"
+		$resourceGroupName = $testDirName + "-" + (Get-RandomName -Count $(59 - $testDirName.Length))
+		$replacements = @{
+			"AZURE_DNS_NAME" = $dnsName
+			"AZURE_RESOURCE_GROUP_NAME" = $resourceGroupName
+		}
+		ReplaceInFile -File "Vagrantfile" -Replacements $replacements
+	
+		vagrant destroy azure -f
+		vagrant up azure
+
+		$session = [System.Management.Automation.Runspaces.PSSession](Get-WinRmSession -DnsName $dnsName)
+		$syncFolders = @{
+			"./Common/" = "/common"
+      		"./../../../build/out/" = "/out"
+		}
+
+		Copy-SyncedFoldersToRemote -Session $session -SyncFolders $syncFolders
+		foreach ($dir in $testDirs) {  
+			log "running tests in $dir"
+			Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version $Version -Session $session
+		}
+
+		Remove-PSSession $session
+	}
+	catch {
+		$ErrorMessage = $_.Exception.ToString()
+		log $ErrorMessage -l Error
+		Exit 1
+	}
+	finally {
+		# don't wait for the destruction of the VM
+		ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }   
+		vagrant destroy azure -f
+		Remove-Item "$currentDir\Vagrantfile" -Force -ErrorAction Ignore
     }
 }
+else {
+	foreach ($dir in $testDirs) {  
+		log "running tests in $dir"
+		Copy-Item "$currentDir\common\Vagrantfile" -Destination $dir -Force
 
-Set-Location $currentDir
+		if ($VagrantProvider -eq "local") {
+			Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version
+		} 
+		else {
+			Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version
+		}
+	}
+}
+
+cd $currentDir

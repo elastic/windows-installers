@@ -57,16 +57,16 @@ Vagrant.configure("2") do |config|
 
 end
 
+def configure_chocolatey()
+  return <<-SHELL
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+  SHELL
+end
+
 def configure_powershellget()
   return <<-SHELL
     choco install powershell-packagemanagement -y
     Install-PackageProvider -Name NuGet -RequiredVersion 2.8.5.201 -Force
-  SHELL
-end
-
-def configure_chocolatey()
-  return <<-SHELL
-    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   SHELL
 end
 
