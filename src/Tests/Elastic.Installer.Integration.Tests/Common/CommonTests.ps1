@@ -1,3 +1,6 @@
+<#
+	Contains Pester tests common to test scenarios
+#>
 $pester = "Pester"
 if(-not(Get-Module -Name $pester)) 
 { 
@@ -203,6 +206,7 @@ function Context-ClusterNameAndNodeName($Expected) {
             ClusterName = "elasticsearch"
             NodeName = $($env:COMPUTERNAME)
             Credentials = ""
+			Host = "localhost"
 			Port = "9200"
         } $Expected
 
@@ -210,10 +214,10 @@ function Context-ClusterNameAndNodeName($Expected) {
         if ($Expected.Credentials) {
             $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Expected.Credentials)
             $AuthHeaderValue = [Convert]::ToBase64String($Bytes)
-            $Response = Invoke-RestMethod "http://localhost:$($Expected.Port)" -Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)}
+            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)" -Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)}
         }
         else {
-            $Response = Invoke-RestMethod "http://localhost:$($Expected.Port)"
+            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)"
         }
 
         It "cluster_name should be $($Expected.ClusterName)" {

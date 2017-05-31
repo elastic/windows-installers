@@ -124,7 +124,7 @@ function Test-AtlasToken() {
     $token = Get-ChildItem env:ATLAS_TOKEN
     if (!$token) {
         log "No ATLAS_TOKEN environment variable detected. Ensure that you have set up an account on https://atlas.hashicorp.com and generate an access token at https://atlas.hashicorp.com/settings/tokens" -l Error
-        Exit
+        Exit 1
     }
 }
 
@@ -248,14 +248,15 @@ function Copy-SyncedFoldersToRemote([System.Management.Automation.Runspaces.PSSe
 	}
 }
 
-function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PSSession]$Session) {
+function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PSSession]$Session, $TestDirName) {
 	$syncFolders = @{
-		"/vagrant/*.log" = "."
+		"/vagrant/install.log" = "./../../../../../build/out/$TestDirName-install.log"
+		"/vagrant/uninstall.log" = "./../../../../../build/out/$TestDirName-uninstall.log"
       	"/out/*.xml" = "./../../../../../build/out"
 	}
 	
 	foreach($syncFolderKey in $syncFolders.Keys) {
-		Copy-Item -Path "C:$syncFolderKey" -Destination "$($syncFolders.$syncFolderKey)" -Recurse -Force -FromSession $Session
+		Copy-Item -Path "C:$syncFolderKey" -Destination "$($syncFolders.$syncFolderKey)" -Recurse -Force -FromSession $Session -ErrorAction Ignore
 	}
 }
 
@@ -279,7 +280,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
 		Copy-SyncedFoldersToRemote -Session $session
 		log "Run Pester bootstrap"	
 		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
-		Copy-SyncedFoldersFromRemote -Session $session
+		Copy-SyncedFoldersFromRemote -Session $session -TestDirName $testDirName
 		Remove-PSSession $session
 	}
 	catch {
@@ -290,7 +291,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
 	finally {
 		# don't wait for the destruction
 		ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }   
-		vagrant destroy azure -f
+		#vagrant destroy azure -f
     }
 }
 
@@ -301,6 +302,10 @@ function Get-Installer([string] $Location, $Product, $Version) {
 
 	if (!$Location) {
 		$Location = ".\..\out"
+	}
+
+	if (!$Version) {
+		$Version = $env:EsVersion
 	}
 
 	$exePath = "$Location\$Product\$Product-$Version.msi"
