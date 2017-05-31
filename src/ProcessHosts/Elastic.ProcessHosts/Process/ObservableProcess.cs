@@ -45,6 +45,7 @@ namespace Elastic.ProcessHosts.Process
 					
 					this.Process.BeginOutputReadLine();
 					this.Process.BeginErrorReadLine();
+					this.Process.Exited += (sender, eventArgs) => observer.OnCompleted();
 					this.Started = true;
 
 					return new CompositeDisposable(stdOutSubscription, stdErrSubscription, processError);

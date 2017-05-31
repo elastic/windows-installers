@@ -95,11 +95,12 @@ namespace Elastic.ProcessHosts.Process
 		private void HandleException(Exception e)
 		{
 			this.CompletedHandle?.Set();
-			this.StartedHandle.Set();
+			this.StartedHandle?.Set();
 			throw e;
 		}
 		private void HandleCompleted()
 		{
+			this.StartedHandle?.Set();
 			this.CompletedHandle?.Set();
 		}
 
