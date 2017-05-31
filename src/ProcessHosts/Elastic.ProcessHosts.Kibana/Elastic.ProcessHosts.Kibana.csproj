@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Elastic.ProcessHosts.Kibana</RootNamespace>
-    <AssemblyName>Elastic.ProcessHosts.Kibana</AssemblyName>
+    <AssemblyName>kibana</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

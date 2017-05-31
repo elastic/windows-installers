@@ -1,7 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Reflection;
+using Elastic.Configuration.EnvironmentBased;
+using Elastic.Configuration.EnvironmentBased.Java;
 using Elastic.Configuration.Extensions;
 using Elastic.ProcessHosts.Elasticsearch.Service;
+using Elastic.ProcessHosts.Process;
 
 namespace Elastic.ProcessHosts.Elasticsearch
 {
@@ -11,12 +14,13 @@ namespace Elastic.ProcessHosts.Elasticsearch
 		{
 			if (args.Length == 2 && args[0] == "--clean-shutdown")
 			{
-				var sent = SendCtrlCTo(int.Parse(args[1]));
+				var sent = ControlCDispatcher.Send(int.Parse(args[1]));
 				return sent ? 0 : 1;
 			}
 			var service = new ElasticsearchService(args);
 			try
 			{
+				Console.Title = $"Elasticsearch {AssemblyVersionInformation.AssemblyFileVersion}";
 				service.Run();
 				var exitCode = service.LastExitCode ?? 0;
 				return exitCode;
@@ -32,55 +36,8 @@ namespace Elastic.ProcessHosts.Elasticsearch
 			finally
 			{
 				service.Dispose();
+				Console.ResetColor();
 			}
-		}
-
-		private const int CTRL_C_EVENT = 0;
-		[DllImport("kernel32.dll")]
-		private static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, uint dwProcessGroupId);
-		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern bool AttachConsole(uint dwProcessId);
-		[DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-		private static extern bool FreeConsole();
-		[DllImport("kernel32.dll")]
-		private static extern bool SetConsoleCtrlHandler(ConsoleCtrlDelegate HandlerRoutine, bool Add);
-		private delegate bool ConsoleCtrlDelegate(uint CtrlType);
-
-		private static bool SendCtrlCTo(int processId)
-		{
-			if (!ProcessIdIsElasticsearch(processId)) return false;
-
-			FreeConsole();
-			if (!AttachConsole((uint) processId)) return false;
-			SetConsoleCtrlHandler(null, true);
-			try
-			{
-				if (!GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0))
-					return false;
-				//p.WaitForExit();
-			}
-			finally
-			{
-				FreeConsole();
-				SetConsoleCtrlHandler(null, false);
-			}
-			return true;
-		}
-
-
-
-		private static bool ProcessIdIsElasticsearch(int processId)
-		{
-			try
-			{
-				var p = System.Diagnostics.Process.GetProcessById(processId);
-				return p.ProcessName.Equals("java", StringComparison.OrdinalIgnoreCase);
-			}
-			catch
-			{
-				return false;
-			}
-
 		}
 	}
 }

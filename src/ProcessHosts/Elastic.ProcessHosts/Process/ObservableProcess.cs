@@ -42,7 +42,7 @@ namespace Elastic.ProcessHosts.Process
 
 					if (!this.Process.Start())
 						throw new StartupException($"Failed to start observable process: {binary}");
-
+					
 					this.Process.BeginOutputReadLine();
 					this.Process.BeginErrorReadLine();
 					this.Started = true;
@@ -95,6 +95,7 @@ namespace Elastic.ProcessHosts.Process
 				EnableRaisingEvents = true,
 				StartInfo =
 				{
+					EnvironmentVariables = { {"HOSTNAME", Environment.MachineName } },
 					FileName = exe,
 					Arguments = args != null ? string.Join(" ", args) : string.Empty,
 					CreateNoWindow = true,
