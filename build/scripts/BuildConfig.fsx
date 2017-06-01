@@ -60,7 +60,7 @@ namespace Elastic.Installer.Domain
 }
 """
 
-    let versionGuid (productVersions: ProductVersion list) =
+    let versionGuid (productVersions: ProductVersions list) =
         let config = TypedConfig()
         config.Load sourceYaml
         tracefn "found %i elasticsearch known versions" config.elasticsearch.known_versions.Count
@@ -68,22 +68,25 @@ namespace Elastic.Installer.Domain
 
         productVersions
         |> List.iter(fun p ->
-            let version = p.Version.FullVersion
-            match p.Product with
-            | Elasticsearch ->
-                match config.elasticsearch.known_versions |> Seq.tryFind (fun v -> v.version = version) with
-                | Some _ -> ()
-                | None ->
-                    let newGuid = Guid.NewGuid()
-                    let newVersion = new TypedConfig.elasticsearch_Type.known_versions_Item_Type(version=version, guid=newGuid)
-                    config.elasticsearch.known_versions.Add newVersion
-            | Kibana ->
-                match config.kibana.known_versions |> Seq.tryFind (fun v -> v.version = version) with
-                | Some _ -> ()
-                | None ->
-                    let newGuid = Guid.NewGuid()
-                    let newVersion = new TypedConfig.kibana_Type.known_versions_Item_Type(version=version, guid=newGuid)
-                    config.kibana.known_versions.Add newVersion
+            p.Versions
+            |> List.iter(fun v ->              
+                let version = v.FullVersion
+                match p.Product with
+                | Elasticsearch ->
+                    match config.elasticsearch.known_versions |> Seq.tryFind (fun v -> v.version = version) with
+                    | Some _ -> ()
+                    | None ->
+                        let newGuid = Guid.NewGuid()
+                        let newVersion = new TypedConfig.elasticsearch_Type.known_versions_Item_Type(version=version, guid=newGuid)
+                        config.elasticsearch.known_versions.Add newVersion
+                | Kibana ->
+                    match config.kibana.known_versions |> Seq.tryFind (fun v -> v.version = version) with
+                    | Some _ -> ()
+                    | None ->
+                        let newGuid = Guid.NewGuid()
+                        let newVersion = new TypedConfig.kibana_Type.known_versions_Item_Type(version=version, guid=newGuid)
+                        config.kibana.known_versions.Add newVersion
+            )
         )
 
         config.Save sourceYaml

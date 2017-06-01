@@ -30,7 +30,11 @@ Param(
 
     [Parameter(Mandatory=$true)]
 	[ValidatePattern("\d+\.\d+\.\d+((?:\-[\w\-]+))?")]
-    [string] $Version,
+    [string] $Version,    
+    
+    [Parameter(Mandatory=$false)]
+	[ValidatePattern("^$|\d+\.\d+\.\d+((?:\-[\w\-]+))?")]
+    [string] $PreviousVersion,
 
 	[Parameter(Mandatory=$false)]
 	[ValidateSet("local", "azure", "quick-azure")] 
@@ -54,8 +58,16 @@ $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"
 
 $installer = Get-Installer -location $buildOutDir -Version $Version
 if ($installer -eq $null) {
-    log "No installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
+    log "No $Version installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
     Exit 1
+}
+
+if ($PreviousVersion) {
+	$installer = Get-Installer -location $buildOutDir -Version $PreviousVersion
+	if ($installer -eq $null) {
+		log "No $PreviousVersion installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
+		Exit 1
+	}
 }
 
 $testDirs = Get-ChildItem "Tests\$Tests" -Directory
@@ -107,7 +119,7 @@ if ($VagrantProvider -eq "quick-azure") {
 		Copy-SyncedFoldersToRemote -Session $session -SyncFolders $syncFolders
 		foreach ($dir in $testDirs) {  
 			log "running tests in $dir"
-			Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version $Version -Session $session
+			Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version "$Version" -PreviousVersion "$PreviousVersion" -Session $session
 		}
 
 		Remove-PSSession $session
@@ -130,10 +142,10 @@ else {
 		Copy-Item "$currentDir\common\Vagrantfile" -Destination $dir -Force
 
 		if ($VagrantProvider -eq "local") {
-			Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version
+			Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version -PreviousVersion $PreviousVersion
 		} 
 		else {
-			Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version
+			Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version -PreviousVersion $PreviousVersion
 		}
 	}
 }

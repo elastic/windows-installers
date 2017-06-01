@@ -211,14 +211,14 @@ function Add-Cygpath() {
     }
 }
 
-function Invoke-IntegrationTestsOnLocal($Location, $Version, $VagrantProvider) {
+function Invoke-IntegrationTestsOnLocal($Location, $Version, $PreviousVersion, $VagrantProvider) {
     cd $Location  
     $testDirName = Split-Path $Location -Leaf
     vagrant destroy local -f
 
 	try {
 		vagrant up local    
-		vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+		vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersion '$PreviousVersion' -TestDirName '$testDirName'"
 	}
 	finally {
 		vagrant destroy local -f
@@ -264,7 +264,7 @@ function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PS
 	}
 }
 
-function Invoke-IntegrationTestsOnAzure($Location, $Version) {
+function Invoke-IntegrationTestsOnAzure($Location, $Version, $PreviousVersion) {
     cd $Location
     $dnsName = Get-RandomName
     $testDirName = Split-Path $Location -Leaf
@@ -283,7 +283,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
 		$session = [System.Management.Automation.Runspaces.PSSession](Get-WinRmSession -DnsName $dnsName)
 		Copy-SyncedFoldersToRemote -Session $session
 		log "Run Pester bootstrap"	
-		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersion '$PreviousVersion' -TestDirName '$testDirName'"
 		Copy-SyncedFoldersFromRemote -Session $session -TestDirName $testDirName
 		Remove-PSSession $session
 	}
@@ -299,7 +299,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version) {
     }
 }
 
-function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $Session) {
+function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $PreviousVersion, $Session) {
 	$currentLocation = Get-Location   
 	$testDirName = Split-Path $Location -Leaf
 	try {
@@ -311,7 +311,7 @@ function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $Session) {
 		Copy-SyncedFoldersToRemote -Session $Session -SyncFolders $SyncFolders
 		log "Run Pester bootstrap"	
 		cd $currentLocation
-		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version $Version -TestDirName '$testDirName'"
+		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersion '$PreviousVersion' -TestDirName '$testDirName'"
 		cd $Location
 		Copy-SyncedFoldersFromRemote -Session $Session -TestDirName $testDirName	
 		cd $currentLocation
@@ -377,11 +377,14 @@ function Invoke-SilentInstall {
     Param (
         [System.Collections.ArrayList]
         [Parameter(Position=0)]
-        $Exeargs
+        $Exeargs,
+
+		[string]
+		$Version
     )
 
     $QuotedArgs = Add-Quotes $Exeargs
-    $Exe = Get-Installer
+    $Exe = Get-Installer -Version $Version
     log "running installer: msiexec.exe /i $Exe /qn /l install.log $QuotedArgs"
     $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/i $Exe /qn /l install.log $QuotedArgs" -Wait -PassThru).ExitCode
 
@@ -398,11 +401,14 @@ function Invoke-SilentUninstall {
     Param (
         [System.Collections.ArrayList]
         [Parameter(Position=0)]
-        $Exeargs
+        $Exeargs,
+
+		[string]
+		$Version
     )
 
     $QuotedArgs = Add-Quotes $Exeargs
-    $Exe = Get-Installer
+    $Exe = Get-Installer -Version $Version
     log "running installer: msiexec.exe /x $Exe /qn /l uninstall.log $QuotedArgs"
     $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/x $Exe /qn /l uninstall.log $QuotedArgs" -Wait -PassThru).ExitCode
 
@@ -414,10 +420,14 @@ function Invoke-SilentUninstall {
     return $ExitCode
 }
 
-function Ping-Node([System.Timespan]$Timeout, $Port) {
+function Ping-Node([System.Timespan]$Timeout, $Domain, $Port) {
     if (!$Timeout) {
         $Timeout = New-Timespan -Seconds 3
     }
+
+	if (!$Domain) {
+		$Domain = "localhost"
+	}
 
 	if (!$Port) {
 		$Port = "9200"
@@ -431,7 +441,7 @@ function Ping-Node([System.Timespan]$Timeout, $Port) {
     $StopWatch = [Diagnostics.Stopwatch]::StartNew()
     do {
         try {
-            $Response = Invoke-RestMethod "http://localhost:$Port"
+            $Response = Invoke-RestMethod "http://$($Domain):$Port"
             log "Elasticsearch version $($Response.version.number) running"
             $Result.Success = $true
             return $Result
@@ -458,7 +468,6 @@ function Ping-Node([System.Timespan]$Timeout, $Port) {
 
     return $Result
 }
-
 
 function Get-ElasticsearchService() {
     return Get-Service elasticsearch*

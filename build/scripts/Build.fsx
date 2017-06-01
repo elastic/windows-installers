@@ -21,7 +21,7 @@ open Products
 
 module Builder =
 
-    let Sign file (product : ProductVersion) =
+    let Sign file (product : ProductVersions) =
         let release = getBuildParam "release" = "1"
         if release then
             let certificate = getBuildParam "certificate"
@@ -44,10 +44,8 @@ module Builder =
                 if isMono then
                     proc.StartInfo.StandardOutputEncoding <- Encoding.UTF8
                     proc.StartInfo.StandardErrorEncoding  <- Encoding.UTF8
-                proc.ErrorDataReceived.Add(fun d ->
-                    if d.Data <> null then traceError d.Data)
-                proc.OutputDataReceived.Add(fun d ->
-                    if d.Data <> null then trace d.Data)
+                proc.ErrorDataReceived.Add(fun d -> if d.Data <> null then traceError d.Data)
+                proc.OutputDataReceived.Add(fun d -> if d.Data <> null then trace d.Data)
 
                 try
                     tracefn "%s %s" proc.StartInfo.FileName redactedArgs
@@ -68,8 +66,8 @@ module Builder =
             let exitCode = sign()
             if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" product.Title exitCode
     
-    let patchAssemblyInformation (product: ProductVersion) = 
-        let version = product.Version.ToString()
+    let patchAssemblyInformation (product: ProductVersions) (version:Version) = 
+        let version = version.FullVersion
         let commitHash = Information.getCurrentHash()
         let file = product.ServiceDir @@ "Properties" @@ "AssemblyInfo.cs"
         CreateCSharpAssemblyInfo file
@@ -84,28 +82,36 @@ module Builder =
              Attribute.Version  version
              Attribute.FileVersion version]
     
-    let BuildService (product : ProductVersion) =
-        patchAssemblyInformation product 
-        !! (product.ServiceDir @@ "*.csproj")
-        |> MSBuildRelease product.ServiceBinDir "Build"
-        |> ignore
-        let serviceAssembly = product.ServiceBinDir @@ (sprintf "%s.exe" product.Name)
-        let service = product.BinDir @@ (sprintf "%s.exe" product.Name)
-        CopyFile service serviceAssembly
-        Sign service product
+    let BuildService (product : ProductVersions) =
+        List.zip product.Versions product.BinDirs
+        |> List.iter(fun (version, binDir) ->
+            patchAssemblyInformation product version 
+            
+            !! (product.ServiceDir @@ "*.csproj")
+            |> MSBuildRelease product.ServiceBinDir "Build"
+            |> ignore
+            
+            let serviceAssembly = product.ServiceBinDir @@ (sprintf "%s.exe" product.Name)
+            let service = binDir @@ (sprintf "%s.exe" product.Name)
+            CopyFile service serviceAssembly
+            Sign service product
+        )
 
-    let BuildMsi (product : ProductVersion) =
+    let BuildMsi (product : ProductVersions) =
         !! (MsiDir @@ "*.csproj")
         |> MSBuildRelease MsiBuildDir "Build"
         |> ignore
 
-        let exitCode = ExecProcess (fun info ->
-                        info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir
-                        info.WorkingDirectory <- MsiDir
-                        info.Arguments <- [product.Name; product.Version.FullVersion; Path.GetFullPath(InDir)] |> String.concat " "
-                       ) <| TimeSpan.FromMinutes 20.
-
-        if exitCode <> 0 then failwithf "Error building MSI for %s" product.Name
-        let finalMsi = OutDir @@ product.Name @@ (sprintf "%s-%s.msi" product.Name product.Version.FullVersion)
-        CopyFile finalMsi (MsiDir @@ (sprintf "%s.msi" product.Name))
-        Sign finalMsi product
+        product.Versions
+        |> List.iter(fun version ->
+            let exitCode = ExecProcess (fun info ->
+                            info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir
+                            info.WorkingDirectory <- MsiDir
+                            info.Arguments <- [product.Name; version.FullVersion; Path.GetFullPath(InDir)] |> String.concat " "
+                           ) <| TimeSpan.FromMinutes 20.
+    
+            if exitCode <> 0 then failwithf "Error building MSI for %s" product.Name
+            let finalMsi = OutDir @@ product.Name @@ (sprintf "%s-%s.msi" product.Name version.FullVersion)
+            CopyFile finalMsi (MsiDir @@ (sprintf "%s.msi" product.Name))
+            Sign finalMsi product
+        )

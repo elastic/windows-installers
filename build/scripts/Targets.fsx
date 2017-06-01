@@ -28,7 +28,10 @@ open Commandline
 let productsToBuild = Commandline.parse()
 
 let productDescriptions = productsToBuild
-                          |> List.map(fun p -> sprintf "%s %s" p.Title p.Version.FullVersion)
+                          |> List.map(fun p ->
+                                 p.Versions |> List.map(fun v -> sprintf "%s %s" p.Title v.FullVersion)
+                             )
+                          |> List.concat
                           |> String.concat Environment.NewLine
 
 traceHeader (sprintf "Products:%s%s%s" Environment.NewLine Environment.NewLine productDescriptions)
@@ -73,13 +76,15 @@ Target "PruneFiles" (fun () ->
         
     productsToBuild
     |> List.iter(fun p -> 
-        prune [
-            sprintf "%s-plugin.bat" p.Name;
-            sprintf "%s-translog.bat" p.Name;
-            sprintf "%s-keystore.bat" p.Name
-            ] 
-            p.BinDir
-      )
+        p.BinDirs
+        |> List.iter(fun binDir ->
+            prune [
+                sprintf "%s-plugin.bat" p.Name;
+                sprintf "%s-translog.bat" p.Name;
+                sprintf "%s-keystore.bat" p.Name
+            ] binDir
+        )
+    )
 )
 
 Target "BuildServices" (fun () ->
@@ -96,10 +101,25 @@ Target "Release" (fun () ->
 
 Target "Integrate" (fun () ->
     // TODO: Get the version for each different project
-    let version = productsToBuild.Head.Version.FullVersion
+    let versions = productsToBuild.Head.Versions 
+                  |> List.map(fun v -> v.FullVersion)
+    
+    // last version in the list is the _target_ version    
+    let version = versions |> List.last                
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
     let vagrantProvider = getBuildParamOrDefault "vagrantprovider" "local"
-    let script = sprintf "cd '%s'; %s -Tests %s -Version %s -VagrantProvider %s" Paths.IntegrationTestsDir ".\Bootstrapper.ps1" integrationTestsTargets version vagrantProvider
+    let previousVersion = 
+        match versions.Length with
+        | 1 -> ""
+        | _ -> versions.[versions.Length - 2]
+        
+    let script = sprintf @"cd '%s'; .\Bootstrapper.ps1 -Tests '%s' -Version '%s' -PreviousVersion '%s' -VagrantProvider '%s'" 
+                    IntegrationTestsDir 
+                    integrationTestsTargets 
+                    version 
+                    previousVersion 
+                    vagrantProvider
+        
     trace (sprintf "Running Powershell script: '%s'" script)
     use p = PowerShell.Create()
     use output = new PSDataCollection<PSObject>()
