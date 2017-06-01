@@ -27,17 +27,24 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 		public string JavaHomeMachineVariable => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Machine);
 
 
-		public string JdkRegistry64 => RegistrySubKey(Registry64, JdkRootPath, "CurrentVersion");
-		public string JdkRegistry32 => RegistrySubKey(Registry32, JdkRootPath, "CurrentVersion");
-		public string JreRegistry64 => RegistrySubKey(Registry64, JreRootPath, "CurrentVersion"); 
-		public string JreRegistry32 => RegistrySubKey(Registry32, JreRootPath, "CurrentVersion");
+		public string JdkRegistry64 => RegistrySubKey(Registry64, JdkRootPath);
+		public string JdkRegistry32 => RegistrySubKey(Registry32, JdkRootPath);
+		public string JreRegistry64 => RegistrySubKey(Registry64, JreRootPath); 
+		public string JreRegistry32 => RegistrySubKey(Registry32, JreRootPath);
 		
-		private static string RegistrySubKey(RegistryView view, string subKey, string valueOf)
+		private static string RegistrySubKey(RegistryView view, string subKey)
 		{
 			if (string.IsNullOrWhiteSpace(subKey)) return null;
-			var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view);
-			using (var key = baseKey.OpenSubKey(subKey))
-				return key?.GetValue(valueOf) as string;
+			
+			var registry = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view);
+			string version = null;
+			using (var key = registry.OpenSubKey(subKey))
+				version = key?.GetValue("CurrentVersion") as string;
+			if (version == null) return null;
+
+			using (var key = registry.OpenSubKey(subKey + "\\" + version))
+				return key?.GetValue("JavaHome") as string;
+			
 		}
 	}
 }
