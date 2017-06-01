@@ -17,6 +17,16 @@ namespace Elastic.ProcessHosts.Elasticsearch
 				var sent = ControlCDispatcher.Send(int.Parse(args[1]));
 				return sent ? 0 : 1;
 			}
+			if (args.Length == 1 && args[0] == "--debug-env")
+			{
+				WriteEnvironmentDebugInformation();
+				return 0;
+			}
+			if (args.Length == 1 && args[0] == "--java-home")
+			{
+				Console.WriteLine(JavaConfiguration.Default.JavaHomeCanonical);
+				return 0;
+			}
 			
 			ElasticsearchService service = null;
 			try
@@ -41,6 +51,19 @@ namespace Elastic.ProcessHosts.Elasticsearch
 				service?.Dispose();
 				Console.ResetColor();
 			}
+		}
+
+
+		private static void WriteEnvironmentDebugInformation()
+		{
+			Console.WriteLine("-------------");
+			Console.WriteLine("Elasticsearch");
+			Console.WriteLine("-------------");
+			Console.WriteLine(ElasticsearchEnvironmentConfiguration.Default);
+			Console.WriteLine("-------------");
+			Console.WriteLine("Java");
+			Console.WriteLine("-------------");
+			Console.WriteLine(JavaConfiguration.Default);
 		}
 	}
 }

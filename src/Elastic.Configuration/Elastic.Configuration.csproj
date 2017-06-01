@@ -41,6 +41,7 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnvironmentBased\ElasticsearchEnvironmentConfiguration.cs" />
     <Compile Include="EnvironmentBased\ElasticsearchEnvironmentStateProvider.cs" />
     <Compile Include="EnvironmentBased\Java\JavaConfiguration.cs" />
     <Compile Include="EnvironmentBased\Java\JavaEnvironmentStateProvider.cs" />

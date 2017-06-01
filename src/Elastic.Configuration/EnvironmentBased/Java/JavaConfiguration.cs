@@ -18,7 +18,7 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 			_stateProvider = stateProvider ?? new JavaEnvironmentStateProvider();
 		}
 
-		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin\java.exe");
+		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin", "java.exe");
 		public string JavaHomeCanonical => JavaHomeCandidates.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
 
 		private List<string> JavaHomeCandidates => new List<string> {
@@ -50,8 +50,7 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 		public override string ToString() =>
 			new StringBuilder()
 				.AppendLine($"Java paths")
-				.AppendLine($"- home = {JavaHomeCanonical}")
-				.AppendLine($"- binary = {JavaExecutable}")
+				.AppendLine($"- current = {JavaExecutable}")
 				.AppendLine($"Java Candidates (in order of precedence)")
 				.AppendLine($"- {nameof(_stateProvider.JavaHomeProcessVariable)} = {_stateProvider.JavaHomeProcessVariable}")
 				.AppendLine($"- {nameof(_stateProvider.JavaHomeUserVariable)} = {_stateProvider.JavaHomeUserVariable}")

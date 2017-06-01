@@ -19,7 +19,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
                     .Elasticsearch(e => e
 						.EsHomeMachineVariable(DefaultEsHome)
 						.EnvironmentVariables(new kv { { key, value } }))
-                    .Java(j => j.JavaHomeMachine(DefaultJavaHome))
+                    .Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
                     .ConsoleSession(ConsoleSession.StartedSession)
                     .FileSystem(fs=> s.AddJavaExe(s.AddElasticsearchLibs(fs, null)))
                 );
