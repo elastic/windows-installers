@@ -35,7 +35,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 		public static ElasticsearchProcessTester AllDefaults(params string[] args) => new ElasticsearchProcessTester(s => s
 			.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
-			.Java(j => j.JavaHomeMachine(DefaultJavaHome))
+			.Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
 			.ConsoleSession(ConsoleSession.StartedSession)
 			.FileSystem(s.FileSystemDefaults)
 			.ProcessArguments(args)
@@ -43,7 +43,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 		public static ElasticsearchProcessTester AllDefaults(ConsoleSession session, bool interactive = true) => new ElasticsearchProcessTester(s => s
 			.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
-			.Java(j => j.JavaHomeMachine(DefaultJavaHome))
+			.Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
 			.ConsoleSession(session)
 			.FileSystem(s.FileSystemDefaults)
 			.Interactive(interactive)
@@ -67,7 +67,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			params string[] args) =>
 			new ElasticsearchProcessTester(s => s
 				.Elasticsearch(esState)
-				.Java(j => j.JavaHomeMachine(DefaultJavaHome))
+				.Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
 				.ConsoleSession(ConsoleSession.StartedSession)
 				.FileSystem(fs=> s.AddJavaExe(s.AddElasticsearchLibs(fs, homeDirectoryForFileSystem)))
 				.ProcessArguments(args)

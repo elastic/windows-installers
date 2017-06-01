@@ -27,14 +27,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 		[Fact] public void MissingElasticsearchLibFolderThrows() => CreateThrows(s => s
 				.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
 				.ConsoleSession(ConsoleSession.StartedSession)
-				.Java(j => j.JavaHomeCurrentUser(JavaHomeUser))
+				.Java(j => j.JavaHomeUserVariable(JavaHomeUser))
 				.FileSystem(s.AddJavaExe)
 			, e => { e.Message.Should().Contain("Expected a 'lib' directory inside:"); });
 
 		[Fact] public void MissingElasticsearchJarThrows() => CreateThrows(s => s
 				.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
 				.ConsoleSession(ConsoleSession.StartedSession)
-				.Java(j => j.JavaHomeCurrentUser(JavaHomeUser))
+				.Java(j => j.JavaHomeUserVariable(JavaHomeUser))
 				.FileSystem(fs =>
 				{
 					fs = s.AddJavaExe(fs);

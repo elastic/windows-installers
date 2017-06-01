@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.ServiceProcess;
+using System.Text;
 
 namespace Elastic.Configuration.EnvironmentBased.Java
 {
@@ -15,41 +19,51 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 		}
 
 		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin\java.exe");
-		public string JavaHomeCanonical => new [] {
-				_stateProvider.JavaHomeCurrentUser,
-				_stateProvider.JavaHomeMachine,
-				_stateProvider.JavaHomeRegistry
-			}
-			.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
+		public string JavaHomeCanonical => JavaHomeCandidates.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
+
+		private List<string> JavaHomeCandidates => new List<string> {
+			_stateProvider.JavaHomeProcessVariable,
+			_stateProvider.JavaHomeUserVariable,
+			_stateProvider.JavaHomeMachineVariable,
+			_stateProvider.JdkRegistry64,
+			_stateProvider.JreRegistry64,
+			_stateProvider.JdkRegistry32,
+			_stateProvider.JreRegistry32
+		};
 
 		public bool JavaInstalled => !string.IsNullOrEmpty(this.JavaHomeCanonical);
+
+		public bool Using32BitJava => JavaHomeCandidates.FindIndex(c => !string.IsNullOrWhiteSpace(c)) >= JavaHomeCandidates.Count - 2;
 
 		public bool JavaMisconfigured 
 		{
 			get
 			{
 				if (!JavaInstalled) return false;
-				if (string.IsNullOrEmpty(_stateProvider.JavaHomeMachine) && string.IsNullOrWhiteSpace(_stateProvider.JavaHomeCurrentUser)) return false;
-				if (string.IsNullOrWhiteSpace(_stateProvider.JavaHomeCurrentUser)) return false;
-				if (string.IsNullOrWhiteSpace(_stateProvider.JavaHomeMachine)) return false;
-				return _stateProvider.JavaHomeMachine != _stateProvider.JavaHomeCurrentUser;
+				if (string.IsNullOrEmpty(_stateProvider.JavaHomeMachineVariable) && string.IsNullOrWhiteSpace(_stateProvider.JavaHomeUserVariable)) return false;
+				if (string.IsNullOrWhiteSpace(_stateProvider.JavaHomeUserVariable)) return false;
+				if (string.IsNullOrWhiteSpace(_stateProvider.JavaHomeMachineVariable)) return false;
+				return _stateProvider.JavaHomeMachineVariable != _stateProvider.JavaHomeUserVariable;
 			}
 		}
-
-		public bool SetJavaHome(out string javaHome)
-		{
-			javaHome = _stateProvider.JavaHomeMachine;
-			if (!string.IsNullOrEmpty(javaHome))
-				return true; // already set at machine level, nothing to do
-
-			var userValue = _stateProvider.JavaHomeCurrentUser;
-			javaHome = !string.IsNullOrEmpty(userValue) ? userValue : _stateProvider.JavaHomeRegistry;
-			if (string.IsNullOrEmpty(javaHome)) return false;
-			_stateProvider.SetJavaHomeEnvironmentVariable(javaHome);
-			return true;
-		}
-
-
+			
+		public override string ToString() =>
+			new StringBuilder()
+				.AppendLine($"Java paths")
+				.AppendLine($"- home = {JavaHomeCanonical}")
+				.AppendLine($"- binary = {JavaExecutable}")
+				.AppendLine($"Java Candidates (in order of precedence)")
+				.AppendLine($"- {nameof(_stateProvider.JavaHomeProcessVariable)} = {_stateProvider.JavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(_stateProvider.JavaHomeUserVariable)} = {_stateProvider.JavaHomeUserVariable}")
+				.AppendLine($"- {nameof(_stateProvider.JavaHomeMachineVariable)} = {_stateProvider.JavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(_stateProvider.JdkRegistry64)} = {_stateProvider.JdkRegistry64}")
+				.AppendLine($"- {nameof(_stateProvider.JreRegistry64)} = {_stateProvider.JreRegistry64}")
+				.AppendLine($"- {nameof(_stateProvider.JdkRegistry32)} = {_stateProvider.JdkRegistry32}")
+				.AppendLine($"- {nameof(_stateProvider.JreRegistry32)} = {_stateProvider.JreRegistry32}")
+				.AppendLine($"Java checks")
+				.AppendLine($"- {nameof(Using32BitJava)} = {Using32BitJava}")
+				.AppendLine($"- JAVA_HOME as machine and user variable = {JavaMisconfigured}")
+				.ToString();
 
 	}
 }

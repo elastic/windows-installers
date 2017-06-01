@@ -31,7 +31,6 @@ namespace Elastic.Configuration.EnvironmentBased
 		public string ConfigDirectoryUserVariable => Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.User);
 		public string ConfigDirectoryMachineVariable => Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.Machine);
 
-
 		public void SetEsHomeEnvironmentVariable(string esHome) =>
 			Environment.SetEnvironmentVariable("ES_HOME", esHome, EnvironmentVariableTarget.Machine);
 
