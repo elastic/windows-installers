@@ -1,16 +1,20 @@
 ﻿using System;
 using Microsoft.Win32;
+using static Microsoft.Win32.RegistryView;
 
 namespace Elastic.Configuration.EnvironmentBased.Java
 {
 
 	public interface IJavaEnvironmentStateProvider
 	{
-		string JavaHomeCurrentUser { get; }
-		string JavaHomeMachine { get; }
-		string JavaHomeRegistry  { get; }
-
-		void SetJavaHomeEnvironmentVariable(string javaHome);
+		string JavaHomeUserVariable { get; }
+		string JavaHomeMachineVariable { get; }
+		string JavaHomeProcessVariable { get; }
+		
+		string JdkRegistry64 { get; }
+		string JdkRegistry32 { get; }
+		string JreRegistry64  { get; }
+		string JreRegistry32 { get; }
 	}
 
 	public class JavaEnvironmentStateProvider : IJavaEnvironmentStateProvider
@@ -18,52 +22,29 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 		private const string JreRootPath = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
 		private const string JdkRootPath = "SOFTWARE\\JavaSoft\\Java Development Kit";
 
-		public string JavaHomeCurrentUser => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.User);
-		public string JavaHomeMachine => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Machine);
-		public string JavaHomeRegistry
-		{
-			get
-			{
-				var path = JvmRegistrySubKey + "\\" + JvmRegistryVersion;
-				return ReadRegistry(path, "JavaHome");
-			}
-		}
-		public void SetJavaHomeEnvironmentVariable(string javaHome) => 
-			Environment.SetEnvironmentVariable("JAVA_HOME", javaHome, EnvironmentVariableTarget.Machine);
+		public string JavaHomeProcessVariable => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Process);
+		public string JavaHomeUserVariable => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.User);
+		public string JavaHomeMachineVariable => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Machine);
 
-		private static string JvmRegistrySubKey =>
-			RegistryExists(JdkRootPath) ? JdkRootPath
-			: RegistryExists(JreRootPath) ? JreRootPath
-			: null; 
+
+		public string JdkRegistry64 => RegistrySubKey(Registry64, JdkRootPath);
+		public string JdkRegistry32 => RegistrySubKey(Registry32, JdkRootPath);
+		public string JreRegistry64 => RegistrySubKey(Registry64, JreRootPath); 
+		public string JreRegistry32 => RegistrySubKey(Registry32, JreRootPath);
+		
+		private static string RegistrySubKey(RegistryView view, string subKey)
+		{
+			if (string.IsNullOrWhiteSpace(subKey)) return null;
 			
-		private static string JvmRegistryVersion => ReadRegistry(JvmRegistrySubKey, "CurrentVersion");
+			var registry = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view);
+			string version = null;
+			using (var key = registry.OpenSubKey(subKey))
+				version = key?.GetValue("CurrentVersion") as string;
+			if (version == null) return null;
 
-		private static bool RegistryExists(string subKey) =>
-			RegistryExists(RegistryView.Registry64, subKey) || RegistryExists(RegistryView.Registry32, subKey);
-
-		private static bool RegistryExists(RegistryView view, string subKey)
-		{
-			if (string.IsNullOrWhiteSpace(subKey)) return false;
-			var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view);
-			using (var key = baseKey.OpenSubKey(subKey))
-				return key != null;
-		}
-
-		private static string ReadRegistry(string subKey, string valueOf)
-		{
-			if (string.IsNullOrWhiteSpace(subKey)) return null;
-			var x64 = RegistrySubKey(RegistryView.Registry64, subKey, valueOf);
-			if (!string.IsNullOrEmpty(x64)) return x64;
-			var x86 = RegistrySubKey(RegistryView.Registry32, subKey, valueOf);
-			return x86;
-		}
-
-		private static string RegistrySubKey(RegistryView view, string subKey, string valueOf)
-		{
-			if (string.IsNullOrWhiteSpace(subKey)) return null;
-			var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view);
-			using (var key = baseKey.OpenSubKey(subKey))
-				return key?.GetValue(valueOf) as string;
+			using (var key = registry.OpenSubKey(subKey + "\\" + version))
+				return key?.GetValue("JavaHome") as string;
+			
 		}
 	}
 }

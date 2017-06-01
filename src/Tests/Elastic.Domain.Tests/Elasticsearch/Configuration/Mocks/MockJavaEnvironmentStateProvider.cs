@@ -8,36 +8,56 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 {
 	public class MockJavaEnvironmentStateProvider : IJavaEnvironmentStateProvider
 	{
-		private string _javaHomeCurrentUser;
-		string IJavaEnvironmentStateProvider.JavaHomeCurrentUser => _javaHomeCurrentUser;
-		private string _javaHomeMachine;
-		string IJavaEnvironmentStateProvider.JavaHomeMachine => _javaHomeMachine;
-		private string _javaHomeRegistry;
-		string IJavaEnvironmentStateProvider.JavaHomeRegistry => _javaHomeRegistry;
+		private string _javaHomeUserVariable;
+		string IJavaEnvironmentStateProvider.JavaHomeUserVariable => _javaHomeUserVariable;
+		private string _javaHomeMachineVariable;
+		string IJavaEnvironmentStateProvider.JavaHomeMachineVariable => _javaHomeMachineVariable;
+		private string _javaHomeProcessVariable;
+		string IJavaEnvironmentStateProvider.JavaHomeProcessVariable => _javaHomeProcessVariable;
+		private string _jdkRegistry64;
+		string IJavaEnvironmentStateProvider.JdkRegistry64 => _jdkRegistry64;
+		private string _jdkRegistry32;
+		string IJavaEnvironmentStateProvider.JdkRegistry32 => _jdkRegistry32;
+		private string _jreRegistry64;
+		string IJavaEnvironmentStateProvider.JreRegistry64 => _jreRegistry64; 
+		private string _jreRegistry32;
+		string IJavaEnvironmentStateProvider.JreRegistry32 => _jreRegistry32;
 
-		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin\java.exe");
-		private IJavaEnvironmentStateProvider _t => this;
-		public string JavaHomeCanonical => new [] {_t.JavaHomeMachine, _t.JavaHomeCurrentUser, _t.JavaHomeRegistry}
-			.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
-
-		public void SetJavaHomeEnvironmentVariable(string javaHome) { }
-
-
-		public MockJavaEnvironmentStateProvider JavaHomeCurrentUser(string path)
+		public MockJavaEnvironmentStateProvider JavaHomeUserVariable(string path)
 		{
-			this._javaHomeCurrentUser = path;
+			this._javaHomeUserVariable = path;
 			return this;
 		}
 
-		public MockJavaEnvironmentStateProvider JavaHomeMachine(string path)
+		public MockJavaEnvironmentStateProvider JavaHomeMachineVariable(string path)
 		{
-			this._javaHomeMachine = path;
+			this._javaHomeMachineVariable = path;
+			return this;
+		}
+		public MockJavaEnvironmentStateProvider JavaHomeProcessVariable(string path)
+		{
+			this._javaHomeProcessVariable = path;
 			return this;
 		}
 
-		public MockJavaEnvironmentStateProvider JavaHomeRegistry(string path)
+		public MockJavaEnvironmentStateProvider JdkRegistry64(string path)
 		{
-			this._javaHomeRegistry = path;
+			this._jdkRegistry64 = path;
+			return this;
+		}
+		public MockJavaEnvironmentStateProvider JreRegistry64(string path)
+		{
+			this._jreRegistry64 = path;
+			return this;
+		}
+		public MockJavaEnvironmentStateProvider JdkRegistry32(string path)
+		{
+			this._jdkRegistry32 = path;
+			return this;
+		}
+		public MockJavaEnvironmentStateProvider JreRegistry32(string path)
+		{
+			this._jreRegistry32 = path;
 			return this;
 		}
 	}

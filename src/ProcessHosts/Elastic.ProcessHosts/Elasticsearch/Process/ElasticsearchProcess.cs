@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Configuration.EnvironmentBased.Java;
@@ -39,6 +41,8 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 				fileSystem,
 				completedHandle)
 		{
+			CheckForBadEnvironmentVariables(env);
+			
 			var homeDirectory = env.HomeDirectory?.TrimEnd('\\')
 				?? throw new StartupException("No ES_HOME variable set and no home directory could be inferred from the executable location");
 			var configDirectory = env.ConfigDirectory?.TrimEnd('\\')
@@ -59,6 +63,39 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 
 			this.Arguments = this.CreateObservableProcessArguments(parsedArguments);
 		}
+
+		protected void CheckForBadEnvironmentVariables(ElasticsearchEnvironmentConfiguration c)
+		{
+			var errors = new Dictionary<string, string>();
+			var classPathError = "Don't modify the classpath with ES_CLASSPATH, Best is to add ";
+			classPathError += "additional elements via the plugin mechanism, or if code must really be ";
+			classPathError += "added to the main classpath, add jars to lib, unsupported";
+			ErrorIfExists(c, errors, "ES_CLASSPATH", (k,v) => classPathError);
+
+			const string t = "to %ES_JAVA_OPTS%";
+			const string i = "in jvm.options or add";
+			ErrorIfExists(c, errors, "ES_MIN_MEM", (k, v) => $"{k}={v}: set -Xms{v} {i} \"-Xms{v}\" {t}");
+			ErrorIfExists(c, errors, "ES_MAX_MEM", (k, v) => $"{k}={v}: set -Xmx{v} {i} \"-Xmx{v}\" {t}");
+			ErrorIfExists(c, errors, "ES_HEAP_SIZE", (k, v) => $"{k}={v}: set -Xms{v} and -Xmx{v} {i} \"-Xms{v} -Xmx{v}\" {t}");
+			ErrorIfExists(c, errors, "ES_HEAP_NEWSIZE", (k, v) => $"{k}={v}: set -Xmn{v} {i} \"-Xmn{v}\" {t}");
+			ErrorIfExists(c, errors, "ES_DIRECT_SIZE", (k,v) => $"{k}={v}: set -XX:MaxDirectMemorySize={v} {i} \"-XX:MaxDirectMemorySize={v}\" {t}");
+			ErrorIfExists(c, errors, "ES_USE_IPV4", (k,v) => $"{k}={v}: set -Djava.net.preferIPv4Stack=true {i} \"-Djava.net.preferIPv4Stack=true\" {t}");
+			ErrorIfExists(c, errors, "ES_GC_OPTS", (k, v) => $"{k}={v}: set %ES_GC_OPTS: = and % {i} \"{v}\" {t}");
+			ErrorIfExists(c, errors, "ES_GC_LOG_FILE", (k,v) => $"{k}={v}: set -Xloggc:{v} {i} \"-Xloggc:{v}\" {t}");
+
+			if (errors.Count == 0) return;
+			var helpText = errors.Values.Aggregate(new StringBuilder(), (sb, v) => sb.AppendLine(v), sb => sb.ToString());
+			throw new StartupException("The following deprecated environment variables are set and preventing elasticsearch from starting", helpText);
+		}
+
+		private static void ErrorIfExists(ElasticsearchEnvironmentConfiguration c, Dictionary<string, string> errors, string variable, Func<string, string, string> errorMessage)
+		{
+			var v = c.GetEnvironmentVariable(variable);
+			if (string.IsNullOrWhiteSpace(v)) return;
+			errors.Add(variable, errorMessage(variable, v));
+		}
+		
+		
 
 		protected override void HandleMessage(ConsoleOut c)
 		{

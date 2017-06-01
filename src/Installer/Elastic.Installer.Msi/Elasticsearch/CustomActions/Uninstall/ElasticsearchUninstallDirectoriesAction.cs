@@ -18,6 +18,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 
 		[CustomAction]
 		public static ActionResult ElasticsearchUninstallDirectories(Session session) =>
-			session.Handle(() => new DeleteDirectoriesTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
+			session.Handle(() => new DeleteDirectoriesTask(
+				session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession(), rollBack: false).Execute());
 	}
 }

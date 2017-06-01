@@ -14,13 +14,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		protected override bool ExecuteTask()
 		{
 			this.Session.SendActionStart(1000, ActionName, "Setting environment variables", "[1]");
-			string javaHome;
-			if (!this.InstallationModel.JavaConfiguration.SetJavaHome(out javaHome))
-			{
-				throw new Exception($"A Java installation was detected, but unable to set the JAVA_HOME environment variable.  " +
-									$"Attempted to set: '{javaHome}'");
-			}
-
 			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
 

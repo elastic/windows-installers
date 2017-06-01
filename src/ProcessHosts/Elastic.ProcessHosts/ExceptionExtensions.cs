@@ -8,11 +8,14 @@ namespace Elastic.ProcessHosts
 		public static void ToConsole(this Exception e, string prefix)
 		{
 			Console.ForegroundColor = ConsoleColor.Red;
-			if (e is StartupException)
+			var startUpException = e as StartupException;
+			if (startUpException != null)
 				Console.Error.WriteLine(e.Message);
 			else
 				Console.Error.WriteLine($"{prefix}: {e}");
 			Console.ResetColor();
+			if (!string.IsNullOrWhiteSpace(startUpException?.HelpText))
+				Console.WriteLine(startUpException.HelpText);
 		}
 	}
 }
