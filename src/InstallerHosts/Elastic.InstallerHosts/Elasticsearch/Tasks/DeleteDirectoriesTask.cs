@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using Elastic.Configuration.FileBased.Yaml;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
@@ -9,7 +10,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
 	public class DeleteDirectoriesTask : ElasticsearchInstallationTask
 	{
-		public DeleteDirectoriesTask(string[] args, ISession session) : base(args, session) { }
+		private bool RollBack { get; }
+		public DeleteDirectoriesTask(string[] args, ISession session, bool rollBack) : base(args, session)
+		{
+			RollBack = rollBack;
+		}
 
 		public DeleteDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
@@ -40,7 +45,10 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 				this.DeleteDirectory(dataDirectory);
 
 			if (this.FileSystem.Directory.Exists(logsDirectory))
+			{
+				DumpElasticsearchLogOnRollback(logsDirectory);
 				this.DeleteDirectory(logsDirectory);
+			}
 
 			if (this.FileSystem.Directory.Exists(configDirectory))
 				this.DeleteDirectory(configDirectory);
@@ -71,6 +79,21 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 			this.Session.SendProgress(1000, "Elasticsearch installation directory removed");
 			return true;
+		}
+
+		private void DumpElasticsearchLogOnRollback(string logsDirectory)
+		{
+			if (!this.RollBack) return;
+			var clusterName = this.InstallationModel.ConfigurationModel.ClusterName;
+			var logFile = Path.Combine(logsDirectory, clusterName) + ".log";
+			if (this.FileSystem.File.Exists(logFile))
+			{
+				this.Session.Log($"Elasticsearch log file found: {logFile}");
+				var log = this.FileSystem.File.ReadAllText(logFile);
+				this.Session.Log(log);
+			}
+			else
+				this.Session.Log($"Elasticsearch log file not found: {logFile}");
 		}
 
 		private void DeleteDirectory(string directory)

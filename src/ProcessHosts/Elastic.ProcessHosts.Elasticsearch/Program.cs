@@ -17,17 +17,20 @@ namespace Elastic.ProcessHosts.Elasticsearch
 				var sent = ControlCDispatcher.Send(int.Parse(args[1]));
 				return sent ? 0 : 1;
 			}
-			var service = new ElasticsearchService(args);
+			
+			ElasticsearchService service = null;
 			try
 			{
-				Console.Title = $"Elasticsearch {AssemblyVersionInformation.AssemblyFileVersion}";
+				service = new ElasticsearchService(args);
+				if (Environment.UserInteractive)
+					Console.Title = $"Elasticsearch {AssemblyVersionInformation.AssemblyFileVersion}";
 				service.Run();
 				var exitCode = service.LastExitCode ?? 0;
 				return exitCode;
 			}
 			catch (Exception e)
 			{
-				var exitCode = service.LastExitCode ?? 1;
+				var exitCode = service?.LastExitCode ?? 1;
 				if (Environment.UserInteractive)
 					e.ToConsole("An exception occurred while trying to start elasticsearch.");
 				e.ToEventLog("Elasticsearch");
@@ -35,7 +38,7 @@ namespace Elastic.ProcessHosts.Elasticsearch
 			}
 			finally
 			{
-				service.Dispose();
+				service?.Dispose();
 				Console.ResetColor();
 			}
 		}

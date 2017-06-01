@@ -17,6 +17,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 
 		[CustomAction]
 		public static ActionResult ElasticsearchRollbackDirectories(Session session) =>
-			session.Handle(() => new DeleteDirectoriesTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
+			session.Handle(() => new DeleteDirectoriesTask(
+				session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession(), rollBack: true).Execute());
 	}
 }
