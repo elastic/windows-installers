@@ -25,12 +25,12 @@ namespace Elastic.ProcessHosts.Elasticsearch
 				Console.WriteLine(JavaConfiguration.Default.JavaHomeCanonical);
 				return 0;
 			}
-			if (JavaConfiguration.Default.Using32BitJava && Environment.UserInteractive)
-				Console.WriteLine("You are using a 32bit version this may cause the JVM to start, consider installing a 64bit JVM");
-			
 			ElasticsearchService service = null;
 			try
 			{
+				if (Environment.UserInteractive && JavaConfiguration.Default.Using32BitJava)
+					Console.WriteLine("You are using a 32bit version this may cause the JVM to start, consider installing a 64bit JVM");
+
 				service = new ElasticsearchService(args);
 				if (Environment.UserInteractive)
 					Console.Title = $"Elasticsearch {AssemblyVersionInformation.AssemblyFileVersion}";
