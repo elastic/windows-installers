@@ -285,18 +285,6 @@ namespace Elastic.Installer.UI.Elasticsearch
 			this.ViewModel.TabSelectedIndex = this.ViewModel.Steps.Count - 1;
 		}
 
-		private void RecheckPrequisites()
-		{
-			var javaState = new JavaEnvironmentStateProvider();
-			var esState = ElasticsearchEnvironmentConfiguration.Default;
-			var javaConfig = new JavaConfiguration(javaState);
-			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esState.ConfigDirectory);
-
-			this.ViewModel.BadElasticsearchYamlFile = esConfig.FoundButNotValid;
-			this.ViewModel.JavaInstalled = javaConfig.JavaInstalled;
-			this.ViewModel.JavaMisconfigured = javaConfig.JavaMisconfigured;
-		}
-
 		private void PromptPrerequisiteFailures(IList<ValidationFailure> failures)
 		{
 			if (failures.Count == 0) return;

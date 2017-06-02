@@ -56,6 +56,30 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.InvalidExternalSta
 				.Java(j => j.JavaHomeMachineVariable(@"C:\Java").JdkRegistry64(@"C:\JavaX"))
 			)
 			.IsValidOnFirstStep();
+		
+		[Fact] public void Jdk32BitsOnlyIsAPrequisiteFailure() => EmptyJavaModel(s=>s
+				.Java(j => j.JdkRegistry32(@"C:\Java32"))
+			)
+			.HasPrerequisiteErrors(errors => errors
+				.ShouldHaveErrors(TextResources.NoticeModelValidator_Using32BitJava)
+			);
+		
+		[Fact] public void Jre32BitsOnlyIsAPrequisiteFailure() => EmptyJavaModel(s=>s
+				.Java(j => j.JreRegistry32(@"C:\Java32"))
+			)
+			.HasPrerequisiteErrors(errors => errors
+				.ShouldHaveErrors(TextResources.NoticeModelValidator_Using32BitJava)
+			);
+		
+		[Fact] public void Jre32And64IsValid() => EmptyJavaModel(s=>s
+				.Java(j => j.JreRegistry64(@"C:\Java").JreRegistry32(@"c:\Java32"))
+			)
+			.IsValidOnFirstStep();
+		
+		[Fact] public void Jdk32And64IsValid() => EmptyJavaModel(s=>s
+				.Java(j => j.JdkRegistry64(@"C:\Java").JdkRegistry32(@"c:\Java32"))
+			)
+			.IsValidOnFirstStep();
 
 	}
 }
