@@ -3,6 +3,7 @@
 	<Costura IncludeDebugSymbols='false'>
 		<IncludeAssemblies>
 			Elastic.ProcessHosts
+			Elastic.Configuration
 		</IncludeAssemblies>
 	</Costura>
 </Weavers>
