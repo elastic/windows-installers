@@ -152,11 +152,11 @@ function Context-MsiRegistered($Expected) {
             $Product.IdentifyingNumber | Should Not Be $null
         }
 
-        It "MSI should have Name that matches the release" {
+        It "MSI should have Name that matches $($Expected.Name)" {
             $Product.Name | Should Be $($Expected.Name)
         }
 
-        It "MSI should have Caption that matches the release" {
+        It "MSI should have Caption that matches $($Expected.Caption)" {
             $Product.Caption | Should Be $($Expected.Caption)
         }
 
@@ -164,7 +164,7 @@ function Context-MsiRegistered($Expected) {
             $Product.Vendor | Should Be "Elastic"
         }
 
-        It "MSI should have the correct Version" {
+        It "MSI should have the version $($Expected.Version)" {
             $Product.Version | Should BeExactly $($Expected.Version)
         }
     }
@@ -305,4 +305,113 @@ function Context-JvmOptions ($Expected) {
             $ConfigLines | Should Contain ([regex]::Escape("-Xms$($Expected)m"))
         }
     }
+}
+
+function Context-InsertData($Domain, $Port, $Credentials) {
+	if (!$Domain) {
+		$Domain = "localhost"
+	}
+
+	if (!$Port) {
+		$Port = "9200"
+	}
+
+	Context "Insert Data" {
+		try {
+			$requests = @(
+				'{ "index" : { "_index" : "test", "_type" : "type1", "_id" : "1" } }'
+				'{ "field1" : "value1" }'
+				'{ "delete" : { "_index" : "test", "_type" : "type1", "_id" : "2" } }'
+				'{ "create" : { "_index" : "test", "_type" : "type1", "_id" : "3" } }'
+				'{ "field1" : "value3" }'
+				'{ "update" : {"_id" : "1", "_type" : "type1", "_index" : "test"} }'
+				'{ "doc" : {"field2" : "value2"} }'
+			)
+
+			$body = [string]::Join("`n", $requests) + "`n"
+
+			if ($Credentials) {
+				$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
+				$authHeaderValue = [Convert]::ToBase64String($bytes)
+				$response = Invoke-RestMethod "http://$($Domain):$Port/_bulk" -Method Post `
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
+								-Body $body
+			}
+			else {
+				$response = Invoke-RestMethod "http://$($Domain):$Port/_bulk" -Method Post -Body $body
+			}
+
+			It "Should have no errors" {
+				$response.errors | Should Be $false
+			}
+
+			It "Takes longer than 0ms" {
+				$response.took | Should BeGreaterThan 0
+			}
+		}
+		catch {
+			$Code = $_.Exception.Response.StatusCode.value__
+			$Description = $_.Exception.Response.StatusDescription
+
+			if ($_) {
+				$response = $_ | ConvertFrom-Json
+				if ($response) {
+					log "bulk call failed: $response" -l Error
+				}
+			}
+			else {
+				log "bulk call failed. code: $Code, description: $Description" -l Error
+			}
+		}
+	}
+}
+
+function Context-ReadData($Domain, $Port, $Credentials) {
+	if (!$Domain) {
+		$Domain = "localhost"
+	}
+
+	if (!$Port) {
+		$Port = "9200"
+	}
+
+	Context "Read Data" {
+		try {
+			if ($Credentials) {
+				$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
+				$authHeaderValue = [Convert]::ToBase64String($bytes)
+				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" -Method Get `
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
+			}
+			else {
+				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" -Method Get
+			}
+
+			It "Have expected count" {
+				$response.hits.total | Should Be 2
+			}
+
+			it "should not time out" {
+				$response.timed_out | Should Be $false
+			}
+
+			It "Takes longer than 0ms" {
+				$response.took | Should BeGreaterThan 0
+			}
+		}
+		catch {
+			$Code = $_.Exception.Response.StatusCode.value__
+			$Description = $_.Exception.Response.StatusDescription
+
+			if ($_) {
+				$response = $_ | ConvertFrom-Json
+				if ($response) {
+					log "bulk call failed: $response" -l Error
+				}
+			}
+			else {
+				log "bulk call failed. code: $Code, description: $Description" -l Error
+			}
+		}
+	}
 }

@@ -69,31 +69,41 @@ module Products =
         Prerelease : string;
     }
 
-    type ProductVersion(product:Product, version:Version) =
-        member this.Product = product;
-        member this.Version = version;
+    type ProductVersions(product:Product, versions:Version list) =
+        member this.Product = product
+        member this.Versions = versions
         member this.Name = product.Name
         member this.Title = product.Title
 
-        member this.DownloadUrl =
-            match product with
-            | Elasticsearch ->
-                sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl this.Version.FullVersion
-            | Kibana -> sprintf "%s/kibana/kibana-%s-windows-x86.zip" ArtifactDownloadsUrl this.Version.FullVersion
-
-        member this.ZipFile =
+        member this.DownloadUrls =
+            this.Versions
+            |> List.map(fun v ->
+                match product with
+                | Elasticsearch ->
+                    sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl v.FullVersion
+                | Kibana ->               
+                    sprintf "%s/kibana/kibana-%s-windows-x86.zip" ArtifactDownloadsUrl v.FullVersion                       
+            )
+        
+        member this.ZipFiles =
             InDir |> CreateDir
-            InDir
-            |> Path.GetFullPath
-            |> fun f -> Path.Combine(f, sprintf "%s-%s.zip" this.Name this.Version.FullVersion)
+            let fullPathInDir = InDir |> Path.GetFullPath
+            this.Versions
+            |> List.map(fun v ->
+                Path.Combine(fullPathInDir, sprintf "%s-%s.zip" this.Name v.FullVersion)
+            )
 
-        member this.ExtractedDirectory =
+        member this.ExtractedDirectories =
             InDir |> CreateDir
-            InDir
-            |> Path.GetFullPath
-            |> fun f -> Path.Combine(f, sprintf "%s-%s" this.Name this.Version.FullVersion)
+            let fullPathInDir = InDir |> Path.GetFullPath            
+            this.Versions
+            |> List.map (fun v ->
+                Path.Combine(fullPathInDir, sprintf "%s-%s" this.Name v.FullVersion)
+            )
 
-        member this.BinDir = InDir @@ sprintf "%s-%s/bin/" this.Name this.Version.FullVersion
+        member this.BinDirs = 
+            this.Versions
+            |> List.map(fun v -> InDir @@ sprintf "%s-%s/bin/" this.Name v.FullVersion)
 
         member this.ServiceDir =
             ProcessHostsDir @@ sprintf "Elastic.ProcessHosts.%s/" this.Title
@@ -101,30 +111,36 @@ module Products =
         member this.ServiceBinDir = this.ServiceDir @@ "bin/AnyCPU/Release/"
 
         member this.Unzip () =
-            if directoryExists this.ExtractedDirectory |> not && fileExists this.ZipFile
-            then
-                tracefn "Unzipping %s %s" this.Name this.Version.FullVersion
-                Unzip InDir this.ZipFile
-                match this.Product with
-                    | Kibana ->
-                        let original = sprintf "kibana-%s-windows-x86" this.Version.FullVersion
-                        if directoryExists original |> not then
-                            Rename (InDir @@ (sprintf "kibana-%s" this.Version.FullVersion)) (InDir @@ original)
-                    | _ -> ()
-            else tracefn "Extracted directory %s already exists" this.ExtractedDirectory
+            List.zip3 this.ExtractedDirectories this.ZipFiles this.Versions
+            |> List.iter(fun (extractedDirectory, zipFile, version) ->
+                if directoryExists extractedDirectory |> not && fileExists zipFile
+                then
+                    tracefn "Unzipping %s %s" this.Name zipFile
+                    Unzip InDir zipFile
+                    match this.Product with
+                        | Kibana ->
+                            let original = sprintf "kibana-%s-windows-x86" version.FullVersion
+                            if directoryExists original |> not then
+                                Rename (InDir @@ (sprintf "kibana-%s" version.FullVersion)) (InDir @@ original)
+                        | _ -> ()
+                else tracefn "Extracted directory %s already exists" extractedDirectory                
+            )
 
         member this.Download () =
-            let locations = (this.DownloadUrl, this.ZipFile)
-            match locations with
-            | (_, downloaded) when fileExists downloaded ->
-                tracefn "Already downloaded %s %s" this.Name this.Version.FullVersion
-            | _ ->
-                tracefn "Downloading %s %s" this.Name this.Version.FullVersion
-                use webClient = new System.Net.WebClient()
-                locations |> webClient.DownloadFile
-                tracefn "Done downloading %s %s" this.Name this.Version.FullVersion
+            let locations = List.zip this.DownloadUrls this.ZipFiles
+            locations
+            |> List.iter(fun location ->          
+                match location with
+                | (_, zip) when fileExists zip ->
+                    tracefn "Already downloaded %s to %s" this.Name zip
+                | (url, zip) ->
+                    tracefn "Downloading %s from %s" this.Name url 
+                    use webClient = new System.Net.WebClient()
+                    location |> webClient.DownloadFile
+                    tracefn "Done downloading %s from %s to %s" this.Name url zip 
+            )  
 
-        static member CreateFromProduct (productToVersion:Product -> Version) (product: Product)  =
-            ProductVersion(product, productToVersion product)
+        static member CreateFromProduct (productToVersion:Product -> Version list) (product: Product)  =
+            ProductVersions(product, productToVersion product)
 
 

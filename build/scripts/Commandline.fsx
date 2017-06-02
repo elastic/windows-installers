@@ -9,6 +9,7 @@
 #load "Products.fsx"
 
 open System
+open System.Collections.Generic
 open System.IO
 open System.Text.RegularExpressions
 open Fake
@@ -22,7 +23,7 @@ module Commandline =
     let private usage = """
 USAGE:
 
-build <target> [products] [version] [params] [skiptests]
+build <target> [Products] [Versions] [Params] [skiptests]
 
 Targets:
 
@@ -38,11 +39,11 @@ Targets:
   - downloads the product zip files if not already downloaded
 * unzipproducts
   - unzips product zip files if not already unzipped
-* release [Products] [Version] [CertFile] [PasswordFile]
+* release [Products] [Versions] [CertFile] [PasswordFile]
   - create a release versions of each MSI by building and then signing the service executable and installer for each.
   - when CertFile and PasswordFile are specified, these will be used for signing otherwise the values in ELASTIC_CERT_FILE
     and ELASTIC_CERT_PASSWORD environment variables will be used
-* integrate [Products] [Version] [VagrantProvider] [TestTargets] [skiptests]  -
+* integrate [Products] [Versions] [VagrantProvider] [TestTargets] [skiptests]  -
   - run integration tests. Can filter tests by wildcard [testtargets]
 * help or ?
   - show this usage summary
@@ -62,10 +63,12 @@ optional comma separated collection of products to build. can use
 * kibana
     - build kibana
 
-Version:
+Versions:
 
-optional version to build. When specified, for build targets other than release, the version zip file will
-be downloaded and extracted to build/in directory if it doesn't already exist.
+Optional version(s) to build. Multiple versions can be specified separated by commas. 
+
+When specified, for build targets other than release, the version zip files will
+be downloaded and extracted to build/in directory if they don't already exist.
 
 when not specified
     - for build targets other than release, the latest non-prelease version of each product will be downloaded
@@ -118,7 +121,7 @@ Whether to skip unit tests.
         let firstLink = feed.Channel.Items |> Seq.find (fun item -> itemIsProduct item.Title)
         let version = parseVersion firstLink.Title
         tracefn "Extracted %s version %s from '%s'" product.Name version.FullVersion firstLink.Title
-        version
+        [version]
 
     let private versionFromInDir (product : Product) =
         let extractVersion (fileInfo:FileInfo) =
@@ -131,7 +134,7 @@ Whether to skip unit tests.
         | 1 ->
             let version = zips.[0] |> extractVersion |> parseVersion
             tracefn "Extracted %s from %s" version.FullVersion zips.[0].FullName
-            version
+            [version]
         | _ -> failwithf "Expecting one %s zip file in %s but found %i" product.Name InDir zips.Length
 
 
@@ -164,17 +167,26 @@ Whether to skip unit tests.
         | "integrate" -> Some candidate
         | _ -> None
 
-    let private (|IsVersion|_|) candidate =
-        let m = VersionRegex().Match candidate
-        match m.Success with
-        | true -> Some {  Product = m.Product.Value;
-                          FullVersion = m.Version.Value;
-                          Major = m.Major.Value |> int;
-                          Minor = m.Minor.Value |> int;
-                          Patch = m.Patch.Value |> int;
-                          Prerelease = m.Prerelease.Value; }
+    let private (|IsVersionList|_|) candidate =
+        let versionStrings = splitStr "," candidate
+        let versions = new List<Version>()
+        
+        versionStrings
+        |> List.iter(fun v ->
+            let m = VersionRegex().Match v
+            match m.Success with
+            | true -> versions.Add({ Product = m.Product.Value;
+                        FullVersion = m.Version.Value;
+                        Major = m.Major.Value |> int;
+                        Minor = m.Minor.Value |> int;
+                        Patch = m.Patch.Value |> int;
+                        Prerelease = m.Prerelease.Value; })
+            | _ -> ()
+        )      
+        match versions with
+        | v when v.Count = versionStrings.Length -> Some (List.ofSeq v)
         | _ -> None
-
+        
     let private (|IsProductList|_|) candidate =
         let products = splitStr "," candidate
         let productFromValue value =
@@ -227,99 +239,99 @@ Whether to skip unit tests.
                        | ["release"] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromEnvVariables ()
-                           All |> List.map (ProductVersion.CreateFromProduct versionFromInDir)
+                           All |> List.map (ProductVersions.CreateFromProduct versionFromInDir)
                        | ["release"; IsProductList products ] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromEnvVariables ()
-                           products |> List.map (ProductVersion.CreateFromProduct versionFromInDir)
-                       | ["release"; IsVersion version ] ->
+                           products |> List.map (ProductVersions.CreateFromProduct versionFromInDir)
+                       | ["release"; IsVersionList versions ] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromEnvVariables ()
-                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
-                       | ["release"; IsProductList products; IsVersion version ] ->
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | ["release"; IsProductList products; IsVersionList versions ] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromEnvVariables ()
-                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
-                       | ["release"; IsProductList products; IsVersion version; certFile; passwordFile ] ->
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | ["release"; IsProductList products; IsVersionList versions; certFile; passwordFile ] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromFile certFile passwordFile
-                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
-                       | ["release"; IsVersion version; certFile; passwordFile ] ->
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | ["release"; IsVersionList versions; certFile; passwordFile ] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromFile certFile passwordFile
-                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | ["release"; IsProductList products; certFile; passwordFile ] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromFile certFile passwordFile
-                           products |> List.map (ProductVersion.CreateFromProduct versionFromInDir)
+                           products |> List.map (ProductVersions.CreateFromProduct versionFromInDir)
                        | ["release"; certFile; passwordFile ] ->
                            setBuildParam "release" "1"
                            certAndPasswordFromFile certFile passwordFile
-                           All |> List.map (ProductVersion.CreateFromProduct versionFromInDir)
+                           All |> List.map (ProductVersions.CreateFromProduct versionFromInDir)
 
-                       | ["integrate"; IsProductList products; IsVersion version; IsVagrantProvider provider; testTargets] ->
+                       | ["integrate"; IsProductList products; IsVersionList versions; IsVagrantProvider provider; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
-                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
-                       | ["integrate"; IsProductList products; IsVersion version; testTargets] ->
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | ["integrate"; IsProductList products; IsVersionList versions; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                            
-                       | ["integrate"; IsProductList products; IsVersion version; IsVagrantProvider provider] ->
+                       | ["integrate"; IsProductList products; IsVersionList versions; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
-                       | ["integrate"; IsProductList products; IsVersion version] ->
-                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | ["integrate"; IsProductList products; IsVersionList versions] ->
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                            
-                       | ["integrate"; IsVersion version; IsVagrantProvider provider; testTargets] ->
+                       | ["integrate"; IsVersionList versions; IsVagrantProvider provider; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)                       
-                       | ["integrate"; IsVersion version; testTargets] ->
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
+                       | ["integrate"; IsVersionList versions; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                            
                        | ["integrate"; IsProductList products; IsVagrantProvider provider; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
-                           products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)                           
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                           
                        | ["integrate"; IsProductList products; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
                        
                        | ["integrate"; IsProductList products; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion) 
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion) 
                        | ["integrate"; IsProductList products] ->
-                           products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
                            
                            
-                       | ["integrate"; IsVersion version; IsVagrantProvider provider] ->
+                       | ["integrate"; IsVersionList versions; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)                       
-                       | ["integrate"; IsVersion version] ->
-                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
+                       | ["integrate"; IsVersionList versions] ->
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | ["integrate"; IsVagrantProvider provider; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)      
+                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)      
                        | ["integrate"; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)                
+                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                
                        | ["integrate"; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
+                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
 
-                       | [IsTarget target; IsVersion version] ->
-                           All |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                       | [IsTarget target; IsVersionList versions] ->
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target; IsProductList products] ->
-                           products |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
-                       | [IsTarget target; IsProductList products; IsVersion version] ->
-                           products |> List.map (ProductVersion.CreateFromProduct <| fun _ -> version)
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
+                       | [IsTarget target; IsProductList products; IsVersionList versions] ->
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target] ->
-                           All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
+                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
                        | [] ->
-                           All |> List.map (ProductVersion.CreateFromProduct lastFeedVersion)
+                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
                        | ["help"]
                        | ["?"] ->
                            trace usage
