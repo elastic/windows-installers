@@ -9,12 +9,12 @@ namespace Elastic.InstallerHosts
 {
 	public static class SessionExtensions
 	{
-		public static ISession ToISession(this Microsoft.Deployment.WindowsInstaller.Session session) => new SessionWrapper(session);
+		public static ISession ToISession(this Session session) => new SessionWrapper(session);
 
 		private static volatile string[] _cachedSetupArguments;
 		private static readonly object Lock = new object();
 
-		public static string[] ToSetupArguments(this Microsoft.Deployment.WindowsInstaller.Session session, IEnumerable<string> allArguments)
+		public static string[] ToSetupArguments(this Session session, IEnumerable<string> allArguments)
 		{
 			if (session == null) return new string[] { };
 			if (_cachedSetupArguments != null) return _cachedSetupArguments;
@@ -35,7 +35,7 @@ namespace Elastic.InstallerHosts
 			return _cachedSetupArguments;
 		}
 
-		public static bool TryGetValue(this Microsoft.Deployment.WindowsInstaller.Session session, string property, out string value)
+		public static bool TryGetValue(this Session session, string property, out string value)
 		{
 			value = null;
 			try
@@ -54,7 +54,7 @@ namespace Elastic.InstallerHosts
 			}
 		}
 
-		public static void Set(this Microsoft.Deployment.WindowsInstaller.Session session, string property, string value)
+		public static void Set(this Session session, string property, string value)
 		{
 			if (session.IsActive())
 				session[property] = value;
@@ -75,7 +75,7 @@ namespace Elastic.InstallerHosts
 			}
 		}
 
-		public static ActionResult Handle(this Microsoft.Deployment.WindowsInstaller.Session session, Func<bool> action)
+		public static ActionResult Handle(this Session session, Func<bool> action)
 		{
 			try
 			{

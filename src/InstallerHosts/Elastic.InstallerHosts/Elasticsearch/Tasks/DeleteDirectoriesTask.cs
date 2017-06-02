@@ -22,7 +22,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		/// <summary>
 		/// This action ensures we remove the Elasticsearch installation directory completely.
 		/// We can't rely on the MSI RemoveFiles step to remove directories/files that were registered 
-		/// on a full uninstall becase new files may have been introduced later on (e.g. plugins).
+		/// on a full uninstall because new files may have been introduced later on (e.g. plugins).
 		/// </summary>
 		protected override bool ExecuteTask()
 		{

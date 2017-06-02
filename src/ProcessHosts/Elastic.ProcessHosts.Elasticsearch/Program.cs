@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Reflection;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Configuration.EnvironmentBased.Java;
 using Elastic.Configuration.Extensions;
 using Elastic.ProcessHosts.Elasticsearch.Service;
-using Elastic.ProcessHosts.Process;
 
 namespace Elastic.ProcessHosts.Elasticsearch
 {

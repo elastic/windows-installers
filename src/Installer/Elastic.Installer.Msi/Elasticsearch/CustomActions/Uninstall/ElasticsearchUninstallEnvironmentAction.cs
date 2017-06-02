@@ -11,8 +11,8 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 	{
 		public override string Name => nameof(ElasticsearchUninstallEnvironmentAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.UninstallEnvironment;
-		public override Step Step => Step.InstallExecute;
-		public override When When => When.Before;
+		public override Step Step => new Step(nameof(ElasticsearchUninstallServiceAction));
+		public override When When => When.After;
 
 		[CustomAction]
 		public static ActionResult ElasticsearchUninstallEnvironment(Session session) =>

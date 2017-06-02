@@ -28,19 +28,9 @@
 
             <Directory Id="INSTALLDIR.bin" Name="bin">
 
-              <Component Id="Component.elasticsearch_keystore.bat" Guid="daaa2cba-a1ed-4f29-afbf-547886c8d35a" Win64="yes">
-                <RemoveFile Id="elasticsearch_keystore.bat" Name="elasticsearch_keystore.bat" On="both" />
-                <File Id="elasticsearch_keystore.bat" Source="..\..\..\build\in\elasticsearch-5.4.0\bin\elasticsearch-keystore.bat" />
-              </Component>
-
               <Component Id="Component.elasticsearch_plugin.bat" Guid="daaa2cba-a1ed-4f29-afbf-54780b44f88c" Win64="yes">
                 <RemoveFile Id="elasticsearch_plugin.bat" Name="elasticsearch_plugin.bat" On="both" />
                 <File Id="elasticsearch_plugin.bat" Source="..\..\..\build\in\elasticsearch-5.4.0\bin\elasticsearch-plugin.bat" />
-              </Component>
-
-              <Component Id="Component.elasticsearch_translog.bat" Guid="daaa2cba-a1ed-4f29-afbf-547861a30033" Win64="yes">
-                <RemoveFile Id="elasticsearch_translog.bat" Name="elasticsearch_translog.bat" On="both" />
-                <File Id="elasticsearch_translog.bat" Source="..\..\..\build\in\elasticsearch-5.4.0\bin\elasticsearch-translog.bat" />
               </Component>
 
               <Component Id="Component.elasticsearch.exe" Guid="daaa2cba-a1ed-4f29-afbf-5478f1f18046" Win64="yes">
@@ -88,14 +78,9 @@
 
                   <Directory Id="INSTALLDIR.data.nodes.0._state" Name="_state">
 
-                    <Component Id="Component.global_6.st" Guid="daaa2cba-a1ed-4f29-afbf-5478a6a2de83" Win64="yes">
-                      <RemoveFile Id="global_6.st" Name="global_6.st" On="both" />
-                      <File Id="global_6.st" Source="..\..\..\build\in\elasticsearch-5.4.0\data\nodes\0\_state\global-6.st" />
-                    </Component>
-
-                    <Component Id="Component.node_11.st" Guid="daaa2cba-a1ed-4f29-afbf-547817bcfdfb" Win64="yes">
-                      <RemoveFile Id="node_11.st" Name="node_11.st" On="both" />
-                      <File Id="node_11.st" Source="..\..\..\build\in\elasticsearch-5.4.0\data\nodes\0\_state\node-11.st" />
+                    <Component Id="Component.node_0.st" Guid="daaa2cba-a1ed-4f29-afbf-54788f244413" Win64="yes">
+                      <RemoveFile Id="node_0.st" Name="node_0.st" On="both" />
+                      <File Id="node_0.st" Source="..\..\..\build\in\elasticsearch-5.4.0\data\nodes\0\_state\node-0.st" />
                     </Component>
 
                   </Directory>
@@ -278,11 +263,6 @@
             </Directory>
 
             <Directory Id="INSTALLDIR.logs" Name="logs">
-
-              <Component Id="Component.elasticsearch_2017_05_30.log" Guid="daaa2cba-a1ed-4f29-afbf-54784f8d2d29" Win64="yes">
-                <RemoveFile Id="elasticsearch_2017_05_30.log" Name="elasticsearch_2017_05_30.log" On="both" />
-                <File Id="elasticsearch_2017_05_30.log" Source="..\..\..\build\in\elasticsearch-5.4.0\logs\elasticsearch-2017-05-30.log" />
-              </Component>
 
               <Component Id="Component.elasticsearch.log" Guid="daaa2cba-a1ed-4f29-afbf-5478362f6985" Win64="yes">
                 <RemoveFile Id="elasticsearch.log" Name="elasticsearch.log" On="both" />
@@ -696,17 +676,14 @@
       <ComponentRef Id="Component.LICENSE.txt" />
       <ComponentRef Id="Component.NOTICE.txt" />
       <ComponentRef Id="Component.README.textile" />
-      <ComponentRef Id="Component.elasticsearch_keystore.bat" />
       <ComponentRef Id="Component.elasticsearch_plugin.bat" />
-      <ComponentRef Id="Component.elasticsearch_translog.bat" />
       <ComponentRef Id="Component.elasticsearch.exe" />
       <ComponentRef Id="Component.elasticsearch.yml" />
       <ComponentRef Id="Component.jvm.options" />
       <ComponentRef Id="Component.log4j2.properties" />
       <ComponentRef Id="scripts.EmptyDirectory" />
       <ComponentRef Id="Component.node.lock" />
-      <ComponentRef Id="Component.global_6.st" />
-      <ComponentRef Id="Component.node_11.st" />
+      <ComponentRef Id="Component.node_0.st" />
       <ComponentRef Id="Component.elasticsearch_5.4.0.jar" />
       <ComponentRef Id="Component.HdrHistogram_2.1.9.jar" />
       <ComponentRef Id="Component.hppc_0.7.1.jar" />
@@ -741,7 +718,6 @@
       <ComponentRef Id="Component.snakeyaml_1.15.jar" />
       <ComponentRef Id="Component.spatial4j_0.6.jar" />
       <ComponentRef Id="Component.t_digest_3.0.jar" />
-      <ComponentRef Id="Component.elasticsearch_2017_05_30.log" />
       <ComponentRef Id="Component.elasticsearch.log" />
       <ComponentRef Id="Component.elasticsearch_deprecation.log" />
       <ComponentRef Id="Component._...rch_index_indexing_slowlog.log" />
@@ -808,21 +784,21 @@
       <Custom Action="Action4SetProp_NODENAME" After="Action3SetProp_LOGSDIRECTORY">(NOT Installed) AND (NODENAME="")</Custom>
       <Custom Action="ElasticsearchValidateArgumentsAction" After="InstallInitialize"> (1) </Custom>
       <Custom Action="Set_ElasticsearchUninstallServiceAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallServiceAction" Before="RemoveFiles">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="ElasticsearchUninstallServiceAction" After="ElasticsearchUninstallPluginsAction">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchRollbackEnvironmentAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackEnvironmentAction" Before="ElasticsearchEnvironmentAction" />
       <Custom Action="Set_ElasticsearchUninstallPluginsAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallPluginsAction" Before="RemoveFiles">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="ElasticsearchUninstallPluginsAction" After="InstallInitialize">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchRollbackDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackDirectoriesAction" Before="ElasticsearchDirectoriesAction" />
       <Custom Action="Set_ElasticsearchUninstallDirectoriesAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallDirectoriesAction" Before="RemoveFiles">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="ElasticsearchUninstallDirectoriesAction" After="ElasticsearchUninstallEnvironmentAction">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchRollbackServiceAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackServiceAction" Before="ElasticsearchServiceInstallAction" />
       <Custom Action="Set_ElasticsearchServiceStopAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchServiceStopAction" After="InstallInitialize"> (1) </Custom>
       <Custom Action="Set_ElasticsearchUninstallEnvironmentAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallEnvironmentAction" Before="InstallExecute"> (Installed) </Custom>
+      <Custom Action="ElasticsearchUninstallEnvironmentAction" After="ElasticsearchUninstallServiceAction"> (Installed) </Custom>
       <Custom Action="Set_ElasticsearchEnvironmentAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchEnvironmentAction" Before="InstallFinalize"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchDirectoriesAction_Props" After="InstallInitialize" />
