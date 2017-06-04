@@ -26,16 +26,17 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		public static string DefaultProgramFiles => 
 			Environment.GetEnvironmentVariable("ProgramW6432") ?? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
-		public static readonly string DefaultCompanyDirectory =
+		public static readonly string DefaultCompanyDataDirectory =
 			Path.Combine(Environment.GetEnvironmentVariable(ProgramDataEnvironmentVariable), CompanyFolderName);
 
-		public static readonly string DefaultWritableDirectory = Path.Combine(DefaultCompanyDirectory, ProductFolderName);
+		public static readonly string DefaultProductDataDirectory = Path.Combine(DefaultCompanyDataDirectory, ProductFolderName);
 
-		public static readonly string DefaultInstallationDirectory = Path.Combine(DefaultProgramFiles, CompanyFolderName, ProductFolderName);
-		public static readonly string DefaultMsiLogFileLocation = Path.Combine(DefaultWritableDirectory, "install.log");
-		public static readonly string DefaultLogsDirectory = Path.Combine(DefaultWritableDirectory, Logs);
-		public static readonly string DefaultDataDirectory = Path.Combine(DefaultWritableDirectory, Data);
-		public static readonly string DefaultConfigDirectory = Path.Combine(DefaultWritableDirectory, Config);
+		public static readonly string DefaultCompanyInstallationDirectory = Path.Combine(DefaultProgramFiles, CompanyFolderName);
+		public static readonly string DefaultProductInstallationDirectory = Path.Combine(DefaultCompanyInstallationDirectory, ProductFolderName);
+		public static readonly string DefaultMsiLogFileLocation = Path.Combine(DefaultProductDataDirectory, "install.log");
+		public static readonly string DefaultLogsDirectory = Path.Combine(DefaultProductDataDirectory, Logs);
+		public static readonly string DefaultDataDirectory = Path.Combine(DefaultProductDataDirectory, Data);
+		public static readonly string DefaultConfigDirectory = Path.Combine(DefaultProductDataDirectory, Config);
 
 		private bool _refreshing;
 		private readonly ElasticsearchEnvironmentConfiguration _elasticsearchEnvironmentConfiguration;
@@ -110,18 +111,18 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this._refreshing = true;
 
 			//todo duplication?
-			this.InstallDir = this._elasticsearchEnvironmentConfiguration.TargetInstallationDirectory ?? DefaultInstallationDirectory;
+			this.InstallDir = this._elasticsearchEnvironmentConfiguration.TargetInstallationDirectory ?? DefaultProductInstallationDirectory;
 			this.ConfigDirectory = this._elasticsearchEnvironmentConfiguration.TargetInstallationConfigDirectory ?? DefaultConfigDirectory;
 			this.DataDirectory = this._yamlConfiguration?.Settings?.DataPath ?? DefaultDataDirectory;
 			this.LogsDirectory = this._yamlConfiguration?.Settings?.LogsPath ?? DefaultLogsDirectory;
 
-			var home = this._elasticsearchEnvironmentConfiguration.TargetInstallationDirectory ?? DefaultInstallationDirectory;
+			var home = this._elasticsearchEnvironmentConfiguration.TargetInstallationDirectory ?? DefaultProductInstallationDirectory;
 			var config = this._elasticsearchEnvironmentConfiguration.TargetInstallationConfigDirectory ?? DefaultConfigDirectory;
 			var data = this._yamlConfiguration?.Settings?.DataPath ?? DefaultDataDirectory;
 			var logs = this._yamlConfiguration?.Settings?.LogsPath ?? DefaultLogsDirectory;
 
 			this.ConfigureLocations = 
-				!this.SamePathAs(home, DefaultInstallationDirectory)
+				!this.SamePathAs(home, DefaultProductInstallationDirectory)
 				|| !this.SamePathAs(config, DefaultConfigDirectory)
 				|| !this.SamePathAs(data, DefaultDataDirectory)
 				|| !this.SamePathAs(logs, DefaultLogsDirectory);
