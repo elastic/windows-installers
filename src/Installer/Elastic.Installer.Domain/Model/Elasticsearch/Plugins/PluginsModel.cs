@@ -103,8 +103,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			yield return new Plugin
 			{
 				PluginType = PluginType.Discovery,
-				Url = "discovery-azure",
-				DisplayName = "Azure Discovery",
+				Url = "discovery-azure-classic",
+				DisplayName = "Azure Discovery (Classic)",
 				Description = TextResources.PluginsModel_AzureDiscovery
 			};
 
