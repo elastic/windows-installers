@@ -188,7 +188,16 @@ namespace Elastic.Installer.Domain.Properties {
                 return ResourceManager.GetString("ConfigurationModelValidator_TransportPortMinimum", resourceCulture);
             }
         }
-        
+	    //
+        /// <summary>
+        ///   Looks up a localized string similar to that lets the user know you need an internet connection to install plugins
+        /// </summary>
+        public static string PluginsModelValidator_NoInternet {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_NoInternet", resourceCulture);
+            }
+        }
+	    
         /// <summary>
         ///   Looks up a localized string similar to A URL to Elasticsearch must be specified..
         /// </summary>

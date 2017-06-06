@@ -470,4 +470,9 @@ by removing one of these environment variables.</value>
   <data name="ConnectingModelValidator_IndexMustBeSpecified" xml:space="preserve">
     <value>An index must be specified.</value>
   </data>
+  <data name="PluginsModelValidator_NoInternet" xml:space="preserve">
+    <value>Plugin installation is online, meaning you need a connection to the 
+    internet to commence. Either deselect all plugins or connect 
+    to the internet and refresh the installer.</value>
+  </data>
 </root>
