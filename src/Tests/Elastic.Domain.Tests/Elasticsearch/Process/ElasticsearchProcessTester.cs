@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		public TestableElasticsearchObservableProcess ObservableProcess { get; set; }
 
 		public static string DefaultJavaHome { get; } = @"C:\Java";
-		public static string DefaultEsHome { get; } = LocationsModel.DefaultInstallationDirectory;
+		public static string DefaultEsHome { get; } = LocationsModel.DefaultProductInstallationDirectory;
 
 		public ElasticsearchProcessTester(Func<ElasticsearchProcessTesterStateProvider, ElasticsearchProcessTesterStateProvider> setup)
 		{
