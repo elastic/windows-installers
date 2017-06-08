@@ -40,7 +40,7 @@ elasticsearch:
     - version: 5.4.0
       guid: 8279eff6-3a85-4b37-ac5a-3c5136bb5465
     - version: 5.4.1
-      guid: f2000767-935c-4354-9cb4-75f0366e8c1c
+      guid: 127c0984-c0fe-4f6d-acf9-4c15101bd627
 kibana:
   upgrade_code: 6a2e6f51-5145-4c1a-8d05-2190ae213367
   known_versions:

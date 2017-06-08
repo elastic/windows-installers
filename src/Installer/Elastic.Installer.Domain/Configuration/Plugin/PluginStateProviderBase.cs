@@ -60,10 +60,14 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			if (exitCode != 0 || errors)
 				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode} ErrorCheck: {errors} ErrorOut: {errorOut}");
 
-			return data.Split(SplitListing, StringSplitOptions.RemoveEmptyEntries)
+			var plugins = data.Split(SplitListing, StringSplitOptions.RemoveEmptyEntries)
 					.Select(p => p.Split('@').FirstOrDefault())
 					.Where(p => !string.IsNullOrWhiteSpace(p))
 					.ToList();
+			
+			Session.Log($"installed plugins: {Environment.NewLine}{string.Join(Environment.NewLine, plugins)}");
+
+			return plugins;
 		}
 
 		public abstract DataReceivedEventHandler CreateInstallHandler(int perDownloadIncrement, string plugin);

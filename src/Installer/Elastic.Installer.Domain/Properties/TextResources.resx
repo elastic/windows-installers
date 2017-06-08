@@ -450,7 +450,8 @@ by removing one of these environment variables.</value>
     <value>User or Password is incorrect</value>
   </data>
   <data name="NoticeModelValidator_HigherVersionInstalled" xml:space="preserve">
-    <value>A higher version is already installed.  In order to downgrade, you must uninstall this version first.</value>
+    <value>A higher version is already installed.  In order to downgrade, you must uninstall this version first.
+PLEASE NOTE: an uninstall will always remove the data folder be sure you move it elsewhere if you need to keep it.</value>
   </data>
   <data name="ConfigurationModelValidator_BasePath" xml:space="preserve">
     <value>Base Path</value>

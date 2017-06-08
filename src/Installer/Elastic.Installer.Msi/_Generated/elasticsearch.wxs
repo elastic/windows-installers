@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="f2000767-935c-4354-9cb4-75f0366e8c1c" Name="Elasticsearch 5.4.1" Language="1033" Codepage="Windows-1252" Version="5.4.1" UpgradeCode="daaa2cba-a1ed-4f29-afbf-5478617b00f6" Manufacturer="Elastic">
+  <Product Id="127c0984-c0fe-4f6d-acf9-4c15101bd627" Name="Elasticsearch 5.4.1" Language="1033" Codepage="Windows-1252" Version="5.4.1" UpgradeCode="daaa2cba-a1ed-4f29-afbf-5478617b00f6" Manufacturer="Elastic">
     <Package InstallerVersion="200" Compressed="yes" Platform="x64" SummaryCodepage="Windows-1252" Languages="1033" InstallScope="perMachine" />
     <Media Id="1" Cabinet="Elasticsearch_5.4.1_.cab" EmbedCab="yes" />
 
@@ -75,6 +75,7 @@
                 </Component>
 
               </Directory>
+
             </Directory>
 
             <Directory Id="INSTALLDIR.lib" Name="lib">
@@ -553,12 +554,6 @@
               </Directory>
             </Directory>
           </Directory>
-
-          <Component Id="Elastic" Guid="daaa2cba-a1ed-4f29-afbf-54789d7bb99d" KeyPath="yes" Win64="yes">
-            <CreateFolder />
-            <RemoveFolder Id="Elastic" On="uninstall" />
-          </Component>
-
         </Directory>
       </Directory>
     </Directory>
@@ -749,7 +744,7 @@
       <Custom Action="Set_ElasticsearchRollbackEnvironmentAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackEnvironmentAction" Before="ElasticsearchEnvironmentAction" />
       <Custom Action="Set_ElasticsearchUninstallPluginsAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallPluginsAction" After="InstallInitialize">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="ElasticsearchUninstallPluginsAction" Before="ProcessComponents">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchRollbackDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackDirectoriesAction" Before="ElasticsearchDirectoriesAction" />
       <Custom Action="Set_ElasticsearchUninstallDirectoriesAction_Props" After="InstallInitialize" />
