@@ -471,4 +471,9 @@ PLEASE NOTE: an uninstall will always remove the data folder be sure you move it
   <data name="ConnectingModelValidator_IndexMustBeSpecified" xml:space="preserve">
     <value>An index must be specified.</value>
   </data>
+  <data name="PluginsModelValidator_NoInternet" xml:space="preserve">
+    <value>Plugin installation is online, meaning you need a connection to the 
+    internet to commence. Either deselect all plugins or connect 
+    to the internet and refresh the installer.</value>
+  </data>
 </root>

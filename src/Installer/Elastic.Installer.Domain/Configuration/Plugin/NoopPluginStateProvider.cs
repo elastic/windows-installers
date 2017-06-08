@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Elastic.Installer.Domain.Configuration.Plugin
 {
@@ -23,5 +24,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 		public void Remove(int pluginTicks, string installDirectory, string configDirectory, string plugin, params string[] additionalArguments)
 		{
 		}
+
+		public Task<bool> HasInternetConnection() => Task.FromResult(true);
 	}
 }
