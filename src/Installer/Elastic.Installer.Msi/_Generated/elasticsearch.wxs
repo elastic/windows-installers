@@ -67,15 +67,6 @@
                 <File Id="log4j2.properties" Source="..\..\..\build\in\elasticsearch-5.4.1\config\log4j2.properties" />
               </Component>
 
-              <Directory Id="INSTALLDIR.config.scripts" Name="scripts">
-
-                <Component Id="scripts.EmptyDirectory" Guid="daaa2cba-a1ed-4f29-afbf-5478b5fde9df" KeyPath="yes" Win64="yes">
-                  <CreateFolder />
-                  <RemoveFolder Id="INSTALLDIR.config.scripts" On="uninstall" />
-                </Component>
-
-              </Directory>
-
             </Directory>
 
             <Directory Id="INSTALLDIR.lib" Name="lib">
@@ -643,7 +634,6 @@
       <ComponentRef Id="Component.elasticsearch.yml" />
       <ComponentRef Id="Component.jvm.options" />
       <ComponentRef Id="Component.log4j2.properties" />
-      <ComponentRef Id="scripts.EmptyDirectory" />
       <ComponentRef Id="Component.elasticsearch_5.4.1.jar" />
       <ComponentRef Id="Component.HdrHistogram_2.1.9.jar" />
       <ComponentRef Id="Component.hppc_0.7.1.jar" />
@@ -730,7 +720,6 @@
       <ComponentRef Id="Component.plugin_descriptor.properties.9" />
       <ComponentRef Id="Component.plugin_security.policy.5" />
       <ComponentRef Id="Component.transport_netty4_5.4.1.jar" />
-      <ComponentRef Id="Elastic" />
     </Feature>
 
     <InstallExecuteSequence>
