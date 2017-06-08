@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 
 namespace Elastic.Installer.Domain.Configuration.Plugin
@@ -153,6 +155,39 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			};
 			start.EnvironmentVariables["CONF_DIR"] = configDirectory;
 			return new Process { StartInfo = start };
+		}
+
+		private bool _hasInterNetConnection;
+		public async Task<bool> HasInternetConnection()
+		{
+			//if (_hasInterNetConnection) return true;
+			_hasInterNetConnection = await CanReadArtifactsUrl();
+			return _hasInterNetConnection;
+		}
+
+		private static async Task<bool> CanReadArtifactsUrl()
+		{
+			try
+			{
+				using (var client = new MyWebClient())
+				{
+					using (var stream = await client.OpenReadTaskAsync(new Uri("https://artifacts.elastic.co")))
+						return stream != null;
+				}
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		private class MyWebClient : WebClient
+		{
+			protected override WebRequest GetWebRequest(Uri uri)
+			{
+				var w = base.GetWebRequest(uri);
+				w.Timeout = 2000;
+				return w;
+			}
 		}
 	}
 }

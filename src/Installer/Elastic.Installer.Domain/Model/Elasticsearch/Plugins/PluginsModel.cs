@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Model.Base.Plugins;
 using Elastic.Installer.Domain.Properties;
+using ReactiveUI;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 {
@@ -21,6 +25,31 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				this.ConfigDirectory = t.Item4;
 				this.Refresh();
 			});
+
+			this.AvailablePlugins.ItemChanged.Select(e => this.Plugins.Any())
+				.Subscribe(any =>
+				{
+					if (!any) this.HasInternetConnection = true;
+				});
+			
+			Observable.Timer(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(2))
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.Subscribe(async _ => await SetInternetConnection());
+		}
+
+		private async Task SetInternetConnection()
+		{
+			if (!this.Plugins.Any()) return;
+			
+			this.HasInternetConnection = await this.PluginStateProvider.HasInternetConnection();
+			this.Validate();
+		}
+		
+		bool hasInternetConnection;
+		public bool HasInternetConnection
+		{
+			get => this.hasInternetConnection;
+			set => this.RaiseAndSetIfChanged(ref this.hasInternetConnection, value);
 		}
 
 		protected override IEnumerable<Plugin> GetPlugins()

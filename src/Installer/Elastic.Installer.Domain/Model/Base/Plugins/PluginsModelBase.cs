@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		where TModelValidator : AbstractValidator<TModel>, new()
 	{
 		public IPluginStateProvider PluginStateProvider { get; }
-		private ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
+		protected ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
 
 		protected bool AlreadyInstalled { get; set; }
 		protected string InstallDirectory { get; set; }
