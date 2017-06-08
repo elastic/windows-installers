@@ -73,9 +73,15 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 			if (Empty(installDirectory))
 				this.FileSystem.Directory.Delete(installDirectory, true);
+			
+			if (Empty(LocationsModel.DefaultCompanyInstallationDirectory))
+				this.FileSystem.Directory.Delete(LocationsModel.DefaultCompanyInstallationDirectory, true);
+			
+			if (Empty(LocationsModel.DefaultProductDataDirectory))
+				this.FileSystem.Directory.Delete(LocationsModel.DefaultProductDataDirectory, true);
 
-			if (Empty(LocationsModel.DefaultCompanyDirectory))
-				this.FileSystem.Directory.Delete(LocationsModel.DefaultCompanyDirectory, true);
+			if (Empty(LocationsModel.DefaultCompanyDataDirectory))
+				this.FileSystem.Directory.Delete(LocationsModel.DefaultCompanyDataDirectory, true);
 
 			this.Session.SendProgress(1000, "Elasticsearch installation directory removed");
 			return true;

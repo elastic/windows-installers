@@ -87,8 +87,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
 				.FileSystem(fs => 
 				{
-					fs.AddDirectory(Path.Combine(LocationsModel.DefaultInstallationDirectory, "config"));
-					var conf = Path.Combine(LocationsModel.DefaultInstallationDirectory, "config", "random-file.yml");
+					fs.AddDirectory(Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config"));
+					var conf = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config", "random-file.yml");
 					fs.AddFile(conf, new MockFileData("node.name: x"));
 					return fs;
 				})
@@ -103,7 +103,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 					m.LocationsModel.ConfigDirectory.Should().Be(EsConfig);
 					var fs = t.FileSystem;
 					fs.Directory.Exists(EsConfig).Should().BeTrue();
-					var original = Path.Combine(LocationsModel.DefaultInstallationDirectory, "config", "elasticsearch.yml");
+					var original = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config", "elasticsearch.yml");
 					var moved = Path.Combine(EsConfig, "random-file.yml");
 					fs.File.Exists(moved).Should().BeTrue();
 					fs.File.Exists(original).Should().BeFalse();

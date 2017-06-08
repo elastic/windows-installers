@@ -46,11 +46,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 				//eventhough we unset place writable folders in the same path, the folders do not change
 				step.PlaceWritableLocationsInSamePath = false;
 				step.LogsDirectory.Should().StartWith(step.InstallDir)
-					.And.StartWith(LocationsModel.DefaultInstallationDirectory);
+					.And.StartWith(LocationsModel.DefaultProductInstallationDirectory);
 				step.ConfigDirectory.Should().StartWith(step.InstallDir)
-					.And.StartWith(LocationsModel.DefaultInstallationDirectory);
+					.And.StartWith(LocationsModel.DefaultProductInstallationDirectory);
 				step.DataDirectory.Should().StartWith(step.InstallDir)
-					.And.StartWith(LocationsModel.DefaultInstallationDirectory);;
+					.And.StartWith(LocationsModel.DefaultProductInstallationDirectory);;
 			})
 			.IsInvalidOnStep(m => m.LocationsModel, errors => errors
 				.ShouldHaveErrors(
