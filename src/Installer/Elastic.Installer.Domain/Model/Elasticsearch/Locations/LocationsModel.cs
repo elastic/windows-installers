@@ -30,7 +30,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			Path.Combine(Environment.GetEnvironmentVariable(ProgramDataEnvironmentVariable), CompanyFolderName);
 
 		public static readonly string DefaultProductDataDirectory = Path.Combine(DefaultCompanyDataDirectory, ProductFolderName);
-
 		public static readonly string DefaultCompanyInstallationDirectory = Path.Combine(DefaultProgramFiles, CompanyFolderName);
 		public static readonly string DefaultProductInstallationDirectory = Path.Combine(DefaultCompanyInstallationDirectory, ProductFolderName);
 		public static readonly string DefaultMsiLogFileLocation = Path.Combine(DefaultProductDataDirectory, "install.log");

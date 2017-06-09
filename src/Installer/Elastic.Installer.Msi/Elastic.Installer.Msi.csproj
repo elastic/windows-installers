@@ -49,7 +49,7 @@
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchConfigurationAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchDirectoriesAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchEnvironmentAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchOptionsAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchJvmOptionsAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchPluginsAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceInstallAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceStartAction.cs" />
