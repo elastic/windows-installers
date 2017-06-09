@@ -733,7 +733,7 @@
       <Custom Action="Set_ElasticsearchRollbackEnvironmentAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackEnvironmentAction" Before="ElasticsearchEnvironmentAction" />
       <Custom Action="Set_ElasticsearchUninstallPluginsAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallPluginsAction" Before="ProcessComponents">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="ElasticsearchUninstallPluginsAction" Before="ProcessComponents">UPGRADINGPRODUCTCODE OR REMOVE="ALL"</Custom>
       <Custom Action="Set_ElasticsearchRollbackDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackDirectoriesAction" Before="ElasticsearchDirectoriesAction" />
       <Custom Action="Set_ElasticsearchUninstallDirectoriesAction_Props" After="InstallInitialize" />

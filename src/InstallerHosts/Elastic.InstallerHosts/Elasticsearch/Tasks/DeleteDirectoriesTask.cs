@@ -72,18 +72,37 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			}
 
 			if (Empty(installDirectory))
+			{
+				this.Session.Log($"{installDirectory} exists and is empty. deleting");
 				this.FileSystem.Directory.Delete(installDirectory, true);
-			
+			}
+
+			if (Empty(LocationsModel.DefaultProductInstallationDirectory))
+			{
+				this.Session.Log($"{LocationsModel.DefaultProductInstallationDirectory} exists and is empty. deleting");
+				this.FileSystem.Directory.Delete(LocationsModel.DefaultProductInstallationDirectory, true);
+			}
+
 			if (Empty(LocationsModel.DefaultCompanyInstallationDirectory))
+			{
+				this.Session.Log($"{LocationsModel.DefaultCompanyInstallationDirectory} exists and is empty. deleting");
 				this.FileSystem.Directory.Delete(LocationsModel.DefaultCompanyInstallationDirectory, true);
-			
+			}
+
 			if (Empty(LocationsModel.DefaultProductDataDirectory))
+			{
+				this.Session.Log($"{LocationsModel.DefaultProductDataDirectory} exists and is empty. deleting");
 				this.FileSystem.Directory.Delete(LocationsModel.DefaultProductDataDirectory, true);
+			}
 
 			if (Empty(LocationsModel.DefaultCompanyDataDirectory))
+			{
+				this.Session.Log($"{LocationsModel.DefaultCompanyDataDirectory} exists and is empty. deleting");
 				this.FileSystem.Directory.Delete(LocationsModel.DefaultCompanyDataDirectory, true);
-
+			}
+			
 			this.Session.SendProgress(1000, "Elasticsearch installation directory removed");
+			
 			return true;
 		}
 
