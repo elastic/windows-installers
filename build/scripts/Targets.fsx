@@ -136,9 +136,9 @@ Target "Integrate" (fun () ->
     Async.RunSynchronously async)
 
 "Clean"
+  ==> "PatchGuids"
   =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
   ==> "UnzipProducts"
-  ==> "PatchGuids"
   ==> "PruneFiles"
   =?> ("UnitTest", (not ((getBuildParam "skiptests") = "1")))
   ==> "BuildServices"
