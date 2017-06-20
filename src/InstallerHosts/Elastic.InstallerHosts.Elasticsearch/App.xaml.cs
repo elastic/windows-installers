@@ -36,7 +36,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 			model.InstallUITask = async () =>
 			{
 				await Task.Delay(TimeSpan.FromSeconds(1));
-				return Observable.Return(ClosingResult.Failed);
+				return Observable.Return(ClosingResult.Success);
 			};
 			model.AllSteps.Last().IsSelected = true;
 			window.Show();
