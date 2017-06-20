@@ -7,6 +7,7 @@
                       
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:uc="http://www.quickzip.org/BaseControls"
                       mc:Ignorable="d"
                       xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
                       xmlns:elasticsearch="clr-namespace:Elastic.Installer.Domain.Model.Elasticsearch;assembly=Elastic.Installer.Domain"
@@ -23,7 +24,16 @@
                       d:DataContext="{d:DesignInstance elasticsearch:ElasticsearchInstallationModel}"
                       Style="{DynamicResource CleanWindowStyleKey}"
                       >
-
+  <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl BorderBrush="Gray" BorderThickness="3" x:Name="FlyoutsControl">
+          <controls:Flyout Header="Help" Theme="Adapt" CloseButtonVisibility="Visible" x:Name="FlyoutControl" IsModal="true" Width="600" IsPinned="false" Position="Left">
+            <ScrollViewer>
+              <uc:HtmlTextBlock x:Name="HelpHtmlControl" Html="" TextWrapping="Wrap" Margin="3" Height="auto" Padding="5"></uc:HtmlTextBlock>
+            </ScrollViewer>
+            <!-- Your custom content here -->
+          </controls:Flyout>
+        </controls:FlyoutsControl>
+  </controls:MetroWindow.Flyouts>
   <controls:MetroWindow.Background>
     <SolidColorBrush Color="White"></SolidColorBrush>
   </controls:MetroWindow.Background>

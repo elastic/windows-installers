@@ -235,7 +235,8 @@ namespace Elastic.Installer.UI.Kibana
 				var tabItem = this.StepsTab.Items[this.ViewModel.TabSelectedIndex] as TabItem;
 				var stepWithHelp = tabItem?.Content as StepWithHelp;
 				if (stepWithHelp == null) return;
-				stepWithHelp.ToggleHelp();
+				this.HelpHtmlControl.Html = stepWithHelp.HelpText;
+				this.FlyoutControl.IsOpen = !this.FlyoutControl.IsOpen;
 			});
 
 			this.ViewModel.ShowLicenseBlurb.Subscribe(async x =>
