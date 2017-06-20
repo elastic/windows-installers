@@ -275,19 +275,19 @@
     <value>Installing...</value>
   </data>
   <data name="MainWindow_TabItemConfiguration" xml:space="preserve">
-    <value>configuration</value>
+    <value>Configuration</value>
   </data>
   <data name="MainWindow_TabItemLocations" xml:space="preserve">
-    <value>locations</value>
+    <value>Locations</value>
   </data>
   <data name="MainWindow_TabItemPlugins" xml:space="preserve">
-    <value>plugins</value>
+    <value>Plugins</value>
   </data>
   <data name="MainWindow_TabItemService" xml:space="preserve">
-    <value>service</value>
+    <value>Service</value>
   </data>
   <data name="MainWindow_TabItemWelcome" xml:space="preserve">
-    <value>welcome</value>
+    <value>Welcome</value>
   </data>
   <data name="MainWindow_Title" xml:space="preserve">
     <value>Elasticsearch {0} Installation</value>
@@ -394,6 +394,9 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
   <data name="NoticeView_RunAsServiceHeaderLabel" xml:space="preserve">
     <value>Install as a service</value>
   </data>
+  <data name="ConfigurationView_Elasticsearch_Help_Header" xml:space="preserve">
+    <value>Configuration Help</value>
+  </data>
   <data name="ConfigurationView_Elasticsearch_Help" xml:space="preserve">
     <value>This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We're only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
 
@@ -414,6 +417,9 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 
 [b]Transport port[/b]: The port to use for node-to-node communication over the Elasticsearch transport protocol.</value>
   </data>
+  <data name="LocationsView_Elasticsearch_Help_Header" xml:space="preserve">
+    <value>Locations Help</value>
+  </data>
   <data name="LocationsView_Elasticsearch_Help" xml:space="preserve">
     <value>Elasticsearch has several different folders that it needs to have read and/or write access to:
 
@@ -427,16 +433,25 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 
 It is best practice to keep your logs, config, and data directories separate from your home directory.  This keeps your data and configuration safe from overwriting when upgrading to newer versions of Elasticsearch.</value>
   </data>
+  <data name="MainWindow_Help_Header" xml:space="preserve">
+    <value>Installation Help</value>
+  </data>
   <data name="MainWindow_Help" xml:space="preserve">
     <value>Heya! Welcome the {0} Windows intaller.
 
 This installer will walk you through various steps to help you conifigure and install {0} on your system.  To make things easier, we've gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you'll definitely want to change.</value>
     <comment>{0} = Product name</comment>
   </data>
+  <data name="PluginsView_Elasticsearch_Help_Header" xml:space="preserve">
+    <value>Plugin Help</value>
+  </data>
   <data name="PluginsView_Elasticsearch_Help" xml:space="preserve">
     <value>Plugins are a way to enhance the basic Elasticsearch functionality in a custom manner.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), native scripts, custom discovery and more.
 
 We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually.</value>
+  </data>
+  <data name="ServiceView_Elasticsearch_Help_Header" xml:space="preserve">
+    <value>Service Help</value>
   </data>
   <data name="ServiceView_Elasticsearch_Help" xml:space="preserve">
     <value>By default, Elasticsearch will be installed as a service.

@@ -3,9 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
-             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:uc="http://www.quickzip.org/BaseControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600"
              x:Name="Control">
@@ -21,16 +18,6 @@
         </Grid.RowDefinitions>
         
         <ContentControl Grid.Row="0" Margin="10,10,10,10" Grid.Column="0" Content="{Binding Path=Step, ElementName=Control}" Grid.RowSpan="3"/>
-        <metro:FlyoutsControl>
-          <metro:Flyout Header="Help" Theme="Accent" CloseButtonVisibility="Hidden" IsOpen="{TemplateBinding controls:StepWithHelp.IsOpen}" Position="Left" Width="600">
-            <ScrollViewer>
-              <uc:HtmlTextBlock Html="{TemplateBinding controls:StepWithHelp.HelpText}" TextWrapping="Wrap"
-                         Margin="3" Height="auto"></uc:HtmlTextBlock>
-            </ScrollViewer>
-            <!-- Your custom content here -->
-          </metro:Flyout>
-        </metro:FlyoutsControl>
-      
       </Grid>
     </ControlTemplate>
   </UserControl.Template>

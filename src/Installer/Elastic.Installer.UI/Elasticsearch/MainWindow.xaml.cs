@@ -36,6 +36,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
 using Elastic.Installer.UI.Elasticsearch.Steps;
 using Elastic.Installer.UI.Shared.Steps;
+using FluentValidation.Internal;
 
 namespace Elastic.Installer.UI.Elasticsearch
 {
@@ -121,24 +122,24 @@ namespace Elastic.Installer.UI.Elasticsearch
 		private readonly IDictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>> StepModelToControl =
 			new Dictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>>
 		{
-			{ typeof(NoticeModel),
-					(m, s) =>  Step(s, new NoticeView { ViewModel = m as NoticeModel }, string.Format(ViewResources.MainWindow_Help, "Elasticsearch")) },
-			{ typeof(LocationsModel),
-					(m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, ViewResources.LocationsView_Elasticsearch_Help)  },
-			{ typeof(ServiceModel),
-					(m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, ViewResources.ServiceView_Elasticsearch_Help) },
-			{ typeof(ConfigurationModel),
-					(m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, ViewResources.ConfigurationView_Elasticsearch_Help) },
-			{ typeof(PluginsModel),
-					(m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, ViewResources.PluginsView_Elasticsearch_Help) },
-			{ typeof(ClosingModel),
-					(m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null) },
+			{ typeof(NoticeModel), (m, s) =>  Step(s, new NoticeView { ViewModel = m as NoticeModel }, 
+				ViewResources.MainWindow_Help_Header, string.Format(ViewResources.MainWindow_Help, "Elasticsearch")) },
+			{ typeof(LocationsModel), (m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, 
+				ViewResources.LocationsView_Elasticsearch_Help_Header, ViewResources.LocationsView_Elasticsearch_Help)  },
+			{ typeof(ServiceModel), (m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, 
+				ViewResources.ServiceView_Elasticsearch_Help_Header, ViewResources.ServiceView_Elasticsearch_Help) },
+			{ typeof(ConfigurationModel), (m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, 
+				ViewResources.ConfigurationView_Elasticsearch_Help_Header, ViewResources.ConfigurationView_Elasticsearch_Help) },
+			{ typeof(PluginsModel), (m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, 
+				ViewResources.PluginsView_Elasticsearch_Help_Header, ViewResources.PluginsView_Elasticsearch_Help) },
+			{ typeof(ClosingModel), (m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null, null) },
 		};
 
-		private static void Step(StepWithHelp step, UserControl view, string help)
+		private static void Step(StepWithHelp step, UserControl view, string helpHeaderText, string help)
 		{
 			step.Step = view;
 			step.HelpText = help;
+			step.HelpHeaderText = helpHeaderText;
 		}
 
 		private void TabNavigation()
@@ -206,7 +207,9 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 						label.Foreground = defaultTabForeground;
 						if (i == selected)
+						{
 							label.Foreground = selectedTabForeground;
+						}
 						if (!this.ViewModel.Steps[i].IsValid)
 							label.Foreground = badTabForeground;
 						if (i > max)
@@ -235,7 +238,9 @@ namespace Elastic.Installer.UI.Elasticsearch
 				var tabItem = this.StepsTab.Items[this.ViewModel.TabSelectedIndex] as TabItem;
 				var stepWithHelp = tabItem?.Content as StepWithHelp;
 				if (stepWithHelp == null) return;
-				stepWithHelp.ToggleHelp();
+				this.HelpHtmlControl.Html = stepWithHelp.HelpText;
+				this.FlyoutControl.Header = stepWithHelp.HelpHeaderText;
+				this.FlyoutControl.IsOpen = !this.FlyoutControl.IsOpen;
 			});
 
 			this.ViewModel.ShowLicenseBlurb.Subscribe(async x =>
