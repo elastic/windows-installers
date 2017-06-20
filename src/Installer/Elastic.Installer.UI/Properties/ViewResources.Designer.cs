@@ -429,6 +429,11 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
+        public static string ConfigurationView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("ConfigurationView_Elasticsearch_Help_Header", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
@@ -1022,6 +1027,11 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
+        public static string LocationsView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("LocationsView_Elasticsearch_Help_Header", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to Elasticsearch has several different folders that it needs to have read and/or write access to:
         ///
@@ -1118,6 +1128,11 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
+        public static string MainWindow_Help_Header {
+            get {
+                return ResourceManager.GetString("MainWindow_Help_Header", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to Heya! Welcome the {0} Windows intaller.
         ///
@@ -1329,6 +1344,11 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
+        public static string PluginsView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("PluginsView_Elasticsearch_Help_Header", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to Plugins are a way to enhance the basic Elasticsearch functionality in a custom manner.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), native scripts, custom discovery and more.
         ///
@@ -1439,6 +1459,11 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
+        public static string ServiceView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("ServiceView_Elasticsearch_Help_Header", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to By default, Elasticsearch will be installed as a service.
         ///

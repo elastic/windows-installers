@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace Elastic.Installer.UI.Controls
 {
@@ -25,6 +27,9 @@ namespace Elastic.Installer.UI.Controls
 
 		public static readonly DependencyProperty HelpTextProperty =
 				DependencyProperty.Register("HelpText", typeof(string), typeof(StepWithHelp), new FrameworkPropertyMetadata());
+		
+		public static readonly DependencyProperty HelpHeaderTextProperty =
+				DependencyProperty.Register("HelpHeaderText", typeof(string), typeof(StepWithHelp), new FrameworkPropertyMetadata());
 		
 		public static readonly DependencyProperty IsOpenProperty =
 				DependencyProperty.Register("IsOpen", typeof(bool), typeof(StepWithHelp), new UIPropertyMetadata());
@@ -40,7 +45,11 @@ namespace Elastic.Installer.UI.Controls
 			get { return (object)GetValue(StepProperty); }
 			set { SetValue(StepProperty, value); }
 		}
-
+		public string HelpHeaderText
+		{
+			get { return (string)GetValue(HelpHeaderTextProperty); }
+			set { SetValue(HelpHeaderTextProperty, value); }
+		}
 		public string HelpText
 		{
 			get { return (string)GetValue(HelpTextProperty); }
@@ -49,11 +58,6 @@ namespace Elastic.Installer.UI.Controls
 		public StepWithHelp()
 		{
 			InitializeComponent();
-		}
-
-		public void ToggleHelp()
-		{
-			this.IsOpen = !this.IsOpen;
 		}
 	}
 }
