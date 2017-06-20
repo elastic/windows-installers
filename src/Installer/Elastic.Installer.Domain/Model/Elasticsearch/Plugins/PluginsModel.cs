@@ -212,11 +212,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		protected override List<string> DefaultPlugins()
 		{
 			var selectedPlugins = new List<string> { "x-pack" };
-			if (this._includeSuggest)
-			{
-				selectedPlugins.Add("ingest-attachment");
-				selectedPlugins.Add("ingest-geoip");
-			}
+			if (!this._includeSuggest) return selectedPlugins;
+			selectedPlugins.Add("ingest-attachment");
+			selectedPlugins.Add("ingest-geoip");
 			return selectedPlugins;
 		}
 	}

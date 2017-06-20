@@ -18,7 +18,8 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <CheckBox Grid.Column="0" x:Name="ProxyCheckBox" VerticalAlignment="Top" />
+          <CheckBox Grid.Column="0" x:Name="ProxyCheckBox" Click="OnActualCheckboxClick" VerticalAlignment="Top">
+          </CheckBox>
 
           <ContentPresenter Margin="4,0,0,0" Grid.Column="1"
                             VerticalAlignment="Center"
