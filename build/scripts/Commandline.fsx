@@ -330,6 +330,12 @@ Whether to skip unit tests.
                            products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target] ->
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
+                       | [IsProductList products; IsVersionList versions] ->
+                           products |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | [IsVersionList versions] ->
+                           All |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | [IsProductList products] ->
+                           products |> List.map(ProductVersions.CreateFromProduct lastFeedVersion)
                        | [] ->
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
                        | ["help"]
