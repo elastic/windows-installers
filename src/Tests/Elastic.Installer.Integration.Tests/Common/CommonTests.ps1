@@ -237,7 +237,7 @@ function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
     $EsLogs = Split-Path $EsConfig -Parent | Join-Path -ChildPath "logs"
 
     $Expected = Merge-Hashtables @{
-            BootstrapMemoryLock = $true
+            BootstrapMemoryLock = $false
             NodeData = $true
             NodeIngest = $true
             NodeMaster = $true
