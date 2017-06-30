@@ -9,15 +9,23 @@ namespace Elastic.Installer.Domain.Shared
 {
 	public class WixStateProvider : IWixStateProvider
 	{
+		public bool CurrentlyInstalling { get; }
 		public SemVersion ExistingVersion { get; }
 		public SemVersion CurrentVersion { get; }
 
-		public WixStateProvider(ProductType productType, string currentVersion)
+		public WixStateProvider(ProductType productType, string currentVersion) 
+			: this(productType, currentVersion, currentlyInstalling: false)
+		{ }
+		
+		public WixStateProvider(ProductType productType, string currentVersion, bool currentlyInstalling)
 		{
+			CurrentlyInstalling = currentlyInstalling;
 			string existingVersion;
 			var installed = IsAlreadyInstalled(productType, out existingVersion);
-			if (!string.IsNullOrEmpty(currentVersion)) CurrentVersion = currentVersion;
-			if (installed && !string.IsNullOrEmpty(existingVersion)) ExistingVersion = existingVersion;
+			if (!string.IsNullOrEmpty(currentVersion)) 
+				CurrentVersion = currentVersion;
+			if (installed && !string.IsNullOrEmpty(existingVersion)) 
+				ExistingVersion = existingVersion;
 		}
 
 		private bool IsAlreadyInstalled(ProductType productType, out string installedVersion)

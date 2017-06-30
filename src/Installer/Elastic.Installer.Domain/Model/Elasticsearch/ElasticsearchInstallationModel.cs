@@ -76,6 +76,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			var pluginDependencies = this.WhenAnyValue(
 				vm => vm.NoticeModel.AlreadyInstalled,
+				vm => vm.NoticeModel.CurrentyInstalling,
 				vm => vm.LocationsModel.InstallDir,
 				vm => vm.LocationsModel.ConfigDirectory
 			);

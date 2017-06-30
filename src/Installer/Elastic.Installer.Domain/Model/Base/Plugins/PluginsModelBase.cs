@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		protected ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
 		public const string UnchangedMoniker = "__unchanged__";
 
-		protected bool AlreadyInstalled { get; set; }
+		protected bool NotAlreadyInstalledOrCurrentlyInstalling { get; set; }
 		protected string InstallDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 
@@ -55,7 +55,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			this.AvailablePlugins.Clear();
 			var plugins = this.GetPlugins();
 			this.AvailablePlugins.AddRange(plugins);
-			var selectedPlugins = !this.AlreadyInstalled
+			var selectedPlugins = this.NotAlreadyInstalledOrCurrentlyInstalling
 				? this.DefaultPlugins()
 				: this.PluginStateProvider.InstalledPlugins(this.InstallDirectory, this.ConfigDirectory).ToList();
 			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))

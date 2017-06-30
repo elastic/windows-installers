@@ -22,6 +22,8 @@ namespace Elastic.InstallerHosts.Kibana
 	{
 		class DemoWixStateProvider : IWixStateProvider
 		{
+			public bool CurrentlyInstalling => false;
+			
 			public SemVersion CurrentVersion => "5.0.0";
 
 			public SemVersion ExistingVersion => null;

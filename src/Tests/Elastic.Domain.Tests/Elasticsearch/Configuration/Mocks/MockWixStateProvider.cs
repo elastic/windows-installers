@@ -10,6 +10,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			this.CurrentVersion = "5.0.0-alpha5";
 		}
 
+		public bool CurrentlyInstalling { get; set; }
+
 		public SemVersion ExistingVersion { get; set; }
 
 		public SemVersion CurrentVersion { get; set; }

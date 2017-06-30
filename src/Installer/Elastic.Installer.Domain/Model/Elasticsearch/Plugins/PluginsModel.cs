@@ -12,14 +12,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 {
 	public class PluginsModel : PluginsModelBase<PluginsModel, PluginsModelValidator>
 	{
-		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies)
+		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, bool, string, string>> pluginDependencies)
 			: base(pluginStateProvider)
 		{
 			pluginDependencies.Subscribe(t =>
 			{
-				this.AlreadyInstalled = t.Item1;
-				this.InstallDirectory = t.Item2;
-				this.ConfigDirectory = t.Item3;
+				this.NotAlreadyInstalledOrCurrentlyInstalling = !t.Item1 && !t.Item2;
+				this.InstallDirectory = t.Item3;
+				this.ConfigDirectory = t.Item4;
 				this.Refresh();
 			});
 

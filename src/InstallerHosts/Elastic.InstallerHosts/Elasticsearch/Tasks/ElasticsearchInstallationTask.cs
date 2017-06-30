@@ -14,7 +14,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected ElasticsearchInstallationTask(string[] args, ISession session)
 			: this(ElasticsearchInstallationModel.Create(
-				new WixStateProvider(ProductType.Elasticsearch, session.Version), session, args), session, new FileSystem())
+				new WixStateProvider(ProductType.Elasticsearch, session.Version, currentlyInstalling: false), session, args), session, new FileSystem())
 		{
 			this.Args = args;
 		}
