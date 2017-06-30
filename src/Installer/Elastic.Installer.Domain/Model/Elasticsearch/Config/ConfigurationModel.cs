@@ -21,7 +21,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 		public const bool DefaultMasterNode = true;
 		public const bool DefaultDataNode = true;
 		public const bool DefaultIngestNode = true;
-		public const bool DefaultMemoryLock = true;
+		public const bool DefaultMemoryLock = false;
 		public static ulong DefaultTotalPhysicalMemory { get; } = GetTotalPhysicalMemory();
 		public const ulong DefaultHeapSizeThreshold = 4096;
 		public const ulong DefaultDistributionHeapSize = 2048;
