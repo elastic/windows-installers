@@ -286,7 +286,14 @@ function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
 
 function Context-JvmOptions ($Expected) {
     if (!($Expected)) {
-        $Expected = (Get-TotalPhysicalMemory) / 2
+    	$totalPhysicalMemory = Get-TotalPhysicalMemory
+    	
+    	if ($totalPhysicalMemory -le 4096) {
+    		$Expected = $totalPhysicalMemory / 2
+    	}
+    	else {
+    		$Expected = 2048
+    	}
     }
 
     Context "JVM Configuration" {
