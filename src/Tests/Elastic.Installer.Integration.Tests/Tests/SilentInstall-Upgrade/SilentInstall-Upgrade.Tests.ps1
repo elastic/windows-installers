@@ -53,7 +53,7 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade -Upgrade to new version"
 
 	$version = $env:EsVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")  -Version $version
+    Invoke-SilentInstall -Version $version
 
     Context-ElasticsearchService
 

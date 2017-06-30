@@ -13,6 +13,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 	{
 		public IPluginStateProvider PluginStateProvider { get; }
 		protected ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
+		public const string  UnchangedMoniker = "__unchanged__";
 
 		protected bool AlreadyInstalled { get; set; }
 		protected string InstallDirectory { get; set; }
@@ -32,8 +33,12 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			get { return _plugins.Where(p => p.Selected).Select(p => p.Url); }
 			set
 			{
-				foreach (var p in AvailablePlugins) p.Selected = false;
 				if (value == null) return;
+				var plugins = value.ToList();
+				if (plugins.Count == 1 && plugins[0] == UnchangedMoniker) return;
+				
+				foreach (var p in AvailablePlugins) p.Selected = false;
+				
 				foreach (var p in AvailablePlugins.Where(p => value.Contains(p.Url)))
 					p.Selected = true;
 			}
@@ -66,6 +71,6 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			return sb.ToString();
 		}
 
-		protected virtual List<string> DefaultPlugins() => new List<string>();
+		protected virtual List<string> DefaultPlugins() => new List<string>() {UnchangedMoniker};
 	}
 }
