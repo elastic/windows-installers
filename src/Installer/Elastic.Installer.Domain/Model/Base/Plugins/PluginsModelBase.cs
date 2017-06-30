@@ -13,7 +13,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 	{
 		public IPluginStateProvider PluginStateProvider { get; }
 		protected ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
-		public const string  UnchangedMoniker = "__unchanged__";
+		public const string UnchangedMoniker = "__unchanged__";
 
 		protected bool AlreadyInstalled { get; set; }
 		protected string InstallDirectory { get; set; }
