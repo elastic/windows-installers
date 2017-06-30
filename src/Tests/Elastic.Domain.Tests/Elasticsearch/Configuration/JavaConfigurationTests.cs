@@ -45,7 +45,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration
 			.JavaHomeUserVariable(_userVariable)
 		);
 
-		[Fact] void UserBeathsMachine() => AssertJavaHome(_userVariable, m => m
+		[Fact] void UserBeatsMachine() => AssertJavaHome(_userVariable, m => m
 			.JavaHomeUserVariable(_userVariable)
 			.JavaHomeMachineVariable(_machineVariable)
 		);
