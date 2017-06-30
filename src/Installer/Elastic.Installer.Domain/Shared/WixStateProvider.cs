@@ -16,8 +16,8 @@ namespace Elastic.Installer.Domain.Shared
 		{
 			string existingVersion;
 			var installed = IsAlreadyInstalled(productType, out existingVersion);
-			CurrentVersion = currentVersion;
-			if (installed) ExistingVersion = existingVersion;
+			if (!string.IsNullOrEmpty(currentVersion)) CurrentVersion = currentVersion;
+			if (installed && !string.IsNullOrEmpty(existingVersion)) ExistingVersion = existingVersion;
 		}
 
 		private bool IsAlreadyInstalled(ProductType productType, out string installedVersion)
