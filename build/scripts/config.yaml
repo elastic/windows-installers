@@ -41,6 +41,10 @@ elasticsearch:
       guid: 8279eff6-3a85-4b37-ac5a-3c5136bb5465
     - version: 5.4.1
       guid: 127c0984-c0fe-4f6d-acf9-4c15101bd627
+    - version: 5.4.2
+      guid: 13ad87cd-18f3-481e-a278-545d873f7353
+    - version: 5.4.3
+      guid: 481906c0-70ca-4a4c-bb66-a6e25ed22b94
     - version: 5.5.0
       guid: 344f09a4-5bf8-4d44-8e86-2130c263b08f
 kibana:
