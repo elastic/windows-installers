@@ -16,26 +16,15 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 				.IsValidOnStep(m => m.PluginsModel);
 		}
 
-		[Fact] void XPackSelectedByDefault() => this._model
+		[Fact] void XPackNotSelectedByDefault() => this._model
 			.OnStep(m => m.PluginsModel, step => 
 			{
-				step.AvailablePlugins.Should().Contain(a=>a.Url == "x-pack" && a.Selected);
+				step.AvailablePlugins.Should().NotContain(a => a.Url == "x-pack" && a.Selected);
 			})
 			.CanClickNext();
 
 
-		[Fact] void IngestPluginsAreSelectedAndReactiveToIngestNode() => this._model
-			.OnStep(m => m.PluginsModel, step =>
-			{
-				step.AvailablePlugins.Should().Contain(a => a.Url == "ingest-attachment" && a.Selected);
-				step.AvailablePlugins.Should().Contain(a => a.Url == "ingest-geoip" && a.Selected);
-			})
-			.ClickBack()
-			.OnStep(m => m.ConfigurationModel, step =>
-			{
-				step.IngestNode = false;
-			})
-			.ClickNext()
+		[Fact] void IngestPluginsNotSelectedByDefault() => this._model
 			.OnStep(m => m.PluginsModel, step =>
 			{
 				step.AvailablePlugins.Should().NotContain(a => a.Url == "ingest-attachment" && a.Selected);

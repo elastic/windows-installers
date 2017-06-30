@@ -11,7 +11,7 @@ Describe "Silent Install with default arguments" {
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled $false
 
     $ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -31,7 +31,7 @@ Describe "Silent Install with default arguments" {
 
     Context-EmptyEventLog
 
-	Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
+	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration
 
