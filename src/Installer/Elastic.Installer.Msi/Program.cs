@@ -85,6 +85,9 @@ namespace Elastic.Installer.Msi
 					// make it easy to reference current version within MSI process
 					new Property("CurrentVersion", version),
 					new Property("MsiLogging", "voicewarmup"),
+					//
+					new Property("SetPlugins", "false"),
+					new Property("StickyPlugins", "__unchanged__"),
 					// do not give option to repair installation
 					new Property("ARPNOREPAIR", "yes"),
 					// do not give option to change installation
