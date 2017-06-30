@@ -5,12 +5,13 @@ Set-Location $currentDir
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
 
+$credentials = "elastic:changeme"
+
 Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous version" {
 
 	$previousVersion = $env:PreviousEsVersion
-	$credentials = "elastic:changeme"
-
-    Invoke-SilentInstall -Version $previousVersion
+	
+    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $previousVersion
 
     Context-ElasticsearchService
 
@@ -26,7 +27,7 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
 
     Context-EsConfigEnvironmentVariable -Expected $ExpectedConfigFolder
 
-    Context-PluginsInstalled
+    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $previousVersion"
@@ -51,7 +52,6 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
 Describe -Tag 'PreviousVersion' "Silent Install upgrade -Upgrade to new version" {
 
 	$version = $env:EsVersion
-	$credentials = "elastic:changeme"
 
     Invoke-SilentInstall -Version $version
 
@@ -69,7 +69,7 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade -Upgrade to new version"
 
     Context-EsConfigEnvironmentVariable -Expected $ExpectedConfigFolder
 
-    Context-PluginsInstalled
+    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
     Context-MsiRegistered
 
@@ -77,7 +77,7 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade -Upgrade to new version"
 
     Context-EmptyEventLog
 
-	Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
+	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
     Context-ElasticsearchConfiguration
 

@@ -83,7 +83,7 @@ function Context-PluginsInstalled($Expected) {
 
     $Expected = Merge-Hashtables @{
         EsPluginBat = $DefaultPluginBat
-        Plugins = @("ingest-attachment", "ingest-geoip", "x-pack")
+        Plugins = @()
     } $Expected
 
 

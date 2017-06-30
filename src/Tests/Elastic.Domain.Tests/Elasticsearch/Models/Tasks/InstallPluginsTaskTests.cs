@@ -13,8 +13,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				(m, s, fs) => new InstallPluginsTask(m, s, fs),
 				(m, t) =>
 				{
-					var installedPlugins = t.PluginState.InstalledAfter;
-					installedPlugins.Should().NotBeEmpty().And.Contain("x-pack").And.HaveCount(3);
+					t.PluginState.InstalledAfter.Should().BeEmpty();
 				}
 			);
 		}

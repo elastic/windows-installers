@@ -334,7 +334,7 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
     <value>The Store SMB plugin works around for a bug in Windows SMB and Java on Windows.</value>
   </data>
   <data name="PluginsModel_XPack" xml:space="preserve">
-    <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. A 30 day fully featured trial license is provided upon first installation.</value>
+    <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation.</value>
   </data>
   <data name="PluginType_ApiExtensions" xml:space="preserve">
     <value>API Extensions</value>

@@ -18,7 +18,7 @@ Describe "Silent Install with different install locations" {
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled $false
 
     Context-EsHomeEnvironmentVariable -Expected $InstallDir
 
@@ -32,7 +32,7 @@ Describe "Silent Install with different install locations" {
 
     Context-EmptyEventLog
   
-    Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
+    Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration -Expected @{Data = $DataDir; Logs = $LogsDir }
 
