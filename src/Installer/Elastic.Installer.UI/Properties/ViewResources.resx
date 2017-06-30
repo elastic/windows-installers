@@ -405,13 +405,13 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 
 [b]Node name[/b]: The unique name given to this particular Elasticsearch node.
 
-[b]Node role[/b]: The type of role(s) this node should have.  If no roles are assigned, then it will act as a client node any only route requests to other nodes in your cluster.
+[b]Node role[/b]: The type of role(s) this node should have.  If no roles are assigned, then it will act as a client node, and only route requests to other nodes in your cluster.
 
 [b]Memory[/b]: The amount of memory to allocate to the JVM heap for Elasticsearch.  The standard rule of thumb is to allocate 50% of available memory to the heap, but never exceed 30.5 GB, leaving the remaining 50% free to ensure there is enough for kernel file system caches.  The 30.5 GB limit is recommended in order to prevent the JVM from entering 64-bit address space, which will result in a performance degradation.
 
-[b]Lock memory[/b]: Windows will try to use as much memory as possible for file system caches and eagerly swap out unused application memory, possibly resulting in the Elasticsearch process being swapped, which is very bad for performance and node stability. By choosing to lock memory, Elasticsearch will leverage the native VirtualLock function in Windows, in effort to keep the JVM in physical memory at all times.
+[b]Lock memory[/b]: Windows will try to use as much memory as possible for file system caches and eagerly swap out unused application memory, possibly resulting in the Elasticsearch process being swapped, which is very bad for performance and node stability. By choosing to lock memory, Elasticsearch will leverage the native VirtualLock function in Windows, in an effort to keep the JVM in physical memory at all times.
 
-[b]Network host[/b]: By default, Elasticsearch binds to loopback addresses only (e.g. [b]127.0.0.1[/b]).  This is sufficient to run a single development node on a server.  However, in order to communicate to form a cluster on other servers, your node will need to bind to a non-loopback address.
+[b]Network host[/b]: By default, Elasticsearch binds to loopback addresses only (e.g. [b]127.0.0.1[/b]).  This is sufficient to run a single development node on a server. However, in order to communicate to form a cluster on other servers, your node will need to bind to a non-loopback address.
 
 [b]HTTP port[/b]: The port to communicate with Elasticsearch REST API over HTTP.
 
