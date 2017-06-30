@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Elastic.InstallerHosts
 {
 	public class SessionWrapper : ISession
 	{
-		private readonly Microsoft.Deployment.WindowsInstaller.Session _session;
+		private readonly Session _session;
 
-		public SessionWrapper(Microsoft.Deployment.WindowsInstaller.Session session)
+		public SessionWrapper(Session session)
 		{
 			this._session = session;
 		}
+
+		public string Version => 
+			!this._session.TryGetValue("CurrentVersion", out string version) ? null : version;
 
 		public T Get<T>(string property)
 		{

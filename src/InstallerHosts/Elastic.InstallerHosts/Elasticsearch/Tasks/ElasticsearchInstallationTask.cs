@@ -2,7 +2,9 @@
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.Installer.Domain.Shared;
 using Elastic.InstallerHosts.Tasks;
+using Microsoft.Win32;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
@@ -11,7 +13,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		protected ElasticsearchInstallationModel InstallationModel => this.Model as ElasticsearchInstallationModel;
 
 		protected ElasticsearchInstallationTask(string[] args, ISession session)
-			: this(ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), session, args), session, new FileSystem())
+			: this(ElasticsearchInstallationModel.Create(
+				new WixStateProvider(ProductType.Elasticsearch, session.Version), session, args), session, new FileSystem())
 		{
 			this.Args = args;
 		}

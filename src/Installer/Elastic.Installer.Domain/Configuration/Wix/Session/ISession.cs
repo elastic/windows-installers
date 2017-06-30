@@ -2,6 +2,7 @@
 {
 	public interface ISession
 	{
+		string Version { get; }
 		void SendActionStart(int totalTicks, string actionName, string message, string actionDataTemplate = null);
 		void SendProgress(int tickIncrement, params object[] actionDataTemplateParameters);
 		void Log(string message);

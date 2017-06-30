@@ -1,51 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using WindowsInstaller;
-using Elastic.Installer.Domain;
-using Semver;
-using System.Linq;
-using System.Collections.Generic;
 using Elastic.Installer.Domain.Configuration.Wix;
+using Semver;
 
-namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
+namespace Elastic.Installer.Domain.Shared
 {
 	public class WixStateProvider : IWixStateProvider
 	{
 		public SemVersion ExistingVersion { get; }
 		public SemVersion CurrentVersion { get; }
 
-		public WixStateProvider(Product product, string currentVersion)
+		public WixStateProvider(ProductType productType, string currentVersion)
 		{
 			string existingVersion;
-			var installed = IsAlreadyInstalled(product, out existingVersion);
-			this.CurrentVersion = currentVersion;
-			if (installed) this.ExistingVersion = existingVersion;
+			var installed = IsAlreadyInstalled(productType, out existingVersion);
+			CurrentVersion = currentVersion;
+			if (installed) ExistingVersion = existingVersion;
 		}
 
-		private bool IsAlreadyInstalled(Product product, out string installedVersion)
+		private bool IsAlreadyInstalled(ProductType productType, out string installedVersion)
 		{
-			var productCodes = GetProductCodes(product);
+			var productCodes = GetProductCodes(productType);
 			installedVersion = null;
 			foreach (var kvp in productCodes)
 			{
 				var version = kvp.Key;
 				var productCode = FormatProductCode(kvp.Value.ToString());
-				if (IsInstalled(productCode))
-				{
-					installedVersion = version;
-					return true;
-				}
+				if (!IsInstalled(productCode)) continue;
+				installedVersion = version;
+				return true;
 			}
 			return false;
 		}
 
-		private Dictionary<string, Guid> GetProductCodes(Product product)
+		private Dictionary<string, Guid> GetProductCodes(ProductType productType)
 		{
-			switch(product)
+			switch(productType)
 			{
-				case Product.Elasticsearch: return ProductGuids.ElasticsearchProductCodes;
-				case Product.Kibana: return ProductGuids.KibanaProductCodes;
-				default: throw new ArgumentException($"Unknown product {product}");
+				case ProductType.Elasticsearch: return ProductGuids.ElasticsearchProductCodes;
+				case ProductType.Kibana: return ProductGuids.KibanaProductCodes;
+				default: throw new ArgumentException($"Unknown product {productType}");
 			}
 		}
 
@@ -57,10 +53,9 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 
 			if (error == MsiError.UnknownProduct)
 				return false;
-			else if (error == MsiError.NoError)
+			if (error == MsiError.NoError)
 				return true;
-			else
-				throw new Exception(error.ToString());
+			throw new Exception(error.ToString());
 		}
 
 		private string FormatProductCode(string productCode)
