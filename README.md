@@ -9,7 +9,7 @@ This is the repository for the Elastic stack MSI-based Windows installers.
 Simply clone the repository and run
 
 ```bat
-build
+build.bat
 ```
 
 This will download the latest version of the stack (currently only Elasticsearch) and create the MSIs.
@@ -17,7 +17,13 @@ This will download the latest version of the stack (currently only Elasticsearch
 You can also specify a specific version
 
 ```bat
-build 5.1.1
+build.bat 5.1.1
+```
+
+There are many other configuration options available, run the following to see them all
+
+```bat
+build.bat help
 ```
 
 **NOTE**: *Building from source should only be done for development purposes.  Only the officially distributed and signed Elastic installer should be used in production. Using an unofficial Elastic installer is not supported.*
@@ -27,29 +33,29 @@ build 5.1.1
 Instead of installing through the UI, it is also possible to perform an installation in "quiet" mode via the command-line using [msiexec](https://technet.microsoft.com/en-us/library/bb490936.aspx?f=255&MSPPError=-2147217396) and passing the `/qn` flag, which will invoke the installer without the UI.  This can be particularly useful for automating deployments.
 
 ```bat
-msiexec /i elasticsearch-5.1.1.msi /qn
+start /wait msiexec.exe /i elasticsearch-5.5.0.msi /qn
 ```
 
 You can also optionally specify a log file
 
 ```bat
-msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log
+start /wait msiexec.exe /i elasticsearch-5.5.0.msi /qn /l elastic-install.log
 ```
 
 All of the configurable options available in the UI are also exposed as command line arguments to `msiexec`:
 
 ```bat
-msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log NODENAME=my_node_name CLUSTERNAME=my_cluster_name
+start /wait msiexec.exe /i elasticsearch-5.5.0.msi /qn /l elastic-install.log NODENAME=my_node_name CLUSTERNAME=my_cluster_name
 ```
 
 ### Command-line options
 
 | Parameter name                   | Description                      | Default value                    |
 | -------------------------------- | -------------------------------- | -------------------------------- |
-| INSTALLDIR                       | Elasticsearch installation path  | C:\Program Files\Elastic\Elasticsearch |
-| DATADIRECTORY                    | Data directory path              | C:\ProgramData\Elastic\Elasticsearch\data |
-| CONFIGDIRECTORY                  | Config directory path            | C:\ProgramData\Elastic\Elasticsearch\config |
-| LOGSDIRECTORY                    | Logs directory path              | C:\ProgramData\Elastic\Elasticsearch\logs |
+| INSTALLDIR                       | Elasticsearch installation path  | `%ProgramW6432%`\Elastic\Elasticsearch |
+| DATADIRECTORY                    | Data directory path              | `%ALLUSERSPROFILE%`\Elastic\Elasticsearch\data |
+| CONFIGDIRECTORY                  | Config directory path            | `%ALLUSERSPROFILE%`\Elastic\Elasticsearch\config |
+| LOGSDIRECTORY                    | Logs directory path              | `%ALLUSERSPROFILE%`\Elastic\Elasticsearch\logs |
 | CLUSTERNAME                      | Cluster name                     | elasticsearch |
 | NODENAME                         | Node name                        | `%COMPUTERNAME%` |
 | UNICASTHOSTS                     | Comma-delimited list of unicast nodes ||
@@ -60,8 +66,8 @@ msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log NODENAME=my_node_n
 | DATANODE                         | Whether or not to make this a data node     | `true` |
 | INGESTNODE                       | Whether or not to make this an ingest node| | `true` |
 | NETWORKHOST                      | Hostname to bind to and advertise to other nodes | `true` |
-| SELECTEDMEMORY                   | Amount of memory to allocate to the JVM | 50% of available RAM capped at 32GB |
-| LOCKMEMORY                       | Whether or not to lock JVM memory           | `true` |
+| SELECTEDMEMORY                   | Amount of memory to allocate to the JVM | 2GB. If the target machine has less than 4GB RAM, then 50% RAM |
+| LOCKMEMORY                       | Whether or not to lock JVM memory           | `false` |
 | INSTALLASSERVICE                 | Install as a Windows service                | `true` |
 | STARTAFTERINSTALL                | Start the service after install is completed | `true` |
 | STARTWHENWINDOWSSTARTS           | Start the service when Windows starts (Automatic) | `true` |
@@ -70,7 +76,7 @@ msiexec /i elasticsearch-5.1.1.msi /qn /l elastic-install.log NODENAME=my_node_n
 | USEEXISTINGUSER                  | Run the service as the specified `USER` | `false` |
 | USER                             | Existing user to run the service as     ||
 | PASSWORD                         | Password for the existing user          ||
-| PLUGINS                          | Comma-delimited list of plugins to install | x-pack,ingest-attachment,ingest-geoip |
+| PLUGINS                          | Comma-delimited list of plugins to install | |
 
 ## Running as a service
 
@@ -97,7 +103,7 @@ In addition to installing and running Elasticsearch as a service, it can also be
 It also accepts the same command-line arguments as the original bat file.
 
 ```bat
-./elasticsearch.exe -Ecluster.name=my_cluster_name -Enode.name=my_node_name
+./elasticsearch.exe -E cluster.name=my_cluster_name -E node.name=my_node_name
 ```
 
 ## Reporting problems
