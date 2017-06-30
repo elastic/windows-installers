@@ -12,17 +12,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 {
 	public class PluginsModel : PluginsModelBase<PluginsModel, PluginsModelValidator>
 	{
-		private bool _includeSuggest;
-
-		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, bool, string, string>> pluginDependencies)
+		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies)
 			: base(pluginStateProvider)
 		{
 			pluginDependencies.Subscribe(t =>
 			{
-				this._includeSuggest = t.Item1;
-				this.AlreadyInstalled = t.Item2;
-				this.InstallDirectory = t.Item3;
-				this.ConfigDirectory = t.Item4;
+				this.AlreadyInstalled = t.Item1;
+				this.InstallDirectory = t.Item2;
+				this.ConfigDirectory = t.Item3;
 				this.Refresh();
 			});
 
@@ -208,14 +205,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				DisplayName = "Store SMB",
 				Description = TextResources.PluginsModel_StoreSmb
 			};
-		}
-		protected override List<string> DefaultPlugins()
-		{
-			var selectedPlugins = new List<string> { "x-pack" };
-			if (!this._includeSuggest) return selectedPlugins;
-			selectedPlugins.Add("ingest-attachment");
-			selectedPlugins.Add("ingest-geoip");
-			return selectedPlugins;
 		}
 	}
 }

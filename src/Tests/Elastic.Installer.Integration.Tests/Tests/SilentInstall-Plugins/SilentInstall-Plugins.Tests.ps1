@@ -5,18 +5,18 @@ Set-Location $currentDir
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
 
-Describe "Silent Install with 1024mb heap size" {
-    $HeapSize = 1024
+Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins" {
 
-    Invoke-SilentInstall @(,"SELECTEDMEMORY=$HeapSize")
+    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
 
-    Context-PingNode -XPackSecurityInstalled $false
-    Context-JvmOptions -Expected 1024
+    Context-PingNode -XPackSecurityInstalled $true
 
-    Invoke-SilentUninstall
+    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+
+    Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
 }
 
-Describe "Silent Uninstall with 1024mb heap size" {
+Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins" {
 
     Invoke-SilentUninstall
 
