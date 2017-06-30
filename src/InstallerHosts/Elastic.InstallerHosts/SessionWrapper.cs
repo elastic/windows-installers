@@ -13,10 +13,11 @@ namespace Elastic.InstallerHosts
 		public SessionWrapper(Session session)
 		{
 			this._session = session;
+			
+			this.Log($"spawned session wrapper for version: {this.Version}");
 		}
 
-		public string Version => 
-			!this._session.TryGetValue("CurrentVersion", out string version) ? null : version;
+		public string Version => this._session.TryGetValue("CurrentVersion", out string version) ? version : null;
 
 		public T Get<T>(string property)
 		{

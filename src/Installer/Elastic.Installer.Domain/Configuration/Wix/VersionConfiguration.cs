@@ -22,7 +22,7 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 			var v = VersionChange.New;
 			var d = InstallationDirection.None;
 
-			if (e != null)
+			if (c != null && e != null)
 			{
 				if (c == e)
 				{
