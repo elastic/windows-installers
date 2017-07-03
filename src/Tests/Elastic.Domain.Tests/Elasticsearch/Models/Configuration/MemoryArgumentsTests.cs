@@ -10,7 +10,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 		{
 			m.ConfigurationModel.SelectedMemory.Should().Be((ulong)v);
 			m.ConfigurationModel.IsValid.Should().BeFalse();
-			m.ConfigurationModel.LockMemory.Should().BeFalse();
 		});
 
 		[Fact] void SelectedMemory() => Argument(nameof(ConfigurationModel.SelectedMemory), ConfigurationModel.DefaultHeapSize, (m, v) =>

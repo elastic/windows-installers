@@ -54,17 +54,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.IsRelevant = false;
 
 			this.AlreadyInstalled = versionConfig.AlreadyInstalled;
-			this.CurrentyInstalling = versionConfig.AlreadyInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;
 			this.Refresh();
 		}
 
-		bool? currentlyInstalling;
-		public bool CurrentyInstalling
-		{
-			get => currentlyInstalling.GetValueOrDefault();
-			private set => this.RaiseAndSetIfChanged(ref currentlyInstalling, value);
-		}
 
 		bool? alreadyInstalled;
 		public bool AlreadyInstalled
@@ -94,8 +87,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(nameof(NoticeModel));
-			sb.AppendLine($"- {nameof(InstalledAsService)} = " + InstalledAsService);
-			sb.AppendLine($"- {nameof(AlreadyInstalled)} = " + AlreadyInstalled);
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
 			return sb.ToString();
 		}

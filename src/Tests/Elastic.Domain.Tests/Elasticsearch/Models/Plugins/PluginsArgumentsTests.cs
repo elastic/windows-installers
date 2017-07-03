@@ -12,36 +12,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 			m.PluginsModel.Plugins.Should().BeEmpty();
 			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(0);
 		});
-		
-		[Fact] void PluginsResetsPreviousSelection() => Argument(
-			s=>s.PreviouslyInstalledPlugins("x-pack"),
-			nameof(PluginsModel.Plugins), "", (m, v) =>
-		{
-			m.PluginsModel.Plugins.Should().BeEmpty();
-			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(0);
-		});
-		[Fact] void PluginsResetsPreviousSelectionWhenAlreadyInstalled() => Argument(
-			setup: s => s.PreviouslyInstalledPlugins("x-pack").Wix(alreadyInstalled:true),
-			key: nameof(PluginsModel.Plugins), 
-			value: "", 
-			assert: (m, v) =>
-		{
-			m.PluginsModel.Plugins.Should().BeEmpty();
-			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(0);
-		});
-		
-		[Fact] void PluginsDefaultLeavesPreviousSelectionWhenAlreadyInstalled() => Argument(
-			setup: s => s.PreviouslyInstalledPlugins("x-pack").Wix(alreadyInstalled: true),
-			key: nameof(PluginsModel.Plugins), 
-			value: PluginsModel.UnchangedMoniker, 
-			msiParam: "x-pack",
-			assert: (m, v) =>
-		{
-			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("x-pack");
-			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(1);
-		});
-		
-		
+
 		[Fact] void PluginsSingleValue() => Argument(nameof(PluginsModel.Plugins), "analysis-icu", (m, v) =>
 		{
 			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("analysis-icu");

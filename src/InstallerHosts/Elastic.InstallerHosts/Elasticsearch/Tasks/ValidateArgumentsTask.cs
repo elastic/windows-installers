@@ -22,13 +22,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 				var validationFailures = ValidationFailures(failures);
 				throw new Exception(errorPrefix + Environment.NewLine + validationFailures);
 			}
-
-			if (!this.Session.Get<bool>("SetPlugins"))
-			{
-				this.Session.Set("SetPlugins", "true");
-				this.Session.Set("StickyPlugins", string.Join(",",this.InstallationModel.PluginsModel.Plugins));
-			}
-			
 			return true;
 		}
 	}

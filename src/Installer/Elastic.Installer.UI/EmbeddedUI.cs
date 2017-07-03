@@ -8,9 +8,9 @@ using ReactiveUI;
 using System.Threading.Tasks;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
+using Elastic.Installer.UI.Shared.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Kibana;
-using Elastic.Installer.Domain.Shared;
 using Elastic.InstallerHosts;
 
 namespace Elastic.Installer.UI
@@ -118,12 +118,12 @@ namespace Elastic.Installer.UI
 			}
 		}
 
-		private static ProductType GetProduct(string product)
+		private static Product GetProduct(string product)
 		{
 			switch(product)
 			{
-				case "elasticsearch": return ProductType.Elasticsearch;
-				case "kibana": return ProductType.Kibana;
+				case "elasticsearch": return Product.Elasticsearch;
+				case "kibana": return Product.Kibana;
 				default: throw new ArgumentException($"Unknown product name {product}");
 			}
 		}

@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace Elastic.Installer.Domain.Configuration.Wix.Session
+﻿namespace Elastic.Installer.Domain.Configuration.Wix.Session
 {
 	public class NoopSession : ISession
 	{
-		public string Version => null;
-		
 		public T Get<T>(string property) => default(T);
 
 		public void Set(string property, string value) { }

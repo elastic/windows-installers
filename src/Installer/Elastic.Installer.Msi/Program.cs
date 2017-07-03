@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Elastic.Installer.Domain.Model.Kibana.Plugins;
 using WixSharp;
 using static System.Reflection.Assembly;
 
@@ -26,17 +25,8 @@ namespace Elastic.Installer.Msi
 			var setupParams = product.MsiParams;
 			var staticProperties = setupParams
 				.Where(v => v.Attribute.IsStatic)
-				.Select(a =>
-				{
-					//TODO temporary quick fixes
-					//make sure the default burned into the installer is the unchanged moniker for plugins
-					if (a.Key.Equals("PLUGINS", StringComparison.OrdinalIgnoreCase)) 
-						return new Property(a.Key, PluginsModel.UnchangedMoniker);
-					//make sure the default burned into the installer is lockmemory false
-					else if (a.Key.Equals("LOCKMEMORY", StringComparison.OrdinalIgnoreCase)) 
-						return new Property(a.Key, "false");
-					return new Property(a.Key, a.Value);
-				});
+				.Select(a => new Property(a.Key, a.Value)
+			);
 			// Only set dynamic property if MSI is not installed and value is empty 
 			var dynamicProperties = setupParams
 				.Where(v => v.Attribute.IsDynamic)
@@ -85,9 +75,6 @@ namespace Elastic.Installer.Msi
 					// make it easy to reference current version within MSI process
 					new Property("CurrentVersion", version),
 					new Property("MsiLogging", "voicewarmup"),
-					//
-					new Property("SetPlugins", "false"),
-					new Property("StickyPlugins", "__unchanged__"),
 					// do not give option to repair installation
 					new Property("ARPNOREPAIR", "yes"),
 					// do not give option to change installation

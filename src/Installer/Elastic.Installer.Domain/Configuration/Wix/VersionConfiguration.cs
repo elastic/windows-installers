@@ -7,13 +7,12 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 		public SemVersion ExistingVersion { get; }
 		public SemVersion CurrentVersion { get; }
 
-		public VersionChange VersionChange { get; }
+		public VersionChange VersionChange { get; } 
 		public InstallationDirection InstallationDirection { get; }
 
-		public bool CurrentlyInstalling { get; }
 		public bool AlreadyInstalled => VersionChange != VersionChange.New;
 		public bool SameVersionAlreadyInstalled => VersionChange == VersionChange.Same;
-		public bool HigherVersionAlreadyInstalled => InstallationDirection == InstallationDirection.Down;
+		public bool HigherVersionAlreadyInstalled => InstallationDirection == InstallationDirection.Down; 
 
 		public VersionConfiguration(IWixStateProvider wixStateProvider)
 		{
@@ -27,7 +26,7 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 			{
 				if (c == e)
 				{
-					v = wixStateProvider.CurrentlyInstalling ? VersionChange.New : VersionChange.Same;
+					v = VersionChange.Same;
 					d = InstallationDirection.None;
 				}
 				else if (c > e) d = InstallationDirection.Up;
@@ -40,7 +39,6 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 			}
 			this.VersionChange = v;
 			this.InstallationDirection = d;
-			this.CurrentlyInstalling = wixStateProvider.CurrentlyInstalling;
 		}
 	}
 }

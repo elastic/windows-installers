@@ -24,29 +24,18 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			
 			RuleFor(vm => vm.BadElasticsearchYamlFile).Must(b => !b).WithMessage(BadElasticsearchYamlFile);
 
-			RuleFor(vm => vm.SameVersionAlreadyInstalled)
-				.Must(b => !b)
-				.When(vm => !vm.NoticeModel?.CurrentyInstalling ?? true)
-				.WithMessage(AlreadyInstalled);
+			RuleFor(vm => vm.SameVersionAlreadyInstalled).Must(b => !b).WithMessage(AlreadyInstalled);
 
-			RuleFor(vm => vm.HigherVersionAlreadyInstalled)
-				.Must(b => !b)
-				.When(vm => !vm.NoticeModel?.CurrentyInstalling ?? true)
-				.WithMessage(HigherVersionInstalled);
+			RuleFor(vm => vm.HigherVersionAlreadyInstalled).Must(b => !b).WithMessage(HigherVersionInstalled);
 
 			RuleFor(vm => vm.Steps)
 				.Must(steps => steps.Where(s => s != null).All(s => s.IsValid))
-				.When(vm =>
-				{
-					var v = !vm.JavaInstalled
-						&& !vm.JavaMisconfigured
-						&& !vm.Using32BitJava
-					    && !vm.BadElasticsearchYamlFile;
-					if (!vm.NoticeModel?.CurrentyInstalling ?? true)
-						v = v && !vm.SameVersionAlreadyInstalled && !vm.HigherVersionAlreadyInstalled;
-					return v;
-						
-				})
+				.When(vm => !vm.JavaInstalled
+							&& !vm.JavaMisconfigured
+							&& !vm.Using32BitJava
+							&& !vm.SameVersionAlreadyInstalled
+							&& !vm.HigherVersionAlreadyInstalled
+							&& !vm.BadElasticsearchYamlFile)
 				.WithMessage(NotAllModelsAreValid);
 		}
 	}

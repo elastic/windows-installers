@@ -35,9 +35,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this;
 		}
 
-		public TestSetupStateProvider Wix(string currentVersion, string existingVersion, bool currentlyInstalling = false)
+		public TestSetupStateProvider Wix(string currentVersion, string existingVersion)
 		{
-			this.WixState = new MockWixStateProvider() { CurrentVersion = currentVersion, CurrentlyInstalling = currentlyInstalling};
+			this.WixState = new MockWixStateProvider() { CurrentVersion = currentVersion };
 			if (!string.IsNullOrWhiteSpace(existingVersion)) this.WixState.ExistingVersion = existingVersion;
 			return this;
 		}
