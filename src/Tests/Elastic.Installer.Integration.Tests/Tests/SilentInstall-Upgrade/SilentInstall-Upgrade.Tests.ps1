@@ -91,7 +91,7 @@ Describe -Tag 'PreviousVersion' "Silent Uninstall upgrade - Uninstall new versio
 
 	$version = $env:EsVersion
 
-    Invoke-SilentUninstall -Version $version
+    Invoke-SilentUninstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $version
 
     Context "Ping node" {
         It "Elasticsearch node should not be running" {
