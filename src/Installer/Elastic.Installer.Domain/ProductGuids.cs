@@ -34,7 +34,8 @@ namespace Elastic.Installer.Domain
 			{ "5.4.3", new Guid("481906c0-70ca-4a4c-bb66-a6e25ed22b94") },
 			{ "5.5.0", new Guid("344f09a4-5bf8-4d44-8e86-2130c263b08f") },
 			{ "6.0.0-beta1", new Guid("f234f31d-f25c-4e64-8d3e-868f7b7ece97") },
-			{ "6.1.0", new Guid("7280a702-8532-4341-ac9e-38b221d14c1c") }
+			{ "6.1.0", new Guid("7280a702-8532-4341-ac9e-38b221d14c1c") },
+			{ "7.0.0-alpha1", new Guid("303b8268-6caa-4b82-aa3a-2b3e7197a0a3") }
 		};
 
 		public static Dictionary<string, Guid> KibanaProductCodes => new Dictionary<string, Guid>
