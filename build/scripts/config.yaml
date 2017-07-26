@@ -48,7 +48,7 @@ elasticsearch:
     - version: 5.5.0
       guid: 344f09a4-5bf8-4d44-8e86-2130c263b08f
     - version: 5.5.1
-      guid: 21d9cc46-4d3e-4939-bc46-8dccb4d664c3
+      guid: 2beb1fc0-042a-49fb-af3d-285a80f3c737
     - version: 6.0.0-beta1
       guid: f234f31d-f25c-4e64-8d3e-868f7b7ece97
     - version: 6.1.0
