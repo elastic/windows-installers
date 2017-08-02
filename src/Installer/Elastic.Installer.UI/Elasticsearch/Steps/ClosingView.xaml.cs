@@ -43,7 +43,11 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.OpenReference.Content = string.Format(ViewResources.ClosingView_ReadTheReference, majorMinor);
-		
+
+			this.OpenElasticsearch.Content = this.ViewModel.DefaultInstallXPack
+				? ViewResources.ClosingView_ElasticsearchRunningAtHeaderWithCredentials
+				: ViewResources.ClosingView_ElasticsearchRunningAtHeader;
+
 			this.ViewModel.InstallXPack.Subscribe(x =>
 			{
 				this.OpenElasticsearch.Content = x

@@ -9,15 +9,17 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Closing
 	public class ClosingModel : ClosingModelBase<ClosingModel, ClosingModelValidator>
 	{
 		public ClosingModel(
-			SemVersion currentVersion,
-			bool isUpgrade,
-			IObservable<string> hostName,
-			IObservable<string> wixLogFile,
-			IObservable<string> elasticsearchLog,
-			IObservable<bool> installXPack,
+			SemVersion currentVersion, 
+			bool isUpgrade, 
+			bool defaultInstallXPack, 
+			IObservable<string> hostName, 
+			IObservable<string> wixLogFile, 
+			IObservable<string> elasticsearchLog, 
+			IObservable<bool> installXPack, 
 			IServiceStateProvider serviceStateProvider) 
 			: base(currentVersion, isUpgrade, hostName, wixLogFile, elasticsearchLog, installXPack, serviceStateProvider)
 		{
+			this.DefaultInstallXPack = defaultInstallXPack;
 			this.OpenFindYourClient = ReactiveCommand.Create();
 			this.Refresh();
 		}
@@ -25,5 +27,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Closing
 		public sealed override void Refresh() { }
 
 		public ReactiveCommand<object> OpenFindYourClient { get; }
+
+		public bool DefaultInstallXPack { get; }
 	}
 }
