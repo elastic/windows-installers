@@ -20,7 +20,7 @@ open Products.Paths
 
 module Commandline =
 
-    let private usage = """
+    let usage = """
 USAGE:
 
 build <target> [Products] [Versions] [Params] [skiptests]
@@ -142,16 +142,6 @@ Whether to skip unit tests.
     let private skipTests = args |> List.exists (fun x -> x = "skiptests")
     let private filteredArgs = args |> List.filter (fun x -> x <> "skiptests")
 
-    let target =
-        match (filteredArgs |> List.tryHead) with
-        | Some t -> t
-        | _ -> "buildinstallers"
-
-    let arguments =
-        match filteredArgs with
-        | _ :: tail -> target :: tail
-        | [] -> [target]
-
     let private (|IsTarget|_|) (candidate: string) =
         match candidate.ToLowerInvariant() with
         | "buildservices"
@@ -166,6 +156,21 @@ Whether to skip unit tests.
         | "release"
         | "integrate" -> Some candidate
         | _ -> None
+
+    let target =
+        match (filteredArgs |> List.tryHead) with
+        | Some t -> 
+            match (t.ToLowerInvariant()) with
+            | IsTarget t -> t
+            | "help" 
+            | "?" -> "help"
+            | _ -> "buildinstallers"
+        | _ -> "buildinstallers"
+
+    let arguments =
+        match filteredArgs with
+        | _ :: tail -> target :: tail
+        | [] -> [target]
 
     let private (|IsVersionList|_|) candidate =
         let versionStrings = splitStr "," candidate
@@ -338,15 +343,10 @@ Whether to skip unit tests.
                            products |> List.map(ProductVersions.CreateFromProduct lastFeedVersion)
                        | [] ->
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-                       | ["help"]
-                       | ["?"] ->
-                           trace usage
-                           exit 2
                        | _ ->
                            traceError usage
                            exit 2
 
         setBuildParam "target" target
         if skipTests then setBuildParam "skiptests" "1"
-        traceHeader target
         products
