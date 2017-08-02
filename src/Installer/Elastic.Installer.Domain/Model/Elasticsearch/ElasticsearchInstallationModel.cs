@@ -86,11 +86,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
 			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 			var observeElasticsearchLog = this.WhenAnyValue(vm => vm.LocationsModel.ElasticsearchLog);
+
+			var installXPack = this.PluginsModel.DefaultPlugins().Contains("x-pack");
 			var observeInstallXPack = this.PluginsModel.AvailablePlugins.ItemChanged
 				.Where(x => x.PropertyName == nameof(Plugin.Selected) && x.Sender.PluginType == PluginType.XPack)
 				.Select(x => x.Sender.Selected);
 
-			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog,
+			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, installXPack, observeHost, observeInstallationLog,
 				observeElasticsearchLog, observeInstallXPack, serviceStateProvider);
 			this.AllSteps = new ReactiveList<IStep>
 			{
