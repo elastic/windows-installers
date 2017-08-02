@@ -66,6 +66,6 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			return sb.ToString();
 		}
 
-		protected virtual List<string> DefaultPlugins() => new List<string>();
+		public virtual List<string> DefaultPlugins() => new List<string>();
 	}
 }
