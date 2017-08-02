@@ -34,7 +34,8 @@ let productDescriptions = productsToBuild
                           |> List.concat
                           |> String.concat Environment.NewLine
 
-traceHeader (sprintf "Products:%s%s%s" Environment.NewLine Environment.NewLine productDescriptions)
+if (getBuildParam "target" |> toLower <> "help") then 
+    traceHeader (sprintf "Products:%s%s%s" Environment.NewLine Environment.NewLine productDescriptions)
 
 Target "Clean" (fun _ ->
     CleanDirs [MsiBuildDir; OutDir; ResultsDir]
@@ -134,6 +135,8 @@ Target "Integrate" (fun () ->
               |> Async.AwaitIAsyncResult
               |> Async.Ignore
     Async.RunSynchronously async)
+
+Target "Help" (fun () -> trace Commandline.usage)
 
 "Clean"
   ==> "PatchGuids"
