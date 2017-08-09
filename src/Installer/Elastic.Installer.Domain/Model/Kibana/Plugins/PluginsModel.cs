@@ -30,7 +30,5 @@ namespace Elastic.Installer.Domain.Model.Kibana.Plugins
 				Description = TextResources.PluginsModel_XPack,
 			};
 		}
-
-		public override List<string> DefaultPlugins() => new List<string> { "x-pack" };
 	}
 }
