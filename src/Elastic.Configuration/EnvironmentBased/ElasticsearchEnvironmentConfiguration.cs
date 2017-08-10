@@ -83,7 +83,7 @@ namespace Elastic.Configuration.EnvironmentBased
 				.AppendLine($"- {nameof(StateProvider.HomeDirectoryMachineVariable)} = {StateProvider.HomeDirectoryMachineVariable}")
 				.AppendLine($"- From executable location = {HomeDirectoryInferred}")
 		
-				.AppendLine($"ES_CONFIG (in order of precedence)")
+				.AppendLine($"CONF_DIR (in order of precedence)")
 				.AppendLine($"- {nameof(StateProvider.ConfigDirectoryProcessVariable)} = {StateProvider.ConfigDirectoryProcessVariable}")
 				.AppendLine($"- {nameof(StateProvider.ConfigDirectoryUserVariable)} = {StateProvider.ConfigDirectoryUserVariable}")
 				.AppendLine($"- {nameof(StateProvider.ConfigDirectoryMachineVariable)} = {StateProvider.ConfigDirectoryMachineVariable}")

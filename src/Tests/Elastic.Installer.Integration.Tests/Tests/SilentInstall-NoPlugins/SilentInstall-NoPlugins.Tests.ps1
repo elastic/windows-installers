@@ -33,7 +33,7 @@ Describe "Silent Uninstall with no plugins" {
     }
 
     Context "ES_CONFIG Environment Variable" {
-        $EsConfig = Get-MachineEnvironmentVariable "ES_CONFIG"
+        $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
         It "ES_CONFIG Environment variable should be null" {
             $EsConfig | Should Be $null
         }
