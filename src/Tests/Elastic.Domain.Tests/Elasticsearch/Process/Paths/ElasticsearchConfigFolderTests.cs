@@ -15,6 +15,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 		private const string EsConfUser = @"c:\Elasticsearch\UserConfig";
 		private const string EsConfMachine = @"c:\Elasticsearch\MachineConfig";
 		private const string EsConfCommandLine = @"c:\Elasticsearch\ArgCommandLine";
+		
+		//mocks the old ES_CONFIG environment variables
+		private const string EsConfProcessOld = @"c:\Elasticsearch\ProcessOld";
+		private const string EsConfUserOld = @"c:\Elasticsearch\UserConfigOld";
+		private const string EsConfMachineOld = @"c:\Elasticsearch\MachineConfigOld";
 
 		private static string DefaultEsConf => Path.Combine(DefaultEsHome, "config");
 
@@ -95,9 +100,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				)
 			);
 			
-			
-			
-
 		[Fact] public void ArgumentPassedOnCommandLineCanContainEqualsSignInPath() =>
 			InstantiateThrows(() => 
 				ElasticsearchChangesOnly(e => e
@@ -105,6 +107,36 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 					, "-E", $"path.conf={EsConfCommandLine}\\=x==y"
 				)
 			);
+		
+		[Fact] public void ConfigProcessVariableWinsFromOld() => ElasticsearchChangesOnly(e=>e
+				.EsConfigProcessVariable(EsConfProcess)
+				.EsConfigProcessVariableOld(EsConfProcessOld)
+				.ElasticsearchExecutable(Executable)
+			)
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsConfArg(EsConfProcess));
+			});
+		
+		[Fact] public void ConfigUserVariableWinsFromOld() => ElasticsearchChangesOnly(e=>e
+				.EsConfigUserVariable(EsConfUser)
+				.EsConfigUserVariableOld(EsConfUserOld)
+				.ElasticsearchExecutable(Executable)
+			)
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsConfArg(EsConfUser));
+			});
+		
+		[Fact] public void ConfigMachineVariableWinsFromOld() => ElasticsearchChangesOnly(e=>e
+				.EsConfigMachineVariable(EsConfMachine)
+				.EsConfigMachineVariableOld(EsConfMachineOld)
+				.ElasticsearchExecutable(Executable)
+			)
+			.Start(p =>
+			{
+				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsConfArg(EsConfMachine));
+			});
 			
 		private static void InstantiateThrows(Action instantiate) => instantiate
 			.ShouldThrowExactly<StartupException>()
