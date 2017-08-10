@@ -31,9 +31,9 @@ namespace Elastic.Configuration.EnvironmentBased
 		public string HomeDirectoryProcessVariable => Environment.GetEnvironmentVariable("ES_HOME", EnvironmentVariableTarget.Process);
 		public string RunningExecutableLocation => new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
 
-		public string ConfigDirectoryUserVariable => Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.User);
-		public string ConfigDirectoryMachineVariable => Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.Machine);
-		public string ConfigDirectoryProcessVariable => Environment.GetEnvironmentVariable("ES_CONFIG", EnvironmentVariableTarget.Process);
+		public string ConfigDirectoryUserVariable => Environment.GetEnvironmentVariable("CONF_DIR", EnvironmentVariableTarget.User);
+		public string ConfigDirectoryMachineVariable => Environment.GetEnvironmentVariable("CONF_DIR", EnvironmentVariableTarget.Machine);
+		public string ConfigDirectoryProcessVariable => Environment.GetEnvironmentVariable("CONF_DIR", EnvironmentVariableTarget.Process);
 
 		public string GetEnvironmentVariable(string variable) =>
 			Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Process)
@@ -44,6 +44,6 @@ namespace Elastic.Configuration.EnvironmentBased
 			Environment.SetEnvironmentVariable("ES_HOME", esHome, EnvironmentVariableTarget.Machine);
 
 		public void SetEsConfigEnvironmentVariable(string esConfig) =>
-			Environment.SetEnvironmentVariable("ES_CONFIG", esConfig, EnvironmentVariableTarget.Machine);
+			Environment.SetEnvironmentVariable("CONF_DIR", esConfig, EnvironmentVariableTarget.Machine);
 	}
 }
