@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using Elastic.ProcessHosts.Process;
 using FluentAssertions;
 using Xunit;
 using static Elastic.Installer.Domain.Tests.Elasticsearch.Process.ElasticsearchProcessTester;
@@ -87,19 +89,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 			});
 
 		[Fact] public void ArgumentPassedOnCommandLineWins() =>
-			ElasticsearchChangesOnly(
-				EsHomeCommandLine,
-				e => e.ElasticsearchExecutable(Executable)
-				, "-E", $"path.home={EsHomeCommandLine}"
-			)
-			.Start(p =>
-			{
-				p.ObservableProcess.ArgsCalled.Should()
-					.NotBeNullOrEmpty()
-					.And.NotContain(EsHomeArg(_executableParentFolder))
-					.And.Contain(EsHomeArg(EsHomeCommandLine))
-					.And.ContainSingle(s => s.Contains("path.home"));
-			});
+			InstantiateThrows(() =>
+                ElasticsearchChangesOnly(
+                    EsHomeCommandLine,
+                    e => e.ElasticsearchExecutable(Executable)
+                    , "-E", $"path.home={EsHomeCommandLine}"
+                )
+		    );
 
 		[Fact] public void ArgumentPassedOnCommandLineNeedsFlag() =>
 			ElasticsearchChangesOnly(
@@ -119,35 +115,27 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 			});
 
 		[Fact] public void ConjoinedArgumentPassedOnCommandLineWins() =>
-			ElasticsearchChangesOnly(
-				EsHomeCommandLine,
-				e => e.ElasticsearchExecutable(Executable)
-				, $"-Epath.home={EsHomeCommandLine}"
-			)
-			.Start(p =>
-			{
-				p.ObservableProcess.ArgsCalled.Should()
-					.NotBeNullOrEmpty()
-					.And.NotContain(EsHomeArg(_executableParentFolder))
-					.And.Contain(EsHomeArg(EsHomeCommandLine))
-					.And.ContainSingle(s => s.Contains("path.home"));
-			});
+			InstantiateThrows(() =>
+                ElasticsearchChangesOnly(
+                    EsHomeCommandLine,
+                    e => e.ElasticsearchExecutable(Executable)
+                    , $"-Epath.home={EsHomeCommandLine}"
+                )
+			);
 
 		[Fact]
 		public void ArgumentPassedOnCommandLineCanContainEqualsSignInPath()
 		{
 			var home = $"{EsHomeCommandLine}\\=x==y";
-			ElasticsearchChangesOnly(
-				home, e => e.ElasticsearchExecutable(Executable), "-E", $"path.home={home}"
-			)
-			.Start(p =>
-			{
-				p.ObservableProcess.ArgsCalled.Should()
-					.NotBeNullOrEmpty()
-					.And.NotContain(EsHomeArg(_executableParentFolder))
-					.And.Contain(EsHomeArg(home))
-					.And.ContainSingle(s => s.Contains("path.home"));
-			});
+			InstantiateThrows(() =>
+                ElasticsearchChangesOnly(
+                    home, e => e.ElasticsearchExecutable(Executable), "-E", $"path.home={home}"
+                )
+			);
 		}
+		
+		private static void InstantiateThrows(Action instantiate) => instantiate
+			.ShouldThrowExactly<StartupException>()
+			.WithMessage("setting -E path.home is no longer supported");
 	}
 }
