@@ -7,13 +7,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 {
 	public class MockElasticsearchEnvironmentStateProvider : IElasticsearchEnvironmentStateProvider
 	{
-		private string _esHomeMachine;
-		private string _esHomeUser;
-		private string _esHomeProcess;
-		private string _esExecutable;
-		private string _esConfigMachine;
-		private string _esConfigUser;
-		private string _esConfigProcess;
 		private Dictionary<string, string> _mockVariables = new Dictionary<string, string>();
 
 		public string LastSetEsHome { get; set; }
@@ -28,23 +21,23 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		}
 		public MockElasticsearchEnvironmentStateProvider EsHomeMachineVariable(string esHome)
 		{
-			this._esHomeMachine = esHome;
+			this.HomeDirectoryMachineVariable = esHome;
 			return this;
 		}
 		public MockElasticsearchEnvironmentStateProvider EsHomeUserVariable(string esHome)
 		{
-			this._esHomeUser = esHome;
+			this.HomeDirectoryUserVariable = esHome;
 			return this;
 		}
 		public MockElasticsearchEnvironmentStateProvider EsHomeProcessVariable(string esHome)
 		{
-			this._esHomeProcess = esHome;
+			this.HomeDirectoryProcessVariable = esHome;
 			return this;
 		}
 		
 		public MockElasticsearchEnvironmentStateProvider ElasticsearchExecutable(string executable)
 		{
-			this._esExecutable = executable;
+			this.RunningExecutableLocation = executable;
 			return this;
 		}
 
@@ -64,23 +57,59 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this;
 		}
 		
-		public string RunningExecutableLocation => this._esExecutable;
+		public MockElasticsearchEnvironmentStateProvider EsConfigMachineVariableOld(string esConfig)
+		{
+			this._esConfigMachineOld = esConfig;
+			return this;
+		}
+		public MockElasticsearchEnvironmentStateProvider EsConfigUserVariableOld(string esConfig)
+		{
+			this._esConfigUserOld = esConfig;
+			return this;
+		}
+		public MockElasticsearchEnvironmentStateProvider EsConfigProcessVariableOld(string esConfig)
+		{
+			this._esConfigProcessOld = esConfig;
+			return this;
+		}
 
-		public string HomeDirectoryUserVariable => this._esHomeUser;
-		public string HomeDirectoryMachineVariable => this._esHomeMachine;
-		public string HomeDirectoryProcessVariable => this._esHomeProcess;
-		public string ConfigDirectoryUserVariable => this._esConfigUser;
-		public string ConfigDirectoryMachineVariable => this._esConfigMachine;
-		public string ConfigDirectoryProcessVariable => this._esConfigProcess;
+		private string RunningExecutableLocation { get; set; }
+		string IElasticsearchEnvironmentStateProvider.RunningExecutableLocation => this.RunningExecutableLocation;
 
-		public void SetEsHomeEnvironmentVariable(string esHome)
+		private string HomeDirectoryMachineVariable { get; set; }
+		string IElasticsearchEnvironmentStateProvider.HomeDirectoryMachineVariable => this.HomeDirectoryMachineVariable;
+
+		private string HomeDirectoryUserVariable { get; set; }
+		string IElasticsearchEnvironmentStateProvider.HomeDirectoryUserVariable => this.HomeDirectoryUserVariable;
+
+		private string HomeDirectoryProcessVariable { get; set; }
+		string IElasticsearchEnvironmentStateProvider.HomeDirectoryProcessVariable => this.HomeDirectoryProcessVariable;
+
+		private string _esConfigMachine;
+		private string _esConfigMachineOld;
+		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryMachineVariable => this._esConfigMachine ?? this._esConfigMachineOld;
+		private string _esConfigUser;
+		private string _esConfigUserOld;
+		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryUserVariable => this._esConfigUser ?? this._esConfigUserOld;
+		private string _esConfigProcess;
+		private string _esConfigProcessOld;
+		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryProcessVariable => this._esConfigProcess ?? this._esConfigProcessOld;
+
+
+		void IElasticsearchEnvironmentStateProvider.SetEsHomeEnvironmentVariable(string esHome)
 		{
 			this.LastSetEsHome = esHome;
 		}
 
-		public void SetEsConfigEnvironmentVariable(string esConfig)
+		void IElasticsearchEnvironmentStateProvider.SetEsConfigEnvironmentVariable(string esConfig)
 		{
 			this.LastSetEsConfig = esConfig;
+		}
+
+		public bool UnsetOldConfigVariableWasCalled { get; private set; }
+		void IElasticsearchEnvironmentStateProvider.UnsetOldConfigVariable()
+		{
+			this.UnsetOldConfigVariableWasCalled = true;
 		}
 	}
 }

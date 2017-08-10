@@ -17,6 +17,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				{
 					t.EsState.LastSetEsHome.Should().Be(m.LocationsModel.InstallDir);
 					t.EsState.LastSetEsConfig.Should().Be(m.LocationsModel.ConfigDirectory);
+					t.EsState.UnsetOldConfigVariableWasCalled.Should().BeTrue();
 				}
 			);
 
@@ -30,6 +31,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				{
 					t.EsState.LastSetEsHome.Should().Be(EsHome);
 					t.EsState.LastSetEsConfig.Should().Be(EsConfig);
+					t.EsState.UnsetOldConfigVariableWasCalled.Should().BeTrue();
 				}
 			);
 
