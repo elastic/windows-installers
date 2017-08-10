@@ -82,7 +82,6 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			ErrorIfExists(c, errors, "ES_USE_IPV4", (k,v) => $"{k}={v}: set -Djava.net.preferIPv4Stack=true {i} \"-Djava.net.preferIPv4Stack=true\" {t}");
 			ErrorIfExists(c, errors, "ES_GC_OPTS", (k, v) => $"{k}={v}: set %ES_GC_OPTS: = and % {i} \"{v}\" {t}");
 			ErrorIfExists(c, errors, "ES_GC_LOG_FILE", (k,v) => $"{k}={v}: set -Xloggc:{v} {i} \"-Xloggc:{v}\" {t}");
-			ErrorIfExists(c, errors, "ES_CONF", (k,v) => $"{k}={v}: set CONF_DIR={v}");
 
 			if (errors.Count == 0) return;
 			var helpText = errors.Values.Aggregate(new StringBuilder(), (sb, v) => sb.AppendLine(v), sb => sb.ToString());

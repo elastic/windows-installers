@@ -20,6 +20,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			var esState = this.InstallationModel.ElasticsearchEnvironmentConfiguration;
 			esState.SetEsHomeEnvironmentVariable(installDirectory);
 			esState.SetEsConfigEnvironmentVariable(configDirectory);
+			esState.UnsetOldConfigVariable();
 			this.Session.SendProgress(1000, "Environment variables set");
 			return true;
 		}
