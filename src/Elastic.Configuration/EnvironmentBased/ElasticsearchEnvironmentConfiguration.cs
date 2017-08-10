@@ -75,6 +75,8 @@ namespace Elastic.Configuration.EnvironmentBased
 
 		public void SetEsConfigEnvironmentVariable(string esConfig) => StateProvider.SetEsConfigEnvironmentVariable(esConfig);
 		
+		public void UnsetOldConfigVariable() => StateProvider.UnsetOldConfigVariable();
+		
 		public override string ToString() =>
 			new StringBuilder()
 				.AppendLine($"ES_HOME (in order of precedence)")
