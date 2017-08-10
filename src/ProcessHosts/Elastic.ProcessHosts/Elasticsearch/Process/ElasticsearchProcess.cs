@@ -46,7 +46,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			var homeDirectory = env.HomeDirectory?.TrimEnd('\\')
 				?? throw new StartupException("No ES_HOME variable set and no home directory could be inferred from the executable location");
 			var configDirectory = env.ConfigDirectory?.TrimEnd('\\')
-				?? throw new StartupException("ES_CONFIG was not explicitly set nor could it be determined from ES_HOME or the current executable location");
+				?? throw new StartupException("CONF_DIR was not explicitly set nor could it be determined from ES_HOME or the current executable location");
 
 			this.HomeDirectory = homeDirectory;
 			this.ConfigDirectory = configDirectory;
@@ -82,6 +82,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			ErrorIfExists(c, errors, "ES_USE_IPV4", (k,v) => $"{k}={v}: set -Djava.net.preferIPv4Stack=true {i} \"-Djava.net.preferIPv4Stack=true\" {t}");
 			ErrorIfExists(c, errors, "ES_GC_OPTS", (k, v) => $"{k}={v}: set %ES_GC_OPTS: = and % {i} \"{v}\" {t}");
 			ErrorIfExists(c, errors, "ES_GC_LOG_FILE", (k,v) => $"{k}={v}: set -Xloggc:{v} {i} \"-Xloggc:{v}\" {t}");
+			ErrorIfExists(c, errors, "ES_CONF", (k,v) => $"{k}={v}: set CONF_DIR={v}");
 
 			if (errors.Count == 0) return;
 			var helpText = errors.Values.Aggregate(new StringBuilder(), (sb, v) => sb.AppendLine(v), sb => sb.ToString());
@@ -94,8 +95,6 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			if (string.IsNullOrWhiteSpace(v)) return;
 			errors.Add(variable, errorMessage(variable, v));
 		}
-		
-		
 
 		protected override void HandleMessage(ConsoleOut c)
 		{
@@ -134,8 +133,8 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 				{
 					$"-Delasticsearch",
 					$"-Des.path.home=\"{this.HomeDirectory}\"",
-					$"-cp \"{classPath}\" org.elasticsearch.bootstrap.Elasticsearch",
-					$"-Epath.conf=\"{this.ConfigDirectory}\""
+					$"-Des.path.conf=\"{this.ConfigDirectory}\"",
+					$"-cp \"{classPath}\" org.elasticsearch.bootstrap.Elasticsearch"
 				})
 				.Concat(args)
 				.ToList();
@@ -168,9 +167,11 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 						break;
 					default:
 						if (esFlag && a.StartsWith("path.conf"))
-							this.ConfigDirectory = ParseKeyValue(a);
+							throw new StartupException("setting -E path.conf is no longer supported", 
+								"You need to set CONF_DIR as a (process) environment variable to run from a different configuration directory");
 						else if (esFlag && a.StartsWith("path.home"))
-							this.HomeDirectory = ParseKeyValue(a);
+							throw new StartupException("setting -E path.home is no longer supported", 
+								"You need to set ES_HOME as a (process) environment variable to run from a different home directory");
 						else
 							newArgs.Add(esFlag ? $"-E{a}" : a);
 						break;

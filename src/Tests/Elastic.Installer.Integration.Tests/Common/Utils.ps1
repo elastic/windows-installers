@@ -490,7 +490,7 @@ function Get-TotalPhysicalMemory() {
 }
 
 function Get-ElasticsearchYamlConfiguration() {
-	$EsConfig = Get-MachineEnvironmentVariable "ES_CONFIG"
+	$EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
     $EsData = Split-Path $EsConfig -Parent | Join-Path -ChildPath "data"
 	return Get-Content "$EsData\elasticsearch.yml"
 }
@@ -504,7 +504,7 @@ function Add-XPackSecurityCredentials($Username, $Password, $Roles) {
     $Service | Stop-Service
 
     $EsHome = Get-MachineEnvironmentVariable "ES_HOME"
-    $EsConfig = Get-MachineEnvironmentVariable "ES_CONFIG"
+    $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
     $EsUsersBat = Join-Path -Path $EsHome -ChildPath "bin\x-pack\users.bat"
     $ConcatRoles = [string]::Join(",", $Roles)
 

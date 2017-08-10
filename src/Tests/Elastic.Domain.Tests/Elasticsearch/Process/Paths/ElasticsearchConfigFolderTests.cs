@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Elastic.ProcessHosts.Process;
 using FluentAssertions;
 using Xunit;
 using static Elastic.Installer.Domain.Tests.Elasticsearch.Process.ElasticsearchProcessTester;
@@ -17,7 +18,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 
 		private static string DefaultEsConf => Path.Combine(DefaultEsHome, "config");
 
-		private static string EsConfArg(string folder) => $"-Epath.conf=\"{folder}\"";
+		private static string EsConfArg(string folder) => $"-Des.path.conf=\"{folder}\"";
 
 		[Fact] public void DefaultEsHomeIsPassedAsArgumentToJava() => AllDefaults()
 			.Start(p =>
@@ -64,17 +65,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty().And.Contain(EsConfArg(executableConfig));
 			});
 
-		[Fact] public void ArgumentPassedOnCommandLineWins() => ElasticsearchChangesOnly(e=>e
-				.ElasticsearchExecutable(Executable)
-			, "-E", $"path.conf={EsConfCommandLine}")
-			.Start(p =>
-			{
-				var executableConfig = Path.Combine(_executableParentFolder, "config");
-				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
-					.And.NotContain(EsConfArg(executableConfig))
-					.And.Contain(EsConfArg(EsConfCommandLine))
-					.And.ContainSingle(s=>s.Contains("path.conf"));
-			});
+		[Fact] public void ArgumentPassedOnCommandLineWins() =>
+			InstantiateThrows(() =>
+				ElasticsearchChangesOnly(e => e
+					.ElasticsearchExecutable(Executable)
+					, "-E", $"path.conf={EsConfCommandLine}"
+				)
+			);
+		
 		[Fact] public void ArgumentPassedOnCommandLineNeedsFlag() => ElasticsearchChangesOnly(e=>e
 				.ElasticsearchExecutable(Executable)
 			, $"path.conf={EsConfCommandLine}")
@@ -89,28 +87,28 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 					.And.Contain($"path.conf={EsConfCommandLine}");
 			});
 
-		[Fact] public void ConjoinedArgumentPassedOnCommandLineWins() => ElasticsearchChangesOnly(e=>e
-				.ElasticsearchExecutable(Executable)
-			, $"-Epath.conf={EsConfCommandLine}")
-			.Start(p =>
-			{
-				var executableConfig = Path.Combine(_executableParentFolder, "config");
-				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
-					.And.NotContain(EsConfArg(executableConfig))
-					.And.Contain(EsConfArg(EsConfCommandLine))
-					.And.ContainSingle(s=>s.Contains("path.conf"));
-			});
+		[Fact] public void ConjoinedArgumentPassedOnCommandLineWins() =>
+			InstantiateThrows(() =>
+				ElasticsearchChangesOnly(e => e
+						.ElasticsearchExecutable(Executable)
+					, $"-Epath.conf={EsConfCommandLine}"
+				)
+			);
+			
+			
+			
 
-		[Fact] public void ArgumentPassedOnCommandLineCanContainEqualsSignInPath() => ElasticsearchChangesOnly(e=>e
-				.ElasticsearchExecutable(Executable)
-			, "-E", $"path.conf={EsConfCommandLine}\\=x==y")
-			.Start(p =>
-			{
-				var executableConfig = Path.Combine(_executableParentFolder, "config");
-				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
-					.And.NotContain(EsConfArg(executableConfig))
-					.And.Contain(EsConfArg($"{EsConfCommandLine}\\=x==y"))
-					.And.ContainSingle(s=>s.Contains("path.conf"));
-			});
+		[Fact] public void ArgumentPassedOnCommandLineCanContainEqualsSignInPath() =>
+			InstantiateThrows(() => 
+				ElasticsearchChangesOnly(e => e
+					.ElasticsearchExecutable(Executable)
+					, "-E", $"path.conf={EsConfCommandLine}\\=x==y"
+				)
+			);
+			
+		private static void InstantiateThrows(Action instantiate) => instantiate
+			.ShouldThrowExactly<StartupException>()
+			.WithMessage("setting -E path.conf is no longer supported");
+		
 	}
 }

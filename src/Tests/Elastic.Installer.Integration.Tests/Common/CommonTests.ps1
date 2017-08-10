@@ -120,14 +120,14 @@ function Context-EsHomeEnvironmentVariable($Expected) {
 }
 
 function Context-EsConfigEnvironmentVariable($Expected) {
-    Context "ES_CONFIG Environment Variable" {
-        $EsConfig = Get-MachineEnvironmentVariable "ES_CONFIG"
+    Context "CONF_DIR Environment Variable" {
+        $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
 
-        It "ES_CONFIG is not null" {
+        It "CONF_DIR is not null" {
             $EsConfig | Should Not Be $null
         }
 
-        It "ES_CONFIG Environment variable set to $Expected" {
+        It "CONF_DIR Environment variable set to $Expected" {
             $EsConfig | Should Be $Expected
         }
     }
@@ -232,7 +232,7 @@ function Context-ClusterNameAndNodeName($Expected) {
 
 function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
 
-    $EsConfig = Get-MachineEnvironmentVariable "ES_CONFIG"
+    $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
     $EsData = Split-Path $EsConfig -Parent | Join-Path -ChildPath "data"
     $EsLogs = Split-Path $EsConfig -Parent | Join-Path -ChildPath "logs"
 
@@ -297,7 +297,7 @@ function Context-JvmOptions ($Expected) {
     }
 
     Context "JVM Configuration" {
-        $EsConfig = Get-MachineEnvironmentVariable "ES_CONFIG"
+        $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
         $ConfigLines = "$EsConfig\jvm.options"
 
         It "jvm.options should exist in $EsConfig" {
