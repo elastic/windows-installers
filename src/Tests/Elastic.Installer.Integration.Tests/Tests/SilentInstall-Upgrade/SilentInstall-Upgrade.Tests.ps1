@@ -105,9 +105,9 @@ Describe -Tag 'PreviousVersion' "Silent Uninstall upgrade - Uninstall new versio
         }
     }
 
-    Context "ES_CONFIG Environment Variable" {
+    Context "CONF_DIR Environment Variable" {
         $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
-        It "ES_CONFIG Environment variable should be null" {
+        It "CONF_DIR Environment variable should be null" {
             $EsConfig | Should Be $null
         }
     }
