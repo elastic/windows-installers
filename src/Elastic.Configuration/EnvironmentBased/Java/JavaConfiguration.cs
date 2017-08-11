@@ -18,7 +18,23 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 			_stateProvider = stateProvider ?? new JavaEnvironmentStateProvider();
 		}
 
-		public string JavaExecutable => Path.Combine(this.JavaHomeCanonical, @"bin", "java.exe");
+		public string JavaExecutable
+		{
+			get
+			{
+				try
+				{
+					return Path.Combine(this.JavaHomeCanonical, @"bin", "java.exe");
+				}
+				catch (Exception e)
+				{
+					
+					throw new Exception(
+						$"There was a problem constructing a path from the detected java home directory '{this.JavaHomeCanonical}'", e);
+				}
+			}
+		}
+
 		public string JavaHomeCanonical => JavaHomeCandidates.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
 
 		private List<string> JavaHomeCandidates => new List<string> {
