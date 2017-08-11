@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="2beb1fc0-042a-49fb-af3d-285a80f3c737" Name="Elasticsearch 5.5.1" Language="1033" Codepage="Windows-1252" Version="5.5.1" UpgradeCode="daaa2cba-a1ed-4f29-afbf-5478617b00f6" Manufacturer="Elastic">
+  <Product Id="f234f31d-f25c-4e64-8d3e-868f7b7ece97" Name="Elasticsearch 6.0.0-beta1" Language="1033" Codepage="Windows-1252" Version="6.0.0" UpgradeCode="daaa2cba-a1ed-4f29-afbf-5478617b00f6" Manufacturer="Elastic">
     <Package InstallerVersion="200" Compressed="yes" Platform="x64" SummaryCodepage="Windows-1252" Languages="1033" InstallScope="perMachine" />
-    <Media Id="1" Cabinet="Elasticsearch_5.5.1_.cab" EmbedCab="yes" />
+    <Media Id="1" Cabinet="Elasticsearch_6.0.0_beta1_.cab" EmbedCab="yes" />
 
     <Condition Message="This installer requires at least .NET Framework 4.5 in order to run custom install actions. Please install .NET Framework 4.5 then run this installer again.">Installed OR NETFRAMEWORK45</Condition>
 
@@ -13,39 +13,39 @@
 
             <Component Id="Component.LICENSE.txt" Guid="daaa2cba-a1ed-4f29-afbf-5478ddff8dfd" Win64="yes">
               <RemoveFile Id="LICENSE.txt" Name="LICENSE.txt" On="both" />
-              <File Id="LICENSE.txt" Source="..\..\..\build\in\elasticsearch-5.5.1\LICENSE.txt" />
+              <File Id="LICENSE.txt" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\LICENSE.txt" />
             </Component>
 
             <Component Id="Component.NOTICE.txt" Guid="daaa2cba-a1ed-4f29-afbf-5478beafcf50" Win64="yes">
               <RemoveFile Id="NOTICE.txt" Name="NOTICE.txt" On="both" />
-              <File Id="NOTICE.txt" Source="..\..\..\build\in\elasticsearch-5.5.1\NOTICE.txt" />
+              <File Id="NOTICE.txt" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\NOTICE.txt" />
             </Component>
 
             <Component Id="Component.README.textile" Guid="daaa2cba-a1ed-4f29-afbf-54787569b372" Win64="yes">
               <RemoveFile Id="README.textile" Name="README.textile" On="both" />
-              <File Id="README.textile" Source="..\..\..\build\in\elasticsearch-5.5.1\README.textile" />
+              <File Id="README.textile" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\README.textile" />
             </Component>
 
             <Directory Id="INSTALLDIR.bin" Name="bin">
 
               <Component Id="Component.elasticsearch_keystore.bat" Guid="daaa2cba-a1ed-4f29-afbf-547886c8d35a" Win64="yes">
                 <RemoveFile Id="elasticsearch_keystore.bat" Name="elasticsearch_keystore.bat" On="both" />
-                <File Id="elasticsearch_keystore.bat" Source="..\..\..\build\in\elasticsearch-5.5.1\bin\elasticsearch-keystore.bat" />
+                <File Id="elasticsearch_keystore.bat" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\bin\elasticsearch-keystore.bat" />
               </Component>
 
               <Component Id="Component.elasticsearch_plugin.bat" Guid="daaa2cba-a1ed-4f29-afbf-54780b44f88c" Win64="yes">
                 <RemoveFile Id="elasticsearch_plugin.bat" Name="elasticsearch_plugin.bat" On="both" />
-                <File Id="elasticsearch_plugin.bat" Source="..\..\..\build\in\elasticsearch-5.5.1\bin\elasticsearch-plugin.bat" />
+                <File Id="elasticsearch_plugin.bat" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\bin\elasticsearch-plugin.bat" />
               </Component>
 
               <Component Id="Component.elasticsearch_translog.bat" Guid="daaa2cba-a1ed-4f29-afbf-547861a30033" Win64="yes">
                 <RemoveFile Id="elasticsearch_translog.bat" Name="elasticsearch_translog.bat" On="both" />
-                <File Id="elasticsearch_translog.bat" Source="..\..\..\build\in\elasticsearch-5.5.1\bin\elasticsearch-translog.bat" />
+                <File Id="elasticsearch_translog.bat" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\bin\elasticsearch-translog.bat" />
               </Component>
 
               <Component Id="Component.elasticsearch.exe" Guid="daaa2cba-a1ed-4f29-afbf-5478f1f18046" Win64="yes">
                 <RemoveFile Id="elasticsearch.exe" Name="elasticsearch.exe" On="both" />
-                <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-5.5.1\bin\elasticsearch.exe" />
+                <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\bin\elasticsearch.exe" />
               </Component>
 
             </Directory>
@@ -54,196 +54,196 @@
 
               <Component Id="Component.elasticsearch.yml" Guid="daaa2cba-a1ed-4f29-afbf-547839fb66cf" Win64="yes">
                 <RemoveFile Id="elasticsearch.yml" Name="elasticsearch.yml" On="both" />
-                <File Id="elasticsearch.yml" Source="..\..\..\build\in\elasticsearch-5.5.1\config\elasticsearch.yml" />
+                <File Id="elasticsearch.yml" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\config\elasticsearch.yml" />
               </Component>
 
               <Component Id="Component.jvm.options" Guid="daaa2cba-a1ed-4f29-afbf-547881624924" Win64="yes">
                 <RemoveFile Id="jvm.options" Name="jvm.options" On="both" />
-                <File Id="jvm.options" Source="..\..\..\build\in\elasticsearch-5.5.1\config\jvm.options" />
+                <File Id="jvm.options" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\config\jvm.options" />
               </Component>
 
               <Component Id="Component.log4j2.properties" Guid="daaa2cba-a1ed-4f29-afbf-5478d3b0653b" Win64="yes">
                 <RemoveFile Id="log4j2.properties" Name="log4j2.properties" On="both" />
-                <File Id="log4j2.properties" Source="..\..\..\build\in\elasticsearch-5.5.1\config\log4j2.properties" />
+                <File Id="log4j2.properties" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\config\log4j2.properties" />
               </Component>
 
             </Directory>
 
             <Directory Id="INSTALLDIR.lib" Name="lib">
 
-              <Component Id="Component.elasticsearch_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478134af9ed" Win64="yes">
-                <RemoveFile Id="elasticsearch_5.5.1.jar" Name="elasticsearch_5.5.1.jar" On="both" />
-                <File Id="elasticsearch_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\elasticsearch-5.5.1.jar" />
+              <Component Id="Component.elasticsearch_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780af1fbea" Win64="yes">
+                <RemoveFile Id="elasticsearch_6.0.0_beta1.jar" Name="elasticsearch_6.0.0_beta1.jar" On="both" />
+                <File Id="elasticsearch_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\elasticsearch-6.0.0-beta1.jar" />
               </Component>
 
               <Component Id="Component.HdrHistogram_2.1.9.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780dd2332f" Win64="yes">
                 <RemoveFile Id="HdrHistogram_2.1.9.jar" Name="HdrHistogram_2.1.9.jar" On="both" />
-                <File Id="HdrHistogram_2.1.9.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\HdrHistogram-2.1.9.jar" />
+                <File Id="HdrHistogram_2.1.9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\HdrHistogram-2.1.9.jar" />
               </Component>
 
               <Component Id="Component.hppc_0.7.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fa74fa4a" Win64="yes">
                 <RemoveFile Id="hppc_0.7.1.jar" Name="hppc_0.7.1.jar" On="both" />
-                <File Id="hppc_0.7.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\hppc-0.7.1.jar" />
+                <File Id="hppc_0.7.1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\hppc-0.7.1.jar" />
               </Component>
 
               <Component Id="Component.jackson_core_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-547893aa28cb" Win64="yes">
                 <RemoveFile Id="jackson_core_2.8.6.jar" Name="jackson_core_2.8.6.jar" On="both" />
-                <File Id="jackson_core_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\jackson-core-2.8.6.jar" />
+                <File Id="jackson_core_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\jackson-core-2.8.6.jar" />
               </Component>
 
               <Component Id="Component._...kson_dataformat_cbor_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-547861586cf6" Win64="yes">
                 <RemoveFile Id="_...kson_dataformat_cbor_2.8.6.jar" Name="_...kson_dataformat_cbor_2.8.6.jar" On="both" />
-                <File Id="_...kson_dataformat_cbor_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\jackson-dataformat-cbor-2.8.6.jar" />
+                <File Id="_...kson_dataformat_cbor_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\jackson-dataformat-cbor-2.8.6.jar" />
               </Component>
 
               <Component Id="Component._...son_dataformat_smile_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784de96360" Win64="yes">
                 <RemoveFile Id="_...son_dataformat_smile_2.8.6.jar" Name="_...son_dataformat_smile_2.8.6.jar" On="both" />
-                <File Id="_...son_dataformat_smile_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\jackson-dataformat-smile-2.8.6.jar" />
+                <File Id="_...son_dataformat_smile_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\jackson-dataformat-smile-2.8.6.jar" />
               </Component>
 
               <Component Id="Component._...kson_dataformat_yaml_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478c6651b54" Win64="yes">
                 <RemoveFile Id="_...kson_dataformat_yaml_2.8.6.jar" Name="_...kson_dataformat_yaml_2.8.6.jar" On="both" />
-                <File Id="_...kson_dataformat_yaml_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\jackson-dataformat-yaml-2.8.6.jar" />
+                <File Id="_...kson_dataformat_yaml_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\jackson-dataformat-yaml-2.8.6.jar" />
               </Component>
 
-              <Component Id="Component.java_version_checker_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783d77c2cd" Win64="yes">
-                <RemoveFile Id="java_version_checker_5.5.1.jar" Name="java_version_checker_5.5.1.jar" On="both" />
-                <File Id="java_version_checker_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\java-version-checker-5.5.1.jar" />
+              <Component Id="Component._...ersion_checker_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547814935a68" Win64="yes">
+                <RemoveFile Id="_...ersion_checker_6.0.0_beta1.jar" Name="_...ersion_checker_6.0.0_beta1.jar" On="both" />
+                <File Id="_...ersion_checker_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\java-version-checker-6.0.0-beta1.jar" />
               </Component>
 
-              <Component Id="Component.jna_4.4.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fa115652" Win64="yes">
-                <RemoveFile Id="jna_4.4.0.jar" Name="jna_4.4.0.jar" On="both" />
-                <File Id="jna_4.4.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\jna-4.4.0.jar" />
+              <Component Id="Component.jna_4.4.0_1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547838772020" Win64="yes">
+                <RemoveFile Id="jna_4.4.0_1.jar" Name="jna_4.4.0_1.jar" On="both" />
+                <File Id="jna_4.4.0_1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\jna-4.4.0-1.jar" />
               </Component>
 
               <Component Id="Component.joda_time_2.9.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d10c3044" Win64="yes">
                 <RemoveFile Id="joda_time_2.9.5.jar" Name="joda_time_2.9.5.jar" On="both" />
-                <File Id="joda_time_2.9.5.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\joda-time-2.9.5.jar" />
+                <File Id="joda_time_2.9.5.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\joda-time-2.9.5.jar" />
               </Component>
 
               <Component Id="Component.jopt_simple_5.0.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780c1170ff" Win64="yes">
                 <RemoveFile Id="jopt_simple_5.0.2.jar" Name="jopt_simple_5.0.2.jar" On="both" />
-                <File Id="jopt_simple_5.0.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\jopt-simple-5.0.2.jar" />
+                <File Id="jopt_simple_5.0.2.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\jopt-simple-5.0.2.jar" />
               </Component>
 
               <Component Id="Component.jts_1.13.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bde079f3" Win64="yes">
                 <RemoveFile Id="jts_1.13.jar" Name="jts_1.13.jar" On="both" />
-                <File Id="jts_1.13.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\jts-1.13.jar" />
+                <File Id="jts_1.13.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\jts-1.13.jar" />
               </Component>
 
               <Component Id="Component.log4j_1.2_api_2.8.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478cd896f3f" Win64="yes">
                 <RemoveFile Id="log4j_1.2_api_2.8.2.jar" Name="log4j_1.2_api_2.8.2.jar" On="both" />
-                <File Id="log4j_1.2_api_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\log4j-1.2-api-2.8.2.jar" />
+                <File Id="log4j_1.2_api_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\log4j-1.2-api-2.8.2.jar" />
               </Component>
 
               <Component Id="Component.log4j_api_2.8.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547830b6218a" Win64="yes">
                 <RemoveFile Id="log4j_api_2.8.2.jar" Name="log4j_api_2.8.2.jar" On="both" />
-                <File Id="log4j_api_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\log4j-api-2.8.2.jar" />
+                <File Id="log4j_api_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\log4j-api-2.8.2.jar" />
               </Component>
 
               <Component Id="Component.log4j_core_2.8.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789b3cb698" Win64="yes">
                 <RemoveFile Id="log4j_core_2.8.2.jar" Name="log4j_core_2.8.2.jar" On="both" />
-                <File Id="log4j_core_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\log4j-core-2.8.2.jar" />
+                <File Id="log4j_core_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\log4j-core-2.8.2.jar" />
               </Component>
 
-              <Component Id="Component._...ene_analyzers_common_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547818972dca" Win64="yes">
-                <RemoveFile Id="_...ene_analyzers_common_6.6.0.jar" Name="_...ene_analyzers_common_6.6.0.jar" On="both" />
-                <File Id="_...ene_analyzers_common_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-analyzers-common-6.6.0.jar" />
+              <Component Id="Component._...mon_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786e24ebfa" Win64="yes">
+                <RemoveFile Id="_...mon_7.0.0_snapshot_00142c9.jar" Name="_...mon_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...mon_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-analyzers-common-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component._...cene_backward_codecs_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478587b7ac6" Win64="yes">
-                <RemoveFile Id="_...cene_backward_codecs_6.6.0.jar" Name="_...cene_backward_codecs_6.6.0.jar" On="both" />
-                <File Id="_...cene_backward_codecs_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-backward-codecs-6.6.0.jar" />
+              <Component Id="Component._...ecs_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789b87ae09" Win64="yes">
+                <RemoveFile Id="_...ecs_7.0.0_snapshot_00142c9.jar" Name="_...ecs_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ecs_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-backward-codecs-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_core_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547820309523" Win64="yes">
-                <RemoveFile Id="lucene_core_6.6.0.jar" Name="lucene_core_6.6.0.jar" On="both" />
-                <File Id="lucene_core_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-core-6.6.0.jar" />
+              <Component Id="Component._...ore_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b53cca9d" Win64="yes">
+                <RemoveFile Id="_...ore_7.0.0_snapshot_00142c9.jar" Name="_...ore_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ore_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-core-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_grouping_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478200823f6" Win64="yes">
-                <RemoveFile Id="lucene_grouping_6.6.0.jar" Name="lucene_grouping_6.6.0.jar" On="both" />
-                <File Id="lucene_grouping_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-grouping-6.6.0.jar" />
+              <Component Id="Component._...ing_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780e80ab0f" Win64="yes">
+                <RemoveFile Id="_...ing_7.0.0_snapshot_00142c9.jar" Name="_...ing_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ing_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-grouping-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_highlighter_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478cf520fdb" Win64="yes">
-                <RemoveFile Id="lucene_highlighter_6.6.0.jar" Name="lucene_highlighter_6.6.0.jar" On="both" />
-                <File Id="lucene_highlighter_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-highlighter-6.6.0.jar" />
+              <Component Id="Component._...ter_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478cfbfe19c" Win64="yes">
+                <RemoveFile Id="_...ter_7.0.0_snapshot_00142c9.jar" Name="_...ter_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ter_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-highlighter-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_join_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54788bdd052a" Win64="yes">
-                <RemoveFile Id="lucene_join_6.6.0.jar" Name="lucene_join_6.6.0.jar" On="both" />
-                <File Id="lucene_join_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-join-6.6.0.jar" />
+              <Component Id="Component._...oin_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bc255d97" Win64="yes">
+                <RemoveFile Id="_...oin_7.0.0_snapshot_00142c9.jar" Name="_...oin_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...oin_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-join-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_memory_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547821ad2a45" Win64="yes">
-                <RemoveFile Id="lucene_memory_6.6.0.jar" Name="lucene_memory_6.6.0.jar" On="both" />
-                <File Id="lucene_memory_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-memory-6.6.0.jar" />
+              <Component Id="Component._...ory_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478e7c26e83" Win64="yes">
+                <RemoveFile Id="_...ory_7.0.0_snapshot_00142c9.jar" Name="_...ory_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ory_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-memory-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_misc_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547868e10357" Win64="yes">
-                <RemoveFile Id="lucene_misc_6.6.0.jar" Name="lucene_misc_6.6.0.jar" On="both" />
-                <File Id="lucene_misc_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-misc-6.6.0.jar" />
+              <Component Id="Component._...isc_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478419dc977" Win64="yes">
+                <RemoveFile Id="_...isc_7.0.0_snapshot_00142c9.jar" Name="_...isc_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...isc_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-misc-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_queries_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478acaa136d" Win64="yes">
-                <RemoveFile Id="lucene_queries_6.6.0.jar" Name="lucene_queries_6.6.0.jar" On="both" />
-                <File Id="lucene_queries_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-queries-6.6.0.jar" />
+              <Component Id="Component._...ies_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478f5eb9ecc" Win64="yes">
+                <RemoveFile Id="_...ies_7.0.0_snapshot_00142c9.jar" Name="_...ies_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ies_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-queries-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_queryparser_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785a63e130" Win64="yes">
-                <RemoveFile Id="lucene_queryparser_6.6.0.jar" Name="lucene_queryparser_6.6.0.jar" On="both" />
-                <File Id="lucene_queryparser_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-queryparser-6.6.0.jar" />
+              <Component Id="Component._...ser_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-547836d55139" Win64="yes">
+                <RemoveFile Id="_...ser_7.0.0_snapshot_00142c9.jar" Name="_...ser_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ser_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-queryparser-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_sandbox_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547865c0a387" Win64="yes">
-                <RemoveFile Id="lucene_sandbox_6.6.0.jar" Name="lucene_sandbox_6.6.0.jar" On="both" />
-                <File Id="lucene_sandbox_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-sandbox-6.6.0.jar" />
+              <Component Id="Component._...box_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478929bbc54" Win64="yes">
+                <RemoveFile Id="_...box_7.0.0_snapshot_00142c9.jar" Name="_...box_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...box_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-sandbox-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_spatial_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785099eaf2" Win64="yes">
-                <RemoveFile Id="lucene_spatial_6.6.0.jar" Name="lucene_spatial_6.6.0.jar" On="both" />
-                <File Id="lucene_spatial_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-spatial-6.6.0.jar" />
+              <Component Id="Component._...ial_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478a65afda1" Win64="yes">
+                <RemoveFile Id="_...ial_7.0.0_snapshot_00142c9.jar" Name="_...ial_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ial_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-spatial-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component._...ucene_spatial_extras_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478101d1172" Win64="yes">
-                <RemoveFile Id="_...ucene_spatial_extras_6.6.0.jar" Name="_...ucene_spatial_extras_6.6.0.jar" On="both" />
-                <File Id="_...ucene_spatial_extras_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-spatial-extras-6.6.0.jar" />
+              <Component Id="Component._...ras_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-547854e48778" Win64="yes">
+                <RemoveFile Id="_...ras_7.0.0_snapshot_00142c9.jar" Name="_...ras_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...ras_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-spatial-extras-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_spatial3d_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fe531cc7" Win64="yes">
-                <RemoveFile Id="lucene_spatial3d_6.6.0.jar" Name="lucene_spatial3d_6.6.0.jar" On="both" />
-                <File Id="lucene_spatial3d_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-spatial3d-6.6.0.jar" />
+              <Component Id="Component._...l3d_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-54782c1bb554" Win64="yes">
+                <RemoveFile Id="_...l3d_7.0.0_snapshot_00142c9.jar" Name="_...l3d_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...l3d_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-spatial3d-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.lucene_suggest_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784c90c821" Win64="yes">
-                <RemoveFile Id="lucene_suggest_6.6.0.jar" Name="lucene_suggest_6.6.0.jar" On="both" />
-                <File Id="lucene_suggest_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\lucene-suggest-6.6.0.jar" />
+              <Component Id="Component._...est_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478031719da" Win64="yes">
+                <RemoveFile Id="_...est_7.0.0_snapshot_00142c9.jar" Name="_...est_7.0.0_snapshot_00142c9.jar" On="both" />
+                <File Id="_...est_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\lucene-suggest-7.0.0-snapshot-00142c9.jar" />
               </Component>
 
-              <Component Id="Component.plugin_cli_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478ad65650f" Win64="yes">
-                <RemoveFile Id="plugin_cli_5.5.1.jar" Name="plugin_cli_5.5.1.jar" On="both" />
-                <File Id="plugin_cli_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\plugin-cli-5.5.1.jar" />
+              <Component Id="Component.plugin_cli_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547830801542" Win64="yes">
+                <RemoveFile Id="plugin_cli_6.0.0_beta1.jar" Name="plugin_cli_6.0.0_beta1.jar" On="both" />
+                <File Id="plugin_cli_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\plugin-cli-6.0.0-beta1.jar" />
               </Component>
 
               <Component Id="Component.securesm_1.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478665b59f8" Win64="yes">
                 <RemoveFile Id="securesm_1.1.jar" Name="securesm_1.1.jar" On="both" />
-                <File Id="securesm_1.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\securesm-1.1.jar" />
+                <File Id="securesm_1.1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\securesm-1.1.jar" />
               </Component>
 
               <Component Id="Component.snakeyaml_1.15.jar" Guid="daaa2cba-a1ed-4f29-afbf-547878b9ea35" Win64="yes">
                 <RemoveFile Id="snakeyaml_1.15.jar" Name="snakeyaml_1.15.jar" On="both" />
-                <File Id="snakeyaml_1.15.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\snakeyaml-1.15.jar" />
+                <File Id="snakeyaml_1.15.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\snakeyaml-1.15.jar" />
               </Component>
 
               <Component Id="Component.spatial4j_0.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780eb71a08" Win64="yes">
                 <RemoveFile Id="spatial4j_0.6.jar" Name="spatial4j_0.6.jar" On="both" />
-                <File Id="spatial4j_0.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\spatial4j-0.6.jar" />
+                <File Id="spatial4j_0.6.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\spatial4j-0.6.jar" />
               </Component>
 
               <Component Id="Component.t_digest_3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547811092469" Win64="yes">
                 <RemoveFile Id="t_digest_3.0.jar" Name="t_digest_3.0.jar" On="both" />
-                <File Id="t_digest_3.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\lib\t-digest-3.0.jar" />
+                <File Id="t_digest_3.0.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\lib\t-digest-3.0.jar" />
               </Component>
 
             </Directory>
@@ -251,38 +251,52 @@
             <Directory Id="INSTALLDIR.modules" Name="modules">
               <Directory Id="INSTALLDIR.modules.aggs_matrix_stats" Name="aggs-matrix-stats">
 
-                <Component Id="Component.aggs_matrix_stats_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547826144234" Win64="yes">
-                  <RemoveFile Id="aggs_matrix_stats_5.5.1.jar" Name="aggs_matrix_stats_5.5.1.jar" On="both" />
-                  <File Id="aggs_matrix_stats_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\aggs-matrix-stats\aggs-matrix-stats-5.5.1.jar" />
+                <Component Id="Component._...s_matrix_stats_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785df02122" Win64="yes">
+                  <RemoveFile Id="_...s_matrix_stats_6.0.0_beta1.jar" Name="_...s_matrix_stats_6.0.0_beta1.jar" On="both" />
+                  <File Id="_...s_matrix_stats_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\aggs-matrix-stats\aggs-matrix-stats-6.0.0-beta1.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties" Guid="daaa2cba-a1ed-4f29-afbf-547893a03ecb" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties" Name="plugin_descriptor.properties" On="both" />
-                  <File Id="plugin_descriptor.properties" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\aggs-matrix-stats\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\aggs-matrix-stats\plugin-descriptor.properties" />
+                </Component>
+
+              </Directory>
+
+              <Directory Id="INSTALLDIR.modules.analysis_common" Name="analysis-common">
+
+                <Component Id="Component._...nalysis_common_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478739e4d14" Win64="yes">
+                  <RemoveFile Id="_...nalysis_common_6.0.0_beta1.jar" Name="_...nalysis_common_6.0.0_beta1.jar" On="both" />
+                  <File Id="_...nalysis_common_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\analysis-common\analysis-common-6.0.0-beta1.jar" />
+                </Component>
+
+                <Component Id="Component.plugin_descriptor.properties.1" Guid="daaa2cba-a1ed-4f29-afbf-5478fec21303" Win64="yes">
+                  <RemoveFile Id="plugin_descriptor.properties.1" Name="plugin_descriptor.properties.1" On="both" />
+                  <File Id="plugin_descriptor.properties.1" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\analysis-common\plugin-descriptor.properties" />
                 </Component>
 
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.ingest_common" Name="ingest-common">
 
-                <Component Id="Component.ingest_common_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547872ac123b" Win64="yes">
-                  <RemoveFile Id="ingest_common_5.5.1.jar" Name="ingest_common_5.5.1.jar" On="both" />
-                  <File Id="ingest_common_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\ingest-common\ingest-common-5.5.1.jar" />
+                <Component Id="Component.ingest_common_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780774bf6d" Win64="yes">
+                  <RemoveFile Id="ingest_common_6.0.0_beta1.jar" Name="ingest_common_6.0.0_beta1.jar" On="both" />
+                  <File Id="ingest_common_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\ingest-common\ingest-common-6.0.0-beta1.jar" />
                 </Component>
 
                 <Component Id="Component.jcodings_1.0.12.jar" Guid="daaa2cba-a1ed-4f29-afbf-54787d9200c1" Win64="yes">
                   <RemoveFile Id="jcodings_1.0.12.jar" Name="jcodings_1.0.12.jar" On="both" />
-                  <File Id="jcodings_1.0.12.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\ingest-common\jcodings-1.0.12.jar" />
+                  <File Id="jcodings_1.0.12.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\ingest-common\jcodings-1.0.12.jar" />
                 </Component>
 
                 <Component Id="Component.joni_2.1.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478796f85a6" Win64="yes">
                   <RemoveFile Id="joni_2.1.6.jar" Name="joni_2.1.6.jar" On="both" />
-                  <File Id="joni_2.1.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\ingest-common\joni-2.1.6.jar" />
+                  <File Id="joni_2.1.6.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\ingest-common\joni-2.1.6.jar" />
                 </Component>
 
-                <Component Id="Component.plugin_descriptor.properties.1" Guid="daaa2cba-a1ed-4f29-afbf-5478fec21303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.1" Name="plugin_descriptor.properties.1" On="both" />
-                  <File Id="plugin_descriptor.properties.1" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\ingest-common\plugin-descriptor.properties" />
+                <Component Id="Component.plugin_descriptor.properties.2" Guid="daaa2cba-a1ed-4f29-afbf-5478a0f11303" Win64="yes">
+                  <RemoveFile Id="plugin_descriptor.properties.2" Name="plugin_descriptor.properties.2" On="both" />
+                  <File Id="plugin_descriptor.properties.2" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\ingest-common\plugin-descriptor.properties" />
                 </Component>
 
               </Directory>
@@ -291,66 +305,42 @@
 
                 <Component Id="Component.antlr4_runtime_4.5.1_1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789ca4f8e5" Win64="yes">
                   <RemoveFile Id="antlr4_runtime_4.5.1_1.jar" Name="antlr4_runtime_4.5.1_1.jar" On="both" />
-                  <File Id="antlr4_runtime_4.5.1_1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\antlr4-runtime-4.5.1-1.jar" />
+                  <File Id="antlr4_runtime_4.5.1_1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\antlr4-runtime-4.5.1-1.jar" />
                 </Component>
 
                 <Component Id="Component.asm_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478540b35bc" Win64="yes">
                   <RemoveFile Id="asm_5.0.4.jar" Name="asm_5.0.4.jar" On="both" />
-                  <File Id="asm_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\asm-5.0.4.jar" />
+                  <File Id="asm_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\asm-5.0.4.jar" />
                 </Component>
 
                 <Component Id="Component.asm_commons_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786365adc3" Win64="yes">
                   <RemoveFile Id="asm_commons_5.0.4.jar" Name="asm_commons_5.0.4.jar" On="both" />
-                  <File Id="asm_commons_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\asm-commons-5.0.4.jar" />
+                  <File Id="asm_commons_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\asm-commons-5.0.4.jar" />
                 </Component>
 
                 <Component Id="Component.asm_tree_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-547838441039" Win64="yes">
                   <RemoveFile Id="asm_tree_5.0.4.jar" Name="asm_tree_5.0.4.jar" On="both" />
-                  <File Id="asm_tree_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\asm-tree-5.0.4.jar" />
+                  <File Id="asm_tree_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\asm-tree-5.0.4.jar" />
                 </Component>
 
-                <Component Id="Component.lang_expression_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547858bd452b" Win64="yes">
-                  <RemoveFile Id="lang_expression_5.5.1.jar" Name="lang_expression_5.5.1.jar" On="both" />
-                  <File Id="lang_expression_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\lang-expression-5.5.1.jar" />
+                <Component Id="Component._...ang_expression_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478253a9e5a" Win64="yes">
+                  <RemoveFile Id="_...ang_expression_6.0.0_beta1.jar" Name="_...ang_expression_6.0.0_beta1.jar" On="both" />
+                  <File Id="_...ang_expression_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\lang-expression-6.0.0-beta1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_expressions_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bdb326c8" Win64="yes">
-                  <RemoveFile Id="lucene_expressions_6.6.0.jar" Name="lucene_expressions_6.6.0.jar" On="both" />
-                  <File Id="lucene_expressions_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\lucene-expressions-6.6.0.jar" />
-                </Component>
-
-                <Component Id="Component.plugin_descriptor.properties.2" Guid="daaa2cba-a1ed-4f29-afbf-5478a0f11303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.2" Name="plugin_descriptor.properties.2" On="both" />
-                  <File Id="plugin_descriptor.properties.2" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\plugin-descriptor.properties" />
-                </Component>
-
-                <Component Id="Component.plugin_security.policy" Guid="daaa2cba-a1ed-4f29-afbf-547883f186ed" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy" Name="plugin_security.policy" On="both" />
-                  <File Id="plugin_security.policy" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-expression\plugin-security.policy" />
-                </Component>
-
-              </Directory>
-
-              <Directory Id="INSTALLDIR.modules.lang_groovy" Name="lang-groovy">
-
-                <Component Id="Component.groovy_2.4.6_indy.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478c4b086e8" Win64="yes">
-                  <RemoveFile Id="groovy_2.4.6_indy.jar" Name="groovy_2.4.6_indy.jar" On="both" />
-                  <File Id="groovy_2.4.6_indy.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-groovy\groovy-2.4.6-indy.jar" />
-                </Component>
-
-                <Component Id="Component.lang_groovy_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783d78a59d" Win64="yes">
-                  <RemoveFile Id="lang_groovy_5.5.1.jar" Name="lang_groovy_5.5.1.jar" On="both" />
-                  <File Id="lang_groovy_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-groovy\lang-groovy-5.5.1.jar" />
+                <Component Id="Component._...ons_7.0.0_snapshot_00142c9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b45ed1db" Win64="yes">
+                  <RemoveFile Id="_...ons_7.0.0_snapshot_00142c9.jar" Name="_...ons_7.0.0_snapshot_00142c9.jar" On="both" />
+                  <File Id="_...ons_7.0.0_snapshot_00142c9.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\lucene-expressions-7.0.0-snapshot-00142c9.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.3" Guid="daaa2cba-a1ed-4f29-afbf-5478158c1303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.3" Name="plugin_descriptor.properties.3" On="both" />
-                  <File Id="plugin_descriptor.properties.3" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-groovy\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.3" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\plugin-descriptor.properties" />
                 </Component>
 
-                <Component Id="Component.plugin_security.policy.1" Guid="daaa2cba-a1ed-4f29-afbf-5478375400dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.1" Name="plugin_security.policy.1" On="both" />
-                  <File Id="plugin_security.policy.1" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-groovy\plugin-security.policy" />
+                <Component Id="Component.plugin_security.policy" Guid="daaa2cba-a1ed-4f29-afbf-547883f186ed" Win64="yes">
+                  <RemoveFile Id="plugin_security.policy" Name="plugin_security.policy" On="both" />
+                  <File Id="plugin_security.policy" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-expression\plugin-security.policy" />
                 </Component>
 
               </Directory>
@@ -359,22 +349,22 @@
 
                 <Component Id="Component.compiler_0.9.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-547820e67731" Win64="yes">
                   <RemoveFile Id="compiler_0.9.3.jar" Name="compiler_0.9.3.jar" On="both" />
-                  <File Id="compiler_0.9.3.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-mustache\compiler-0.9.3.jar" />
+                  <File Id="compiler_0.9.3.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-mustache\compiler-0.9.3.jar" />
                 </Component>
 
-                <Component Id="Component.lang_mustache_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784419a5d2" Win64="yes">
-                  <RemoveFile Id="lang_mustache_5.5.1.jar" Name="lang_mustache_5.5.1.jar" On="both" />
-                  <File Id="lang_mustache_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-mustache\lang-mustache-5.5.1.jar" />
+                <Component Id="Component.lang_mustache_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d90e3a8b" Win64="yes">
+                  <RemoveFile Id="lang_mustache_6.0.0_beta1.jar" Name="lang_mustache_6.0.0_beta1.jar" On="both" />
+                  <File Id="lang_mustache_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-mustache\lang-mustache-6.0.0-beta1.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.4" Guid="daaa2cba-a1ed-4f29-afbf-5478b7bb1303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.4" Name="plugin_descriptor.properties.4" On="both" />
-                  <File Id="plugin_descriptor.properties.4" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-mustache\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.4" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-mustache\plugin-descriptor.properties" />
                 </Component>
 
-                <Component Id="Component.plugin_security.policy.2" Guid="daaa2cba-a1ed-4f29-afbf-5478375100dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.2" Name="plugin_security.policy.2" On="both" />
-                  <File Id="plugin_security.policy.2" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-mustache\plugin-security.policy" />
+                <Component Id="Component.plugin_security.policy.1" Guid="daaa2cba-a1ed-4f29-afbf-5478375400dd" Win64="yes">
+                  <RemoveFile Id="plugin_security.policy.1" Name="plugin_security.policy.1" On="both" />
+                  <File Id="plugin_security.policy.1" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-mustache\plugin-security.policy" />
                 </Component>
 
               </Directory>
@@ -383,182 +373,166 @@
 
                 <Component Id="Component.antlr4_runtime_4.5.1_1.jar.1" Guid="daaa2cba-a1ed-4f29-afbf-54783beb6496" Win64="yes">
                   <RemoveFile Id="antlr4_runtime_4.5.1_1.jar.1" Name="antlr4_runtime_4.5.1_1.jar.1" On="both" />
-                  <File Id="antlr4_runtime_4.5.1_1.jar.1" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-painless\antlr4-runtime-4.5.1-1.jar" />
+                  <File Id="antlr4_runtime_4.5.1_1.jar.1" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-painless\antlr4-runtime-4.5.1-1.jar" />
                 </Component>
 
                 <Component Id="Component.asm_debug_all_5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547850638076" Win64="yes">
                   <RemoveFile Id="asm_debug_all_5.1.jar" Name="asm_debug_all_5.1.jar" On="both" />
-                  <File Id="asm_debug_all_5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-painless\asm-debug-all-5.1.jar" />
+                  <File Id="asm_debug_all_5.1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-painless\asm-debug-all-5.1.jar" />
                 </Component>
 
-                <Component Id="Component.lang_painless_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547840c9a1bc" Win64="yes">
-                  <RemoveFile Id="lang_painless_5.5.1.jar" Name="lang_painless_5.5.1.jar" On="both" />
-                  <File Id="lang_painless_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-painless\lang-painless-5.5.1.jar" />
+                <Component Id="Component.lang_painless_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478c95ef840" Win64="yes">
+                  <RemoveFile Id="lang_painless_6.0.0_beta1.jar" Name="lang_painless_6.0.0_beta1.jar" On="both" />
+                  <File Id="lang_painless_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-painless\lang-painless-6.0.0-beta1.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.5" Guid="daaa2cba-a1ed-4f29-afbf-54782b561303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.5" Name="plugin_descriptor.properties.5" On="both" />
-                  <File Id="plugin_descriptor.properties.5" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-painless\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.5" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-painless\plugin-descriptor.properties" />
                 </Component>
 
-                <Component Id="Component.plugin_security.policy.3" Guid="daaa2cba-a1ed-4f29-afbf-5478375200dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.3" Name="plugin_security.policy.3" On="both" />
-                  <File Id="plugin_security.policy.3" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\lang-painless\plugin-security.policy" />
+                <Component Id="Component.plugin_security.policy.2" Guid="daaa2cba-a1ed-4f29-afbf-5478375100dd" Win64="yes">
+                  <RemoveFile Id="plugin_security.policy.2" Name="plugin_security.policy.2" On="both" />
+                  <File Id="plugin_security.policy.2" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-painless\plugin-security.policy" />
                 </Component>
 
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.parent_join" Name="parent-join">
 
-                <Component Id="Component.parent_join_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54787824d9c9" Win64="yes">
-                  <RemoveFile Id="parent_join_5.5.1.jar" Name="parent_join_5.5.1.jar" On="both" />
-                  <File Id="parent_join_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\parent-join\parent-join-5.5.1.jar" />
+                <Component Id="Component.parent_join_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789363c240" Win64="yes">
+                  <RemoveFile Id="parent_join_6.0.0_beta1.jar" Name="parent_join_6.0.0_beta1.jar" On="both" />
+                  <File Id="parent_join_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\parent-join\parent-join-6.0.0-beta1.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.6" Guid="daaa2cba-a1ed-4f29-afbf-5478ce851303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.6" Name="plugin_descriptor.properties.6" On="both" />
-                  <File Id="plugin_descriptor.properties.6" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\parent-join\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.6" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\parent-join\plugin-descriptor.properties" />
                 </Component>
 
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.percolator" Name="percolator">
 
-                <Component Id="Component.percolator_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d752ddf2" Win64="yes">
-                  <RemoveFile Id="percolator_5.5.1.jar" Name="percolator_5.5.1.jar" On="both" />
-                  <File Id="percolator_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\percolator\percolator-5.5.1.jar" />
+                <Component Id="Component.percolator_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789a236dcb" Win64="yes">
+                  <RemoveFile Id="percolator_6.0.0_beta1.jar" Name="percolator_6.0.0_beta1.jar" On="both" />
+                  <File Id="percolator_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\percolator\percolator-6.0.0-beta1.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.7" Guid="daaa2cba-a1ed-4f29-afbf-547842201303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.7" Name="plugin_descriptor.properties.7" On="both" />
-                  <File Id="plugin_descriptor.properties.7" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\percolator\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.7" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\percolator\plugin-descriptor.properties" />
                 </Component>
 
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.reindex" Name="reindex">
 
-                <Component Id="Component.commons_codec_1.10.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478796f5d50" Win64="yes">
-                  <RemoveFile Id="commons_codec_1.10.jar" Name="commons_codec_1.10.jar" On="both" />
-                  <File Id="commons_codec_1.10.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\commons-codec-1.10.jar" />
-                </Component>
-
-                <Component Id="Component.commons_logging_1.1.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-547868ab35a8" Win64="yes">
-                  <RemoveFile Id="commons_logging_1.1.3.jar" Name="commons_logging_1.1.3.jar" On="both" />
-                  <File Id="commons_logging_1.1.3.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\commons-logging-1.1.3.jar" />
-                </Component>
-
-                <Component Id="Component.httpasyncclient_4.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547826e95944" Win64="yes">
-                  <RemoveFile Id="httpasyncclient_4.1.2.jar" Name="httpasyncclient_4.1.2.jar" On="both" />
-                  <File Id="httpasyncclient_4.1.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\httpasyncclient-4.1.2.jar" />
-                </Component>
-
-                <Component Id="Component.httpclient_4.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783b3be93b" Win64="yes">
-                  <RemoveFile Id="httpclient_4.5.2.jar" Name="httpclient_4.5.2.jar" On="both" />
-                  <File Id="httpclient_4.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\httpclient-4.5.2.jar" />
-                </Component>
-
-                <Component Id="Component.httpcore_4.4.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-547841525bd1" Win64="yes">
-                  <RemoveFile Id="httpcore_4.4.5.jar" Name="httpcore_4.4.5.jar" On="both" />
-                  <File Id="httpcore_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\httpcore-4.4.5.jar" />
-                </Component>
-
-                <Component Id="Component.httpcore_nio_4.4.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fc877082" Win64="yes">
-                  <RemoveFile Id="httpcore_nio_4.4.5.jar" Name="httpcore_nio_4.4.5.jar" On="both" />
-                  <File Id="httpcore_nio_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\httpcore-nio-4.4.5.jar" />
+                <Component Id="Component._...ch_rest_client_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b2b14d61" Win64="yes">
+                  <RemoveFile Id="_...ch_rest_client_6.0.0_beta1.jar" Name="_...ch_rest_client_6.0.0_beta1.jar" On="both" />
+                  <File Id="_...ch_rest_client_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\reindex\elasticsearch-rest-client-6.0.0-beta1.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.8" Guid="daaa2cba-a1ed-4f29-afbf-5478e44f1303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.8" Name="plugin_descriptor.properties.8" On="both" />
-                  <File Id="plugin_descriptor.properties.8" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.8" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\reindex\plugin-descriptor.properties" />
                 </Component>
 
-                <Component Id="Component.reindex_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785eaa7612" Win64="yes">
-                  <RemoveFile Id="reindex_5.5.1.jar" Name="reindex_5.5.1.jar" On="both" />
-                  <File Id="reindex_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\reindex-5.5.1.jar" />
+                <Component Id="Component.plugin_security.policy.3" Guid="daaa2cba-a1ed-4f29-afbf-5478375200dd" Win64="yes">
+                  <RemoveFile Id="plugin_security.policy.3" Name="plugin_security.policy.3" On="both" />
+                  <File Id="plugin_security.policy.3" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\reindex\plugin-security.policy" />
                 </Component>
 
-                <Component Id="Component.rest_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547857743a5b" Win64="yes">
-                  <RemoveFile Id="rest_5.5.1.jar" Name="rest_5.5.1.jar" On="both" />
-                  <File Id="rest_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\reindex\rest-5.5.1.jar" />
+                <Component Id="Component.reindex_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783a09d5c9" Win64="yes">
+                  <RemoveFile Id="reindex_6.0.0_beta1.jar" Name="reindex_6.0.0_beta1.jar" On="both" />
+                  <File Id="reindex_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\reindex\reindex-6.0.0-beta1.jar" />
                 </Component>
 
               </Directory>
 
-              <Directory Id="INSTALLDIR.modules.transport_netty3" Name="transport-netty3">
-
-                <Component Id="Component.netty_3.10.6.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786aa11ed2" Win64="yes">
-                  <RemoveFile Id="netty_3.10.6.Final.jar" Name="netty_3.10.6.Final.jar" On="both" />
-                  <File Id="netty_3.10.6.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty3\netty-3.10.6.Final.jar" />
-                </Component>
+              <Directory Id="INSTALLDIR.modules.repository_url" Name="repository-url">
 
                 <Component Id="Component.plugin_descriptor.properties.9" Guid="daaa2cba-a1ed-4f29-afbf-547859ea1303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.9" Name="plugin_descriptor.properties.9" On="both" />
-                  <File Id="plugin_descriptor.properties.9" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty3\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.9" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\repository-url\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy.4" Guid="daaa2cba-a1ed-4f29-afbf-5478374f00dd" Win64="yes">
                   <RemoveFile Id="plugin_security.policy.4" Name="plugin_security.policy.4" On="both" />
-                  <File Id="plugin_security.policy.4" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty3\plugin-security.policy" />
+                  <File Id="plugin_security.policy.4" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\repository-url\plugin-security.policy" />
                 </Component>
 
-                <Component Id="Component.transport_netty3_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785ce61d4e" Win64="yes">
-                  <RemoveFile Id="transport_netty3_5.5.1.jar" Name="transport_netty3_5.5.1.jar" On="both" />
-                  <File Id="transport_netty3_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty3\transport-netty3-5.5.1.jar" />
+                <Component Id="Component.repository_url_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478a0e24525" Win64="yes">
+                  <RemoveFile Id="repository_url_6.0.0_beta1.jar" Name="repository_url_6.0.0_beta1.jar" On="both" />
+                  <File Id="repository_url_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\repository-url\repository-url-6.0.0-beta1.jar" />
                 </Component>
 
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.transport_netty4" Name="transport-netty4">
 
-                <Component Id="Component.netty_buffer_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-547881351e3b" Win64="yes">
-                  <RemoveFile Id="netty_buffer_4.1.11.Final.jar" Name="netty_buffer_4.1.11.Final.jar" On="both" />
-                  <File Id="netty_buffer_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\netty-buffer-4.1.11.Final.jar" />
+                <Component Id="Component.netty_buffer_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-547881350591" Win64="yes">
+                  <RemoveFile Id="netty_buffer_4.1.13.Final.jar" Name="netty_buffer_4.1.13.Final.jar" On="both" />
+                  <File Id="netty_buffer_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\netty-buffer-4.1.13.Final.jar" />
                 </Component>
 
-                <Component Id="Component.netty_codec_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-547885592eca" Win64="yes">
-                  <RemoveFile Id="netty_codec_4.1.11.Final.jar" Name="netty_codec_4.1.11.Final.jar" On="both" />
-                  <File Id="netty_codec_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\netty-codec-4.1.11.Final.jar" />
+                <Component Id="Component.netty_codec_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478677b2eca" Win64="yes">
+                  <RemoveFile Id="netty_codec_4.1.13.Final.jar" Name="netty_codec_4.1.13.Final.jar" On="both" />
+                  <File Id="netty_codec_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\netty-codec-4.1.13.Final.jar" />
                 </Component>
 
-                <Component Id="Component._...ty_codec_http_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d644a9fe" Win64="yes">
-                  <RemoveFile Id="_...ty_codec_http_4.1.11.Final.jar" Name="_...ty_codec_http_4.1.11.Final.jar" On="both" />
-                  <File Id="_...ty_codec_http_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\netty-codec-http-4.1.11.Final.jar" />
+                <Component Id="Component._...ty_codec_http_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bebaa9fe" Win64="yes">
+                  <RemoveFile Id="_...ty_codec_http_4.1.13.Final.jar" Name="_...ty_codec_http_4.1.13.Final.jar" On="both" />
+                  <File Id="_...ty_codec_http_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\netty-codec-http-4.1.13.Final.jar" />
                 </Component>
 
-                <Component Id="Component.netty_common_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bc7fe90e" Win64="yes">
-                  <RemoveFile Id="netty_common_4.1.11.Final.jar" Name="netty_common_4.1.11.Final.jar" On="both" />
-                  <File Id="netty_common_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\netty-common-4.1.11.Final.jar" />
+                <Component Id="Component.netty_common_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bc7df66c" Win64="yes">
+                  <RemoveFile Id="netty_common_4.1.13.Final.jar" Name="netty_common_4.1.13.Final.jar" On="both" />
+                  <File Id="netty_common_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\netty-common-4.1.13.Final.jar" />
                 </Component>
 
-                <Component Id="Component.netty_handler_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780908ab4a" Win64="yes">
-                  <RemoveFile Id="netty_handler_4.1.11.Final.jar" Name="netty_handler_4.1.11.Final.jar" On="both" />
-                  <File Id="netty_handler_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\netty-handler-4.1.11.Final.jar" />
+                <Component Id="Component.netty_handler_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fda2ab4a" Win64="yes">
+                  <RemoveFile Id="netty_handler_4.1.13.Final.jar" Name="netty_handler_4.1.13.Final.jar" On="both" />
+                  <File Id="netty_handler_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\netty-handler-4.1.13.Final.jar" />
                 </Component>
 
-                <Component Id="Component._...etty_resolver_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785ae2d95f" Win64="yes">
-                  <RemoveFile Id="_...etty_resolver_4.1.11.Final.jar" Name="_...etty_resolver_4.1.11.Final.jar" On="both" />
-                  <File Id="_...etty_resolver_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\netty-resolver-4.1.11.Final.jar" />
+                <Component Id="Component._...etty_resolver_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785164d95f" Win64="yes">
+                  <RemoveFile Id="_...etty_resolver_4.1.13.Final.jar" Name="_...etty_resolver_4.1.13.Final.jar" On="both" />
+                  <File Id="_...etty_resolver_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\netty-resolver-4.1.13.Final.jar" />
                 </Component>
 
-                <Component Id="Component._...tty_transport_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b258d01b" Win64="yes">
-                  <RemoveFile Id="_...tty_transport_4.1.11.Final.jar" Name="_...tty_transport_4.1.11.Final.jar" On="both" />
-                  <File Id="_...tty_transport_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\netty-transport-4.1.11.Final.jar" />
+                <Component Id="Component._...tty_transport_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bbded01b" Win64="yes">
+                  <RemoveFile Id="_...tty_transport_4.1.13.Final.jar" Name="_...tty_transport_4.1.13.Final.jar" On="both" />
+                  <File Id="_...tty_transport_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\netty-transport-4.1.13.Final.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.10" Guid="daaa2cba-a1ed-4f29-afbf-5478c3802ae8" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.10" Name="plugin_descriptor.properties.10" On="both" />
-                  <File Id="plugin_descriptor.properties.10" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\plugin-descriptor.properties" />
+                  <File Id="plugin_descriptor.properties.10" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy.5" Guid="daaa2cba-a1ed-4f29-afbf-5478375000dd" Win64="yes">
                   <RemoveFile Id="plugin_security.policy.5" Name="plugin_security.policy.5" On="both" />
-                  <File Id="plugin_security.policy.5" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\plugin-security.policy" />
+                  <File Id="plugin_security.policy.5" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\plugin-security.policy" />
                 </Component>
 
-                <Component Id="Component.transport_netty4_5.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786fbf1d4e" Win64="yes">
-                  <RemoveFile Id="transport_netty4_5.5.1.jar" Name="transport_netty4_5.5.1.jar" On="both" />
-                  <File Id="transport_netty4_5.5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.1\modules\transport-netty4\transport-netty4-5.5.1.jar" />
+                <Component Id="Component._...ansport_netty4_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784490642c" Win64="yes">
+                  <RemoveFile Id="_...ansport_netty4_6.0.0_beta1.jar" Name="_...ansport_netty4_6.0.0_beta1.jar" On="both" />
+                  <File Id="_...ansport_netty4_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\transport-netty4\transport-netty4-6.0.0-beta1.jar" />
+                </Component>
+
+              </Directory>
+
+              <Directory Id="INSTALLDIR.modules.tribe" Name="tribe">
+
+                <Component Id="Component.plugin_descriptor.properties.11" Guid="daaa2cba-a1ed-4f29-afbf-5478c3802ae9" Win64="yes">
+                  <RemoveFile Id="plugin_descriptor.properties.11" Name="plugin_descriptor.properties.11" On="both" />
+                  <File Id="plugin_descriptor.properties.11" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\tribe\plugin-descriptor.properties" />
+                </Component>
+
+                <Component Id="Component.tribe_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786c82c61e" Win64="yes">
+                  <RemoveFile Id="tribe_6.0.0_beta1.jar" Name="tribe_6.0.0_beta1.jar" On="both" />
+                  <File Id="tribe_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\tribe\tribe-6.0.0-beta1.jar" />
                 </Component>
 
               </Directory>
@@ -575,8 +549,8 @@
     </UI>
 
     <Upgrade Id="daaa2cba-a1ed-4f29-afbf-5478617b00f6">
-      <UpgradeVersion Minimum="0.0.0.0" Maximum="5.5.1" IncludeMinimum="yes" IncludeMaximum="no" Property="UPGRADEFOUND" />
-      <UpgradeVersion Minimum="5.5.1" IncludeMinimum="no" Property="NEWPRODUCTFOUND" />
+      <UpgradeVersion Minimum="0.0.0.0" Maximum="6.0.0" IncludeMinimum="yes" IncludeMaximum="no" Property="UPGRADEFOUND" />
+      <UpgradeVersion Minimum="6.0.0" IncludeMinimum="no" Property="NEWPRODUCTFOUND" />
     </Upgrade>
 
     <Icon Id="app_icon.ico" SourceFile="Resources\elasticsearch.ico" />
@@ -621,7 +595,7 @@
     <Binary Id="ElasticsearchValidateArgumentsAction_File" SourceFile="%this%.CA.dll" />
 
     <Property Id="ElasticProduct" Value="elasticsearch" />
-    <Property Id="CurrentVersion" Value="5.5.1" />
+    <Property Id="CurrentVersion" Value="6.0.0-beta1" />
     <Property Id="MsiLogging" Value="voicewarmup" />
     <Property Id="ARPNOREPAIR" Value="yes" />
     <Property Id="ARPNOMODIFY" Value="yes" />
@@ -634,7 +608,7 @@
     <Property Id="MASTERNODE" Value="true" />
     <Property Id="DATANODE" Value="true" />
     <Property Id="INGESTNODE" Value="true" />
-    <Property Id="LOCKMEMORY" Value="false" />
+    <Property Id="LOCKMEMORY" Value="true" />
     <Property Id="HTTPPORT" Value="9200" />
     <Property Id="TRANSPORTPORT" Value="9300" />
     <Property Id="PLUGINS" />
@@ -653,95 +627,89 @@
       <ComponentRef Id="Component.elasticsearch.yml" />
       <ComponentRef Id="Component.jvm.options" />
       <ComponentRef Id="Component.log4j2.properties" />
-      <ComponentRef Id="Component.elasticsearch_5.5.1.jar" />
+      <ComponentRef Id="Component.elasticsearch_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.HdrHistogram_2.1.9.jar" />
       <ComponentRef Id="Component.hppc_0.7.1.jar" />
       <ComponentRef Id="Component.jackson_core_2.8.6.jar" />
       <ComponentRef Id="Component._...kson_dataformat_cbor_2.8.6.jar" />
       <ComponentRef Id="Component._...son_dataformat_smile_2.8.6.jar" />
       <ComponentRef Id="Component._...kson_dataformat_yaml_2.8.6.jar" />
-      <ComponentRef Id="Component.java_version_checker_5.5.1.jar" />
-      <ComponentRef Id="Component.jna_4.4.0.jar" />
+      <ComponentRef Id="Component._...ersion_checker_6.0.0_beta1.jar" />
+      <ComponentRef Id="Component.jna_4.4.0_1.jar" />
       <ComponentRef Id="Component.joda_time_2.9.5.jar" />
       <ComponentRef Id="Component.jopt_simple_5.0.2.jar" />
       <ComponentRef Id="Component.jts_1.13.jar" />
       <ComponentRef Id="Component.log4j_1.2_api_2.8.2.jar" />
       <ComponentRef Id="Component.log4j_api_2.8.2.jar" />
       <ComponentRef Id="Component.log4j_core_2.8.2.jar" />
-      <ComponentRef Id="Component._...ene_analyzers_common_6.6.0.jar" />
-      <ComponentRef Id="Component._...cene_backward_codecs_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_core_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_grouping_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_highlighter_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_join_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_memory_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_misc_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_queries_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_queryparser_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_sandbox_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_spatial_6.6.0.jar" />
-      <ComponentRef Id="Component._...ucene_spatial_extras_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_spatial3d_6.6.0.jar" />
-      <ComponentRef Id="Component.lucene_suggest_6.6.0.jar" />
-      <ComponentRef Id="Component.plugin_cli_5.5.1.jar" />
+      <ComponentRef Id="Component._...mon_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ecs_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ore_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ing_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ter_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...oin_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ory_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...isc_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ies_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ser_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...box_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ial_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...ras_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...l3d_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component._...est_7.0.0_snapshot_00142c9.jar" />
+      <ComponentRef Id="Component.plugin_cli_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.securesm_1.1.jar" />
       <ComponentRef Id="Component.snakeyaml_1.15.jar" />
       <ComponentRef Id="Component.spatial4j_0.6.jar" />
       <ComponentRef Id="Component.t_digest_3.0.jar" />
-      <ComponentRef Id="Component.aggs_matrix_stats_5.5.1.jar" />
+      <ComponentRef Id="Component._...s_matrix_stats_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.ingest_common_5.5.1.jar" />
+      <ComponentRef Id="Component._...nalysis_common_6.0.0_beta1.jar" />
+      <ComponentRef Id="Component.plugin_descriptor.properties.1" />
+      <ComponentRef Id="Component.ingest_common_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.jcodings_1.0.12.jar" />
       <ComponentRef Id="Component.joni_2.1.6.jar" />
-      <ComponentRef Id="Component.plugin_descriptor.properties.1" />
+      <ComponentRef Id="Component.plugin_descriptor.properties.2" />
       <ComponentRef Id="Component.antlr4_runtime_4.5.1_1.jar" />
       <ComponentRef Id="Component.asm_5.0.4.jar" />
       <ComponentRef Id="Component.asm_commons_5.0.4.jar" />
       <ComponentRef Id="Component.asm_tree_5.0.4.jar" />
-      <ComponentRef Id="Component.lang_expression_5.5.1.jar" />
-      <ComponentRef Id="Component.lucene_expressions_6.6.0.jar" />
-      <ComponentRef Id="Component.plugin_descriptor.properties.2" />
-      <ComponentRef Id="Component.plugin_security.policy" />
-      <ComponentRef Id="Component.groovy_2.4.6_indy.jar" />
-      <ComponentRef Id="Component.lang_groovy_5.5.1.jar" />
+      <ComponentRef Id="Component._...ang_expression_6.0.0_beta1.jar" />
+      <ComponentRef Id="Component._...ons_7.0.0_snapshot_00142c9.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.3" />
-      <ComponentRef Id="Component.plugin_security.policy.1" />
+      <ComponentRef Id="Component.plugin_security.policy" />
       <ComponentRef Id="Component.compiler_0.9.3.jar" />
-      <ComponentRef Id="Component.lang_mustache_5.5.1.jar" />
+      <ComponentRef Id="Component.lang_mustache_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.4" />
-      <ComponentRef Id="Component.plugin_security.policy.2" />
+      <ComponentRef Id="Component.plugin_security.policy.1" />
       <ComponentRef Id="Component.antlr4_runtime_4.5.1_1.jar.1" />
       <ComponentRef Id="Component.asm_debug_all_5.1.jar" />
-      <ComponentRef Id="Component.lang_painless_5.5.1.jar" />
+      <ComponentRef Id="Component.lang_painless_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.5" />
-      <ComponentRef Id="Component.plugin_security.policy.3" />
-      <ComponentRef Id="Component.parent_join_5.5.1.jar" />
+      <ComponentRef Id="Component.plugin_security.policy.2" />
+      <ComponentRef Id="Component.parent_join_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.6" />
-      <ComponentRef Id="Component.percolator_5.5.1.jar" />
+      <ComponentRef Id="Component.percolator_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.7" />
-      <ComponentRef Id="Component.commons_codec_1.10.jar" />
-      <ComponentRef Id="Component.commons_logging_1.1.3.jar" />
-      <ComponentRef Id="Component.httpasyncclient_4.1.2.jar" />
-      <ComponentRef Id="Component.httpclient_4.5.2.jar" />
-      <ComponentRef Id="Component.httpcore_4.4.5.jar" />
-      <ComponentRef Id="Component.httpcore_nio_4.4.5.jar" />
+      <ComponentRef Id="Component._...ch_rest_client_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.8" />
-      <ComponentRef Id="Component.reindex_5.5.1.jar" />
-      <ComponentRef Id="Component.rest_5.5.1.jar" />
-      <ComponentRef Id="Component.netty_3.10.6.Final.jar" />
+      <ComponentRef Id="Component.plugin_security.policy.3" />
+      <ComponentRef Id="Component.reindex_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.9" />
       <ComponentRef Id="Component.plugin_security.policy.4" />
-      <ComponentRef Id="Component.transport_netty3_5.5.1.jar" />
-      <ComponentRef Id="Component.netty_buffer_4.1.11.Final.jar" />
-      <ComponentRef Id="Component.netty_codec_4.1.11.Final.jar" />
-      <ComponentRef Id="Component._...ty_codec_http_4.1.11.Final.jar" />
-      <ComponentRef Id="Component.netty_common_4.1.11.Final.jar" />
-      <ComponentRef Id="Component.netty_handler_4.1.11.Final.jar" />
-      <ComponentRef Id="Component._...etty_resolver_4.1.11.Final.jar" />
-      <ComponentRef Id="Component._...tty_transport_4.1.11.Final.jar" />
+      <ComponentRef Id="Component.repository_url_6.0.0_beta1.jar" />
+      <ComponentRef Id="Component.netty_buffer_4.1.13.Final.jar" />
+      <ComponentRef Id="Component.netty_codec_4.1.13.Final.jar" />
+      <ComponentRef Id="Component._...ty_codec_http_4.1.13.Final.jar" />
+      <ComponentRef Id="Component.netty_common_4.1.13.Final.jar" />
+      <ComponentRef Id="Component.netty_handler_4.1.13.Final.jar" />
+      <ComponentRef Id="Component._...etty_resolver_4.1.13.Final.jar" />
+      <ComponentRef Id="Component._...tty_transport_4.1.13.Final.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.10" />
       <ComponentRef Id="Component.plugin_security.policy.5" />
-      <ComponentRef Id="Component.transport_netty4_5.5.1.jar" />
+      <ComponentRef Id="Component._...ansport_netty4_6.0.0_beta1.jar" />
+      <ComponentRef Id="Component.plugin_descriptor.properties.11" />
+      <ComponentRef Id="Component.tribe_6.0.0_beta1.jar" />
     </Feature>
 
     <InstallExecuteSequence>

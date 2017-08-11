@@ -137,7 +137,8 @@ function Context-MsiRegistered($Expected) {
     $Expected = Merge-Hashtables @{
             Name = "Elasticsearch $env:EsVersion"
             Caption = "Elasticsearch $env:EsVersion"
-            Version = $env:EsVersion
+            # version is always without any prerelease suffix
+            Version = $($env:EsVersion).Split("-")[0]
         } $Expected
 
 
@@ -254,20 +255,48 @@ function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
             $ConfigLines | Should Exist
         }
 
-        It "bootstrap.memory_lock set to $($Expected.BootstrapMemoryLock)" {
-            $ConfigLines | Should Contain "bootstrap.memory_lock: $($Expected.BootstrapMemoryLock)"
+		If ($Expected.BootstrapMemoryLock -eq $false) {
+			It "bootstrap.memory_lock should not be set in config" {
+			   $ConfigLines | Should Not Contain "bootstrap.memory_lock: $($Expected.BootstrapMemoryLock)"
+			} 
         }
-
-        It "node.data set to to $($Expected.NodeData)" {
-            $ConfigLines | Should Contain "node.data: $($Expected.NodeData)"
+        else {
+			It "bootstrap.memory_lock set to $($Expected.BootstrapMemoryLock)" {
+			   $ConfigLines | Should Contain "bootstrap.memory_lock: $($Expected.BootstrapMemoryLock)"
+			}         
         }
+        
+		If ($Expected.NodeData -eq $false) {
+			It "node.data should not be set in config" {
+			   $ConfigLines | Should Not Contain "node.data: $($Expected.NodeData)"
+			} 
+		}
+		else {
+			It "node.data set to to $($Expected.NodeData)" {
+				$ConfigLines | Should Contain "node.data: $($Expected.NodeData)"
+			}    
+		}
 
-        It "node.ingest set to $($Expected.NodeIngest)" {
-            $ConfigLines | Should Contain "node.ingest: $($Expected.NodeIngest)"
-        }
-
-        It "node.master set to $($Expected.NodeMaster)" {
-            $ConfigLines | Should Contain "node.master: $($Expected.NodeMaster)"
+		If ($Expected.NodeIngest -eq $false) {
+			It "node.ingest should not be set in config" {
+			   $ConfigLines | Should Not Contain "node.ingest: $($Expected.NodeIngest)"
+			} 
+		}
+		else {
+			It "node.ingest set to $($Expected.NodeIngest)" {
+				$ConfigLines | Should Contain "node.ingest: $($Expected.NodeIngest)"
+			}
+		}
+		
+		If ($Expected.NodeMaster -eq $false) {
+			It "node.master should not be set in config" {
+			   $ConfigLines | Should Not Contain "node.master: $($Expected.NodeMaster)"
+			} 
+		}
+		else {
+			It "node.master set to $($Expected.NodeMaster)" {
+				$ConfigLines | Should Contain "node.master: $($Expected.NodeMaster)"
+			}
         }
 
         It "node.max_local_storage_nodes set to $($Expected.NodeMaxLocalStorageNodes)" {
