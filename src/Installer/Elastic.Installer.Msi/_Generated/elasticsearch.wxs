@@ -608,7 +608,7 @@
     <Property Id="MASTERNODE" Value="true" />
     <Property Id="DATANODE" Value="true" />
     <Property Id="INGESTNODE" Value="true" />
-    <Property Id="LOCKMEMORY" Value="true" />
+    <Property Id="LOCKMEMORY" Value="false" />
     <Property Id="HTTPPORT" Value="9200" />
     <Property Id="TRANSPORTPORT" Value="9300" />
     <Property Id="PLUGINS" />
