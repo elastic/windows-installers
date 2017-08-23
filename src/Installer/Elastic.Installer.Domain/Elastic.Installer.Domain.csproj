@@ -81,7 +81,9 @@
     <Compile Include="Configuration\Service\ElasticsearchServiceConfiguration.cs" />
     <Compile Include="Configuration\Service\KibanaServiceConfiguration.cs" />
     <Compile Include="Configuration\Service\ServiceConfiguration.cs" />
-    <Compile Include="Configuration\Service\ServiceInstallationManager.cs" />
+    <Compile Include="Configuration\Service\ServiceInstallationManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Configuration\Service\ServiceInstallationManager.Designer.cs" />
     <Compile Include="Configuration\Service\ServiceStateProvider.cs" />
     <Compile Include="Configuration\Wix\InstallationDirection.cs" />
