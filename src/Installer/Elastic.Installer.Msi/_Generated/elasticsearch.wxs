@@ -28,6 +28,11 @@
 
             <Directory Id="INSTALLDIR.bin" Name="bin">
 
+              <Component Id="Component.elasticsearch_env.bat" Guid="daaa2cba-a1ed-4f29-afbf-5478f708a154" Win64="yes">
+                <RemoveFile Id="elasticsearch_env.bat" Name="elasticsearch_env.bat" On="both" />
+                <File Id="elasticsearch_env.bat" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\bin\elasticsearch-env.bat" />
+              </Component>
+
               <Component Id="Component.elasticsearch_keystore.bat" Guid="daaa2cba-a1ed-4f29-afbf-547886c8d35a" Win64="yes">
                 <RemoveFile Id="elasticsearch_keystore.bat" Name="elasticsearch_keystore.bat" On="both" />
                 <File Id="elasticsearch_keystore.bat" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\bin\elasticsearch-keystore.bat" />
@@ -620,6 +625,7 @@
       <ComponentRef Id="Component.LICENSE.txt" />
       <ComponentRef Id="Component.NOTICE.txt" />
       <ComponentRef Id="Component.README.textile" />
+      <ComponentRef Id="Component.elasticsearch_env.bat" />
       <ComponentRef Id="Component.elasticsearch_keystore.bat" />
       <ComponentRef Id="Component.elasticsearch_plugin.bat" />
       <ComponentRef Id="Component.elasticsearch_translog.bat" />

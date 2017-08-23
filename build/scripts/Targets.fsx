@@ -81,6 +81,7 @@ Target "PruneFiles" (fun () ->
         |> List.iter(fun binDir ->
             prune [
                 sprintf "%s-plugin.bat" p.Name;
+                sprintf "%s-env.bat" p.Name;
                 sprintf "%s-translog.bat" p.Name;
                 sprintf "%s-keystore.bat" p.Name
             ] binDir
