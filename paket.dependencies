@@ -6,7 +6,7 @@ nuget FluentValidation 5.5.0.0 framework: >= net45
 nuget Fody 1.29.4 content: none
 nuget HtmlTextBlock 1.0.1 content: none, framework: >= net45
 nuget ILMerge 2.14.1208 framework: >= net40
-nuget MahApps.Metro 1.1.0 framework: >= net45
+nuget MahApps.Metro 1.1.2 framework: >= net45
 nuget MahApps.Metro.Resources == 0.4.0 framework: >= net45
 nuget reactiveui 6.3.1 framework: >= net45
 nuget reactiveui-core 6.3.1 framework: >= net45
