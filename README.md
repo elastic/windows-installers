@@ -64,8 +64,8 @@ start /wait msiexec.exe /i elasticsearch-5.5.0.msi /qn /l elastic-install.log NO
 | MINIMUMMASTERNODES               | Minimum number of master eligible nodes | 1 |
 | MASTERNODE                       | Whether this node should be master eligible | `true` |
 | DATANODE                         | Whether or not to make this a data node     | `true` |
-| INGESTNODE                       | Whether or not to make this an ingest node| | `true` |
-| NETWORKHOST                      | Hostname to bind to and advertise to other nodes | `true` |
+| INGESTNODE                       | Whether or not to make this an ingest node | `true` |
+| NETWORKHOST                      | Hostname to bind to and advertise to other nodes | |
 | SELECTEDMEMORY                   | Amount of memory to allocate to the JVM | 2GB. If the target machine has less than 4GB RAM, then 50% RAM |
 | LOCKMEMORY                       | Whether or not to lock JVM memory           | `false` |
 | INSTALLASSERVICE                 | Install as a Windows service                | `true` |
