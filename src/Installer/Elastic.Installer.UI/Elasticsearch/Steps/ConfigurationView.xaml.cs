@@ -113,19 +113,19 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 		private void OnMinimumMasterNodesChange(int i)
 		{
-				if (i == 0)
-				{
-					this.MinimumMasterTextBox.StringFormat = ViewResources.ConfigurationView_MinimumMasterNodesNotSet;
-					this.MinimumMasterTextBox.FontWeight = FontWeights.Normal;
-					this.MinimumMasterTextBox.Foreground = this._defaultBrush;
+			if (i == 0)
+			{
+				this.MinimumMasterTextBox.StringFormat = ViewResources.ConfigurationView_MinimumMasterNodesNotSet;
+				this.MinimumMasterTextBox.FontWeight = FontWeights.Normal;
+				this.MinimumMasterTextBox.Foreground = this._defaultBrush;
 
-				}
-				else
-				{
-					this.MinimumMasterTextBox.StringFormat = ViewResources.ConfigurationView_MinimumMasterNodesSet;
-					this.MinimumMasterTextBox.FontWeight = FontWeights.Bold;
-					this.MinimumMasterTextBox.Foreground = this._defaultUpDownBrush;
-				}
+			}
+			else
+			{
+				this.MinimumMasterTextBox.StringFormat = ViewResources.ConfigurationView_MinimumMasterNodesSet;
+				this.MinimumMasterTextBox.FontWeight = FontWeights.Bold;
+				this.MinimumMasterTextBox.Foreground = this._defaultUpDownBrush;
+			}
 		}
 	}
 }

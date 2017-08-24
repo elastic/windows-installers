@@ -117,7 +117,7 @@
                                    Value="0"  Minimum="0" Foreground="{DynamicResource AccentColorBrush}" FontWeight="Bold" 
                                    Margin="5, 0,0,0"
                                    TextAlignment="Left" IsReadOnly="True"
-                                     StringFormat="{x:Static resx:ViewResources.ConfigurationView_UnicastExplanationLabel}"
+                                     StringFormat="{x:Static resx:ViewResources.ConfigurationView_MinimumMasterNodesNotSet}"
                                      />
       <Label Grid.Row="5" Grid.Column="0"  x:Name="UnicastHostsLabel" Content="{x:Static resx:ViewResources.ConfigurationView_UnicastHostsLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
       <Label Grid.Row="5" Grid.Column="1"  Content="{x:Static resx:ViewResources.ConfigurationView_UnicastExplanationLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
