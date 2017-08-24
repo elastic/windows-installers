@@ -130,7 +130,6 @@
     <Compile Include="Kibana\Steps\PluginsView.xaml.cs">
       <DependentUpon>PluginsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Product.cs" />
     <Compile Include="Progress\InstallProgressCounter.cs" />
     <Compile Include="Progress\ProgressDialogControllerExtensions.cs" />
     <Compile Include="Progress\ProgressIndicator.cs" />
@@ -332,7 +331,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)%(Filename)')" />
   </Target>
   <Import Project="..\..\..\.paket\paket.targets" />
   <Choose>

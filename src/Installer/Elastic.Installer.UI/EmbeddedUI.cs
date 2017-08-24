@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using Microsoft.Deployment.WindowsInstaller;
 using ReactiveUI;
 using System.Threading.Tasks;
+using Elastic.Installer.Domain;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.UI.Shared.Configuration.EnvironmentBased;

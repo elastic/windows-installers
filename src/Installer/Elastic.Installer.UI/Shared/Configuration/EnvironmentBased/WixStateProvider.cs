@@ -57,10 +57,10 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 
 			if (error == MsiError.UnknownProduct)
 				return false;
-			else if (error == MsiError.NoError)
+			if (error == MsiError.NoError)
 				return true;
-			else
-				throw new Exception(error.ToString());
+
+			throw new Exception(error.ToString());
 		}
 
 		private string FormatProductCode(string productCode)

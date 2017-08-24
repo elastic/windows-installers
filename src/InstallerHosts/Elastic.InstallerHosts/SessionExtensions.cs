@@ -62,7 +62,7 @@ namespace Elastic.InstallerHosts
 				session.CustomActionData[property] = value;
 		}
 
-		public static bool IsActive(this Microsoft.Deployment.WindowsInstaller.Session session)
+		public static bool IsActive(this Session session)
 		{
 			try
 			{

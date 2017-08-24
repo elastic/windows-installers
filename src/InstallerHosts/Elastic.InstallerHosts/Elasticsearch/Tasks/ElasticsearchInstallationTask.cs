@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using Elastic.Installer.Domain;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
@@ -11,7 +12,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		protected ElasticsearchInstallationModel InstallationModel => this.Model as ElasticsearchInstallationModel;
 
 		protected ElasticsearchInstallationTask(string[] args, ISession session)
-			: this(ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), session, args), session, new FileSystem())
+			: this(ElasticsearchInstallationModel.Create(new NoopWixStateProvider(Product.Elasticsearch, session.Get<string>("ProductCode")), session, args), session, new FileSystem())
 		{
 			this.Args = args;
 		}

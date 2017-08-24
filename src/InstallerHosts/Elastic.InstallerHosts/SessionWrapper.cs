@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Linq;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
+using Microsoft.Deployment.WindowsInstaller;
+using WixSharp;
 
 namespace Elastic.InstallerHosts
 {
 	public class SessionWrapper : ISession
 	{
-		private readonly Microsoft.Deployment.WindowsInstaller.Session _session;
+		private readonly Session _session;
 
-		public SessionWrapper(Microsoft.Deployment.WindowsInstaller.Session session)
+		public SessionWrapper(Session session)
 		{
 			this._session = session;
 		}
@@ -26,6 +28,9 @@ namespace Elastic.InstallerHosts
 			this._session.Set(property, value);
 		}
 
+		public string GetProductProperty(string property) =>
+			_session.GetProductProperty(property);
+
 		public void Log(string message) => this._session.Log(message);
 
 		public void SendActionStart(int totalTicks, string actionName, string message, string actionDataTemplate = null)
@@ -41,6 +46,10 @@ namespace Elastic.InstallerHosts
 				Log($"{string.Join(" ", actionDataTemplateParameters.Select((v, i) => $"[{i}] {v}"))}");
 		}
 
-		public bool Uninstalling => string.Equals(this.Get<string>("REMOVE"), "All", StringComparison.OrdinalIgnoreCase);
+		public bool Uninstalling => this._session.IsUninstalling(); //string.Equals(this.Get<string>("REMOVE"), "All", StringComparison.OrdinalIgnoreCase);
+
+		public bool Upgrading => this._session.IsUpgrading();
+
+		public bool Rollback => this._session.GetMode(InstallRunMode.Rollback);
 	}
 }

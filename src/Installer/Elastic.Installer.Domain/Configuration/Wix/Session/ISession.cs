@@ -6,7 +6,10 @@
 		void SendProgress(int tickIncrement, params object[] actionDataTemplateParameters);
 		void Log(string message);
 		T Get<T>(string property);
+		string GetProductProperty(string property);
 		void Set(string property, string value);
 		bool Uninstalling { get; }
+		bool Upgrading { get; }
+		bool Rollback { get; }
 	}
 }

@@ -20,8 +20,6 @@ namespace Elastic.Installer.Msi
 			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}");
 
 			// set properties in the MSI so that they don't have to be set on the command line.
-			// The only awkward one is plugins as it has a not empty default value, but an empty
-			// string can be passed to not install any plugins
 			var setupParams = product.MsiParams;
 			var staticProperties = setupParams
 				.Where(v => v.Attribute.IsStatic)
@@ -54,7 +52,7 @@ namespace Elastic.Installer.Msi
 					// Shows up as Help Link in Programs and Features
 					HelpLink = $"https://discuss.elastic.co/c/{productName}"
 				},
-				Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase($"{productName} ") + version,
+				Name = CultureInfo.InvariantCulture.TextInfo.ToTitleCase($"{productName} ") + version,
 				OutFileName = productName,
 				Version = new Version(version.Split('-')[0]),
 				Actions = dynamicProperties

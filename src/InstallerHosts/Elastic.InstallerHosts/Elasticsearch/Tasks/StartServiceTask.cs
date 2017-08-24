@@ -23,6 +23,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
+			throw new Exception();
+
 			this.Session.Log("Executing start service!");
 			if (!this.InstallationModel.ServiceModel.StartAfterInstall)
 				return true;

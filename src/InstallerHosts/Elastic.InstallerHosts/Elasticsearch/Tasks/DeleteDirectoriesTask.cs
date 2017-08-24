@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using WindowsInstaller;
 using Elastic.Configuration.FileBased.Yaml;
+using Elastic.Installer.Domain;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
@@ -26,6 +28,14 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		/// </summary>
 		protected override bool ExecuteTask()
 		{
+			Session.Log($"AlreadyInstalled: {this.InstallationModel.NoticeModel.AlreadyInstalled}");
+			Session.Log($"Session Uninstalling: {this.Session.Uninstalling}");
+			Session.Log($"Session Rollback: {this.Session.Rollback}");
+			Session.Log($"Session Upgrading: {this.Session.Upgrading}");
+			Session.Log($"Rollback: {RollBack}");
+			
+			
+
 			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.Uninstalling)
 				return true;
 

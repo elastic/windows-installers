@@ -133,6 +133,7 @@
     <Compile Include="Model\Kibana\Plugins\PluginsModelValidator.cs" />
     <Compile Include="Model\ModelArgument.cs" />
     <Compile Include="Model\ModelArgumentParser.cs" />
+    <Compile Include="Product.cs" />
     <Compile Include="ProductGuids.cs" />
     <Compile Include="Properties\TextResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -176,7 +177,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)\%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)\%(Filename)')" />
   </Target>
   <UsingTask AssemblyFile="packages\WixSharp.bin.1.0.21.0\build\SetEnvVar.dll" TaskName="SetEnvVar" />
   <Choose>
