@@ -429,20 +429,24 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
-        public static string ConfigurationView_Elasticsearch_Help_Header {
-            get {
-                return ResourceManager.GetString("ConfigurationView_Elasticsearch_Help_Header", resourceCulture);
-            }
-        }
         /// <summary>
         ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
         ///
-        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important no [rest of string was truncated]&quot;;.
+        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Elasticsearch_Help {
             get {
                 return ResourceManager.GetString("ConfigurationView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuration Help.
+        /// </summary>
+        public static string ConfigurationView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("ConfigurationView_Elasticsearch_Help_Header", resourceCulture);
             }
         }
         
@@ -481,7 +485,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
         ///
-        ///[b]Base Path[/b]: Enables you to specify a path to  [rest of string was truncated]&quot;;.
+        ///[b]Base Path[/b]: Enables you to specify a p [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Kibana_Help {
             get {
@@ -758,7 +762,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Index Name[/b]: Kibana uses an index in Elasticsearch to store saved searches, visualizations and dashboards. Kibana creates a new index if the index doesn’t already exist.
         ///
-        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that the Kiba [rest of string was truncated]&quot;;.
+        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that t [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConnectingView_Kibana_Help {
             get {
@@ -1027,11 +1031,6 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
-        public static string LocationsView_Elasticsearch_Help_Header {
-            get {
-                return ResourceManager.GetString("LocationsView_Elasticsearch_Help_Header", resourceCulture);
-            }
-        }
         /// <summary>
         ///   Looks up a localized string similar to Elasticsearch has several different folders that it needs to have read and/or write access to:
         ///
@@ -1043,11 +1042,20 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Config[/b]: The directory where Elasticsearch will its configuration files.
         ///
-        ///It is best practice to keep your logs, config, and data directories separate from your home  [rest of string was truncated]&quot;;.
+        ///It is best practice to keep your logs, config, and data directories separate from  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string LocationsView_Elasticsearch_Help {
             get {
                 return ResourceManager.GetString("LocationsView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locations Help.
+        /// </summary>
+        public static string LocationsView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("LocationsView_Elasticsearch_Help_Header", resourceCulture);
             }
         }
         
@@ -1128,11 +1136,6 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
-        public static string MainWindow_Help_Header {
-            get {
-                return ResourceManager.GetString("MainWindow_Help_Header", resourceCulture);
-            }
-        }
         /// <summary>
         ///   Looks up a localized string similar to Heya! Welcome the {0} Windows intaller.
         ///
@@ -1141,6 +1144,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string MainWindow_Help {
             get {
                 return ResourceManager.GetString("MainWindow_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installation Help.
+        /// </summary>
+        public static string MainWindow_Help_Header {
+            get {
+                return ResourceManager.GetString("MainWindow_Help_Header", resourceCulture);
             }
         }
         
@@ -1210,7 +1222,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to configuration.
+        ///   Looks up a localized string similar to Configuration.
         /// </summary>
         public static string MainWindow_TabItemConfiguration {
             get {
@@ -1219,7 +1231,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to locations.
+        ///   Looks up a localized string similar to Locations.
         /// </summary>
         public static string MainWindow_TabItemLocations {
             get {
@@ -1228,7 +1240,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to plugins.
+        ///   Looks up a localized string similar to Plugins.
         /// </summary>
         public static string MainWindow_TabItemPlugins {
             get {
@@ -1237,7 +1249,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to service.
+        ///   Looks up a localized string similar to Service.
         /// </summary>
         public static string MainWindow_TabItemService {
             get {
@@ -1246,7 +1258,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to welcome.
+        ///   Looks up a localized string similar to Welcome.
         /// </summary>
         public static string MainWindow_TabItemWelcome {
             get {
@@ -1344,11 +1356,6 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
-        public static string PluginsView_Elasticsearch_Help_Header {
-            get {
-                return ResourceManager.GetString("PluginsView_Elasticsearch_Help_Header", resourceCulture);
-            }
-        }
         /// <summary>
         ///   Looks up a localized string similar to Plugins are a way to enhance the basic Elasticsearch functionality in a custom manner.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), native scripts, custom discovery and more.
         ///
@@ -1357,6 +1364,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string PluginsView_Elasticsearch_Help {
             get {
                 return ResourceManager.GetString("PluginsView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin Help.
+        /// </summary>
+        public static string PluginsView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("PluginsView_Elasticsearch_Help_Header", resourceCulture);
             }
         }
         
@@ -1459,11 +1475,6 @@ namespace Elastic.Installer.UI.Properties {
             }
         }
         
-        public static string ServiceView_Elasticsearch_Help_Header {
-            get {
-                return ResourceManager.GetString("ServiceView_Elasticsearch_Help_Header", resourceCulture);
-            }
-        }
         /// <summary>
         ///   Looks up a localized string similar to By default, Elasticsearch will be installed as a service.
         ///
@@ -1474,6 +1485,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string ServiceView_Elasticsearch_Help {
             get {
                 return ResourceManager.GetString("ServiceView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Help.
+        /// </summary>
+        public static string ServiceView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("ServiceView_Elasticsearch_Help_Header", resourceCulture);
             }
         }
         

@@ -6,7 +6,7 @@ NUGET
     Fody (1.29.4) - content: none
     HtmlTextBlock (1.0.1) - content: none, restriction: >= net45
     ILMerge (2.14.1208) - restriction: >= net40
-    MahApps.Metro (1.1) - restriction: >= net45
+    MahApps.Metro (1.1.2) - restriction: >= net45
     MahApps.Metro.Resources (0.4) - restriction: >= net45
       MahApps.Metro (>= 1.0)
     Microsoft.CSharp (4.4) - restriction: || (== netstandard1.0) (== netstandard1.3)
@@ -113,8 +113,8 @@ NUGET
       Rx-Main (>= 2.2.5) - restriction: == net45
       Rx-Main (>= 2.2.5) - restriction: >= portable-win81+wpa81
       Rx-WinRT (>= 2.2.5) - restriction: >= portable-win81+wpa81
-      Rx-XAML (>= 2.2.5) - restriction: == net45
-      Rx-XAML (>= 2.2.5) - restriction: >= portable-win81+wpa81
+      Rx-Xaml (>= 2.2.5) - restriction: == net45
+      Rx-Xaml (>= 2.2.5) - restriction: >= portable-win81+wpa81
       Splat (>= 1.6)
       Splat (>= 1.6) - restriction: == net45
       Splat (>= 1.6) - restriction: >= portable-win81+wpa81
@@ -163,7 +163,7 @@ NUGET
       Rx-Interfaces (>= 2.2.5)
     Rx-WinRT (2.2.5) - restriction: && (>= net45) (>= portable-win81+wpa81)
       Rx-Main (>= 2.2.5)
-    Rx-XAML (2.2.5) - restriction: >= net45
+    Rx-Xaml (2.2.5) - restriction: >= net45
       Rx-Main (>= 2.2.5)
     semver (2.0.4)
       System.Runtime (>= 4.1) - restriction: == netstandard1.1
