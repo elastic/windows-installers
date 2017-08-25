@@ -10,6 +10,14 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
+			Session.Log($"AlreadyInstalled: {this.InstallationModel.NoticeModel.AlreadyInstalled}");
+			Session.Log($"Current Version: {this.InstallationModel.NoticeModel.CurrentVersion}");
+			Session.Log($"Existing Version: {this.InstallationModel.NoticeModel.ExistingVersion}");
+			Session.Log($"Session Uninstalling: {this.Session.IsUninstalling}");
+			Session.Log($"Session Rollback: {this.Session.IsRollback}");
+			Session.Log($"Session Upgrading: {this.Session.IsUpgrading}");
+
+
 			this.Session.Log("Passed Args:\r\n" + string.Join(", ", this.SanitizedArgs));
 			this.Session.Log("ViewModelState:\r\n" + this.InstallationModel);
 			if (!this.InstallationModel.IsValid || this.InstallationModel.Steps.Any(s => !s.IsValid))

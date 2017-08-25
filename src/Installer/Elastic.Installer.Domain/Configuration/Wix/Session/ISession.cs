@@ -8,8 +8,10 @@
 		T Get<T>(string property);
 		string GetProductProperty(string property);
 		void Set(string property, string value);
-		bool Uninstalling { get; }
-		bool Upgrading { get; }
-		bool Rollback { get; }
+		bool IsUninstalling { get; }
+		bool IsInstalling { get; }
+		bool IsInstalled { get; }
+		bool IsUpgrading { get; }
+		bool IsRollback { get; }
 	}
 }

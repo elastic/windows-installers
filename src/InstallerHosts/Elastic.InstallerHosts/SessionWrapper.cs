@@ -46,10 +46,14 @@ namespace Elastic.InstallerHosts
 				Log($"{string.Join(" ", actionDataTemplateParameters.Select((v, i) => $"[{i}] {v}"))}");
 		}
 
-		public bool Uninstalling => this._session.IsUninstalling(); //string.Equals(this.Get<string>("REMOVE"), "All", StringComparison.OrdinalIgnoreCase);
+		public bool IsUninstalling => this._session.IsUninstalling();
 
-		public bool Upgrading => this._session.IsUpgrading();
+		public bool IsInstalling => this._session.IsInstalling();
 
-		public bool Rollback => this._session.GetMode(InstallRunMode.Rollback);
+		public bool IsInstalled => this._session.IsInstalled();
+
+		public bool IsUpgrading => this._session.IsUpgrading();
+
+		public bool IsRollback => this._session.GetMode(InstallRunMode.Rollback);
 	}
 }

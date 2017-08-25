@@ -28,15 +28,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		/// </summary>
 		protected override bool ExecuteTask()
 		{
-			Session.Log($"AlreadyInstalled: {this.InstallationModel.NoticeModel.AlreadyInstalled}");
-			Session.Log($"Session Uninstalling: {this.Session.Uninstalling}");
-			Session.Log($"Session Rollback: {this.Session.Rollback}");
-			Session.Log($"Session Upgrading: {this.Session.Upgrading}");
-			Session.Log($"Rollback: {RollBack}");
-			
-			
-
-			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.Uninstalling)
+			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.IsUninstalling)
 				return true;
 
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;

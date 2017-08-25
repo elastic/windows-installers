@@ -12,12 +12,15 @@ namespace Elastic.Installer.Msi
 {
 	public class Program
 	{
+		private static bool _releaseMode;
+
 		private static void Main(string[] args)
 		{
-			var productName = args[0].ToLower();
+			var productName = args[0].ToLowerInvariant();
 			var product = GetProduct(productName);
 			var version = args[1];
 			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}");
+			_releaseMode = args.Length > 3 && !string.IsNullOrEmpty(args[3]);
 
 			// set properties in the MSI so that they don't have to be set on the command line.
 			var setupParams = product.MsiParams;
@@ -38,6 +41,8 @@ namespace Elastic.Installer.Msi
 				)
 			);
 
+			var textInfo = CultureInfo.InvariantCulture.TextInfo;
+
 			var project = new Project
 			{
 				ProductId = product.ProductCode[version],
@@ -52,7 +57,7 @@ namespace Elastic.Installer.Msi
 					// Shows up as Help Link in Programs and Features
 					HelpLink = $"https://discuss.elastic.co/c/{productName}"
 				},
-				Name = CultureInfo.InvariantCulture.TextInfo.ToTitleCase($"{productName} ") + version,
+				Name = textInfo.ToTitleCase($"{productName} ") + version,
 				OutFileName = productName,
 				Version = new Version(version.Split('-')[0]),
 				Actions = dynamicProperties
@@ -98,7 +103,7 @@ namespace Elastic.Installer.Msi
 							{
 								Dirs = new []
 								{
-									new Dir(new Id("INSTALLDIR"), CultureInfo.CurrentCulture.TextInfo.ToTitleCase(productName))
+									new Dir(new Id("INSTALLDIR"), textInfo.ToTitleCase(productName))
 									{
 										DirFileCollections = new []
 										{
@@ -119,9 +124,13 @@ namespace Elastic.Installer.Msi
 				project.UI = WUI.WixUI_ProgressOnly;
 
 			project.MajorUpgradeStrategy = MajorUpgradeStrategy.Default;
-			project.MajorUpgradeStrategy.RemoveExistingProductAfter = Step.InstallValidate;
 			project.WixSourceGenerated += PatchWixSource;
 			project.IncludeWixExtension(WixExtension.NetFx);
+
+			if (!_releaseMode)
+			{
+				project.IncludeWixExtension(WixExtension.Util);
+			}
 
 			const string wixLocation = @"..\..\..\packages\WixSharp.wix.bin\tools\bin";
 			if (!Directory.Exists(wixLocation))
@@ -160,6 +169,17 @@ namespace Elastic.Installer.Msi
 						new XAttribute("Id", component.File.Attribute("Id").Value),
 						new XAttribute("Name", component.File.Attribute("Id").Value),
 						new XAttribute("On", "both")
+					)
+				);
+			}
+
+			// include WixFailWhenDeferred Custom Action when not building a release
+			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
+			if (!_releaseMode)
+			{
+				var product = document.Root.Descendants(ns + "Product").First();
+				product.Add(new XElement(ns + "CustomActionRef",
+						new XAttribute("Id", "WixFailWhenDeferred")
 					)
 				);
 			}

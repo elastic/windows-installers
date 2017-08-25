@@ -67,6 +67,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			var versionConfig = new VersionConfiguration(wixStateProvider);
 			this.SameVersionAlreadyInstalled = versionConfig.SameVersionAlreadyInstalled;
+			this.UnInstalling = this.Session.IsUninstalling;
+			this.Installing = this.Session.IsInstalling;
+			this.Installed = this.Session.IsInstalled;
 			this.HigherVersionAlreadyInstalled = versionConfig.HigherVersionAlreadyInstalled;
 
 			this.LocationsModel = new LocationsModel(elasticsearchEnvironmentConfiguration, yamlConfiguration, versionConfig);
@@ -167,6 +170,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			this.ActiveStep.Validate();
 		}
+
+		public bool Installing { get; }
+
+		public bool Installed { get; }
+
+		public bool UnInstalling { get; }
 
 		public static ElasticsearchInstallationModel Create(IWixStateProvider wixState, ISession session, params string[] args)
 		{
