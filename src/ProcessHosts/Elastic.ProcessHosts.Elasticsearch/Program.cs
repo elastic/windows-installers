@@ -33,7 +33,7 @@ namespace Elastic.ProcessHosts.Elasticsearch
 
 				service = new ElasticsearchService(args);
 				if (Environment.UserInteractive)
-					Console.Title = $"Elasticsearch {AssemblyVersionInformation.AssemblyFileVersion}";
+					Console.Title = $"Elasticsearch {AssemblyVersionInformation.AssemblyInformationalVersion}";
 				service.Run();
 				var exitCode = service.LastExitCode ?? 0;
 				return exitCode;
