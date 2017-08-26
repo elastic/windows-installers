@@ -75,12 +75,14 @@ module Builder =
              Attribute.Description product.Product.AssemblyDescription
              Attribute.Guid product.Product.AssemblyGuid
              Attribute.Product product.Product.Title
-             Attribute.Metadata("GitBuildHash", commitHash) 
+             Attribute.Metadata("GitBuildHash", commitHash)
              Attribute.Company  "Elasticsearch BV"
              Attribute.Copyright "Apache License, version 2 (ALv2). Copyright Elasticsearch."
              Attribute.Trademark (sprintf "%s is a trademark of Elasticsearch BV, registered in the U.S. and in other countries." product.Product.Title)
              Attribute.Version  version
-             Attribute.FileVersion version]
+             Attribute.FileVersion version
+             Attribute.InformationalVersion version // Attribute.Version and Attribute.FileVersion normalize the version number, so retain the prelease suffix
+            ]
     
     let BuildService (product : ProductVersions) =
         List.zip product.Versions product.BinDirs
