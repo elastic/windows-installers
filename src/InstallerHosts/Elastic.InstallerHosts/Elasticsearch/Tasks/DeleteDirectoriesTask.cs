@@ -27,20 +27,28 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		protected override bool ExecuteTask()
 		{
 			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.Uninstalling)
+			{
+				this.Session.Log($"Skipping {nameof(DeleteDirectoriesTask)}: previously installed and not currently uninstalling");
 				return true;
+			}
+			
+			if (this.InstallationModel.NoticeModel.AlreadyInstalled && this.RollBack)
+			{
+				this.Session.Log($"Skipping {nameof(DeleteDirectoriesTask)}: previously installed and currently performing a rollback");
+				return true;
+			}
 
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
-
+			
 			if (!this.FileSystem.Directory.Exists(configDirectory))
 				return true;
 
-			this.Session.SendActionStart(1000, ActionName, "Removing data, logs, and config directory",
-				"Removing directories: [1]");
+			this.Session.SendActionStart(1000, ActionName, "Removing data, logs, and config directory", "Removing directories: [1]");
 
 			var yamlConfiguration = ElasticsearchYamlConfiguration.FromFolder(configDirectory);
 			var dataDirectory = yamlConfiguration?.Settings?.DataPath ?? string.Empty;
 			var logsDirectory = yamlConfiguration?.Settings?.LogsPath ?? string.Empty;
-
+			
 			if (this.FileSystem.Directory.Exists(dataDirectory))
 				this.DeleteDirectory(dataDirectory);
 
