@@ -35,6 +35,7 @@ namespace Elastic.Installer.Domain
 			{ "5.5.0", new Guid("344f09a4-5bf8-4d44-8e86-2130c263b08f") },
 			{ "5.5.1", new Guid("2beb1fc0-042a-49fb-af3d-285a80f3c737") },
 			{ "5.5.2", new Guid("2105d4cc-ac3e-4cf0-9214-fe4d9857f801") },
+			{ "5.5.3", new Guid("1f75dce6-5c9e-43c4-ad23-72d94bfec22d") },
 			{ "5.6.0", new Guid("72029505-94e9-4c29-a604-1da02d9d0402") },
 			{ "6.0.0-beta1", new Guid("f234f31d-f25c-4e64-8d3e-868f7b7ece97") },
 			{ "6.0.0-beta2", new Guid("50f217e3-97b7-47ba-95f7-685f7db0c8aa") },
@@ -61,6 +62,7 @@ namespace Elastic.Installer.Domain
 			{ "5.5.0", new Guid("fe335f86-1cd3-42a5-905d-46af5eb5d267") },
 			{ "5.5.1", new Guid("44f33065-4532-4aee-9bbb-e681c32845ef") },
 			{ "5.5.2", new Guid("fc7519ca-27ee-416e-bb6d-37bfe3218b99") },
+			{ "5.5.3", new Guid("d968c8bd-2388-4103-bd58-4966c2338718") },
 			{ "5.6.0", new Guid("c3409b89-7793-4231-942c-6c998523d08f") },
 			{ "6.0.0-beta1", new Guid("b9d8d2c7-9e73-4936-ac76-1626dc25d7b9") },
 			{ "6.0.0-beta2", new Guid("da8a7f2e-077f-493d-8986-b02656489b90") }
