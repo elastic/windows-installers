@@ -1,9 +1,7 @@
 ﻿using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using WindowsInstaller;
 using Elastic.Configuration.FileBased.Yaml;
-using Elastic.Installer.Domain;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;

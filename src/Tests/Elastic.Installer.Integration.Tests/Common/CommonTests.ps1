@@ -202,6 +202,20 @@ function Context-EmptyEventLog() {
     }
 }
 
+function Context-EventContainsFailedInstallMessage($StartDate, $Version) {
+    Context "Event log" {
+		$failedMessage = "Product: Elasticsearch $Version -- Installation failed."
+
+        It "Event log contains '$failedMessage'" {
+			$failedLog = Get-EventLog -LogName Application -Source MsiInstaller -After $StartDate | `
+				Where { $_.message -Match $failedMessage }
+
+            $failedLog | Should Not Be $null
+        }
+    }
+}
+
+
 function Context-ClusterNameAndNodeName($Expected) {
     $Expected = Merge-Hashtables @{
             ClusterName = "elasticsearch"
