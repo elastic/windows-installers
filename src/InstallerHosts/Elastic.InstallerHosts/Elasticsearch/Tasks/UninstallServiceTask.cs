@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
@@ -32,10 +33,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			{
 				this.Session.Log("Rolling back from a previous installation so leaving service alone");
 				return true;
-
 			}
+
 			this.Session.SendActionStart(2000, ActionName, "Uninstalling Elasticsearch service", "Elasticsearch service: [1]");
 			this.Session.SendProgress(1000, "uninstalling");
+			this.ServiceStateProvider.StopIfRunning(TimeSpan.FromSeconds(60));
 			this.ServiceStateProvider.RunTimeUninstall(this.InstallationModel.GetServiceConfiguration());
 			this.Session.SendProgress(1000, "uninstalled");
 

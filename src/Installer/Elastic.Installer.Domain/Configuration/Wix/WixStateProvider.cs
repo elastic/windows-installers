@@ -1,20 +1,38 @@
 ﻿using System;
-using System.Text;
-using WindowsInstaller;
-using Elastic.Installer.Domain;
-using Semver;
-using System.Linq;
 using System.Collections.Generic;
-using Elastic.Installer.Domain.Configuration.Wix;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Permissions;
+using System.Text;
+using Semver;
 
-namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
+namespace Elastic.Installer.Domain.Configuration.Wix
 {
 	public class WixStateProvider : IWixStateProvider
 	{
+		private enum MsiError : uint
+		{
+			NoError = 0,
+			NoMoreItems = 259,
+			UnknownProduct = 1605,
+		}
+
+		[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
+		private static class MsiInterop
+		{
+			[DllImport("msi.dll", CharSet = CharSet.Auto)]
+			public static extern MsiError MsiGetProductInfo(string product, string property, StringBuilder value, ref uint valueSize);
+		}
+
 		public SemVersion ExistingVersion { get; }
 		public SemVersion CurrentVersion { get; }
 
-		public WixStateProvider(Product product, string currentVersion)
+		public WixStateProvider(Product product, Guid currentProductCode) 
+			:this(product, GetVersion(product, currentProductCode))
+		{
+		}
+
+		public WixStateProvider(Product product, string currentVersion) 
 		{
 			string existingVersion;
 			var installed = IsAlreadyInstalled(product, out existingVersion);
@@ -22,7 +40,15 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 			if (installed) this.ExistingVersion = existingVersion;
 		}
 
-		private bool IsAlreadyInstalled(Product product, out string installedVersion)
+		private static string GetVersion(Product product, Guid currentProductCode)
+		{
+			var productCodes = GetProductCodes(product);
+			return (from productCode in productCodes
+				where productCode.Value == currentProductCode
+				select productCode.Key).FirstOrDefault();
+		}
+
+		private static bool IsAlreadyInstalled(Product product, out string installedVersion)
 		{
 			var productCodes = GetProductCodes(product);
 			installedVersion = null;
@@ -39,9 +65,9 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 			return false;
 		}
 
-		private Dictionary<string, Guid> GetProductCodes(Product product)
+		private static Dictionary<string, Guid> GetProductCodes(Product product)
 		{
-			switch(product)
+			switch (product)
 			{
 				case Product.Elasticsearch: return ProductGuids.ElasticsearchProductCodes;
 				case Product.Kibana: return ProductGuids.KibanaProductCodes;
@@ -49,7 +75,7 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 			}
 		}
 
-		private bool IsInstalled(string productCode)
+		private static bool IsInstalled(string productCode)
 		{
 			var sb = new StringBuilder(2048);
 			uint size = 2048;
@@ -63,7 +89,7 @@ namespace Elastic.Installer.UI.Shared.Configuration.EnvironmentBased
 			throw new Exception(error.ToString());
 		}
 
-		private string FormatProductCode(string productCode)
+		private static string FormatProductCode(string productCode)
 		{
 			if (!productCode.StartsWith("{"))
 				productCode = "{" + productCode;

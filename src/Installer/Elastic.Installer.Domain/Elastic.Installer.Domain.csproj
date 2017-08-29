@@ -89,6 +89,7 @@
     <Compile Include="Configuration\Wix\InstallationDirection.cs" />
     <Compile Include="Configuration\Wix\IWixStateProvider.cs" />
     <Compile Include="Configuration\Wix\NoopWixStateProvider.cs" />
+    <Compile Include="Configuration\Wix\WixStateProvider.cs" />
     <Compile Include="Configuration\Wix\Session\ISession.cs" />
     <Compile Include="Configuration\Wix\Session\NoopSession.cs" />
     <Compile Include="Configuration\Wix\VersionChange.cs" />

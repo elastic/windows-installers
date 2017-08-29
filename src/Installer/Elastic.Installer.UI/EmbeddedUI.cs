@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Elastic.Installer.Domain;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
-using Elastic.Installer.UI.Shared.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Kibana;
 using Elastic.InstallerHosts;

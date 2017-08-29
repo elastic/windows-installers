@@ -11,9 +11,7 @@ using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Base.Closing;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.UI.Elasticsearch;
-using Elastic.Installer.UI.Shared.Configuration.EnvironmentBased;
 using ReactiveUI;
-using Semver;
 
 namespace Elastic.InstallerHosts.Elasticsearch
 {
