@@ -13,7 +13,7 @@ namespace Elastic.InstallerHosts.Kibana.Tasks
 		protected KibanaInstallationModel InstallationModel => this.Model as KibanaInstallationModel;
 
 		protected KibanaInstallationTask(string[] args, ISession session)
-			: this(KibanaInstallationModel.Create(new WixStateProvider(Product.Kibana, Guid.Parse(session.GetProductProperty("ProductCode"))), session, args), session, new FileSystem())
+			: this(KibanaInstallationModel.Create(new WixStateProvider(Product.Kibana, Guid.Parse(session.Get<string>("ProductCode"))), session, args), session, new FileSystem())
 		{
 			this.Args = args;
 		}

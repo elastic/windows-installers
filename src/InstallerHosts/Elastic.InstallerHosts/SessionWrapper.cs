@@ -10,10 +10,7 @@ namespace Elastic.InstallerHosts
 	{
 		private readonly Session _session;
 
-		public SessionWrapper(Session session)
-		{
-			this._session = session;
-		}
+		public SessionWrapper(Session session) => this._session = session;
 
 		public T Get<T>(string property)
 		{
@@ -23,13 +20,7 @@ namespace Elastic.InstallerHosts
 			return default(T);
 		}
 
-		public void Set(string property, string value)
-		{
-			this._session.Set(property, value);
-		}
-
-		public string GetProductProperty(string property) =>
-			_session.GetProductProperty(property);
+		public void Set(string property, string value) => this._session.Set(property, value);
 
 		public void Log(string message) => this._session.Log(message);
 

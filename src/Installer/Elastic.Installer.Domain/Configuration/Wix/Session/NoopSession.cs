@@ -4,8 +4,6 @@
 	{
 		public T Get<T>(string property) => default(T);
 
-		public string GetProductProperty(string property) => null;
-
 		public void Set(string property, string value) { }
 
 		public void Log(string message) { }
