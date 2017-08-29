@@ -26,10 +26,19 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		/// </summary>
 		protected override bool ExecuteTask()
 		{
-			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.IsUninstalling)
+			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled)
 			{
-				this.Session.Log($"Skipping {nameof(DeleteDirectoriesTask)}: Already installed and not currently uninstalling");
-				return true;
+				if (!this.Session.IsUninstalling)
+				{
+					this.Session.Log($"Skipping {nameof(DeleteDirectoriesTask)}: Already installed and not currently uninstalling");
+					return true;
+				}
+
+				if (!this.Session.IsRollback)
+				{
+					this.Session.Log($"Skipping {nameof(DeleteDirectoriesTask)}: Already installed and not currently rolling back");
+					return true;
+				}
 			}
 
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;

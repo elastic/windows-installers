@@ -18,7 +18,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			LocationsModel locationsModel
 			)
 		{
-			this.IsRelevant = versionConfig.AlreadyInstalled;
+			this.IsRelevant = versionConfig.ExistingVersionInstalled;
 			this.LocationsModel = locationsModel;
 			this.Header = "Notice";
 			this.ExistingVersion = versionConfig.ExistingVersion;
@@ -54,17 +54,17 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				&& versionConfig.InstallationDirection == InstallationDirection.Up)
 				this.IsRelevant = false;
 
-			this.AlreadyInstalled = versionConfig.AlreadyInstalled;
+			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;
 			this.Refresh();
 		}
 
 
-		bool? alreadyInstalled;
-		public bool AlreadyInstalled
+		bool? existingVersionInstalled;
+		public bool ExistingVersionInstalled
 		{
-			get => alreadyInstalled.GetValueOrDefault();
-			private set => this.RaiseAndSetIfChanged(ref alreadyInstalled, value);
+			get => existingVersionInstalled.GetValueOrDefault();
+			private set => this.RaiseAndSetIfChanged(ref existingVersionInstalled, value);
 		}
 
 		bool? installedAsService;

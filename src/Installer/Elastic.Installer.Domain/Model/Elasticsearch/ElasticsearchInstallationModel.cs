@@ -65,7 +65,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.ElasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
 
-			var versionConfig = new VersionConfiguration(wixStateProvider);
+			var versionConfig = new VersionConfiguration(wixStateProvider, this.Session.IsInstalled);
 			this.SameVersionAlreadyInstalled = versionConfig.SameVersionAlreadyInstalled;
 			this.UnInstalling = this.Session.IsUninstalling;
 			this.Installing = this.Session.IsInstalling;
@@ -78,7 +78,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.ConfigurationModel = new ConfigurationModel(yamlConfiguration, localJvmOptions);
 
 			var pluginDependencies = this.WhenAnyValue(
-				vm => vm.NoticeModel.AlreadyInstalled,
+				vm => vm.NoticeModel.ExistingVersionInstalled,
 				vm => vm.LocationsModel.InstallDir,
 				vm => vm.LocationsModel.ConfigDirectory
 			);

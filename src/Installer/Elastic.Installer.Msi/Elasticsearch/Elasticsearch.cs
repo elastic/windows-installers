@@ -5,6 +5,7 @@ using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch
 {
@@ -18,5 +19,12 @@ namespace Elastic.Installer.Msi.Elasticsearch
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.ElasticsearchProductCodes;
 
 		public override Guid UpgradeCode => ProductGuids.ElasticsearchUpgradeCode;
+
+		public override List<Dir> Files(string path)
+		{
+			var dirs = base.Files(path);
+			dirs.Add(new Dir("plugins"));
+			return dirs;
+		}
 	}
 }

@@ -10,7 +10,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			this.Session.Log($"Already Installed: {this.InstallationModel.NoticeModel.AlreadyInstalled}");
+			this.Session.Log($"Existing Version Installed: {this.InstallationModel.NoticeModel.ExistingVersionInstalled}");
 			this.Session.Log($"Current Version: {this.InstallationModel.NoticeModel.CurrentVersion}");
 			this.Session.Log($"Existing Version: {this.InstallationModel.NoticeModel.ExistingVersion}");
 			this.Session.Log($"Session Uninstalling: {this.Session.IsUninstalling}");

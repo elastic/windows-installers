@@ -23,15 +23,24 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
+			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled)
+			{
+				if (!this.Session.IsUninstalling)
+				{
+					this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and not currently uninstalling");
+					return true;
+				}
+
+				if (!this.Session.IsRollback)
+				{
+					this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and not currently rolling back");
+					return true;
+				}
+			}
+
 			if (!this.ServiceStateProvider.SeesService)
 			{
 				this.Session.Log("No service running with the name 'Elasticsearch'");
-				return true;
-			}
-
-			if (this.InstallationModel.NoticeModel.AlreadyInstalled)
-			{
-				this.Session.Log("Rolling back from a previous installation so leaving service alone");
 				return true;
 			}
 
