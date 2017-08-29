@@ -7,6 +7,9 @@ Set-Location $currentDir
 
 Describe "Silent Failed Install with default arguments" {
 
+	$startDate = Get-Date
+	$version = $env:EsVersion
+
 	Context "Failed installation" {
 		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1")
 

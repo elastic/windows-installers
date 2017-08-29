@@ -70,6 +70,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.UnInstalling = this.Session.IsUninstalling;
 			this.Installing = this.Session.IsInstalling;
 			this.Installed = this.Session.IsInstalled;
+			this.Upgrading = this.Session.IsUpgrading;
 			this.HigherVersionAlreadyInstalled = versionConfig.HigherVersionAlreadyInstalled;
 
 			this.LocationsModel = new LocationsModel(elasticsearchEnvironmentConfiguration, yamlConfiguration, versionConfig);
@@ -216,6 +217,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		{
 			get => using32BitJava;
 			set => this.RaiseAndSetIfChanged(ref using32BitJava, value);
+		}
+
+		bool upgrading;
+		public bool Upgrading
+		{
+			get => upgrading;
+			set => this.RaiseAndSetIfChanged(ref upgrading, value);
 		}
 
 		public override void Refresh()
