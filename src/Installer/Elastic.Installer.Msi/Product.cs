@@ -20,7 +20,7 @@ namespace Elastic.Installer.Msi
 
 		public abstract IEnumerable<ModelArgument> MsiParams { get; }
 
-		public virtual List<Dir> Files(string path) =>
+		public virtual List<Dir> Files(string path, string companionFile) =>
 			Directory.GetDirectories(path)
 				.Where(directory => Directory.EnumerateFileSystemEntries(directory).Any())
 				.Select(Path.GetFileName)

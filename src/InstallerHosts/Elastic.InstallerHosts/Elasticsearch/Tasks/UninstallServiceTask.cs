@@ -46,7 +46,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 			this.Session.SendActionStart(2000, ActionName, "Uninstalling Elasticsearch service", "Elasticsearch service: [1]");
 			this.Session.SendProgress(1000, "uninstalling");
-			this.ServiceStateProvider.StopIfRunning(TimeSpan.FromSeconds(60));
+			//this.ServiceStateProvider.StopIfRunning(TimeSpan.FromSeconds(60));
 			this.ServiceStateProvider.RunTimeUninstall(this.InstallationModel.GetServiceConfiguration());
 			this.Session.SendProgress(1000, "uninstalled");
 

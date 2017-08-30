@@ -30,7 +30,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				.When(vm => !vm.UnInstalling && !vm.Installing)
 				.WithMessage(AlreadyInstalled);
 
-			RuleFor(vm => vm.HigherVersionAlreadyInstalled).Must(b => !b).WithMessage(HigherVersionInstalled);
+			RuleFor(vm => vm.HigherVersionAlreadyInstalled)
+				.Must(b => !b)
+				.When(vm => vm.Installing)
+				.WithMessage(HigherVersionInstalled);
 
 			RuleFor(vm => vm.Steps)
 				.Must(steps => steps.Where(s => s != null).All(s => s.IsValid))

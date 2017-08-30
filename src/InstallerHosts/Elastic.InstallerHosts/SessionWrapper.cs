@@ -37,12 +37,47 @@ namespace Elastic.InstallerHosts
 				Log($"{string.Join(" ", actionDataTemplateParameters.Select((v, i) => $"[{i}] {v}"))}");
 		}
 
+		/// <summary>
+		/// Determines whether MSI is running in "uninstalling" mode.
+		/// <para>
+		/// This method will fail to retrieve the correct value if called from the deferred custom action and the session properties
+		/// that it depends on are not preserved with 'UsesProperties' or 'DefaultUsesProperties'.
+		/// </para>
+		/// </summary>
 		public bool IsUninstalling => this._session.IsUninstalling();
 
+		/// <summary>
+		/// Gets a value indicating whether the product is being installed.
+		/// <para>
+		/// This method will fail to retrieve the correct value if called from the deferred custom action and the session properties
+		/// that it depends on are not preserved with 'UsesProperties' or 'DefaultUsesProperties'.
+		/// </para>
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if installing; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsInstalling => this._session.IsInstalling();
 
+		/// <summary>
+		/// Determines whether the product associated with the session is installed.
+		/// <para>
+		/// This method will fail to retrieve the correct value if called from the deferred custom action and the session properties
+		/// that it depends on are not preserved with 'UsesProperties' or 'DefaultUsesProperties'.
+		/// </para>
+		/// </summary>
 		public bool IsInstalled => this._session.IsInstalled();
 
+		/// <summary>
+		/// Gets a value indicating whether the product is being upgraded.
+		/// <para>
+		/// This method will fail to retrieve the correct value if called from the deferred custom action and the session properties
+		/// that it depends on are not preserved with 'UsesProperties' or 'DefaultUsesProperties'.
+		/// </para>
+		/// <para>
+		/// This method relies on "UPGRADINGPRODUCTCODE" property, which is not set by MSI until previous version is uninstalled. Thus it may not be the
+		/// most practical way of detecting upgrades. Use AppSearch.GetProductVersionFromUpgradeCode as a more reliable alternative.
+		/// </para>
+		/// </summary>
 		public bool IsUpgrading => this._session.IsUpgrading();
 
 		public bool IsRollback => this._session.GetMode(InstallRunMode.Rollback);

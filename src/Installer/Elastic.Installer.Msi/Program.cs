@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Elastic.Installer.Domain.Model.Base.Service;
 using WixSharp;
 using static System.Reflection.Assembly;
 
@@ -88,6 +89,8 @@ namespace Elastic.Installer.Msi
 					new Property("ARPNOREPAIR", "yes"),
 					// do not give option to change installation
 					new Property("ARPNOMODIFY", "yes"),
+					// https://msdn.microsoft.com/en-us/library/aa371182(v=vs.85).aspx
+					new Property("REINSTALLMODE", "amus"), 
 					// add .NET Framework 4.5 as a dependency
 					new PropertyRef("NETFRAMEWORK45"),
 				}.Concat(staticProperties).ToArray(),
@@ -115,7 +118,7 @@ namespace Elastic.Installer.Msi
 										{
 											new DirFiles(distributionRoot + @"\*.*")
 										},
-										Dirs = product.Files(distributionRoot).ToArray(),
+										Dirs = product.Files(distributionRoot, $"{_productName}.exe").ToArray(),
 									}
 								}
 							}
@@ -189,16 +192,26 @@ namespace Elastic.Installer.Msi
 				if (fileId == exeName)
 				{
 					exeFound = true;
-					component.Component.Add(new XElement(ns + "ServiceControl",
-						new XAttribute("Id", fileId),
-						new XAttribute("Name", _productTitle), // MUST match the name of the service
-						new XAttribute("Stop", "install"),
-						new XAttribute("Wait", "yes")
-					));
+
+					// Remove CompanionFile from exe as it has a version
+					//component.File.Attribute("CompanionFile").Remove();
+
+					//component.Component.Add(new XElement(ns + "ServiceControl",
+					//	new XAttribute("Id", fileId),
+					//	new XAttribute("Name", _productTitle), // MUST match the name of the service
+					//	new XAttribute("Stop", "install"),
+					//	new XAttribute("Wait", "yes")
+					//));
 				}
 			}
 
 			if (!exeFound) throw new Exception($"No File element found with Id '{_productName}.exe'");
+
+			//var installExecuteSequence = document.Root.Descendants(ns + "InstallExecuteSequence").Single();
+			//installExecuteSequence.Add(new XElement(ns + "StopServices",
+			//	new XAttribute("Sequence", "1900"),
+			//	new XCData($"VersionNT AND (NOT UPGRADINGPRODUCTCODE AND REMOVE=\"ALL\")")
+			//));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
