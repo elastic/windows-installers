@@ -48,7 +48,7 @@ Describe -Tag 'PreviousVersion' "Silent Install fail upgrade - Install previous 
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersion' "Silent Install fail upgrade -Fail when Upgrading" {
+Describe -Tag 'PreviousVersion' "Silent Install fail upgrade - Fail when Upgrading" {
 
 	$version = $env:EsVersion
 	$startDate = Get-Date
@@ -64,6 +64,30 @@ Describe -Tag 'PreviousVersion' "Silent Install fail upgrade -Fail when Upgradin
 	Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $version
 
 	# Existing version should still be installed and running
+	# NOTE: It may be in StartingPending to begin, after failed upgrade
+	Context "Elasticsearch service" {	
+		$service = Get-ElasticsearchService
+
+		It "Service is not null" {
+            $Service | Should Not Be $null
+        }
+
+		if ($service.Status -ne "Running") {
+			$service.Refresh()
+			$startTime = Get-Date
+			$timeout = New-TimeSpan -Seconds 30
+
+			while ($service.Status -ne "Running") {
+				if ($(Get-Date) - $startTime -gt $timeout) {
+					throw "Attempted to start the service in $timeout, but did not start"
+				}
+
+				Start-Sleep -m 250
+				$service.Refresh()
+			}
+		}
+	}
+
     Context-ElasticsearchService
 
     Context-PingNode -XPackSecurityInstalled $false
@@ -105,51 +129,18 @@ Describe -Tag 'PreviousVersion' "Silent Uninstall fail upgrade - Uninstall old v
 
     Invoke-SilentUninstall -Version $version
 
-    Context "Ping node" {
-        It "Elasticsearch node should not be running" {
-            try {
-                $Response = Invoke-RestMethod http://localhost:9200
-                $Response | Should Be $null
-            }
-            catch {
-                $_.Exception.Message | Should Be "Unable to connect to the remote server"
-            }
-        }
-    }
+	Context-NodeNotRunning
 
-    Context "CONF_DIR Environment Variable" {
-        $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
-        It "CONF_DIR Environment variable should be null" {
-            $EsConfig | Should Be $null
-        }
-    }
+	Context-EnvironmentVariableNull -Name "CONF_DIR"
 
-    Context "ES_HOME Environment Variable" {
-        $EsConfig = Get-MachineEnvironmentVariable "ES_HOME"
-        It "ES_HOME Environment variable should be null" {
-            $EsConfig | Should Be $null
-        }
-    }
+	Context-EnvironmentVariableNull -Name "ES_HOME"
 
-    Context "MSI Product" {
-        $Product = Get-ElasticsearchWin32Product
-        It "MSI should not be registered" {
-            $Product | Should Be $null
-        }
-    }
+	Context-MsiNotRegistered
 
-    Context "Elasticsearch Service" {
-        $Service = Get-ElasticsearchWin32Service
-        It "Service should not be registered" {
-            $Service | Should Be $null
-        }
-    }
+	Context-ElasticsearchServiceNotInstalled
 
-    Context "Installation directory" {
-        $ProgramFiles = Get-ProgramFilesFolder
-        $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
-        It "Installation directory should not exist" {
-            $ExpectedHomeFolder | Should Not Exist
-        }
-    }
+ 	$ProgramFiles = Get-ProgramFilesFolder
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+
+	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

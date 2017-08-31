@@ -16,9 +16,16 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 			if (this.Session.IsRollback && this.InstallationModel.NoticeModel.ExistingVersionInstalled)
 			{
+				this.Session.Log($"{nameof(RemoveEnvironmentVariablesTask)}: Rolling back and checking for existence of ES_CONFIG_OLD");
+
 				// handle rolling back to a version that uses the old config environment variable
 				if (this.InstallationModel.ElasticsearchEnvironmentConfiguration.RestoreOldConfigVariable())
+				{
+					this.Session.Log($"Skipping {nameof(RemoveEnvironmentVariablesTask)}: ES_CONFIG_OLD found and reinstated");
 					esState.SetEsConfigEnvironmentVariable(null);
+				}
+
+				return true;
 			}
 
 			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled && !this.Session.IsUninstalling)
