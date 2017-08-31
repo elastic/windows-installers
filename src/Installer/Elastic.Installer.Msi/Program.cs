@@ -89,8 +89,12 @@ namespace Elastic.Installer.Msi
 					new Property("ARPNOREPAIR", "yes"),
 					// do not give option to change installation
 					new Property("ARPNOMODIFY", "yes"),
+					// Always overwrite all files
 					// https://msdn.microsoft.com/en-us/library/aa371182(v=vs.85).aspx
-					new Property("REINSTALLMODE", "amus"), 
+					//new Property("REINSTALLMODE", "amus"),
+					// Use the FilesInUse dialog and handle it ourselves.
+					// https://msdn.microsoft.com/en-us/library/windows/desktop/aa370377(v=vs.85).aspx
+					new Property("MSIRESTARTMANAGERCONTROL", "Disable"), 
 					// add .NET Framework 4.5 as a dependency
 					new PropertyRef("NETFRAMEWORK45"),
 				}.Concat(staticProperties).ToArray(),
@@ -165,6 +169,7 @@ namespace Elastic.Installer.Msi
 		{
 			var ns = document.Root.Name.Namespace;
 
+			// create RemoveFile entries for each file, to remove when installing or uninstalling
 			// see http://www.syntevo.com/blog/?p=3508
 			var components = document.Root.Descendants(ns + "Component")
 				.Where(c => c.Descendants(ns + "File").Any())
@@ -176,42 +181,44 @@ namespace Elastic.Installer.Msi
 			foreach (var component in components)
 			{
 				var fileId = component.File.Attribute("Id").Value;
+				var fileName = Path.GetFileName(component.File.Attribute("Source").Value);
 
 				component.Component.AddFirst(
 					new XElement(ns + "RemoveFile",
 						new XAttribute("Id", fileId),
-						new XAttribute("Name", fileId),
+						new XAttribute("Name", fileName),
 						new XAttribute("On", "both")
 					)
 				);
 
-				// Stop the service when installing.
-				// Use a ServiceControl element as opposed to a custom action as an item in the ServiceControl table
-				// signals that a service will be stopped as part of the install process, preventing
+				// Use a ServiceControl element as an item in the ServiceControl table
+				// signals interaction with a service as part of the install process, preventing
 				// the FileDialog in use window from appearing when upgrading		
 				if (fileId == exeName)
 				{
 					exeFound = true;
-
-					// Remove CompanionFile from exe as it has a version
-					//component.File.Attribute("CompanionFile").Remove();
-
-					//component.Component.Add(new XElement(ns + "ServiceControl",
-					//	new XAttribute("Id", fileId),
-					//	new XAttribute("Name", _productTitle), // MUST match the name of the service
-					//	new XAttribute("Stop", "install"),
-					//	new XAttribute("Wait", "yes")
-					//));
+					component.Component.Add(new XElement(ns + "ServiceControl",
+						new XAttribute("Id", fileId),
+						new XAttribute("Name", _productTitle), // MUST match the name of the service
+						new XAttribute("Stop", "both"),
+						new XAttribute("Start", "both"),
+						new XAttribute("Wait", "yes")
+					));
 				}
 			}
 
 			if (!exeFound) throw new Exception($"No File element found with Id '{_productName}.exe'");
 
-			//var installExecuteSequence = document.Root.Descendants(ns + "InstallExecuteSequence").Single();
-			//installExecuteSequence.Add(new XElement(ns + "StopServices",
-			//	new XAttribute("Sequence", "1900"),
-			//	new XCData($"VersionNT AND (NOT UPGRADINGPRODUCTCODE AND REMOVE=\"ALL\")")
-			//));
+			// Add conditions for Starting and Stopping Services
+			var installExecuteSequence = document.Root.Descendants(ns + "InstallExecuteSequence").Single();
+			installExecuteSequence.Add(new XElement(ns + "StopServices",
+				new XAttribute("Sequence", "1900"),
+				new XCData($"VersionNT AND (NOT Installed OR REMOVE=\"ALL\")")
+			));
+			installExecuteSequence.Add(new XElement(ns + "StartServices",
+				new XAttribute("Sequence", "5900"),
+				new XCData($"VersionNT AND INSTALLASSERVICE=\"true\" AND STARTAFTERINSTALL=\"true\" AND (NOT Installed OR (UPGRADINGPRODUCTCODE AND REMOVE=\"ALL\"))")
+			));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html

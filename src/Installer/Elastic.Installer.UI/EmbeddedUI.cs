@@ -42,8 +42,7 @@ namespace Elastic.Installer.UI
 			if (string.Equals(session["REMOVE"], "All", StringComparison.OrdinalIgnoreCase))
 				return false;
 
-			_session = session;
-
+			this._session = session;
 			this._installStartEvent = new ManualResetEvent(false);
 			this._installExitEvent = new ManualResetEvent(false);
 			this._appThread = new Thread(this.Run);
@@ -60,6 +59,11 @@ namespace Elastic.Installer.UI
 		public MessageResult ProcessMessage(InstallMessage messageType, Record messageRecord,
 			MessageButtons buttons, MessageIcon icon, MessageDefaultButton defaultButton)
 		{
+			// skip showing any FilesInUse dialog, which is shown because the Windows service
+			// is running and will be stopped/removed/started
+			if (messageType == InstallMessage.RMFilesInUse || messageType == InstallMessage.FilesInUse)
+				return MessageResult.OK;
+
 			object result = this._mainWindow.Dispatcher.Invoke(
 				DispatcherPriority.Send,
 				new Func<MessageResult>(() => this._mainWindow.ProcessMessage(messageType, messageRecord, buttons, icon, defaultButton)));

@@ -14,7 +14,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 		public override Condition Condition => Condition.NOT_Installed;
 		public override Return Return => Return.check;
 		public override Sequence Sequence => Sequence.InstallExecuteSequence;
-		public override Step Step => Step.InstallFinalize;
+		public override Step Step => Step.StartServices;
 		public override When When => When.Before;
 		public override Execute Execute => Execute.deferred;
 
