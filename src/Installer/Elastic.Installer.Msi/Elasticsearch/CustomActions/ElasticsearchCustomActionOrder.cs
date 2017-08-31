@@ -21,7 +21,8 @@
 		// Rollback actions are played in reverse order
 		RollbackEnvironment = 1,
 		RollbackDirectories = 2,
-		RollbackService = 3,
+		RollbackServiceStart = 3,
+		RollbackServiceInstall = 4,
 	
 		// Uninstall actions
 		UninstallService = 1,

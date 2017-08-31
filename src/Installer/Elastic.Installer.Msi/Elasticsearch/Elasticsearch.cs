@@ -19,12 +19,5 @@ namespace Elastic.Installer.Msi.Elasticsearch
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.ElasticsearchProductCodes;
 
 		public override Guid UpgradeCode => ProductGuids.ElasticsearchUpgradeCode;
-
-		public override List<Dir> Files(string path, string companionFile)
-		{
-			var dirs = base.Files(path, companionFile);
-			dirs.Add(new Dir("plugins"));
-			return dirs;
-		}
 	}
 }

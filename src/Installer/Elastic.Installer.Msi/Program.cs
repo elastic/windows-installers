@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Elastic.Installer.Domain.Model.Base.Service;
 using WixSharp;
 using static System.Reflection.Assembly;
 
@@ -89,12 +88,6 @@ namespace Elastic.Installer.Msi
 					new Property("ARPNOREPAIR", "yes"),
 					// do not give option to change installation
 					new Property("ARPNOMODIFY", "yes"),
-					// Always overwrite all files
-					// https://msdn.microsoft.com/en-us/library/aa371182(v=vs.85).aspx
-					//new Property("REINSTALLMODE", "amus"),
-					// Use the FilesInUse dialog and handle it ourselves.
-					// https://msdn.microsoft.com/en-us/library/windows/desktop/aa370377(v=vs.85).aspx
-					new Property("MSIRESTARTMANAGERCONTROL", "Disable"), 
 					// add .NET Framework 4.5 as a dependency
 					new PropertyRef("NETFRAMEWORK45"),
 				}.Concat(staticProperties).ToArray(),
@@ -122,7 +115,7 @@ namespace Elastic.Installer.Msi
 										{
 											new DirFiles(distributionRoot + @"\*.*")
 										},
-										Dirs = product.Files(distributionRoot, $"{_productName}.exe").ToArray(),
+										Dirs = product.Files(distributionRoot).ToArray(),
 									}
 								}
 							}
@@ -201,24 +194,12 @@ namespace Elastic.Installer.Msi
 						new XAttribute("Id", fileId),
 						new XAttribute("Name", _productTitle), // MUST match the name of the service
 						new XAttribute("Stop", "both"),
-						new XAttribute("Start", "both"),
 						new XAttribute("Wait", "yes")
 					));
 				}
 			}
 
 			if (!exeFound) throw new Exception($"No File element found with Id '{_productName}.exe'");
-
-			// Add conditions for Starting and Stopping Services
-			var installExecuteSequence = document.Root.Descendants(ns + "InstallExecuteSequence").Single();
-			installExecuteSequence.Add(new XElement(ns + "StopServices",
-				new XAttribute("Sequence", "1900"),
-				new XCData($"VersionNT AND (NOT Installed OR REMOVE=\"ALL\")")
-			));
-			installExecuteSequence.Add(new XElement(ns + "StartServices",
-				new XAttribute("Sequence", "5900"),
-				new XCData($"VersionNT AND INSTALLASSERVICE=\"true\" AND STARTAFTERINSTALL=\"true\" AND (NOT Installed OR (UPGRADINGPRODUCTCODE AND REMOVE=\"ALL\"))")
-			));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html

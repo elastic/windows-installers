@@ -14,6 +14,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		{
 			this.ServiceStateProvider = new ServiceStateProvider(session, "Elasticsearch");
 		}
+
 		public StopServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
 			: base(model, session, fileSystem)
 		{
@@ -22,14 +23,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			this.Session.Log($"Existing Version Installed: {this.InstallationModel.NoticeModel.ExistingVersionInstalled}");
-			this.Session.Log($"Current Version: {this.InstallationModel.NoticeModel.CurrentVersion}");
-			this.Session.Log($"Existing Version: {this.InstallationModel.NoticeModel.ExistingVersion}");
-			this.Session.Log($"Session Installing: {this.Session.IsInstalling}");
-			this.Session.Log($"Session Uninstalling: {this.Session.IsUninstalling}");
-			this.Session.Log($"Session Rollback: {this.Session.IsRollback}");
-			this.Session.Log($"Session Upgrading: {this.Session.IsUpgrading}");
-
 			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled &&
 			    this.InstallationModel.NoticeModel.CurrentVersion < this.InstallationModel.NoticeModel.ExistingVersion && 
 				this.Session.IsUninstalling)

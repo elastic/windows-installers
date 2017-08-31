@@ -47,7 +47,7 @@
                 <RemoveFile Id="elasticsearch.exe" Name="elasticsearch.exe" On="both" />
                 <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-5.5.2\bin\elasticsearch.exe" />
 
-                <ServiceControl Id="elasticsearch.exe" Name="Elasticsearch" Stop="install" Start="both" Wait="yes" />
+                <ServiceControl Id="elasticsearch.exe" Name="Elasticsearch" Stop="both" Wait="yes" />
               </Component>
 
             </Directory>
@@ -565,22 +565,7 @@
 
               </Directory>
             </Directory>
-
-            <Directory Id="INSTALLDIR.plugins" Name="plugins">
-
-              <Component Id="plugins.EmptyDirectory" Guid="daaa2cba-a1ed-4f29-afbf-5478e5d5da07" KeyPath="yes" Win64="yes">
-                <CreateFolder />
-                <RemoveFolder Id="INSTALLDIR.plugins" On="uninstall" />
-              </Component>
-
-            </Directory>
           </Directory>
-
-          <Component Id="Elastic" Guid="daaa2cba-a1ed-4f29-afbf-54789d7bb99d" KeyPath="yes" Win64="yes">
-            <CreateFolder />
-            <RemoveFolder Id="Elastic" On="uninstall" />
-          </Component>
-
         </Directory>
       </Directory>
     </Directory>
@@ -613,10 +598,12 @@
     <CustomAction Id="ElasticsearchRollbackDirectoriesAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackDirectories" Return="check" Impersonate="no" Execute="rollback" />
     <CustomAction Id="Set_ElasticsearchUninstallDirectoriesAction_Props" Property="ElasticsearchUninstallDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchUninstallDirectoriesAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchUninstallDirectories" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchRollbackServiceAction_Props" Property="ElasticsearchRollbackServiceAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
-    <CustomAction Id="ElasticsearchRollbackServiceAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackService" Return="check" Impersonate="no" Execute="rollback" />
+    <CustomAction Id="Set_ElasticsearchRollbackServiceStartAction_Props" Property="ElasticsearchRollbackServiceStartAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="ElasticsearchRollbackServiceStartAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackServiceStart" Return="check" Impersonate="no" Execute="rollback" />
     <CustomAction Id="Set_ElasticsearchUninstallEnvironmentAction_Props" Property="ElasticsearchUninstallEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchUninstallEnvironmentAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchUninstallEnvironment" Return="check" Impersonate="no" Execute="deferred" />
+    <CustomAction Id="Set_ElasticsearchRollbackInstallServiceAction_Props" Property="ElasticsearchRollbackInstallServiceAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="ElasticsearchRollbackInstallServiceAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackInstallService" Return="check" Impersonate="no" Execute="rollback" />
     <CustomAction Id="Set_ElasticsearchEnvironmentAction_Props" Property="ElasticsearchEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchEnvironmentAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchEnvironment" Return="check" Impersonate="no" Execute="deferred" />
     <CustomAction Id="Set_ElasticsearchDirectoriesAction_Props" Property="ElasticsearchDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
@@ -629,6 +616,8 @@
     <CustomAction Id="ElasticsearchPluginsAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchPlugins" Return="check" Impersonate="no" Execute="deferred" />
     <CustomAction Id="Set_ElasticsearchServiceInstallAction_Props" Property="ElasticsearchServiceInstallAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchServiceInstallAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchServiceInstall" Return="check" Impersonate="no" Execute="deferred" />
+    <CustomAction Id="Set_ElasticsearchServiceStartAction_Props" Property="ElasticsearchServiceStartAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="ElasticsearchServiceStartAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchServiceStart" Return="check" Impersonate="no" Execute="deferred" />
     <CustomAction Id="PreventDowngrading" Error="Newer version already installed" />
 
     <Binary Id="ElasticsearchValidateArgumentsAction_File" SourceFile="%this%.CA.dll" />
@@ -638,7 +627,6 @@
     <Property Id="MsiLogging" Value="voicewarmup" />
     <Property Id="ARPNOREPAIR" Value="yes" />
     <Property Id="ARPNOMODIFY" Value="yes" />
-    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
     <Property Id="INSTALLASSERVICE" Value="true" />
     <Property Id="STARTAFTERINSTALL" Value="true" />
     <Property Id="STARTWHENWINDOWSSTARTS" Value="true" />
@@ -756,8 +744,6 @@
       <ComponentRef Id="Component.plugin_descriptor.properties.10" />
       <ComponentRef Id="Component.plugin_security.policy.5" />
       <ComponentRef Id="Component.transport_netty4_5.5.2.jar" />
-      <ComponentRef Id="plugins.EmptyDirectory" />
-      <ComponentRef Id="Elastic" />
     </Feature>
 
     <InstallExecuteSequence>
@@ -771,17 +757,19 @@
       <Custom Action="Set_ElasticsearchRollbackEnvironmentAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackEnvironmentAction" Before="ElasticsearchEnvironmentAction" />
       <Custom Action="Set_ElasticsearchUninstallPluginsAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallPluginsAction" Before="ProcessComponents">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="ElasticsearchUninstallPluginsAction" After="StopServices">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchRollbackDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackDirectoriesAction" Before="ElasticsearchDirectoriesAction" />
       <Custom Action="Set_ElasticsearchUninstallDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchUninstallDirectoriesAction" After="ElasticsearchUninstallEnvironmentAction">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
-      <Custom Action="Set_ElasticsearchRollbackServiceAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchRollbackServiceAction" Before="ElasticsearchServiceInstallAction" />
+      <Custom Action="Set_ElasticsearchRollbackServiceStartAction_Props" After="InstallInitialize" />
+      <Custom Action="ElasticsearchRollbackServiceStartAction" Before="ElasticsearchServiceStartAction" />
       <Custom Action="Set_ElasticsearchUninstallEnvironmentAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchUninstallEnvironmentAction" After="ElasticsearchUninstallServiceAction">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="Set_ElasticsearchRollbackInstallServiceAction_Props" After="InstallInitialize" />
+      <Custom Action="ElasticsearchRollbackInstallServiceAction" Before="ElasticsearchServiceInstallAction" />
       <Custom Action="Set_ElasticsearchEnvironmentAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchEnvironmentAction" Before="StartServices"> (NOT Installed) </Custom>
+      <Custom Action="ElasticsearchEnvironmentAction" After="InstallFiles"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchDirectoriesAction" After="ElasticsearchEnvironmentAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchConfigurationAction_Props" After="InstallInitialize" />
@@ -792,13 +780,11 @@
       <Custom Action="ElasticsearchPluginsAction" After="ElasticsearchJvmOptionsAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchServiceInstallAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchServiceInstallAction" After="ElasticsearchPluginsAction"> (NOT Installed) </Custom>
+      <Custom Action="Set_ElasticsearchServiceStartAction_Props" After="InstallInitialize" />
+      <Custom Action="ElasticsearchServiceStartAction" After="ElasticsearchServiceInstallAction">(NOT Installed) AND INSTALLASSERVICE="true" AND STARTAFTERINSTALL="true"</Custom>
       <Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
 
       <RemoveExistingProducts After="InstallFinalize" />
-
-      <StopServices Sequence="1900"><![CDATA[VersionNT AND NOT REMOVE="ALL"]]></StopServices>
-
-      <StartServices Sequence="5900"><![CDATA[VersionNT AND INSTALLASSERVICE="true" AND STARTAFTERINSTALL="true" AND (NOT Installed OR (UPGRADINGPRODUCTCODE AND REMOVE="ALL"))]]></StartServices>
     </InstallExecuteSequence>
 
     <InstallUISequence>

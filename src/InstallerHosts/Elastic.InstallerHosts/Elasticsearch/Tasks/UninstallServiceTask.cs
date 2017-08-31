@@ -23,19 +23,17 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled)
+			if (this.Session.IsRollback && this.InstallationModel.NoticeModel.ExistingVersionInstalled)
 			{
-				if (!this.Session.IsUninstalling)
-				{
-					this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and not currently uninstalling");
-					return true;
-				}
+				// handle rolling back to a version that uses the old config environment variable
+				this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and rolling back");
+				return true;
+			}
 
-				if (!this.Session.IsRollback)
-				{
-					this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and not currently rolling back");
-					return true;
-				}
+			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled && !this.Session.IsUninstalling)
+			{
+				this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and not currently uninstalling");
+				return true;
 			}
 
 			if (!this.ServiceStateProvider.SeesService)
@@ -46,7 +44,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 			this.Session.SendActionStart(2000, ActionName, "Uninstalling Elasticsearch service", "Elasticsearch service: [1]");
 			this.Session.SendProgress(1000, "uninstalling");
-			//this.ServiceStateProvider.StopIfRunning(TimeSpan.FromSeconds(60));
 			this.ServiceStateProvider.RunTimeUninstall(this.InstallationModel.GetServiceConfiguration());
 			this.Session.SendProgress(1000, "uninstalled");
 
