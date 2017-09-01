@@ -18,7 +18,7 @@ namespace Elastic.Installer.Domain.Model.Kibana.Notice
 			LocationsModel locationsModel
 			)
 		{
-			this.IsRelevant = versionConfig.AlreadyInstalled;
+			this.IsRelevant = versionConfig.ExistingVersionInstalled;
 			this.LocationsModel = locationsModel;
 			this.Header = "Notice";
 			this.ExistingVersion = versionConfig.ExistingVersion;
@@ -53,7 +53,7 @@ namespace Elastic.Installer.Domain.Model.Kibana.Notice
 				&& versionConfig.InstallationDirection == InstallationDirection.Up)
 				this.IsRelevant = false;
 
-			this.AlreadyInstalled = versionConfig.AlreadyInstalled;
+			this.AlreadyInstalled = versionConfig.ExistingVersionInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;
 			this.Refresh();
 		}

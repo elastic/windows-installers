@@ -5,20 +5,20 @@ Set-Location $currentDir
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
 
-Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins" {
+Describe "Silent Failed Install with default arguments" {
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
+	$startDate = Get-Date
+	$version = $env:EsVersion
 
-    Context-PingNode -XPackSecurityInstalled $true
+	Context "Failed installation" {
+		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1")
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+		It "Exit code is 1603" {
+			$exitCode | Should Be 1603
+		}
+	}
 
-    Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
-}
-
-Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins" {
-
-    Invoke-SilentUninstall
+	Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $version
 
 	Context-NodeNotRunning
 

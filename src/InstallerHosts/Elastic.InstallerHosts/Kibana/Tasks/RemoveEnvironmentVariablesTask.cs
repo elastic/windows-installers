@@ -12,7 +12,7 @@ namespace Elastic.InstallerHosts.Kibana.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.Uninstalling)
+			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.IsUninstalling)
 				return true;
 
 			this.Session.SendActionStart(1000, ActionName, "Removing environment variables", "[1]");
