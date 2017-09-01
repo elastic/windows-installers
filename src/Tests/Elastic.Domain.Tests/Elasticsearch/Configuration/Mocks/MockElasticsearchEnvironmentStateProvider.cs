@@ -111,5 +111,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		{
 			this.UnsetOldConfigVariableWasCalled = true;
 		}
+
+		public bool RestoreOldConfigVariableWasCalled { get; private set; }
+		bool IElasticsearchEnvironmentStateProvider.RestoreOldConfigVariable()
+		{
+			this.RestoreOldConfigVariableWasCalled = true;
+			return true;
+		}
 	}
 }

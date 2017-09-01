@@ -1,19 +1,27 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 using static System.Diagnostics.Process;
 
 namespace Elastic.ProcessHosts.Elasticsearch
 {
-	internal static class ControlCDispatcher {
+	[SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
+	internal static class ControlCDispatcher
+	{
 		private const int CTRL_C_EVENT = 0;
+
 		[DllImport("kernel32.dll")]
 		private static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, uint dwProcessGroupId);
+
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern bool AttachConsole(uint dwProcessId);
+
 		[DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
 		private static extern bool FreeConsole();
+
 		[DllImport("kernel32.dll")]
 		private static extern bool SetConsoleCtrlHandler(ConsoleCtrlDelegate HandlerRoutine, bool Add);
+
 		private delegate bool ConsoleCtrlDelegate(uint CtrlType);
 
 		public static bool Send(int processId)
@@ -27,7 +35,6 @@ namespace Elastic.ProcessHosts.Elasticsearch
 			{
 				if (!GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0))
 					return false;
-				//p.WaitForExit();
 			}
 			finally
 			{
@@ -36,8 +43,6 @@ namespace Elastic.ProcessHosts.Elasticsearch
 			}
 			return true;
 		}
-
-
 
 		private static bool ProcessIdIsElasticsearch(int processId)
 		{
@@ -50,7 +55,6 @@ namespace Elastic.ProcessHosts.Elasticsearch
 			{
 				return false;
 			}
-
 		}
 	}
 }

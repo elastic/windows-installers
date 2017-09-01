@@ -31,29 +31,29 @@ function Write-Log {
         switch ($Level)
         {
             'Error' {
-                Write-Error $LogMessage
+                Write-Error $LogMessage | Out-Null
             }
             'Warn' {
-                Write-Warning $LogMessage
+                Write-Warning $LogMessage | Out-Null
             }
             'Info' {
-                Write-Verbose $LogMessage
+                Write-Verbose $LogMessage | Out-Null
             }
             'Debug' {
-                Write-Debug $LogMessage
+                Write-Debug $LogMessage | Out-Null
             }
             'Default' {
-                Write-Output $LogMessage
+                Write-Output $LogMessage | Out-Null
             }
         }
 
         if ($Path) {
             if ((Test-Path $Path) -and $DoNotOverwrite) {
-                Write-Error "Log file $Path already exists but you specified not to overwrite. Either delete the file or specify a different name."
+                Write-Error "Log file $Path already exists but you specified not to overwrite. Either delete the file or specify a different name." | Out-Null
                 return
             }
             elseif (!(Test-Path $Path)) {
-                Write-Verbose "Creating $Path."
+                Write-Verbose "Creating $Path." | Out-Null
                 New-Item $Path -Force -ItemType File | Out-Null
             }
             $LogMessage | Out-File -FilePath $Path -Append
@@ -322,6 +322,65 @@ function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $PreviousVersi
 	}
 }
 
+function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Version, $PreviousVersion) {
+
+	# run all tests on one vagrant box
+	if ($VagrantProvider -eq "quick-azure") {
+		try {
+			Copy-Item "$currentDir\common\Vagrantfile" -Destination $CurrentDir -Force
+			$dnsName = Get-RandomName
+			$testDirName = "Quick-Tests"
+			$resourceGroupName = $testDirName + "-" + (Get-RandomName -Count $(59 - $testDirName.Length))
+			$replacements = @{
+				"AZURE_DNS_NAME" = $dnsName
+				"AZURE_RESOURCE_GROUP_NAME" = $resourceGroupName
+			}
+			ReplaceInFile -File "Vagrantfile" -Replacements $replacements
+	
+			vagrant destroy azure -f
+			vagrant up azure
+
+			$session = [System.Management.Automation.Runspaces.PSSession](Get-WinRmSession -DnsName $dnsName)
+			$syncFolders = @{
+				"./Common/" = "/common"
+      			"./../../../build/out/" = "/out"
+			}
+
+			Copy-SyncedFoldersToRemote -Session $session -SyncFolders $syncFolders
+			foreach ($dir in $TestDirs) {  
+				log "running tests in $dir"
+				Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version "$Version" -PreviousVersion "$PreviousVersion" -Session $session
+			}
+
+			Remove-PSSession $session
+		}
+		catch {
+			$ErrorMessage = $_.Exception.ToString()
+			log $ErrorMessage -l Error
+			Exit 1
+		}
+		finally {
+			# don't wait for the destruction of the VM
+			ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }   
+			vagrant destroy azure -f
+			Remove-Item "$CurrentDir\Vagrantfile" -Force -ErrorAction Ignore
+		}
+	}
+	else {
+		foreach ($dir in $TestDirs) {  
+			log "running tests in $dir"
+			Copy-Item "$CurrentDir\common\Vagrantfile" -Destination $dir -Force
+
+			if ($VagrantProvider -eq "local") {
+				Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version -PreviousVersion $PreviousVersion
+			} 
+			else {
+				Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version -PreviousVersion $PreviousVersion
+			}
+		}
+	}
+}
+
 function Get-Installer([string] $Location, $Product, $Version) {
 	if (!$Product) {
 		$Product = "elasticsearch"
@@ -389,7 +448,6 @@ function Invoke-SilentInstall {
     $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/i $Exe /qn /l install.log $QuotedArgs" -Wait -PassThru).ExitCode
 
     if ($ExitCode) {
-        Write-Output "last exit code not zero: $ExitCode"
         log "last exit code not zero: $ExitCode" -l Error
     }
 
@@ -413,7 +471,6 @@ function Invoke-SilentUninstall {
     $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/x $Exe /qn /l uninstall.log $QuotedArgs" -Wait -PassThru).ExitCode
 
     if ($ExitCode) {
-        Write-Host "last exit code not zero: $ExitCode"
         log "last exit code not zero: $ExitCode" -l Error
     }
 

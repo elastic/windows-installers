@@ -12,6 +12,14 @@
 
 		public void SendProgress(int tickIncrement, params object[] actionDataTemplateParameters) { }
 
-		public bool Uninstalling { get; set; }
+		public bool IsUninstalling { get; set; }
+
+		public bool IsInstalling { get; set; }
+
+		public bool IsInstalled { get; set; }
+
+		public bool IsUpgrading { get; set; }
+
+		public bool IsRollback { get; set; }
 	}
 }

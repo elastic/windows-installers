@@ -202,6 +202,20 @@ function Context-EmptyEventLog() {
     }
 }
 
+function Context-EventContainsFailedInstallMessage($StartDate, $Version) {
+    Context "Event log" {
+		$failedMessage = "Product: Elasticsearch $Version -- Installation failed."
+
+        It "Event log contains '$failedMessage'" {
+			$failedLog = Get-EventLog -LogName Application -Source MsiInstaller -After $StartDate | `
+				Where { $_.message -Match $failedMessage }
+
+            $failedLog | Should Not Be $null
+        }
+    }
+}
+
+
 function Context-ClusterNameAndNodeName($Expected) {
     $Expected = Merge-Hashtables @{
             ClusterName = "elasticsearch"
@@ -423,3 +437,76 @@ function Context-ReadData($Domain, $Port, $Credentials) {
 		}
 	}
 }
+
+function Context-EmptyInstallDirectory($Path) {    
+	Context "Installation directory" {
+        It "Installation directory should not exist or is empty" {
+			if (Test-Path $Path) {
+				$files = Get-ChildItem $Path
+				$files | Should Be $null
+			}
+			else {
+				$Path | Should Not Exist
+			}            
+        }
+    }
+}
+
+function Context-EnvironmentVariableNull($Name) {
+	Context "$Name Environment Variable" {
+        $envVar = Get-MachineEnvironmentVariable $Name
+        It "$Name Environment variable should be null" {
+            $envVar | Should Be $null
+        }
+    }
+}
+
+function Context-MsiNotRegistered() {
+	Context "MSI Product" {
+        $Product = Get-ElasticsearchWin32Product
+        It "MSI should not be registered" {
+            $Product | Should Be $null
+        }
+    }
+}
+
+function Context-ElasticsearchServiceNotInstalled() {
+	Context "Elasticsearch Service" {
+        $Service = Get-ElasticsearchWin32Service
+        It "Service should not be registered" {
+            $Service | Should Be $null
+        }
+    }
+}
+
+function Context-NodeNotRunning($Domain, $Port, $Credentials) {
+	if (!$Domain) {
+		$Domain = "localhost"
+	}
+
+	if (!$Port) {
+		$Port = "9200"
+	}
+
+	Context "Ping node" {
+        It "Elasticsearch node should not be running" {
+            try {
+				if ($Credentials) {
+					$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
+					$authHeaderValue = [Convert]::ToBase64String($bytes)
+					$response = Invoke-RestMethod "http://$($Domain):$Port" `
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
+				}
+				else {
+					$response = Invoke-RestMethod "http://$($Domain):$Port"
+				}
+
+                $Response | Should Be $null
+            }
+            catch {
+                $_.Exception.Message | Should Be "Unable to connect to the remote server"
+            }
+        }
+    }
+}
+

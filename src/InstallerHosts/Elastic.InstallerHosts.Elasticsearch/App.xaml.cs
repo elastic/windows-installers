@@ -5,13 +5,13 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Elastic.Installer.Domain;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Base.Closing;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.UI.Elasticsearch;
 using ReactiveUI;
-using Semver;
 
 namespace Elastic.InstallerHosts.Elasticsearch
 {
@@ -20,16 +20,9 @@ namespace Elastic.InstallerHosts.Elasticsearch
 	/// </summary>
 	public partial class App : Application
 	{
-		class DemoWixStateProvider : IWixStateProvider
-		{
-			public SemVersion CurrentVersion => "5.0.0";
-
-			public SemVersion ExistingVersion => null;
-		}
-
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
-			var wix = new DemoWixStateProvider();
+			var wix = new WixStateProvider(Product.Elasticsearch, "5.5.1");
 			var model = ElasticsearchInstallationModel.Create(wix, new NoopSession());
 
 			var window = new MainWindow(model, new ManualResetEvent(false));

@@ -8,10 +8,10 @@ using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 {
-	public class ElasticsearchRollbackServiceAction : RollbackCustomAction<Elasticsearch>
+	public class ElasticsearchRollbackInstallServiceAction : RollbackCustomAction<Elasticsearch>
 	{
-		public override string Name => nameof(ElasticsearchRollbackServiceAction);
-		public override int Order => (int)ElasticsearchCustomActionOrder.RollbackService;
+		public override string Name => nameof(ElasticsearchRollbackInstallServiceAction);
+		public override int Order => (int)ElasticsearchCustomActionOrder.RollbackServiceInstall;
 		public override When When => When.Before;
 		public override Step Step => new Step(nameof(ElasticsearchServiceInstallAction));
 

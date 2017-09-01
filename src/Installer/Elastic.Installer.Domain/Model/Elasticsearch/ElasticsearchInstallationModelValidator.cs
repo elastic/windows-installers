@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Management.Instrumentation;
 using Elastic.Installer.Domain.Properties;
 using FluentValidation;
 
@@ -24,9 +25,15 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			
 			RuleFor(vm => vm.BadElasticsearchYamlFile).Must(b => !b).WithMessage(BadElasticsearchYamlFile);
 
-			RuleFor(vm => vm.SameVersionAlreadyInstalled).Must(b => !b).WithMessage(AlreadyInstalled);
+			RuleFor(vm => vm.SameVersionAlreadyInstalled)
+				.Must(b => !b)
+				.When(vm => !vm.UnInstalling && !vm.Installing)
+				.WithMessage(AlreadyInstalled);
 
-			RuleFor(vm => vm.HigherVersionAlreadyInstalled).Must(b => !b).WithMessage(HigherVersionInstalled);
+			RuleFor(vm => vm.HigherVersionAlreadyInstalled)
+				.Must(b => !b)
+				.When(vm => vm.Installing)
+				.WithMessage(HigherVersionInstalled);
 
 			RuleFor(vm => vm.Steps)
 				.Must(steps => steps.Where(s => s != null).All(s => s.IsValid))

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="Windows-1252"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product Id="2105d4cc-ac3e-4cf0-9214-fe4d9857f801" Name="Elasticsearch 5.5.2" Language="1033" Codepage="Windows-1252" Version="5.5.2" UpgradeCode="daaa2cba-a1ed-4f29-afbf-5478617b00f6" Manufacturer="Elastic">
     <Package InstallerVersion="200" Compressed="yes" Platform="x64" SummaryCodepage="Windows-1252" Languages="1033" InstallScope="perMachine" />
     <Media Id="1" Cabinet="Elasticsearch_5.5.2_.cab" EmbedCab="yes" />
@@ -29,23 +29,25 @@
             <Directory Id="INSTALLDIR.bin" Name="bin">
 
               <Component Id="Component.elasticsearch_keystore.bat" Guid="daaa2cba-a1ed-4f29-afbf-547886c8d35a" Win64="yes">
-                <RemoveFile Id="elasticsearch_keystore.bat" Name="elasticsearch_keystore.bat" On="both" />
+                <RemoveFile Id="elasticsearch_keystore.bat" Name="elasticsearch-keystore.bat" On="both" />
                 <File Id="elasticsearch_keystore.bat" Source="..\..\..\build\in\elasticsearch-5.5.2\bin\elasticsearch-keystore.bat" />
               </Component>
 
               <Component Id="Component.elasticsearch_plugin.bat" Guid="daaa2cba-a1ed-4f29-afbf-54780b44f88c" Win64="yes">
-                <RemoveFile Id="elasticsearch_plugin.bat" Name="elasticsearch_plugin.bat" On="both" />
+                <RemoveFile Id="elasticsearch_plugin.bat" Name="elasticsearch-plugin.bat" On="both" />
                 <File Id="elasticsearch_plugin.bat" Source="..\..\..\build\in\elasticsearch-5.5.2\bin\elasticsearch-plugin.bat" />
               </Component>
 
               <Component Id="Component.elasticsearch_translog.bat" Guid="daaa2cba-a1ed-4f29-afbf-547861a30033" Win64="yes">
-                <RemoveFile Id="elasticsearch_translog.bat" Name="elasticsearch_translog.bat" On="both" />
+                <RemoveFile Id="elasticsearch_translog.bat" Name="elasticsearch-translog.bat" On="both" />
                 <File Id="elasticsearch_translog.bat" Source="..\..\..\build\in\elasticsearch-5.5.2\bin\elasticsearch-translog.bat" />
               </Component>
 
               <Component Id="Component.elasticsearch.exe" Guid="daaa2cba-a1ed-4f29-afbf-5478f1f18046" Win64="yes">
                 <RemoveFile Id="elasticsearch.exe" Name="elasticsearch.exe" On="both" />
                 <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-5.5.2\bin\elasticsearch.exe" />
+
+                <ServiceControl Id="elasticsearch.exe" Name="Elasticsearch" Stop="both" Wait="yes" />
               </Component>
 
             </Directory>
@@ -72,177 +74,177 @@
             <Directory Id="INSTALLDIR.lib" Name="lib">
 
               <Component Id="Component.elasticsearch_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478134af94a" Win64="yes">
-                <RemoveFile Id="elasticsearch_5.5.2.jar" Name="elasticsearch_5.5.2.jar" On="both" />
+                <RemoveFile Id="elasticsearch_5.5.2.jar" Name="elasticsearch-5.5.2.jar" On="both" />
                 <File Id="elasticsearch_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\elasticsearch-5.5.2.jar" />
               </Component>
 
               <Component Id="Component.HdrHistogram_2.1.9.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780dd2332f" Win64="yes">
-                <RemoveFile Id="HdrHistogram_2.1.9.jar" Name="HdrHistogram_2.1.9.jar" On="both" />
+                <RemoveFile Id="HdrHistogram_2.1.9.jar" Name="HdrHistogram-2.1.9.jar" On="both" />
                 <File Id="HdrHistogram_2.1.9.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\HdrHistogram-2.1.9.jar" />
               </Component>
 
               <Component Id="Component.hppc_0.7.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fa74fa4a" Win64="yes">
-                <RemoveFile Id="hppc_0.7.1.jar" Name="hppc_0.7.1.jar" On="both" />
+                <RemoveFile Id="hppc_0.7.1.jar" Name="hppc-0.7.1.jar" On="both" />
                 <File Id="hppc_0.7.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\hppc-0.7.1.jar" />
               </Component>
 
               <Component Id="Component.jackson_core_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-547893aa28cb" Win64="yes">
-                <RemoveFile Id="jackson_core_2.8.6.jar" Name="jackson_core_2.8.6.jar" On="both" />
+                <RemoveFile Id="jackson_core_2.8.6.jar" Name="jackson-core-2.8.6.jar" On="both" />
                 <File Id="jackson_core_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\jackson-core-2.8.6.jar" />
               </Component>
 
               <Component Id="Component._...kson_dataformat_cbor_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-547861586cf6" Win64="yes">
-                <RemoveFile Id="_...kson_dataformat_cbor_2.8.6.jar" Name="_...kson_dataformat_cbor_2.8.6.jar" On="both" />
+                <RemoveFile Id="_...kson_dataformat_cbor_2.8.6.jar" Name="jackson-dataformat-cbor-2.8.6.jar" On="both" />
                 <File Id="_...kson_dataformat_cbor_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\jackson-dataformat-cbor-2.8.6.jar" />
               </Component>
 
               <Component Id="Component._...son_dataformat_smile_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784de96360" Win64="yes">
-                <RemoveFile Id="_...son_dataformat_smile_2.8.6.jar" Name="_...son_dataformat_smile_2.8.6.jar" On="both" />
+                <RemoveFile Id="_...son_dataformat_smile_2.8.6.jar" Name="jackson-dataformat-smile-2.8.6.jar" On="both" />
                 <File Id="_...son_dataformat_smile_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\jackson-dataformat-smile-2.8.6.jar" />
               </Component>
 
               <Component Id="Component._...kson_dataformat_yaml_2.8.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478c6651b54" Win64="yes">
-                <RemoveFile Id="_...kson_dataformat_yaml_2.8.6.jar" Name="_...kson_dataformat_yaml_2.8.6.jar" On="both" />
+                <RemoveFile Id="_...kson_dataformat_yaml_2.8.6.jar" Name="jackson-dataformat-yaml-2.8.6.jar" On="both" />
                 <File Id="_...kson_dataformat_yaml_2.8.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\jackson-dataformat-yaml-2.8.6.jar" />
               </Component>
 
               <Component Id="Component.java_version_checker_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478aabcc2cd" Win64="yes">
-                <RemoveFile Id="java_version_checker_5.5.2.jar" Name="java_version_checker_5.5.2.jar" On="both" />
+                <RemoveFile Id="java_version_checker_5.5.2.jar" Name="java-version-checker-5.5.2.jar" On="both" />
                 <File Id="java_version_checker_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\java-version-checker-5.5.2.jar" />
               </Component>
 
               <Component Id="Component.jna_4.4.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fa115652" Win64="yes">
-                <RemoveFile Id="jna_4.4.0.jar" Name="jna_4.4.0.jar" On="both" />
+                <RemoveFile Id="jna_4.4.0.jar" Name="jna-4.4.0.jar" On="both" />
                 <File Id="jna_4.4.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\jna-4.4.0.jar" />
               </Component>
 
               <Component Id="Component.joda_time_2.9.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d10c3044" Win64="yes">
-                <RemoveFile Id="joda_time_2.9.5.jar" Name="joda_time_2.9.5.jar" On="both" />
+                <RemoveFile Id="joda_time_2.9.5.jar" Name="joda-time-2.9.5.jar" On="both" />
                 <File Id="joda_time_2.9.5.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\joda-time-2.9.5.jar" />
               </Component>
 
               <Component Id="Component.jopt_simple_5.0.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780c1170ff" Win64="yes">
-                <RemoveFile Id="jopt_simple_5.0.2.jar" Name="jopt_simple_5.0.2.jar" On="both" />
+                <RemoveFile Id="jopt_simple_5.0.2.jar" Name="jopt-simple-5.0.2.jar" On="both" />
                 <File Id="jopt_simple_5.0.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\jopt-simple-5.0.2.jar" />
               </Component>
 
               <Component Id="Component.jts_1.13.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bde079f3" Win64="yes">
-                <RemoveFile Id="jts_1.13.jar" Name="jts_1.13.jar" On="both" />
+                <RemoveFile Id="jts_1.13.jar" Name="jts-1.13.jar" On="both" />
                 <File Id="jts_1.13.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\jts-1.13.jar" />
               </Component>
 
               <Component Id="Component.log4j_1.2_api_2.8.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478cd896f3f" Win64="yes">
-                <RemoveFile Id="log4j_1.2_api_2.8.2.jar" Name="log4j_1.2_api_2.8.2.jar" On="both" />
+                <RemoveFile Id="log4j_1.2_api_2.8.2.jar" Name="log4j-1.2-api-2.8.2.jar" On="both" />
                 <File Id="log4j_1.2_api_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\log4j-1.2-api-2.8.2.jar" />
               </Component>
 
               <Component Id="Component.log4j_api_2.8.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547830b6218a" Win64="yes">
-                <RemoveFile Id="log4j_api_2.8.2.jar" Name="log4j_api_2.8.2.jar" On="both" />
+                <RemoveFile Id="log4j_api_2.8.2.jar" Name="log4j-api-2.8.2.jar" On="both" />
                 <File Id="log4j_api_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\log4j-api-2.8.2.jar" />
               </Component>
 
               <Component Id="Component.log4j_core_2.8.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789b3cb698" Win64="yes">
-                <RemoveFile Id="log4j_core_2.8.2.jar" Name="log4j_core_2.8.2.jar" On="both" />
+                <RemoveFile Id="log4j_core_2.8.2.jar" Name="log4j-core-2.8.2.jar" On="both" />
                 <File Id="log4j_core_2.8.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\log4j-core-2.8.2.jar" />
               </Component>
 
               <Component Id="Component._...ene_analyzers_common_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547818972dca" Win64="yes">
-                <RemoveFile Id="_...ene_analyzers_common_6.6.0.jar" Name="_...ene_analyzers_common_6.6.0.jar" On="both" />
+                <RemoveFile Id="_...ene_analyzers_common_6.6.0.jar" Name="lucene-analyzers-common-6.6.0.jar" On="both" />
                 <File Id="_...ene_analyzers_common_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-analyzers-common-6.6.0.jar" />
               </Component>
 
               <Component Id="Component._...cene_backward_codecs_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478587b7ac6" Win64="yes">
-                <RemoveFile Id="_...cene_backward_codecs_6.6.0.jar" Name="_...cene_backward_codecs_6.6.0.jar" On="both" />
+                <RemoveFile Id="_...cene_backward_codecs_6.6.0.jar" Name="lucene-backward-codecs-6.6.0.jar" On="both" />
                 <File Id="_...cene_backward_codecs_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-backward-codecs-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_core_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547820309523" Win64="yes">
-                <RemoveFile Id="lucene_core_6.6.0.jar" Name="lucene_core_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_core_6.6.0.jar" Name="lucene-core-6.6.0.jar" On="both" />
                 <File Id="lucene_core_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-core-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_grouping_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478200823f6" Win64="yes">
-                <RemoveFile Id="lucene_grouping_6.6.0.jar" Name="lucene_grouping_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_grouping_6.6.0.jar" Name="lucene-grouping-6.6.0.jar" On="both" />
                 <File Id="lucene_grouping_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-grouping-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_highlighter_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478cf520fdb" Win64="yes">
-                <RemoveFile Id="lucene_highlighter_6.6.0.jar" Name="lucene_highlighter_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_highlighter_6.6.0.jar" Name="lucene-highlighter-6.6.0.jar" On="both" />
                 <File Id="lucene_highlighter_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-highlighter-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_join_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54788bdd052a" Win64="yes">
-                <RemoveFile Id="lucene_join_6.6.0.jar" Name="lucene_join_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_join_6.6.0.jar" Name="lucene-join-6.6.0.jar" On="both" />
                 <File Id="lucene_join_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-join-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_memory_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547821ad2a45" Win64="yes">
-                <RemoveFile Id="lucene_memory_6.6.0.jar" Name="lucene_memory_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_memory_6.6.0.jar" Name="lucene-memory-6.6.0.jar" On="both" />
                 <File Id="lucene_memory_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-memory-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_misc_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547868e10357" Win64="yes">
-                <RemoveFile Id="lucene_misc_6.6.0.jar" Name="lucene_misc_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_misc_6.6.0.jar" Name="lucene-misc-6.6.0.jar" On="both" />
                 <File Id="lucene_misc_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-misc-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_queries_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478acaa136d" Win64="yes">
-                <RemoveFile Id="lucene_queries_6.6.0.jar" Name="lucene_queries_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_queries_6.6.0.jar" Name="lucene-queries-6.6.0.jar" On="both" />
                 <File Id="lucene_queries_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-queries-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_queryparser_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785a63e130" Win64="yes">
-                <RemoveFile Id="lucene_queryparser_6.6.0.jar" Name="lucene_queryparser_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_queryparser_6.6.0.jar" Name="lucene-queryparser-6.6.0.jar" On="both" />
                 <File Id="lucene_queryparser_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-queryparser-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_sandbox_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547865c0a387" Win64="yes">
-                <RemoveFile Id="lucene_sandbox_6.6.0.jar" Name="lucene_sandbox_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_sandbox_6.6.0.jar" Name="lucene-sandbox-6.6.0.jar" On="both" />
                 <File Id="lucene_sandbox_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-sandbox-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_spatial_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785099eaf2" Win64="yes">
-                <RemoveFile Id="lucene_spatial_6.6.0.jar" Name="lucene_spatial_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_spatial_6.6.0.jar" Name="lucene-spatial-6.6.0.jar" On="both" />
                 <File Id="lucene_spatial_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-spatial-6.6.0.jar" />
               </Component>
 
               <Component Id="Component._...ucene_spatial_extras_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478101d1172" Win64="yes">
-                <RemoveFile Id="_...ucene_spatial_extras_6.6.0.jar" Name="_...ucene_spatial_extras_6.6.0.jar" On="both" />
+                <RemoveFile Id="_...ucene_spatial_extras_6.6.0.jar" Name="lucene-spatial-extras-6.6.0.jar" On="both" />
                 <File Id="_...ucene_spatial_extras_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-spatial-extras-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_spatial3d_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fe531cc7" Win64="yes">
-                <RemoveFile Id="lucene_spatial3d_6.6.0.jar" Name="lucene_spatial3d_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_spatial3d_6.6.0.jar" Name="lucene-spatial3d-6.6.0.jar" On="both" />
                 <File Id="lucene_spatial3d_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-spatial3d-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.lucene_suggest_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784c90c821" Win64="yes">
-                <RemoveFile Id="lucene_suggest_6.6.0.jar" Name="lucene_suggest_6.6.0.jar" On="both" />
+                <RemoveFile Id="lucene_suggest_6.6.0.jar" Name="lucene-suggest-6.6.0.jar" On="both" />
                 <File Id="lucene_suggest_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\lucene-suggest-6.6.0.jar" />
               </Component>
 
               <Component Id="Component.plugin_cli_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478adc2650f" Win64="yes">
-                <RemoveFile Id="plugin_cli_5.5.2.jar" Name="plugin_cli_5.5.2.jar" On="both" />
+                <RemoveFile Id="plugin_cli_5.5.2.jar" Name="plugin-cli-5.5.2.jar" On="both" />
                 <File Id="plugin_cli_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\plugin-cli-5.5.2.jar" />
               </Component>
 
               <Component Id="Component.securesm_1.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478665b59f8" Win64="yes">
-                <RemoveFile Id="securesm_1.1.jar" Name="securesm_1.1.jar" On="both" />
+                <RemoveFile Id="securesm_1.1.jar" Name="securesm-1.1.jar" On="both" />
                 <File Id="securesm_1.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\securesm-1.1.jar" />
               </Component>
 
               <Component Id="Component.snakeyaml_1.15.jar" Guid="daaa2cba-a1ed-4f29-afbf-547878b9ea35" Win64="yes">
-                <RemoveFile Id="snakeyaml_1.15.jar" Name="snakeyaml_1.15.jar" On="both" />
+                <RemoveFile Id="snakeyaml_1.15.jar" Name="snakeyaml-1.15.jar" On="both" />
                 <File Id="snakeyaml_1.15.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\snakeyaml-1.15.jar" />
               </Component>
 
               <Component Id="Component.spatial4j_0.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780eb71a08" Win64="yes">
-                <RemoveFile Id="spatial4j_0.6.jar" Name="spatial4j_0.6.jar" On="both" />
+                <RemoveFile Id="spatial4j_0.6.jar" Name="spatial4j-0.6.jar" On="both" />
                 <File Id="spatial4j_0.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\spatial4j-0.6.jar" />
               </Component>
 
               <Component Id="Component.t_digest_3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547811092469" Win64="yes">
-                <RemoveFile Id="t_digest_3.0.jar" Name="t_digest_3.0.jar" On="both" />
+                <RemoveFile Id="t_digest_3.0.jar" Name="t-digest-3.0.jar" On="both" />
                 <File Id="t_digest_3.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\lib\t-digest-3.0.jar" />
               </Component>
 
@@ -252,12 +254,12 @@
               <Directory Id="INSTALLDIR.modules.aggs_matrix_stats" Name="aggs-matrix-stats">
 
                 <Component Id="Component.aggs_matrix_stats_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478261442b7" Win64="yes">
-                  <RemoveFile Id="aggs_matrix_stats_5.5.2.jar" Name="aggs_matrix_stats_5.5.2.jar" On="both" />
+                  <RemoveFile Id="aggs_matrix_stats_5.5.2.jar" Name="aggs-matrix-stats-5.5.2.jar" On="both" />
                   <File Id="aggs_matrix_stats_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\aggs-matrix-stats\aggs-matrix-stats-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties" Guid="daaa2cba-a1ed-4f29-afbf-547893a03ecb" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties" Name="plugin_descriptor.properties" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\aggs-matrix-stats\plugin-descriptor.properties" />
                 </Component>
 
@@ -266,22 +268,22 @@
               <Directory Id="INSTALLDIR.modules.ingest_common" Name="ingest-common">
 
                 <Component Id="Component.ingest_common_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547872ac11de" Win64="yes">
-                  <RemoveFile Id="ingest_common_5.5.2.jar" Name="ingest_common_5.5.2.jar" On="both" />
+                  <RemoveFile Id="ingest_common_5.5.2.jar" Name="ingest-common-5.5.2.jar" On="both" />
                   <File Id="ingest_common_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\ingest-common\ingest-common-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.jcodings_1.0.12.jar" Guid="daaa2cba-a1ed-4f29-afbf-54787d9200c1" Win64="yes">
-                  <RemoveFile Id="jcodings_1.0.12.jar" Name="jcodings_1.0.12.jar" On="both" />
+                  <RemoveFile Id="jcodings_1.0.12.jar" Name="jcodings-1.0.12.jar" On="both" />
                   <File Id="jcodings_1.0.12.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\ingest-common\jcodings-1.0.12.jar" />
                 </Component>
 
                 <Component Id="Component.joni_2.1.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478796f85a6" Win64="yes">
-                  <RemoveFile Id="joni_2.1.6.jar" Name="joni_2.1.6.jar" On="both" />
+                  <RemoveFile Id="joni_2.1.6.jar" Name="joni-2.1.6.jar" On="both" />
                   <File Id="joni_2.1.6.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\ingest-common\joni-2.1.6.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.1" Guid="daaa2cba-a1ed-4f29-afbf-5478fec21303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.1" Name="plugin_descriptor.properties.1" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.1" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.1" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\ingest-common\plugin-descriptor.properties" />
                 </Component>
 
@@ -290,42 +292,42 @@
               <Directory Id="INSTALLDIR.modules.lang_expression" Name="lang-expression">
 
                 <Component Id="Component.antlr4_runtime_4.5.1_1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789ca4f8e5" Win64="yes">
-                  <RemoveFile Id="antlr4_runtime_4.5.1_1.jar" Name="antlr4_runtime_4.5.1_1.jar" On="both" />
+                  <RemoveFile Id="antlr4_runtime_4.5.1_1.jar" Name="antlr4-runtime-4.5.1-1.jar" On="both" />
                   <File Id="antlr4_runtime_4.5.1_1.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\antlr4-runtime-4.5.1-1.jar" />
                 </Component>
 
                 <Component Id="Component.asm_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478540b35bc" Win64="yes">
-                  <RemoveFile Id="asm_5.0.4.jar" Name="asm_5.0.4.jar" On="both" />
+                  <RemoveFile Id="asm_5.0.4.jar" Name="asm-5.0.4.jar" On="both" />
                   <File Id="asm_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\asm-5.0.4.jar" />
                 </Component>
 
                 <Component Id="Component.asm_commons_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786365adc3" Win64="yes">
-                  <RemoveFile Id="asm_commons_5.0.4.jar" Name="asm_commons_5.0.4.jar" On="both" />
+                  <RemoveFile Id="asm_commons_5.0.4.jar" Name="asm-commons-5.0.4.jar" On="both" />
                   <File Id="asm_commons_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\asm-commons-5.0.4.jar" />
                 </Component>
 
                 <Component Id="Component.asm_tree_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-547838441039" Win64="yes">
-                  <RemoveFile Id="asm_tree_5.0.4.jar" Name="asm_tree_5.0.4.jar" On="both" />
+                  <RemoveFile Id="asm_tree_5.0.4.jar" Name="asm-tree-5.0.4.jar" On="both" />
                   <File Id="asm_tree_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\asm-tree-5.0.4.jar" />
                 </Component>
 
                 <Component Id="Component.lang_expression_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785ebeb170" Win64="yes">
-                  <RemoveFile Id="lang_expression_5.5.2.jar" Name="lang_expression_5.5.2.jar" On="both" />
+                  <RemoveFile Id="lang_expression_5.5.2.jar" Name="lang-expression-5.5.2.jar" On="both" />
                   <File Id="lang_expression_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\lang-expression-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.lucene_expressions_6.6.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bdb326c8" Win64="yes">
-                  <RemoveFile Id="lucene_expressions_6.6.0.jar" Name="lucene_expressions_6.6.0.jar" On="both" />
+                  <RemoveFile Id="lucene_expressions_6.6.0.jar" Name="lucene-expressions-6.6.0.jar" On="both" />
                   <File Id="lucene_expressions_6.6.0.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\lucene-expressions-6.6.0.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.2" Guid="daaa2cba-a1ed-4f29-afbf-5478a0f11303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.2" Name="plugin_descriptor.properties.2" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.2" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.2" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy" Guid="daaa2cba-a1ed-4f29-afbf-547883f186ed" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy" Name="plugin_security.policy" On="both" />
+                  <RemoveFile Id="plugin_security.policy" Name="plugin-security.policy" On="both" />
                   <File Id="plugin_security.policy" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-expression\plugin-security.policy" />
                 </Component>
 
@@ -334,22 +336,22 @@
               <Directory Id="INSTALLDIR.modules.lang_groovy" Name="lang-groovy">
 
                 <Component Id="Component.groovy_2.4.6_indy.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478c4b086e8" Win64="yes">
-                  <RemoveFile Id="groovy_2.4.6_indy.jar" Name="groovy_2.4.6_indy.jar" On="both" />
+                  <RemoveFile Id="groovy_2.4.6_indy.jar" Name="groovy-2.4.6-indy.jar" On="both" />
                   <File Id="groovy_2.4.6_indy.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-groovy\groovy-2.4.6-indy.jar" />
                 </Component>
 
                 <Component Id="Component.lang_groovy_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478add966ec" Win64="yes">
-                  <RemoveFile Id="lang_groovy_5.5.2.jar" Name="lang_groovy_5.5.2.jar" On="both" />
+                  <RemoveFile Id="lang_groovy_5.5.2.jar" Name="lang-groovy-5.5.2.jar" On="both" />
                   <File Id="lang_groovy_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-groovy\lang-groovy-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.3" Guid="daaa2cba-a1ed-4f29-afbf-5478158c1303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.3" Name="plugin_descriptor.properties.3" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.3" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.3" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-groovy\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy.1" Guid="daaa2cba-a1ed-4f29-afbf-5478375400dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.1" Name="plugin_security.policy.1" On="both" />
+                  <RemoveFile Id="plugin_security.policy.1" Name="plugin-security.policy" On="both" />
                   <File Id="plugin_security.policy.1" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-groovy\plugin-security.policy" />
                 </Component>
 
@@ -358,22 +360,22 @@
               <Directory Id="INSTALLDIR.modules.lang_mustache" Name="lang-mustache">
 
                 <Component Id="Component.compiler_0.9.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-547820e67731" Win64="yes">
-                  <RemoveFile Id="compiler_0.9.3.jar" Name="compiler_0.9.3.jar" On="both" />
+                  <RemoveFile Id="compiler_0.9.3.jar" Name="compiler-0.9.3.jar" On="both" />
                   <File Id="compiler_0.9.3.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-mustache\compiler-0.9.3.jar" />
                 </Component>
 
                 <Component Id="Component.lang_mustache_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784419a6b3" Win64="yes">
-                  <RemoveFile Id="lang_mustache_5.5.2.jar" Name="lang_mustache_5.5.2.jar" On="both" />
+                  <RemoveFile Id="lang_mustache_5.5.2.jar" Name="lang-mustache-5.5.2.jar" On="both" />
                   <File Id="lang_mustache_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-mustache\lang-mustache-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.4" Guid="daaa2cba-a1ed-4f29-afbf-5478b7bb1303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.4" Name="plugin_descriptor.properties.4" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.4" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.4" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-mustache\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy.2" Guid="daaa2cba-a1ed-4f29-afbf-5478375100dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.2" Name="plugin_security.policy.2" On="both" />
+                  <RemoveFile Id="plugin_security.policy.2" Name="plugin-security.policy" On="both" />
                   <File Id="plugin_security.policy.2" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-mustache\plugin-security.policy" />
                 </Component>
 
@@ -382,27 +384,27 @@
               <Directory Id="INSTALLDIR.modules.lang_painless" Name="lang-painless">
 
                 <Component Id="Component.antlr4_runtime_4.5.1_1.jar.1" Guid="daaa2cba-a1ed-4f29-afbf-54783beb6496" Win64="yes">
-                  <RemoveFile Id="antlr4_runtime_4.5.1_1.jar.1" Name="antlr4_runtime_4.5.1_1.jar.1" On="both" />
+                  <RemoveFile Id="antlr4_runtime_4.5.1_1.jar.1" Name="antlr4-runtime-4.5.1-1.jar" On="both" />
                   <File Id="antlr4_runtime_4.5.1_1.jar.1" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-painless\antlr4-runtime-4.5.1-1.jar" />
                 </Component>
 
                 <Component Id="Component.asm_debug_all_5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547850638076" Win64="yes">
-                  <RemoveFile Id="asm_debug_all_5.1.jar" Name="asm_debug_all_5.1.jar" On="both" />
+                  <RemoveFile Id="asm_debug_all_5.1.jar" Name="asm-debug-all-5.1.jar" On="both" />
                   <File Id="asm_debug_all_5.1.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-painless\asm-debug-all-5.1.jar" />
                 </Component>
 
                 <Component Id="Component.lang_painless_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547840c9a1df" Win64="yes">
-                  <RemoveFile Id="lang_painless_5.5.2.jar" Name="lang_painless_5.5.2.jar" On="both" />
+                  <RemoveFile Id="lang_painless_5.5.2.jar" Name="lang-painless-5.5.2.jar" On="both" />
                   <File Id="lang_painless_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-painless\lang-painless-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.5" Guid="daaa2cba-a1ed-4f29-afbf-54782b561303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.5" Name="plugin_descriptor.properties.5" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.5" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.5" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-painless\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy.3" Guid="daaa2cba-a1ed-4f29-afbf-5478375200dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.3" Name="plugin_security.policy.3" On="both" />
+                  <RemoveFile Id="plugin_security.policy.3" Name="plugin-security.policy" On="both" />
                   <File Id="plugin_security.policy.3" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\lang-painless\plugin-security.policy" />
                 </Component>
 
@@ -411,12 +413,12 @@
               <Directory Id="INSTALLDIR.modules.parent_join" Name="parent-join">
 
                 <Component Id="Component.parent_join_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478e8859b18" Win64="yes">
-                  <RemoveFile Id="parent_join_5.5.2.jar" Name="parent_join_5.5.2.jar" On="both" />
+                  <RemoveFile Id="parent_join_5.5.2.jar" Name="parent-join-5.5.2.jar" On="both" />
                   <File Id="parent_join_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\parent-join\parent-join-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.6" Guid="daaa2cba-a1ed-4f29-afbf-5478ce851303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.6" Name="plugin_descriptor.properties.6" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.6" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.6" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\parent-join\plugin-descriptor.properties" />
                 </Component>
 
@@ -425,12 +427,12 @@
               <Directory Id="INSTALLDIR.modules.percolator" Name="percolator">
 
                 <Component Id="Component.percolator_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d775ddf2" Win64="yes">
-                  <RemoveFile Id="percolator_5.5.2.jar" Name="percolator_5.5.2.jar" On="both" />
+                  <RemoveFile Id="percolator_5.5.2.jar" Name="percolator-5.5.2.jar" On="both" />
                   <File Id="percolator_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\percolator\percolator-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.7" Guid="daaa2cba-a1ed-4f29-afbf-547842201303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.7" Name="plugin_descriptor.properties.7" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.7" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.7" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\percolator\plugin-descriptor.properties" />
                 </Component>
 
@@ -439,47 +441,47 @@
               <Directory Id="INSTALLDIR.modules.reindex" Name="reindex">
 
                 <Component Id="Component.commons_codec_1.10.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478796f5d50" Win64="yes">
-                  <RemoveFile Id="commons_codec_1.10.jar" Name="commons_codec_1.10.jar" On="both" />
+                  <RemoveFile Id="commons_codec_1.10.jar" Name="commons-codec-1.10.jar" On="both" />
                   <File Id="commons_codec_1.10.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\commons-codec-1.10.jar" />
                 </Component>
 
                 <Component Id="Component.commons_logging_1.1.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-547868ab35a8" Win64="yes">
-                  <RemoveFile Id="commons_logging_1.1.3.jar" Name="commons_logging_1.1.3.jar" On="both" />
+                  <RemoveFile Id="commons_logging_1.1.3.jar" Name="commons-logging-1.1.3.jar" On="both" />
                   <File Id="commons_logging_1.1.3.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\commons-logging-1.1.3.jar" />
                 </Component>
 
                 <Component Id="Component.httpasyncclient_4.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547826e95944" Win64="yes">
-                  <RemoveFile Id="httpasyncclient_4.1.2.jar" Name="httpasyncclient_4.1.2.jar" On="both" />
+                  <RemoveFile Id="httpasyncclient_4.1.2.jar" Name="httpasyncclient-4.1.2.jar" On="both" />
                   <File Id="httpasyncclient_4.1.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\httpasyncclient-4.1.2.jar" />
                 </Component>
 
                 <Component Id="Component.httpclient_4.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783b3be93b" Win64="yes">
-                  <RemoveFile Id="httpclient_4.5.2.jar" Name="httpclient_4.5.2.jar" On="both" />
+                  <RemoveFile Id="httpclient_4.5.2.jar" Name="httpclient-4.5.2.jar" On="both" />
                   <File Id="httpclient_4.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\httpclient-4.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.httpcore_4.4.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-547841525bd1" Win64="yes">
-                  <RemoveFile Id="httpcore_4.4.5.jar" Name="httpcore_4.4.5.jar" On="both" />
+                  <RemoveFile Id="httpcore_4.4.5.jar" Name="httpcore-4.4.5.jar" On="both" />
                   <File Id="httpcore_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\httpcore-4.4.5.jar" />
                 </Component>
 
                 <Component Id="Component.httpcore_nio_4.4.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fc877082" Win64="yes">
-                  <RemoveFile Id="httpcore_nio_4.4.5.jar" Name="httpcore_nio_4.4.5.jar" On="both" />
+                  <RemoveFile Id="httpcore_nio_4.4.5.jar" Name="httpcore-nio-4.4.5.jar" On="both" />
                   <File Id="httpcore_nio_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\httpcore-nio-4.4.5.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.8" Guid="daaa2cba-a1ed-4f29-afbf-5478e44f1303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.8" Name="plugin_descriptor.properties.8" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.8" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.8" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.reindex_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547847d519c3" Win64="yes">
-                  <RemoveFile Id="reindex_5.5.2.jar" Name="reindex_5.5.2.jar" On="both" />
+                  <RemoveFile Id="reindex_5.5.2.jar" Name="reindex-5.5.2.jar" On="both" />
                   <File Id="reindex_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\reindex-5.5.2.jar" />
                 </Component>
 
                 <Component Id="Component.rest_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789c2d3a5b" Win64="yes">
-                  <RemoveFile Id="rest_5.5.2.jar" Name="rest_5.5.2.jar" On="both" />
+                  <RemoveFile Id="rest_5.5.2.jar" Name="rest-5.5.2.jar" On="both" />
                   <File Id="rest_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\reindex\rest-5.5.2.jar" />
                 </Component>
 
@@ -488,22 +490,22 @@
               <Directory Id="INSTALLDIR.modules.transport_netty3" Name="transport-netty3">
 
                 <Component Id="Component.netty_3.10.6.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786aa11ed2" Win64="yes">
-                  <RemoveFile Id="netty_3.10.6.Final.jar" Name="netty_3.10.6.Final.jar" On="both" />
+                  <RemoveFile Id="netty_3.10.6.Final.jar" Name="netty-3.10.6.Final.jar" On="both" />
                   <File Id="netty_3.10.6.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty3\netty-3.10.6.Final.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.9" Guid="daaa2cba-a1ed-4f29-afbf-547859ea1303" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.9" Name="plugin_descriptor.properties.9" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.9" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.9" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty3\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy.4" Guid="daaa2cba-a1ed-4f29-afbf-5478374f00dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.4" Name="plugin_security.policy.4" On="both" />
+                  <RemoveFile Id="plugin_security.policy.4" Name="plugin-security.policy" On="both" />
                   <File Id="plugin_security.policy.4" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty3\plugin-security.policy" />
                 </Component>
 
                 <Component Id="Component.transport_netty3_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478daa31d4e" Win64="yes">
-                  <RemoveFile Id="transport_netty3_5.5.2.jar" Name="transport_netty3_5.5.2.jar" On="both" />
+                  <RemoveFile Id="transport_netty3_5.5.2.jar" Name="transport-netty3-5.5.2.jar" On="both" />
                   <File Id="transport_netty3_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty3\transport-netty3-5.5.2.jar" />
                 </Component>
 
@@ -512,52 +514,52 @@
               <Directory Id="INSTALLDIR.modules.transport_netty4" Name="transport-netty4">
 
                 <Component Id="Component.netty_buffer_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-547881351e3b" Win64="yes">
-                  <RemoveFile Id="netty_buffer_4.1.11.Final.jar" Name="netty_buffer_4.1.11.Final.jar" On="both" />
+                  <RemoveFile Id="netty_buffer_4.1.11.Final.jar" Name="netty-buffer-4.1.11.Final.jar" On="both" />
                   <File Id="netty_buffer_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\netty-buffer-4.1.11.Final.jar" />
                 </Component>
 
                 <Component Id="Component.netty_codec_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-547885592eca" Win64="yes">
-                  <RemoveFile Id="netty_codec_4.1.11.Final.jar" Name="netty_codec_4.1.11.Final.jar" On="both" />
+                  <RemoveFile Id="netty_codec_4.1.11.Final.jar" Name="netty-codec-4.1.11.Final.jar" On="both" />
                   <File Id="netty_codec_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\netty-codec-4.1.11.Final.jar" />
                 </Component>
 
                 <Component Id="Component._...ty_codec_http_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d644a9fe" Win64="yes">
-                  <RemoveFile Id="_...ty_codec_http_4.1.11.Final.jar" Name="_...ty_codec_http_4.1.11.Final.jar" On="both" />
+                  <RemoveFile Id="_...ty_codec_http_4.1.11.Final.jar" Name="netty-codec-http-4.1.11.Final.jar" On="both" />
                   <File Id="_...ty_codec_http_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\netty-codec-http-4.1.11.Final.jar" />
                 </Component>
 
                 <Component Id="Component.netty_common_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bc7fe90e" Win64="yes">
-                  <RemoveFile Id="netty_common_4.1.11.Final.jar" Name="netty_common_4.1.11.Final.jar" On="both" />
+                  <RemoveFile Id="netty_common_4.1.11.Final.jar" Name="netty-common-4.1.11.Final.jar" On="both" />
                   <File Id="netty_common_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\netty-common-4.1.11.Final.jar" />
                 </Component>
 
                 <Component Id="Component.netty_handler_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780908ab4a" Win64="yes">
-                  <RemoveFile Id="netty_handler_4.1.11.Final.jar" Name="netty_handler_4.1.11.Final.jar" On="both" />
+                  <RemoveFile Id="netty_handler_4.1.11.Final.jar" Name="netty-handler-4.1.11.Final.jar" On="both" />
                   <File Id="netty_handler_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\netty-handler-4.1.11.Final.jar" />
                 </Component>
 
                 <Component Id="Component._...etty_resolver_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785ae2d95f" Win64="yes">
-                  <RemoveFile Id="_...etty_resolver_4.1.11.Final.jar" Name="_...etty_resolver_4.1.11.Final.jar" On="both" />
+                  <RemoveFile Id="_...etty_resolver_4.1.11.Final.jar" Name="netty-resolver-4.1.11.Final.jar" On="both" />
                   <File Id="_...etty_resolver_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\netty-resolver-4.1.11.Final.jar" />
                 </Component>
 
                 <Component Id="Component._...tty_transport_4.1.11.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b258d01b" Win64="yes">
-                  <RemoveFile Id="_...tty_transport_4.1.11.Final.jar" Name="_...tty_transport_4.1.11.Final.jar" On="both" />
+                  <RemoveFile Id="_...tty_transport_4.1.11.Final.jar" Name="netty-transport-4.1.11.Final.jar" On="both" />
                   <File Id="_...tty_transport_4.1.11.Final.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\netty-transport-4.1.11.Final.jar" />
                 </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.10" Guid="daaa2cba-a1ed-4f29-afbf-5478c3802ae8" Win64="yes">
-                  <RemoveFile Id="plugin_descriptor.properties.10" Name="plugin_descriptor.properties.10" On="both" />
+                  <RemoveFile Id="plugin_descriptor.properties.10" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.10" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\plugin-descriptor.properties" />
                 </Component>
 
                 <Component Id="Component.plugin_security.policy.5" Guid="daaa2cba-a1ed-4f29-afbf-5478375000dd" Win64="yes">
-                  <RemoveFile Id="plugin_security.policy.5" Name="plugin_security.policy.5" On="both" />
+                  <RemoveFile Id="plugin_security.policy.5" Name="plugin-security.policy" On="both" />
                   <File Id="plugin_security.policy.5" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\plugin-security.policy" />
                 </Component>
 
                 <Component Id="Component.transport_netty4_5.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478ed7c1d4e" Win64="yes">
-                  <RemoveFile Id="transport_netty4_5.5.2.jar" Name="transport_netty4_5.5.2.jar" On="both" />
+                  <RemoveFile Id="transport_netty4_5.5.2.jar" Name="transport-netty4-5.5.2.jar" On="both" />
                   <File Id="transport_netty4_5.5.2.jar" Source="..\..\..\build\in\elasticsearch-5.5.2\modules\transport-netty4\transport-netty4-5.5.2.jar" />
                 </Component>
 
@@ -586,35 +588,35 @@
     <CustomAction Id="Action3SetProp_LOGSDIRECTORY" Property="LOGSDIRECTORY" Value="[%ALLUSERSPROFILE]\Elastic\Elasticsearch\logs" Return="check" Execute="immediate" />
     <CustomAction Id="Action4SetProp_NODENAME" Property="NODENAME" Value="[%COMPUTERNAME]" Return="check" Execute="immediate" />
     <CustomAction Id="ElasticsearchValidateArgumentsAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchValidateArguments" Return="check" Impersonate="no" Execute="immediate" />
-    <CustomAction Id="Set_ElasticsearchUninstallServiceAction_Props" Property="ElasticsearchUninstallServiceAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchUninstallServiceAction_Props" Property="ElasticsearchUninstallServiceAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchUninstallServiceAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchUninstallService" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchRollbackEnvironmentAction_Props" Property="ElasticsearchRollbackEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchRollbackEnvironmentAction_Props" Property="ElasticsearchRollbackEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchRollbackEnvironmentAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackEnvironment" Return="check" Impersonate="no" Execute="rollback" />
-    <CustomAction Id="Set_ElasticsearchUninstallPluginsAction_Props" Property="ElasticsearchUninstallPluginsAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchUninstallPluginsAction_Props" Property="ElasticsearchUninstallPluginsAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchUninstallPluginsAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchUninstallPlugins" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchRollbackDirectoriesAction_Props" Property="ElasticsearchRollbackDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchRollbackDirectoriesAction_Props" Property="ElasticsearchRollbackDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchRollbackDirectoriesAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackDirectories" Return="check" Impersonate="no" Execute="rollback" />
-    <CustomAction Id="Set_ElasticsearchUninstallDirectoriesAction_Props" Property="ElasticsearchUninstallDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchUninstallDirectoriesAction_Props" Property="ElasticsearchUninstallDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchUninstallDirectoriesAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchUninstallDirectories" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchRollbackServiceAction_Props" Property="ElasticsearchRollbackServiceAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
-    <CustomAction Id="ElasticsearchRollbackServiceAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackService" Return="check" Impersonate="no" Execute="rollback" />
-    <CustomAction Id="Set_ElasticsearchServiceStopAction_Props" Property="ElasticsearchServiceStopAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
-    <CustomAction Id="ElasticsearchServiceStopAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchServiceStop" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchUninstallEnvironmentAction_Props" Property="ElasticsearchUninstallEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchRollbackServiceStartAction_Props" Property="ElasticsearchRollbackServiceStartAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="ElasticsearchRollbackServiceStartAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackServiceStart" Return="check" Impersonate="no" Execute="rollback" />
+    <CustomAction Id="Set_ElasticsearchUninstallEnvironmentAction_Props" Property="ElasticsearchUninstallEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchUninstallEnvironmentAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchUninstallEnvironment" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchEnvironmentAction_Props" Property="ElasticsearchEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchRollbackInstallServiceAction_Props" Property="ElasticsearchRollbackInstallServiceAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="ElasticsearchRollbackInstallServiceAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchRollbackInstallService" Return="check" Impersonate="no" Execute="rollback" />
+    <CustomAction Id="Set_ElasticsearchEnvironmentAction_Props" Property="ElasticsearchEnvironmentAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchEnvironmentAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchEnvironment" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchDirectoriesAction_Props" Property="ElasticsearchDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchDirectoriesAction_Props" Property="ElasticsearchDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchDirectoriesAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchDirectories" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchConfigurationAction_Props" Property="ElasticsearchConfigurationAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchConfigurationAction_Props" Property="ElasticsearchConfigurationAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchConfigurationAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchConfiguration" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchJvmOptionsAction_Props" Property="ElasticsearchJvmOptionsAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchJvmOptionsAction_Props" Property="ElasticsearchJvmOptionsAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchJvmOptionsAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchJvmOptions" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchPluginsAction_Props" Property="ElasticsearchPluginsAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchPluginsAction_Props" Property="ElasticsearchPluginsAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchPluginsAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchPlugins" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchServiceInstallAction_Props" Property="ElasticsearchServiceInstallAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchServiceInstallAction_Props" Property="ElasticsearchServiceInstallAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchServiceInstallAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchServiceInstall" Return="check" Impersonate="no" Execute="deferred" />
-    <CustomAction Id="Set_ElasticsearchServiceStartAction_Props" Property="ElasticsearchServiceStartAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
+    <CustomAction Id="Set_ElasticsearchServiceStartAction_Props" Property="ElasticsearchServiceStartAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];PLUGINS=[PLUGINS];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIRECTORY.bin=[INSTALLDIRECTORY.bin];VERSION=[VERSION];REMOVE=[REMOVE];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchServiceStartAction" BinaryKey="ElasticsearchValidateArgumentsAction_File" DllEntry="ElasticsearchServiceStart" Return="check" Impersonate="no" Execute="deferred" />
     <CustomAction Id="PreventDowngrading" Error="Newer version already installed" />
 
@@ -755,19 +757,19 @@
       <Custom Action="Set_ElasticsearchRollbackEnvironmentAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackEnvironmentAction" Before="ElasticsearchEnvironmentAction" />
       <Custom Action="Set_ElasticsearchUninstallPluginsAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallPluginsAction" Before="ProcessComponents">UPGRADINGPRODUCTCODE OR REMOVE="ALL"</Custom>
+      <Custom Action="ElasticsearchUninstallPluginsAction" After="StopServices">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchRollbackDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackDirectoriesAction" Before="ElasticsearchDirectoriesAction" />
       <Custom Action="Set_ElasticsearchUninstallDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchUninstallDirectoriesAction" After="ElasticsearchUninstallEnvironmentAction">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
-      <Custom Action="Set_ElasticsearchRollbackServiceAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchRollbackServiceAction" Before="ElasticsearchServiceInstallAction" />
-      <Custom Action="Set_ElasticsearchServiceStopAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchServiceStopAction" After="InstallInitialize"> (1) </Custom>
+      <Custom Action="Set_ElasticsearchRollbackServiceStartAction_Props" After="InstallInitialize" />
+      <Custom Action="ElasticsearchRollbackServiceStartAction" Before="ElasticsearchServiceStartAction" />
       <Custom Action="Set_ElasticsearchUninstallEnvironmentAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchUninstallEnvironmentAction" After="ElasticsearchUninstallServiceAction"> (Installed) </Custom>
+      <Custom Action="ElasticsearchUninstallEnvironmentAction" After="ElasticsearchUninstallServiceAction">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+      <Custom Action="Set_ElasticsearchRollbackInstallServiceAction_Props" After="InstallInitialize" />
+      <Custom Action="ElasticsearchRollbackInstallServiceAction" Before="ElasticsearchServiceInstallAction" />
       <Custom Action="Set_ElasticsearchEnvironmentAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchEnvironmentAction" Before="InstallFinalize"> (NOT Installed) </Custom>
+      <Custom Action="ElasticsearchEnvironmentAction" After="InstallFiles"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchDirectoriesAction" After="ElasticsearchEnvironmentAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchConfigurationAction_Props" After="InstallInitialize" />
@@ -779,15 +781,17 @@
       <Custom Action="Set_ElasticsearchServiceInstallAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchServiceInstallAction" After="ElasticsearchPluginsAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchServiceStartAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchServiceStartAction" After="ElasticsearchServiceInstallAction"> (NOT Installed) </Custom>
+      <Custom Action="ElasticsearchServiceStartAction" After="ElasticsearchServiceInstallAction">(NOT Installed) AND INSTALLASSERVICE="true" AND STARTAFTERINSTALL="true"</Custom>
       <Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
 
-      <RemoveExistingProducts After="InstallValidate" />
+      <RemoveExistingProducts After="InstallFinalize" />
     </InstallExecuteSequence>
 
     <InstallUISequence>
       <Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
     </InstallUISequence>
+
+    <CustomActionRef Id="WixFailWhenDeferred" />
 
   </Product>
 </Wix>

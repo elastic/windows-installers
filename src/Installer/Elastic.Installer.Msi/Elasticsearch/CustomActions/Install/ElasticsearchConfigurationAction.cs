@@ -21,6 +21,5 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 		[CustomAction]
 		public static ActionResult ElasticsearchConfiguration(Session session) =>
 			session.Handle(() => new EditElasticsearchYamlTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
-
 	}
 }
