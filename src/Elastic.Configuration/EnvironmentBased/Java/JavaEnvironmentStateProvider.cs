@@ -21,10 +21,11 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 	{
 		private const string JreRootPath = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
 		private const string JdkRootPath = "SOFTWARE\\JavaSoft\\Java Development Kit";
+		private const string JavaHome = "JAVA_HOME";
 
-		public string JavaHomeProcessVariable => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Process);
-		public string JavaHomeUserVariable => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.User);
-		public string JavaHomeMachineVariable => Environment.GetEnvironmentVariable("JAVA_HOME", EnvironmentVariableTarget.Machine);
+		public string JavaHomeProcessVariable => Environment.GetEnvironmentVariable(JavaHome, EnvironmentVariableTarget.Process);
+		public string JavaHomeUserVariable => Environment.GetEnvironmentVariable(JavaHome, EnvironmentVariableTarget.User);
+		public string JavaHomeMachineVariable => Environment.GetEnvironmentVariable(JavaHome, EnvironmentVariableTarget.Machine);
 
 
 		public string JdkRegistry64 => RegistrySubKey(Registry64, JdkRootPath);

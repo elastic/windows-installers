@@ -7,15 +7,15 @@ Set-Location $currentDir
 
 $credentials = "elastic:changeme"
 
-Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous version" {
+Describe -Tag 'PreviousVersion' "Silent Install fail upgrade - Install previous version" {
 
 	$previousVersion = $env:PreviousEsVersion
 	
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $previousVersion
+    Invoke-SilentInstall -Version $previousVersion
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled $false
 
     $ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -27,7 +27,7 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
 
     Context-EsConfigEnvironmentVariable -Expected $ExpectedConfigFolder
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+	Context-PluginsInstalled
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $previousVersion"
@@ -39,23 +39,32 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
 
     Context-EmptyEventLog
 
-	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
+	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration
 
     Context-JvmOptions
 
-	# Insert some data
-	Context-InsertData -Credentials "elastic:changeme"
+	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version" {
+Describe -Tag 'PreviousVersion' "Silent Install fail upgrade - Fail when Upgrading" {
 
 	$version = $env:EsVersion
+	$startDate = Get-Date
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $version
+	Context "Failed installation" {
+		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1") -Version $version
 
-	# BUG: Service is not started *after* upgrade, start manually for now
+		It "Exit code is 1603" {
+			$exitCode | Should Be 1603
+		}
+	}
+
+	Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $version
+
+	# Existing version should still be installed and running
+	# NOTE: It may be in StartingPending to begin, after failed upgrade
 	Context "Elasticsearch service" {	
 		$service = Get-ElasticsearchService
 
@@ -64,7 +73,6 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version
         }
 
 		if ($service.Status -ne "Running") {
-			$service.Start()
 			$service.Refresh()
 			$startTime = Get-Date
 			$timeout = New-TimeSpan -Seconds 30
@@ -82,7 +90,7 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled $false
 
     $ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -94,27 +102,30 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version
 
     Context-EsConfigEnvironmentVariable -Expected $ExpectedConfigFolder
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+    Context-PluginsInstalled
 
-    Context-MsiRegistered
+	# previous version still installed
+    Context-MsiRegistered -Expected @{
+		Name = "Elasticsearch $previousVersion"
+		Caption = "Elasticsearch $previousVersion"
+		Version = $previousVersion
+	}
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
-
-	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
+	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration
 
     Context-JvmOptions
 
 	# Check inserted data still exists
-	Context-ReadData -Credentials $credentials
+	Context-ReadData
 }
 
-Describe -Tag 'PreviousVersion' "Silent Uninstall upgrade - Uninstall new version" {
+Describe -Tag 'PreviousVersion' "Silent Uninstall fail upgrade - Uninstall old version" {
 
-	$version = $env:EsVersion
+	$version = $env:PreviousEsVersion
 
     Invoke-SilentUninstall -Version $version
 
@@ -128,7 +139,7 @@ Describe -Tag 'PreviousVersion' "Silent Uninstall upgrade - Uninstall new versio
 
 	Context-ElasticsearchServiceNotInstalled
 
-	$ProgramFiles = Get-ProgramFilesFolder
+ 	$ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder

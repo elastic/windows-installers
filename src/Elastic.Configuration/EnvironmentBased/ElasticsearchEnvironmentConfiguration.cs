@@ -76,6 +76,8 @@ namespace Elastic.Configuration.EnvironmentBased
 		public void SetEsConfigEnvironmentVariable(string esConfig) => StateProvider.SetEsConfigEnvironmentVariable(esConfig);
 		
 		public void UnsetOldConfigVariable() => StateProvider.UnsetOldConfigVariable();
+
+		public bool RestoreOldConfigVariable() => StateProvider.RestoreOldConfigVariable();
 		
 		public override string ToString() =>
 			new StringBuilder()

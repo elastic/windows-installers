@@ -5,6 +5,7 @@ using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch
 {

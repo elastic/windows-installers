@@ -38,7 +38,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnUpgrades, v => v.ReadMoreOnUpgrades, nameof(ReadMoreOnUpgrades.Click));
 			this.ViewModel.ReadMoreOnUpgrades.Subscribe(x => Process.Start(string.Format(ViewResources.NoticeView_Elasticsearch_ReadMoreOnUpgrades, majorMinor)));
 
-			this.WhenAny(view => view.ViewModel.AlreadyInstalled, v=>v.GetValue())
+			this.WhenAny(view => view.ViewModel.ExistingVersionInstalled, v=>v.GetValue())
 				.Subscribe(v => {
 					this.ReadOnlyPropertiesGrid.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
 					this.ReadMoreOnUpgrades.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
