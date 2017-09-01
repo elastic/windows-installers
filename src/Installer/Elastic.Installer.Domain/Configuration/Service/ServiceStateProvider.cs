@@ -69,23 +69,27 @@ namespace Elastic.Installer.Domain.Configuration.Service
 			if (!SeesService) return;
 			using (var service = new ServiceController(_serviceName))
 			{
-				service.Start();
-				service.Refresh();
-
-				var sleepyTime = 250;
-				var ticksPerSleep = (int)Math.Floor(totalTicks / (timeToWait.TotalMilliseconds / sleepyTime));
 				var tickCount = 0;
-				var utcNow = DateTime.UtcNow;
 
-				while (service.Status != ServiceControllerStatus.Running)
+				if (service.Status != ServiceControllerStatus.Running)
 				{
-					if (DateTime.UtcNow - utcNow > timeToWait)
-						throw new System.ServiceProcess.TimeoutException($"Timeout has expired and the operation has not been completed in {timeToWait}.");
-
-					Thread.Sleep(sleepyTime);
+					service.Start();
 					service.Refresh();
-					_session.SendProgress(ticksPerSleep, "waiting to start");
-					tickCount += ticksPerSleep;
+
+					var sleepyTime = 250;
+					var ticksPerSleep = (int)Math.Floor(totalTicks / (timeToWait.TotalMilliseconds / sleepyTime));
+					var utcNow = DateTime.UtcNow;
+
+					while (service.Status != ServiceControllerStatus.Running)
+					{
+						if (DateTime.UtcNow - utcNow > timeToWait)
+							throw new System.ServiceProcess.TimeoutException($"Timeout has expired and the operation has not been completed in {timeToWait}.");
+
+						Thread.Sleep(sleepyTime);
+						service.Refresh();
+						_session.SendProgress(ticksPerSleep, "waiting to start");
+						tickCount += ticksPerSleep;
+					}
 				}
 
 				_session.SendProgress(totalTicks - tickCount, "started");

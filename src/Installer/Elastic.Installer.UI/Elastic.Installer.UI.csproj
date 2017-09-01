@@ -130,7 +130,6 @@
     <Compile Include="Kibana\Steps\PluginsView.xaml.cs">
       <DependentUpon>PluginsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Product.cs" />
     <Compile Include="Progress\InstallProgressCounter.cs" />
     <Compile Include="Progress\ProgressDialogControllerExtensions.cs" />
     <Compile Include="Progress\ProgressIndicator.cs" />
@@ -150,7 +149,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Shared\Configuration\EnvironmentBased\WixStateProvider.cs" />
     <Compile Include="Shared\Steps\ServiceView.xaml.cs">
       <DependentUpon>ServiceView.xaml</DependentUpon>
     </Compile>
@@ -332,7 +330,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)%(Filename)')" />
   </Target>
   <Import Project="..\..\..\.paket\paket.targets" />
   <Choose>

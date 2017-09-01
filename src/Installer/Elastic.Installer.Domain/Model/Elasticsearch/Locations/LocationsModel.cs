@@ -46,7 +46,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			ElasticsearchYamlConfiguration yamlConfiguration, 
 			VersionConfiguration versionConfig)
 		{
-			this.IsRelevant = !versionConfig.AlreadyInstalled;
+			this.IsRelevant = !versionConfig.ExistingVersionInstalled;
 			this.Header = "Locations";
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
