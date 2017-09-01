@@ -16,7 +16,7 @@ namespace Elastic.InstallerHosts.Kibana.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.Uninstalling)
+			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.IsUninstalling)
 				return true;
 
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;

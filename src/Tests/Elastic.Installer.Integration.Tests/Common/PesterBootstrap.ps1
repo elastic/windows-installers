@@ -41,10 +41,10 @@ $pester = "Pester"
 $date = Get-Date -format "yyyy-MM-ddT-HHmmssfff"
 $path = "$($drive)out\results-$TestDirName-$Version-$date.xml"
 
-# Load the Pester module into the current session. Install if not available
-Write-Output "import $pester"
 if(-not(Get-Module -Name $pester)) 
 { 
+	# Load the Pester module into the current session. Install if not available
+	Write-Output "import $pester"
 	if(Get-Module -Name $pester -ListAvailable) { 
        	Import-Module -Name $pester 
     }  

@@ -94,60 +94,6 @@ else {
 
 log "running $testcount test scenario(s)"
 
-# run all tests on one vagrant box
-if ($VagrantProvider -eq "quick-azure") {
-	try {
-		Copy-Item "$currentDir\common\Vagrantfile" -Destination $currentDir -Force
-		$dnsName = Get-RandomName
-		$testDirName = "Quick-Tests"
-		$resourceGroupName = $testDirName + "-" + (Get-RandomName -Count $(59 - $testDirName.Length))
-		$replacements = @{
-			"AZURE_DNS_NAME" = $dnsName
-			"AZURE_RESOURCE_GROUP_NAME" = $resourceGroupName
-		}
-		ReplaceInFile -File "Vagrantfile" -Replacements $replacements
-	
-		vagrant destroy azure -f
-		vagrant up azure
-
-		$session = [System.Management.Automation.Runspaces.PSSession](Get-WinRmSession -DnsName $dnsName)
-		$syncFolders = @{
-			"./Common/" = "/common"
-      		"./../../../build/out/" = "/out"
-		}
-
-		Copy-SyncedFoldersToRemote -Session $session -SyncFolders $syncFolders
-		foreach ($dir in $testDirs) {  
-			log "running tests in $dir"
-			Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version "$Version" -PreviousVersion "$PreviousVersion" -Session $session
-		}
-
-		Remove-PSSession $session
-	}
-	catch {
-		$ErrorMessage = $_.Exception.ToString()
-		log $ErrorMessage -l Error
-		Exit 1
-	}
-	finally {
-		# don't wait for the destruction of the VM
-		ReplaceInFile -File "Vagrantfile" -Replacements @{ "azure.wait_for_destroy = true" = "azure.wait_for_destroy = false" }   
-		vagrant destroy azure -f
-		Remove-Item "$currentDir\Vagrantfile" -Force -ErrorAction Ignore
-    }
-}
-else {
-	foreach ($dir in $testDirs) {  
-		log "running tests in $dir"
-		Copy-Item "$currentDir\common\Vagrantfile" -Destination $dir -Force
-
-		if ($VagrantProvider -eq "local") {
-			Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version -PreviousVersion $PreviousVersion
-		} 
-		else {
-			Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version -PreviousVersion $PreviousVersion
-		}
-	}
-}
+Invoke-IntegrationTests -CurrentDir $currentDir -TestDirs $testDirs -VagrantProvider $VagrantProvider -Version $Version -PreviousVersion $PreviousVersion
 
 cd $currentDir

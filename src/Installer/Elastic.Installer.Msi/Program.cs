@@ -12,22 +12,31 @@ namespace Elastic.Installer.Msi
 {
 	public class Program
 	{
+		private static bool _releaseMode;
+		private static string _productName;
+		private static string _productTitle;
+
 		private static void Main(string[] args)
 		{
-			var productName = args[0].ToLower();
-			var product = GetProduct(productName);
-			var version = args[1];
-			var distributionRoot = Path.Combine(args[2], $"{productName}-{version}");
+			_productName = args[0].ToLowerInvariant();
+			_productTitle = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(_productName);
 
-			// set properties in the MSI so that they don't have to be set on the command line.
-			// The only awkward one is plugins as it has a not empty default value, but an empty
-			// string can be passed to not install any plugins
+			var product = GetProduct(_productName);
+			var version = args[1];
+			var distributionRoot = Path.Combine(args[2], $"{_productName}-{version}");
+
+			_releaseMode = args.Length > 3 && !string.IsNullOrEmpty(args[3]);
+
+			// set properties with default values in the MSI so that they 
+			// don't have to be set on the command line.
 			var setupParams = product.MsiParams;
 			var staticProperties = setupParams
 				.Where(v => v.Attribute.IsStatic)
 				.Select(a => new Property(a.Key, a.Value)
 			);
-			// Only set dynamic property if MSI is not installed and value is empty 
+
+			// Only set dynamic property if MSI is not installed and value is empty.
+			// Dynamic properties calculate the default value at MSI install time
 			var dynamicProperties = setupParams
 				.Where(v => v.Attribute.IsDynamic)
 				.Select(a => new SetPropertyAction(
@@ -48,14 +57,14 @@ namespace Elastic.Installer.Msi
 				ControlPanelInfo = new ProductInfo
 				{
 					Manufacturer = "Elastic",
-					ProductIcon = $@"Resources\{productName}.ico",
+					ProductIcon = $@"Resources\{_productName}.ico",
 					// Shows up as Support Link in Programs and Features
-					UrlInfoAbout = $"https://www.elastic.co/products/{productName}",
+					UrlInfoAbout = $"https://www.elastic.co/products/{_productName}",
 					// Shows up as Help Link in Programs and Features
-					HelpLink = $"https://discuss.elastic.co/c/{productName}"
+					HelpLink = $"https://discuss.elastic.co/c/{_productName}"
 				},
-				Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase($"{productName} ") + version,
-				OutFileName = productName,
+				Name = $"{_productTitle} {version}",
+				OutFileName = _productName,
 				Version = new Version(version.Split('-')[0]),
 				Actions = dynamicProperties
 					.Concat(GetExecutingAssembly().GetTypes()
@@ -71,7 +80,7 @@ namespace Elastic.Installer.Msi
 				Properties = new[]
 				{
 					// used by the embedded UI to create the correct installation model
-					new Property("ElasticProduct", productName),
+					new Property("ElasticProduct", _productName),
 					// make it easy to reference current version within MSI process
 					new Property("CurrentVersion", version),
 					new Property("MsiLogging", "voicewarmup"),
@@ -100,7 +109,7 @@ namespace Elastic.Installer.Msi
 							{
 								Dirs = new []
 								{
-									new Dir(new Id("INSTALLDIR"), CultureInfo.CurrentCulture.TextInfo.ToTitleCase(productName))
+									new Dir(new Id("INSTALLDIR"), _productTitle)
 									{
 										DirFileCollections = new []
 										{
@@ -121,15 +130,18 @@ namespace Elastic.Installer.Msi
 				project.UI = WUI.WixUI_ProgressOnly;
 
 			project.MajorUpgradeStrategy = MajorUpgradeStrategy.Default;
-			project.MajorUpgradeStrategy.RemoveExistingProductAfter = Step.InstallValidate;
 			project.WixSourceGenerated += PatchWixSource;
 			project.IncludeWixExtension(WixExtension.NetFx);
+
+			// needed for WixFailWhenDeferred custom action
+			if (!_releaseMode)
+				project.IncludeWixExtension(WixExtension.Util);
 
 			const string wixLocation = @"..\..\..\packages\WixSharp.wix.bin\tools\bin";
 			if (!Directory.Exists(wixLocation))
 				throw new Exception($"The directory '{wixLocation}' could not be found");
 			Compiler.WixLocation = wixLocation;
-			Compiler.BuildWxs(project, $@"_Generated\{productName.ToLower()}.wxs", Compiler.OutputType.MSI);
+			Compiler.BuildWxs(project, $@"_Generated\{_productName.ToLower()}.wxs", Compiler.OutputType.MSI);
 			Compiler.BuildMsi(project);
 		}
 
@@ -150,18 +162,52 @@ namespace Elastic.Installer.Msi
 		{
 			var ns = document.Root.Name.Namespace;
 
+			// create RemoveFile entries for each file, to remove when installing or uninstalling
 			// see http://www.syntevo.com/blog/?p=3508
 			var components = document.Root.Descendants(ns + "Component")
 				.Where(c => c.Descendants(ns + "File").Any())
 				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() });
 
+			bool exeFound = false;
+			var exeName = $"{_productName}.exe";
+
 			foreach (var component in components)
 			{
+				var fileId = component.File.Attribute("Id").Value;
+				var fileName = Path.GetFileName(component.File.Attribute("Source").Value);
+
 				component.Component.AddFirst(
 					new XElement(ns + "RemoveFile",
-						new XAttribute("Id", component.File.Attribute("Id").Value),
-						new XAttribute("Name", component.File.Attribute("Id").Value),
+						new XAttribute("Id", fileId),
+						new XAttribute("Name", fileName),
 						new XAttribute("On", "both")
+					)
+				);
+
+				// Use a ServiceControl element as an item in the ServiceControl table
+				// signals interaction with a service as part of the install process, preventing
+				// the FileDialog in use window from appearing when upgrading		
+				if (fileId == exeName)
+				{
+					exeFound = true;
+					component.Component.Add(new XElement(ns + "ServiceControl",
+						new XAttribute("Id", fileId),
+						new XAttribute("Name", _productTitle), // MUST match the name of the service
+						new XAttribute("Stop", "both"),
+						new XAttribute("Wait", "yes")
+					));
+				}
+			}
+
+			if (!exeFound) throw new Exception($"No File element found with Id '{_productName}.exe'");
+
+			// include WixFailWhenDeferred Custom Action when not building a release
+			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
+			if (!_releaseMode)
+			{
+				var product = document.Root.Descendants(ns + "Product").First();
+				product.Add(new XElement(ns + "CustomActionRef",
+						new XAttribute("Id", "WixFailWhenDeferred")
 					)
 				);
 			}

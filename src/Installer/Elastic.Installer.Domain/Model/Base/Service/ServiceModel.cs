@@ -19,14 +19,14 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 		public static readonly string DefaultUser = null;
 		public static readonly string DefaultPassword = null;
 
-		private readonly bool _alreadyInstalled;
+		private readonly bool _existingVersionInstalled;
 		private readonly bool _sawService;
 
 		public ServiceModel(IServiceStateProvider serviceStateProvider, VersionConfiguration versionConfig)
 		{
-			this._alreadyInstalled = versionConfig.AlreadyInstalled;
+			this._existingVersionInstalled = versionConfig.ExistingVersionInstalled;
 			this._sawService = serviceStateProvider.SeesService;
-			this.IsRelevant = !this._alreadyInstalled || (this._alreadyInstalled && !this._sawService);
+			this.IsRelevant = !this._existingVersionInstalled || (this._existingVersionInstalled && !this._sawService);
 			this.Header = "Service";
 			this.Refresh();
 			this.WhenAny(vm => vm.User, vm => vm.Password,
@@ -72,7 +72,7 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 			this.UseNetworkService = DefaultUseNetworkService;
 			if (!this._internalRefresh) 
 			{
-				this.InstallAsService = !this._alreadyInstalled || this._sawService;
+				this.InstallAsService = !this._existingVersionInstalled || this._sawService;
 			}
 			this._internalRefresh = false;
 		}

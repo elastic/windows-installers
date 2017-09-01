@@ -12,12 +12,29 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.InstallationModel.NoticeModel.AlreadyInstalled && !this.Session.Uninstalling)
+			var esState = this.InstallationModel.ElasticsearchEnvironmentConfiguration;
+
+			if (this.Session.IsRollback && this.InstallationModel.NoticeModel.ExistingVersionInstalled)
+			{
+				this.Session.Log($"{nameof(RemoveEnvironmentVariablesTask)}: Rolling back and checking for existence of ES_CONFIG_OLD");
+
+				// handle rolling back to a version that uses the old config environment variable
+				if (this.InstallationModel.ElasticsearchEnvironmentConfiguration.RestoreOldConfigVariable())
+				{
+					this.Session.Log($"Skipping {nameof(RemoveEnvironmentVariablesTask)}: ES_CONFIG_OLD found and reinstated");
+					esState.SetEsConfigEnvironmentVariable(null);
+				}
+
 				return true;
+			}
+
+			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled && !this.Session.IsUninstalling)
+			{
+				this.Session.Log($"Skipping {nameof(RemoveEnvironmentVariablesTask)}: Already installed and not currently uninstalling");
+				return true;
+			}
 
 			this.Session.SendActionStart(1000, ActionName, "Removing environment variables", "[1]");
-
-			var esState = this.InstallationModel.ElasticsearchEnvironmentConfiguration;
 			esState.SetEsHomeEnvironmentVariable(null);
 			esState.SetEsConfigEnvironmentVariable(null);
 			this.Session.SendProgress(1000, "Environment variables removed");
