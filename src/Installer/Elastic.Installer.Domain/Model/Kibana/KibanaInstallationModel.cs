@@ -43,7 +43,7 @@ namespace Elastic.Installer.Domain.Model.Kibana
 			string[] args
 		) : base(wixStateProvider, session, args)
 		{
-			var versionConfig = new VersionConfiguration(wixStateProvider);
+			var versionConfig = new VersionConfiguration(wixStateProvider, this.Session.IsInstalled);
 			this.KibanaEnvironmentState = environmentStateProvider;
 
 			this.LocationsModel = new LocationsModel(versionConfig);

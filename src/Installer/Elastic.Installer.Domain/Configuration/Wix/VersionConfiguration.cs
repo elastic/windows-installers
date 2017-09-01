@@ -10,12 +10,14 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 		public VersionChange VersionChange { get; } 
 		public InstallationDirection InstallationDirection { get; }
 
-		public bool AlreadyInstalled => VersionChange != VersionChange.New;
+		public bool ExistingVersionInstalled => VersionChange != VersionChange.New;
+		public bool ThisVersionInstalled { get; }
 		public bool SameVersionAlreadyInstalled => VersionChange == VersionChange.Same;
 		public bool HigherVersionAlreadyInstalled => InstallationDirection == InstallationDirection.Down; 
 
-		public VersionConfiguration(IWixStateProvider wixStateProvider)
+		public VersionConfiguration(IWixStateProvider wixStateProvider, bool thisVersionInstalled)
 		{
+			ThisVersionInstalled = thisVersionInstalled;
 			var c = this.CurrentVersion = wixStateProvider.CurrentVersion;
 			var e = this.ExistingVersion = wixStateProvider.ExistingVersion;
 

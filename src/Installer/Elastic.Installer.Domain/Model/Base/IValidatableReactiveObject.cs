@@ -62,23 +62,23 @@ namespace Elastic.Installer.Domain.Model.Base
 		bool isValid;
 		public bool IsValid
 		{
-			get { return isValid; }
-			private set { this.RaiseAndSetIfChanged(ref isValid, value); }
+			get => isValid;
+			private set => this.RaiseAndSetIfChanged(ref isValid, value);
 		}
 
 		private IList<ValidationFailure> validationFailures = new List<ValidationFailure>();
 		public IList<ValidationFailure> ValidationFailures
 		{
-			get { return validationFailures; }
-			private set { this.RaiseAndSetIfChanged(ref validationFailures, value); }
+			get => validationFailures;
+			private set => this.RaiseAndSetIfChanged(ref validationFailures, value);
 		}
 
 		private IList<ValidationFailure> prerequisiteFailures = new List<ValidationFailure>();
 
 		public IList<ValidationFailure> PrerequisiteFailures
 		{
-			get { return prerequisiteFailures; }
-			set { this.RaiseAndSetIfChanged(ref prerequisiteFailures, value); }
+			get => prerequisiteFailures;
+			set => this.RaiseAndSetIfChanged(ref prerequisiteFailures, value);
 		}
 	}
 }

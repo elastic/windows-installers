@@ -36,7 +36,7 @@ namespace Elastic.Installer.Domain.Model.Kibana.Locations
 
 		public LocationsModel(VersionConfiguration versionConfig)
 		{
-			this.IsRelevant = !versionConfig.AlreadyInstalled;
+			this.IsRelevant = !versionConfig.ExistingVersionInstalled;
 			this.Header = "Locations";
 
 			this.Refresh();

@@ -7,6 +7,10 @@
 		void Log(string message);
 		T Get<T>(string property);
 		void Set(string property, string value);
-		bool Uninstalling { get; }
+		bool IsUninstalling { get; }
+		bool IsInstalling { get; }
+		bool IsInstalled { get; }
+		bool IsUpgrading { get; }
+		bool IsRollback { get; }
 	}
 }

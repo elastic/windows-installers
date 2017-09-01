@@ -65,8 +65,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.ElasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
 
-			var versionConfig = new VersionConfiguration(wixStateProvider);
+			var versionConfig = new VersionConfiguration(wixStateProvider, this.Session.IsInstalled);
 			this.SameVersionAlreadyInstalled = versionConfig.SameVersionAlreadyInstalled;
+			this.UnInstalling = this.Session.IsUninstalling;
+			this.Installing = this.Session.IsInstalling;
+			this.Installed = this.Session.IsInstalled;
+			this.Upgrading = this.Session.IsUpgrading;
 			this.HigherVersionAlreadyInstalled = versionConfig.HigherVersionAlreadyInstalled;
 
 			this.LocationsModel = new LocationsModel(elasticsearchEnvironmentConfiguration, yamlConfiguration, versionConfig);
@@ -75,7 +79,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.ConfigurationModel = new ConfigurationModel(yamlConfiguration, localJvmOptions);
 
 			var pluginDependencies = this.WhenAnyValue(
-				vm => vm.NoticeModel.AlreadyInstalled,
+				vm => vm.NoticeModel.ExistingVersionInstalled,
 				vm => vm.LocationsModel.InstallDir,
 				vm => vm.LocationsModel.ConfigDirectory
 			);
@@ -168,6 +172,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.ActiveStep.Validate();
 		}
 
+		public bool Installing { get; }
+
+		public bool Installed { get; }
+
+		public bool UnInstalling { get; }
+
 		public static ElasticsearchInstallationModel Create(IWixStateProvider wixState, ISession session, params string[] args)
 		{
 			var javaConfig = JavaConfiguration.Default;
@@ -207,6 +217,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		{
 			get => using32BitJava;
 			set => this.RaiseAndSetIfChanged(ref using32BitJava, value);
+		}
+
+		bool upgrading;
+		public bool Upgrading
+		{
+			get => upgrading;
+			set => this.RaiseAndSetIfChanged(ref upgrading, value);
 		}
 
 		public override void Refresh()
