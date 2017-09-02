@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using WixSharp;
 using static System.Reflection.Assembly;
@@ -167,6 +168,33 @@ namespace Elastic.Installer.Msi
 			var components = document.Root.Descendants(ns + "Component")
 				.Where(c => c.Descendants(ns + "File").Any())
 				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() });
+
+			var directories = document.Root.Descendants(ns + "Directory")
+				.Where(c =>
+				{
+					var childComponents = c.Elements(ns + "Component");
+					return childComponents.Any() && childComponents.Any(cc => cc.Descendants(ns + "File").Any());
+				});
+
+			var feature = document.Root.Descendants(ns + "Feature").Single();
+			foreach (var directory in directories)
+			{
+				var guid = WixGuid.NewGuid();
+				var directoryId = directory.Attribute("Id").Value;
+				var componentId = "Component." + directoryId;
+				directory.AddFirst(new XElement(ns + "Component",
+					new XAttribute("Id", componentId),
+					new XAttribute("Guid", guid),
+					new XAttribute("Win64", "yes"),
+					new XElement(ns + "RemoveFile",
+						new XAttribute("Id", directoryId),
+						new XAttribute("Name", "*"), // delete all files in dir
+						new XAttribute("On", "both")
+					)
+				));
+
+				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
+			}
 
 			bool exeFound = false;
 			var exeName = $"{_productName}.exe";
