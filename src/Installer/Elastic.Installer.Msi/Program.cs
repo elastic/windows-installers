@@ -179,12 +179,11 @@ namespace Elastic.Installer.Msi
 			var feature = document.Root.Descendants(ns + "Feature").Single();
 			foreach (var directory in directories)
 			{
-				var guid = WixGuid.NewGuid();
 				var directoryId = directory.Attribute("Id").Value;
 				var componentId = "Component." + directoryId;
 				directory.AddFirst(new XElement(ns + "Component",
 					new XAttribute("Id", componentId),
-					new XAttribute("Guid", guid),
+					new XAttribute("Guid", WixGuid.NewGuid()),
 					new XAttribute("Win64", "yes"),
 					new XElement(ns + "RemoveFile",
 						new XAttribute("Id", directoryId),
@@ -192,6 +191,33 @@ namespace Elastic.Installer.Msi
 						new XAttribute("On", "both")
 					)
 				));
+
+				// Add a Directory entry to remove all files in bin/x-pack, if present
+				if (directoryId == "INSTALLDIR.bin")
+				{
+					var installdirBinXpack = "INSTALLDIR.bin.xpack";
+					var componentInstalldirBinXpack = $"Component.{installdirBinXpack}";
+					directory.AddFirst(new XElement(ns + "Directory",
+						new XAttribute("Id", installdirBinXpack),
+						new XAttribute("Name", "x-pack"),
+						new XElement(ns + "Component",
+							new XAttribute("Id", componentInstalldirBinXpack),
+							new XAttribute("Guid", WixGuid.NewGuid()),
+							new XAttribute("Win64", "yes"),
+							new XElement(ns + "RemoveFile",
+								new XAttribute("Id", installdirBinXpack),
+								new XAttribute("Name", "*"), // remove all files in x-pack dir
+								new XAttribute("On", "both")
+							),							
+							new XElement(ns + "RemoveFolder", 
+								new XAttribute("Id", installdirBinXpack + ".dir"), // remove (now empty) x-pack dir
+								new XAttribute("On", "both")
+							)
+						)
+					));
+
+					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentInstalldirBinXpack)));
+				}
 
 				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
 			}
@@ -204,13 +230,13 @@ namespace Elastic.Installer.Msi
 				var fileId = component.File.Attribute("Id").Value;
 				var fileName = Path.GetFileName(component.File.Attribute("Source").Value);
 
-				component.Component.AddFirst(
-					new XElement(ns + "RemoveFile",
-						new XAttribute("Id", fileId),
-						new XAttribute("Name", fileName),
-						new XAttribute("On", "both")
-					)
-				);
+				//component.Component.AddFirst(
+				//	new XElement(ns + "RemoveFile",
+				//		new XAttribute("Id", fileId),
+				//		new XAttribute("Name", fileName),
+				//		new XAttribute("On", "both")
+				//	)
+				//);
 
 				// Use a ServiceControl element as an item in the ServiceControl table
 				// signals interaction with a service as part of the install process, preventing
@@ -228,6 +254,14 @@ namespace Elastic.Installer.Msi
 			}
 
 			if (!exeFound) throw new Exception($"No File element found with Id '{_productName}.exe'");
+
+			// Change execution sequence of Stopping Services, to happen before 
+			// Installing new files
+			//var installExecuteSequence = document.Root.Descendants(ns + "InstallExecuteSequence").Single();
+			//installExecuteSequence.Add(new XElement(ns + "StopServices",
+			//	new XAttribute("Sequence", "1598"),
+			//	new XCData($"VersionNT AND (NOT Installed OR REMOVE=\"ALL\")")
+			//));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html

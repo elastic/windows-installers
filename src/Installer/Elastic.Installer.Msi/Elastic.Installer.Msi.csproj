@@ -44,13 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomActions\CommitCustomAction.cs" />
     <Compile Include="CustomActions\CustomAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Commit\ElasticsearchCleanupAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\ElasticsearchCustomActionOrder.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchConfigurationAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchDirectoriesAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchEnvironmentAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchJvmOptionsAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchPluginsAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchPreserveInstallAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceInstallAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceStartAction.cs" />
     <Compile Include="CustomActions\RollbackCustomAction.cs" />
