@@ -163,12 +163,6 @@ namespace Elastic.Installer.Msi
 		{
 			var ns = document.Root.Name.Namespace;
 
-			// create RemoveFile entries for each file, to remove when installing or uninstalling
-			// see http://www.syntevo.com/blog/?p=3508
-			var components = document.Root.Descendants(ns + "Component")
-				.Where(c => c.Descendants(ns + "File").Any())
-				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() });
-
 			var directories = document.Root.Descendants(ns + "Directory")
 				.Where(c =>
 				{
@@ -187,7 +181,11 @@ namespace Elastic.Installer.Msi
 					new XAttribute("Win64", "yes"),
 					new XElement(ns + "RemoveFile",
 						new XAttribute("Id", directoryId),
-						new XAttribute("Name", "*"), // delete all files in dir
+						new XAttribute("Name", "*"), // remove all files in dir
+						new XAttribute("On", "both")
+					),
+					new XElement(ns + "RemoveFolder",
+						new XAttribute("Id", directoryId + ".dir"), // remove (now empty) dir
 						new XAttribute("On", "both")
 					)
 				));
@@ -222,46 +220,22 @@ namespace Elastic.Installer.Msi
 				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
 			}
 
-			bool exeFound = false;
 			var exeName = $"{_productName}.exe";
+			var exeComponent = document.Root.Descendants(ns + "Component")
+				.Where(c => c.Descendants(ns + "File").Any(f => f.Attribute("Id").Value == exeName))
+				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() })
+				.SingleOrDefault();
 
-			foreach (var component in components)
-			{
-				var fileId = component.File.Attribute("Id").Value;
-				var fileName = Path.GetFileName(component.File.Attribute("Source").Value);
+			if (exeComponent == null)
+				throw new Exception($"No File element found with Id '{exeName}'");
 
-				//component.Component.AddFirst(
-				//	new XElement(ns + "RemoveFile",
-				//		new XAttribute("Id", fileId),
-				//		new XAttribute("Name", fileName),
-				//		new XAttribute("On", "both")
-				//	)
-				//);
-
-				// Use a ServiceControl element as an item in the ServiceControl table
-				// signals interaction with a service as part of the install process, preventing
-				// the FileDialog in use window from appearing when upgrading		
-				if (fileId == exeName)
-				{
-					exeFound = true;
-					component.Component.Add(new XElement(ns + "ServiceControl",
-						new XAttribute("Id", fileId),
-						new XAttribute("Name", _productTitle), // MUST match the name of the service
-						new XAttribute("Stop", "both"),
-						new XAttribute("Wait", "yes")
-					));
-				}
-			}
-
-			if (!exeFound) throw new Exception($"No File element found with Id '{_productName}.exe'");
-
-			// Change execution sequence of Stopping Services, to happen before 
-			// Installing new files
-			//var installExecuteSequence = document.Root.Descendants(ns + "InstallExecuteSequence").Single();
-			//installExecuteSequence.Add(new XElement(ns + "StopServices",
-			//	new XAttribute("Sequence", "1598"),
-			//	new XCData($"VersionNT AND (NOT Installed OR REMOVE=\"ALL\")")
-			//));
+			var fileId = exeComponent.File.Attribute("Id").Value;
+			exeComponent.Component.Add(new XElement(ns + "ServiceControl",
+				new XAttribute("Id", fileId),
+				new XAttribute("Name", _productTitle), // MUST match the name of the service
+				new XAttribute("Stop", "both"),
+				new XAttribute("Wait", "yes")
+			));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
