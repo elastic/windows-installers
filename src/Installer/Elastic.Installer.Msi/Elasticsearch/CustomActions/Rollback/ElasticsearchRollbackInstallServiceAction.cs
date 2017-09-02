@@ -16,7 +16,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 		public override Step Step => new Step(nameof(ElasticsearchServiceInstallAction));
 
 		[CustomAction]
-		public static ActionResult ElasticsearchRollbackService(Session session) =>
+		public static ActionResult ElasticsearchRollbackInstallService(Session session) =>
 			session.Handle(() => new UninstallServiceTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }

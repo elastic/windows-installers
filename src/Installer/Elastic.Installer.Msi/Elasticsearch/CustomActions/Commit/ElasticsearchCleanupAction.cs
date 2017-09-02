@@ -14,7 +14,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Commit
 		public override int Order => (int)ElasticsearchCustomActionOrder.CleanupInstall;
 
 		[CustomAction]
-		public static ActionResult ElasticsearchCleanupInstall(Session session) =>
+		public static ActionResult ElasticsearchCleanup(Session session) =>
 			session.Handle(() => new CleanupInstallTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }

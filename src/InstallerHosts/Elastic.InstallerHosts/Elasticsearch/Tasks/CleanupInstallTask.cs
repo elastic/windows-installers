@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 
@@ -14,7 +15,17 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		protected override bool ExecuteTask()
 		{
 			if (this.FileSystem.Directory.Exists(this.TempDirectory))
-				this.FileSystem.Directory.Delete(this.TempDirectory, true);
+			{
+				try
+				{
+					this.FileSystem.Directory.Delete(this.TempDirectory, true);
+				}
+				catch (Exception e)
+				{
+					// log, but continue.
+					this.Session.Log($"Exception deleting {this.TempDirectory}: {e}");
+				}
+			}
 
 			return true;
 		}
