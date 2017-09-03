@@ -137,7 +137,7 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 		}
 
 		string password;
-		[Argument(nameof(Password))]
+		[Argument(nameof(Password), IsHidden = true)]
 		public string Password
 		{
 			get => password;
@@ -169,7 +169,7 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 			sb.AppendLine($"- {nameof(UseExistingUser)} = " + UseExistingUser);
 			sb.AppendLine($"- {nameof(UseNetworkService)} = " + UseNetworkService);
 			sb.AppendLine($"- {nameof(User)} = " + User);
-			sb.AppendLine($"- {nameof(Password)} = " + !string.IsNullOrWhiteSpace(Password));
+			sb.AppendLine($"- {nameof(Password)} = " + (!string.IsNullOrWhiteSpace(Password) ? "**********" : string.Empty));
 			return sb.ToString();
 		}
 	}
