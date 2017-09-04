@@ -56,6 +56,27 @@ namespace Elastic.InstallerHosts.Tasks
 			!string.IsNullOrEmpty(pathA) && 
 			!string.IsNullOrEmpty(pathB) && 
 			0 == string.Compare(Path.GetFullPath(pathA), Path.GetFullPath(pathB), true);
+
+		protected void CopyDirectory(string sourceDirectory, string destinationDirectory)
+		{
+			var source = new DirectoryInfo(sourceDirectory);
+			var destination = new DirectoryInfo(destinationDirectory);
+			CopyDirectory(source, destination);
+		}
+
+		protected void CopyDirectory(DirectoryInfo source, DirectoryInfo target)
+		{
+			this.FileSystem.Directory.CreateDirectory(target.FullName);
+
+			foreach (var file in source.GetFiles())
+				file.CopyTo(Path.Combine(target.FullName, file.Name), true);
+
+			foreach (var directory in source.GetDirectories())
+			{
+				var nextTargetSubDir = target.CreateSubdirectory(directory.Name);
+				CopyDirectory(directory, nextTargetSubDir);
+			}
+		}
 	}
 
 

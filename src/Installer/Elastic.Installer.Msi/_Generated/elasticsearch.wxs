@@ -11,6 +11,10 @@
         <Directory Id="Elastic" Name="Elastic">
           <Directory Id="INSTALLDIR" Name="Elasticsearch">
 
+            <Component Id="Component.INSTALLDIR" Guid="daaa2cba-a1ed-4f29-afbf-5478671bebaa" Win64="yes">
+              <RemoveFile Id="INSTALLDIR" Name="*" On="both" />
+            </Component>
+
             <Component Id="Component.LICENSE.txt" Guid="daaa2cba-a1ed-4f29-afbf-5478ddff8dfd" Win64="yes">
               <RemoveFile Id="LICENSE.txt" Name="LICENSE.txt" On="both" />
               <File Id="LICENSE.txt" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\LICENSE.txt" />
@@ -27,6 +31,10 @@
             </Component>
 
             <Directory Id="INSTALLDIR.bin" Name="bin">
+
+              <Component Id="Component.INSTALLDIR.bin" Guid="daaa2cba-a1ed-4f29-afbf-5478df768362" Win64="yes">
+                <RemoveFile Id="INSTALLDIR.bin" Name="*" On="both" />
+              </Component>
 
               <Component Id="Component.elasticsearch_env.bat" Guid="daaa2cba-a1ed-4f29-afbf-5478f708a154" Win64="yes">
                 <RemoveFile Id="elasticsearch_env.bat" Name="elasticsearch-env.bat" On="both" />
@@ -59,6 +67,10 @@
 
             <Directory Id="INSTALLDIR.config" Name="config">
 
+              <Component Id="Component.INSTALLDIR.config" Guid="daaa2cba-a1ed-4f29-afbf-5478ab6080b0" Win64="yes">
+                <RemoveFile Id="INSTALLDIR.config" Name="*" On="both" />
+              </Component>
+
               <Component Id="Component.elasticsearch.yml" Guid="daaa2cba-a1ed-4f29-afbf-547839fb66cf" Win64="yes">
                 <RemoveFile Id="elasticsearch.yml" Name="elasticsearch.yml" On="both" />
                 <File Id="elasticsearch.yml" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\config\elasticsearch.yml" />
@@ -77,6 +89,10 @@
             </Directory>
 
             <Directory Id="INSTALLDIR.lib" Name="lib">
+
+              <Component Id="Component.INSTALLDIR.lib" Guid="daaa2cba-a1ed-4f29-afbf-547828bdf4cc" Win64="yes">
+                <RemoveFile Id="INSTALLDIR.lib" Name="*" On="both" />
+              </Component>
 
               <Component Id="Component.elasticsearch_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780af1fbea" Win64="yes">
                 <RemoveFile Id="elasticsearch_6.0.0_beta1.jar" Name="elasticsearch-6.0.0-beta1.jar" On="both" />
@@ -258,6 +274,10 @@
             <Directory Id="INSTALLDIR.modules" Name="modules">
               <Directory Id="INSTALLDIR.modules.aggs_matrix_stats" Name="aggs-matrix-stats">
 
+                <Component Id="Component.INSTALLDIR.modules.aggs_matrix_stats" Guid="daaa2cba-a1ed-4f29-afbf-5478eade9085" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.aggs_matrix_stats" Name="*" On="both" />
+                </Component>
+
                 <Component Id="Component._...s_matrix_stats_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785df02122" Win64="yes">
                   <RemoveFile Id="_...s_matrix_stats_6.0.0_beta1.jar" Name="aggs-matrix-stats-6.0.0-beta1.jar" On="both" />
                   <File Id="_...s_matrix_stats_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\aggs-matrix-stats\aggs-matrix-stats-6.0.0-beta1.jar" />
@@ -272,6 +292,10 @@
 
               <Directory Id="INSTALLDIR.modules.analysis_common" Name="analysis-common">
 
+                <Component Id="Component.INSTALLDIR.modules.analysis_common" Guid="daaa2cba-a1ed-4f29-afbf-5478e676d55e" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.analysis_common" Name="*" On="both" />
+                </Component>
+
                 <Component Id="Component._...nalysis_common_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478739e4d14" Win64="yes">
                   <RemoveFile Id="_...nalysis_common_6.0.0_beta1.jar" Name="analysis-common-6.0.0-beta1.jar" On="both" />
                   <File Id="_...nalysis_common_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\analysis-common\analysis-common-6.0.0-beta1.jar" />
@@ -285,6 +309,10 @@
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.ingest_common" Name="ingest-common">
+
+                <Component Id="Component.INSTALLDIR.modules.ingest_common" Guid="daaa2cba-a1ed-4f29-afbf-54787e7f0b5f" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.ingest_common" Name="*" On="both" />
+                </Component>
 
                 <Component Id="Component.ingest_common_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780774bf6d" Win64="yes">
                   <RemoveFile Id="ingest_common_6.0.0_beta1.jar" Name="ingest-common-6.0.0-beta1.jar" On="both" />
@@ -309,6 +337,10 @@
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.lang_expression" Name="lang-expression">
+
+                <Component Id="Component.INSTALLDIR.modules.lang_expression" Guid="daaa2cba-a1ed-4f29-afbf-547819d8cae4" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.lang_expression" Name="*" On="both" />
+                </Component>
 
                 <Component Id="Component.antlr4_runtime_4.5.1_1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789ca4f8e5" Win64="yes">
                   <RemoveFile Id="antlr4_runtime_4.5.1_1.jar" Name="antlr4-runtime-4.5.1-1.jar" On="both" />
@@ -354,6 +386,10 @@
 
               <Directory Id="INSTALLDIR.modules.lang_mustache" Name="lang-mustache">
 
+                <Component Id="Component.INSTALLDIR.modules.lang_mustache" Guid="daaa2cba-a1ed-4f29-afbf-5478266128bd" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.lang_mustache" Name="*" On="both" />
+                </Component>
+
                 <Component Id="Component.compiler_0.9.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-547820e67731" Win64="yes">
                   <RemoveFile Id="compiler_0.9.3.jar" Name="compiler-0.9.3.jar" On="both" />
                   <File Id="compiler_0.9.3.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\lang-mustache\compiler-0.9.3.jar" />
@@ -377,6 +413,10 @@
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.lang_painless" Name="lang-painless">
+
+                <Component Id="Component.INSTALLDIR.modules.lang_painless" Guid="daaa2cba-a1ed-4f29-afbf-54786cd01ef8" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.lang_painless" Name="*" On="both" />
+                </Component>
 
                 <Component Id="Component.antlr4_runtime_4.5.1_1.jar.1" Guid="daaa2cba-a1ed-4f29-afbf-54783beb6496" Win64="yes">
                   <RemoveFile Id="antlr4_runtime_4.5.1_1.jar.1" Name="antlr4-runtime-4.5.1-1.jar" On="both" />
@@ -407,6 +447,10 @@
 
               <Directory Id="INSTALLDIR.modules.parent_join" Name="parent-join">
 
+                <Component Id="Component.INSTALLDIR.modules.parent_join" Guid="daaa2cba-a1ed-4f29-afbf-5478fb41d8fb" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.parent_join" Name="*" On="both" />
+                </Component>
+
                 <Component Id="Component.parent_join_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789363c240" Win64="yes">
                   <RemoveFile Id="parent_join_6.0.0_beta1.jar" Name="parent-join-6.0.0-beta1.jar" On="both" />
                   <File Id="parent_join_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\parent-join\parent-join-6.0.0-beta1.jar" />
@@ -421,6 +465,10 @@
 
               <Directory Id="INSTALLDIR.modules.percolator" Name="percolator">
 
+                <Component Id="Component.INSTALLDIR.modules.percolator" Guid="daaa2cba-a1ed-4f29-afbf-54780303c528" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.percolator" Name="*" On="both" />
+                </Component>
+
                 <Component Id="Component.percolator_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789a236dcb" Win64="yes">
                   <RemoveFile Id="percolator_6.0.0_beta1.jar" Name="percolator-6.0.0-beta1.jar" On="both" />
                   <File Id="percolator_6.0.0_beta1.jar" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\percolator\percolator-6.0.0-beta1.jar" />
@@ -434,6 +482,10 @@
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.reindex" Name="reindex">
+
+                <Component Id="Component.INSTALLDIR.modules.reindex" Guid="daaa2cba-a1ed-4f29-afbf-54788078000c" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.reindex" Name="*" On="both" />
+                </Component>
 
                 <Component Id="Component._...ch_rest_client_6.0.0_beta1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b2b14d61" Win64="yes">
                   <RemoveFile Id="_...ch_rest_client_6.0.0_beta1.jar" Name="elasticsearch-rest-client-6.0.0-beta1.jar" On="both" />
@@ -459,6 +511,10 @@
 
               <Directory Id="INSTALLDIR.modules.repository_url" Name="repository-url">
 
+                <Component Id="Component.INSTALLDIR.modules.repository_url" Guid="daaa2cba-a1ed-4f29-afbf-54784082cc52" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.repository_url" Name="*" On="both" />
+                </Component>
+
                 <Component Id="Component.plugin_descriptor.properties.9" Guid="daaa2cba-a1ed-4f29-afbf-547859ea1303" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.9" Name="plugin-descriptor.properties" On="both" />
                   <File Id="plugin_descriptor.properties.9" Source="..\..\..\build\in\elasticsearch-6.0.0-beta1\modules\repository-url\plugin-descriptor.properties" />
@@ -477,6 +533,10 @@
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.transport_netty4" Name="transport-netty4">
+
+                <Component Id="Component.INSTALLDIR.modules.transport_netty4" Guid="daaa2cba-a1ed-4f29-afbf-5478f1dfade6" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.transport_netty4" Name="*" On="both" />
+                </Component>
 
                 <Component Id="Component.netty_buffer_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-547881350591" Win64="yes">
                   <RemoveFile Id="netty_buffer_4.1.13.Final.jar" Name="netty-buffer-4.1.13.Final.jar" On="both" />
@@ -531,6 +591,10 @@
               </Directory>
 
               <Directory Id="INSTALLDIR.modules.tribe" Name="tribe">
+
+                <Component Id="Component.INSTALLDIR.modules.tribe" Guid="daaa2cba-a1ed-4f29-afbf-547802b798a0" Win64="yes">
+                  <RemoveFile Id="INSTALLDIR.modules.tribe" Name="*" On="both" />
+                </Component>
 
                 <Component Id="Component.plugin_descriptor.properties.11" Guid="daaa2cba-a1ed-4f29-afbf-5478c3802ae9" Win64="yes">
                   <RemoveFile Id="plugin_descriptor.properties.11" Name="plugin-descriptor.properties" On="both" />
@@ -718,6 +782,22 @@
       <ComponentRef Id="Component._...ansport_netty4_6.0.0_beta1.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties.11" />
       <ComponentRef Id="Component.tribe_6.0.0_beta1.jar" />
+      <ComponentRef Id="Component.INSTALLDIR" />
+      <ComponentRef Id="Component.INSTALLDIR.bin" />
+      <ComponentRef Id="Component.INSTALLDIR.config" />
+      <ComponentRef Id="Component.INSTALLDIR.lib" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.aggs_matrix_stats" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.analysis_common" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.ingest_common" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.lang_expression" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.lang_mustache" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.lang_painless" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.parent_join" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.percolator" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.reindex" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.repository_url" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.transport_netty4" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.tribe" />
     </Feature>
 
     <InstallExecuteSequence>
@@ -753,7 +833,7 @@
       <Custom Action="Set_ElasticsearchPluginsAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchPluginsAction" After="ElasticsearchJvmOptionsAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchServiceInstallAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchServiceInstallAction" After="ElasticsearchPluginsAction"> (NOT Installed) </Custom>
+      <Custom Action="ElasticsearchServiceInstallAction" After="ElasticsearchPluginsAction">(NOT Installed) AND INSTALLASSERVICE="true"</Custom>
       <Custom Action="Set_ElasticsearchServiceStartAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchServiceStartAction" After="ElasticsearchServiceInstallAction">(NOT Installed) AND INSTALLASSERVICE="true" AND STARTAFTERINSTALL="true"</Custom>
       <Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
