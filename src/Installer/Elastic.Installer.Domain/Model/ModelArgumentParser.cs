@@ -249,16 +249,16 @@ namespace Elastic.Installer.Domain.Model
 
 		private static List<ModelArgument> KnownModelArguments(IList<IValidatableReactiveObject> models)
 		{
-			var seenNames = new HashSet<string>();
+			var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			var viewModelArguments = new List<ModelArgument>();
 			foreach (var model in models)
 			{
 				var viewModelProperties = GetProperties(model.GetType());
 				foreach (var p in viewModelProperties)
 				{
-					if (seenNames.Contains(p.Name, StringComparer.OrdinalIgnoreCase))
-						throw new ArgumentException($"{p.Name} can not be reused as argument option on {model.GetType().Name}");
-					seenNames.Add(p.Name);
+					if (!seenNames.Add(p.Name))
+						throw new ArgumentException(
+							$"{p.Name} can not be reused as argument option on {model.GetType().Name} as it already exists as a property on another model");
 					viewModelArguments.Add(new ModelArgument
 					{
 						Attribute = p.GetCustomAttribute<ArgumentAttribute>(),
@@ -272,7 +272,7 @@ namespace Elastic.Installer.Domain.Model
 			return viewModelArguments;
 		}
 
-		protected static IEnumerable<PropertyInfo> GetProperties(Type type) =>
+		public static IEnumerable<PropertyInfo> GetProperties(Type type) =>
 			from p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 			let attribute = p.GetCustomAttribute<ArgumentAttribute>()
 			where attribute != null
