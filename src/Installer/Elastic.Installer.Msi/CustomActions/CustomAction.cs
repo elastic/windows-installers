@@ -51,7 +51,7 @@ namespace Elastic.Installer.Msi.CustomActions
 				Sequence = this.Sequence,
 				Execute = this.Execute,
 				Impersonate = !this.NeedsElevatedPrivileges,
-				UsesProperties = string.Join(",", this.AllArguments.Concat(new string[] { "UILevel", "INSTALLDIRECTORY.bin", "VERSION", "REMOVE" }))
+				UsesProperties = string.Join(",", this.AllArguments.Concat(new[] { "UILevel", "INSTALLDIRECTORY.bin", "VERSION", "REMOVE", "ProductName" }))
 			};
 		}
 	}

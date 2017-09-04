@@ -23,14 +23,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled &&
-			    this.InstallationModel.NoticeModel.CurrentVersion < this.InstallationModel.NoticeModel.ExistingVersion && 
-				this.Session.IsUninstalling)
-			{
-				this.Session.Log($"Skipping {nameof(StopServiceTask)}: Newer version installed and uninstalling older version");
-				return true;
-			}
-
 			var seesService = this.ServiceStateProvider.SeesService;
 			this.Session.Log($"Trying to execute StopServiceTask seeing service: " + seesService);
 			if (!seesService) return true;

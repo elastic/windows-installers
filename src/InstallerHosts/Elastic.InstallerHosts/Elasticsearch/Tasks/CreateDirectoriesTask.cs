@@ -2,6 +2,8 @@
 using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using static System.Environment;
+using static System.Reflection.Assembly;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
@@ -28,10 +30,13 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			return true;
 		}
 
+
+
 		private void CreatePluginsDirectory()
 		{
-			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
-			var pluginsDirectory = Path.Combine(installDirectory, "plugins");
+			var pluginsDirectoryName = "plugins";
+			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;			
+			var pluginsDirectory = this.FileSystem.Path.Combine(installDirectory, pluginsDirectoryName);
 
 			if (!this.FileSystem.Directory.Exists(pluginsDirectory))
 			{
@@ -71,7 +76,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			//create new config directory if it does not already exist
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
 			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
-			var installConfigDirectory = Path.Combine(installDirectory, "config");
+			var configDirectoryName = "config";
+			var installConfigDirectory = this.FileSystem.Path.Combine(installDirectory, configDirectoryName);
 
 			int actionsTaken = 0;
 			if (!this.FileSystem.Directory.Exists(configDirectory))
@@ -95,8 +101,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 				foreach (var file in this.FileSystem.Directory.EnumerateFiles(installConfigDirectory))
 				{
-					var fileName = Path.GetFileName(file);
-					var to = Path.Combine(configDirectory, fileName);
+					var fileName = this.FileSystem.Path.GetFileName(file);
+					var to = this.FileSystem.Path.Combine(configDirectory, fileName);
 					//do not overwrite existing files
 					if (this.FileSystem.File.Exists(to)) continue;
 
@@ -105,10 +111,10 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 				}
 				foreach (var dir in this.FileSystem.Directory.EnumerateDirectories(installConfigDirectory))
 				{
-					var dirName = Path.GetDirectoryName(dir);
-					var to = Path.Combine(configDirectory, dir);
+					var to = this.FileSystem.Path.Combine(configDirectory, dir);
 					//do not overwrite existing directories
 					if (this.FileSystem.Directory.Exists(to)) continue;
+
 					this.Session.Log($"moving directory: {dir} to {to}");
 					this.FileSystem.Directory.Move(dir, to);
 				}

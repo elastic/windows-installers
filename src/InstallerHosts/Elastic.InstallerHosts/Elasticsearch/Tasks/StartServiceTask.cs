@@ -23,12 +23,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled)
-			{
-				this.Session.Log($"Skipping {nameof(StartServiceTask)}. Existing version already installed, service will need to be manually started after installation");
-				return true;
-			}
-
 			this.Session.Log("Executing start service");
 			if (!this.InstallationModel.ServiceModel.StartAfterInstall)
 				return true;
