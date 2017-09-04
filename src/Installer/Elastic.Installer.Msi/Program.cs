@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using WixSharp;
 using static System.Reflection.Assembly;
@@ -162,44 +163,79 @@ namespace Elastic.Installer.Msi
 		{
 			var ns = document.Root.Name.Namespace;
 
-			// create RemoveFile entries for each file, to remove when installing or uninstalling
-			// see http://www.syntevo.com/blog/?p=3508
-			var components = document.Root.Descendants(ns + "Component")
-				.Where(c => c.Descendants(ns + "File").Any())
-				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() });
+			var directories = document.Root.Descendants(ns + "Directory")
+				.Where(c =>
+				{
+					var childComponents = c.Elements(ns + "Component");
+					return childComponents.Any() && childComponents.Any(cc => cc.Descendants(ns + "File").Any());
+				});
 
-			bool exeFound = false;
-			var exeName = $"{_productName}.exe";
-
-			foreach (var component in components)
+			var feature = document.Root.Descendants(ns + "Feature").Single();
+			foreach (var directory in directories)
 			{
-				var fileId = component.File.Attribute("Id").Value;
-				var fileName = Path.GetFileName(component.File.Attribute("Source").Value);
-
-				component.Component.AddFirst(
+				var directoryId = directory.Attribute("Id").Value;
+				var componentId = "Component." + directoryId;
+				directory.AddFirst(new XElement(ns + "Component",
+					new XAttribute("Id", componentId),
+					new XAttribute("Guid", WixGuid.NewGuid()),
+					new XAttribute("Win64", "yes"),
 					new XElement(ns + "RemoveFile",
-						new XAttribute("Id", fileId),
-						new XAttribute("Name", fileName),
+						new XAttribute("Id", directoryId),
+						new XAttribute("Name", "*"), // remove all files in dir
+						new XAttribute("On", "both")
+					),
+					new XElement(ns + "RemoveFolder",
+						new XAttribute("Id", directoryId + ".dir"), // remove (now empty) dir
 						new XAttribute("On", "both")
 					)
-				);
+				));
 
-				// Use a ServiceControl element as an item in the ServiceControl table
-				// signals interaction with a service as part of the install process, preventing
-				// the FileDialog in use window from appearing when upgrading		
-				if (fileId == exeName)
+				// Add a Directory entry to remove all files in bin/x-pack, if present
+				if (directoryId == "INSTALLDIR.bin")
 				{
-					exeFound = true;
-					component.Component.Add(new XElement(ns + "ServiceControl",
-						new XAttribute("Id", fileId),
-						new XAttribute("Name", _productTitle), // MUST match the name of the service
-						new XAttribute("Stop", "both"),
-						new XAttribute("Wait", "yes")
+					var installdirBinXpack = "INSTALLDIR.bin.xpack";
+					var componentInstalldirBinXpack = $"Component.{installdirBinXpack}";
+					directory.AddFirst(new XElement(ns + "Directory",
+						new XAttribute("Id", installdirBinXpack),
+						new XAttribute("Name", "x-pack"),
+						new XElement(ns + "Component",
+							new XAttribute("Id", componentInstalldirBinXpack),
+							new XAttribute("Guid", WixGuid.NewGuid()),
+							new XAttribute("Win64", "yes"),
+							new XElement(ns + "RemoveFile",
+								new XAttribute("Id", installdirBinXpack),
+								new XAttribute("Name", "*"), // remove all files in x-pack dir
+								new XAttribute("On", "both")
+							),							
+							new XElement(ns + "RemoveFolder", 
+								new XAttribute("Id", installdirBinXpack + ".dir"), // remove (now empty) x-pack dir
+								new XAttribute("On", "both")
+							)
+						)
 					));
+
+					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentInstalldirBinXpack)));
 				}
+
+				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
 			}
 
-			if (!exeFound) throw new Exception($"No File element found with Id '{_productName}.exe'");
+			var exeName = $"{_productName}.exe";
+			var exeComponent = document.Root.Descendants(ns + "Component")
+				.Where(c => c.Descendants(ns + "File").Any(f => f.Attribute("Id").Value == exeName))
+				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() })
+				.SingleOrDefault();
+
+			if (exeComponent == null)
+				throw new Exception($"No File element found with Id '{exeName}'");
+
+			var fileId = exeComponent.File.Attribute("Id").Value;
+			exeComponent.Component.Add(new XElement(ns + "ServiceControl",
+				new XAttribute("Id", fileId),
+				new XAttribute("Name", _productTitle), // MUST match the name of the service
+				new XAttribute("Stop", "both"),
+				new XAttribute("Wait", "yes")
+			));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html

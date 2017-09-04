@@ -34,7 +34,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			foreach (var plugin in plugins)
 			{
 				this.Session.SendProgress(ticksPerPlugin[0], $"removing {plugin}");
-				provider.Remove(ticksPerPlugin[1], installDirectory, configDirectory, plugin);
+				provider.Remove(ticksPerPlugin[1], installDirectory, configDirectory, plugin, "--purge");
 				this.Session.SendProgress(ticksPerPlugin[2], $"removed {plugin}");
 			}
 			return true;
