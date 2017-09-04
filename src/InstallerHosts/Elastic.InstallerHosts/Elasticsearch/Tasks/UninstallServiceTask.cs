@@ -23,13 +23,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.Session.IsRollback && this.InstallationModel.NoticeModel.ExistingVersionInstalled)
-			{
-				// handle rolling back to a version that uses the old config environment variable
-				this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and rolling back");
-				return true;
-			}
-
 			if (this.InstallationModel.NoticeModel.ExistingVersionInstalled && !this.Session.IsUninstalling)
 			{
 				this.Session.Log($"Skipping {nameof(UninstallServiceTask)}: Already installed and not currently uninstalling");

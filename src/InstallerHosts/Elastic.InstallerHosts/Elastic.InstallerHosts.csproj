@@ -40,6 +40,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elasticsearch\Tasks\CleanupInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\CreateDirectoriesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\DeleteDirectoriesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\EditElasticsearchYamlTask.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="Elasticsearch\Tasks\ElasticsearchInstallationTask.cs" />
     <Compile Include="Elasticsearch\Tasks\InstallPluginsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\InstallServiceTask.cs" />
+    <Compile Include="Elasticsearch\Tasks\PreserveInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\RemoveEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\RemovePluginsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\SetEnvironmentVariablesTask.cs" />
