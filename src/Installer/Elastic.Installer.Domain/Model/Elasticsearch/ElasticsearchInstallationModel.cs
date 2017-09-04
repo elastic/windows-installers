@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Text;
 using Elastic.Configuration.EnvironmentBased;
@@ -291,5 +292,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		private string ValidationFailuresString(IEnumerable<ValidationFailure> failures) =>
 			failures.Aggregate(new StringBuilder(), (sb, v) =>
 				sb.AppendLine($"  • '{v.PropertyName}': {v.ErrorMessage}"), sb => sb.ToString());
+
+		public override string[] HiddenProperties =>
+			ModelArgumentParser.GetProperties(this.GetType())			
+				.Where(p => p.GetCustomAttribute<ArgumentAttribute>().IsHidden)
+				.Select(p => p.Name.ToUpperInvariant())
+				.Concat(this.Steps.SelectMany(s => s.HiddenProperties))				
+				.ToArray();
 	}
 }

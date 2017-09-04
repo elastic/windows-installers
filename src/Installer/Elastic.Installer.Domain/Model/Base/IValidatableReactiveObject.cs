@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using FluentValidation;
 using FluentValidation.Results;
 using ReactiveUI;
 
 namespace Elastic.Installer.Domain.Model.Base
 {
-
 	public interface IValidatableReactiveObject
 	{
 		/// <summary>The model validates and can be considered being in a valid state</summary>
@@ -20,6 +21,11 @@ namespace Elastic.Installer.Domain.Model.Base
 		///e.g closing and restarting the installer. They will cause a model dialog to appear with the only option to close the installer
 		/// </summary>
 		IList<ValidationFailure> PrerequisiteFailures { get; }
+
+		/// <summary>
+		/// Model properties whose value should not be logged
+		/// </summary>
+		string[] HiddenProperties { get; }
 
 		/// <summary>Force a model to refresh to its initial (not necessarily valid) state</summary>
 		void Refresh();
@@ -80,5 +86,11 @@ namespace Elastic.Installer.Domain.Model.Base
 			get => prerequisiteFailures;
 			set => this.RaiseAndSetIfChanged(ref prerequisiteFailures, value);
 		}
+
+		public virtual string[] HiddenProperties =>
+			ModelArgumentParser.GetProperties(typeof(TModel))
+				.Where(p => p.GetCustomAttribute<ArgumentAttribute>().IsHidden)
+				.Select(p => p.Name.ToUpperInvariant())
+				.ToArray();
 	}
 }
