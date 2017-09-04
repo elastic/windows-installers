@@ -254,6 +254,19 @@ namespace Elastic.Installer.Msi
 					)
 				);
 			}
+
+			// Update in-built progress templates 
+			// See http://web.mit.edu/ops/services/afs/openafs-1.4.1/src/src/WINNT/install/wix/lang/en_US/ActionText.wxi
+			var ui = document.Root.Descendants(ns + "UI").Single();
+			ui.Add(new XElement(ns + "ProgressText",
+				new XAttribute("Action", "InstallFiles"),
+				new XAttribute("Template", "Copying new files: [9][1]"),
+				new XText("Copying new files")
+			), new XElement(ns + "ProgressText",
+				new XAttribute("Action", "StopServices"),
+				new XAttribute("Template", $"Stopping {_productTitle} service"),
+				new XText($"Stopping {_productTitle} service") // TODO: default template doesn't receive service name. Might be because it's not installed with ServiceInstall table?
+			));
 		}
 	}
 }
