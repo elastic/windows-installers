@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -12,6 +14,8 @@ namespace Elastic.Installer.UI.Progress
 	/// </remarks>
 	public class InstallProgressCounter
 	{
+		private static readonly Regex ActionTemplate = new Regex(@"\[(?<num>\d+)\]", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
 		private readonly double _scriptPhaseWeight;
 		private int _total;
 		private int _completed;
@@ -20,6 +24,7 @@ namespace Elastic.Installer.UI.Progress
 		private bool _enableActionData;
 		private int _progressPhase;
 		private string _lastMessage;
+		private string _lastTemplate;
 
 		public InstallProgressCounter() : this(0.3)
 		{
@@ -51,7 +56,11 @@ namespace Elastic.Installer.UI.Progress
 					{
 						var message = messageRecord.GetString(2);
 						if (!string.IsNullOrEmpty(message))
-							this._lastMessage = message;
+						{
+							// Don't set (and therefore display) the last message if it has actiondata placeholders in it
+							this._lastMessage = ActionTemplate.IsMatch(message) ? this._lastMessage : message;
+							this._lastTemplate = message;
+						}
 					}
 
 					return new ProgressIndicator(this.Progress, this._lastMessage);
@@ -71,12 +80,13 @@ namespace Elastic.Installer.UI.Progress
 					{
 						// template is prefixed with the action name in double delimited braces
 						var actionData = Regex.Replace(messageRecord.GetString(0), "{{.*}}", string.Empty);
+						actionData = !string.IsNullOrEmpty(actionData) ? actionData : _lastTemplate;
 						if (!string.IsNullOrEmpty(actionData))
 						{
 							// Get the Actiondata fields and replace each placeholder in the ActionStart template
 							// with the ActionData field value. The try/catch is needed here as the template may contain
 							// a placeholder for an ActionData field value that does not exist.
-							actionData = Regex.Replace(actionData, @"\[(?<num>\d+)\]", m =>
+							actionData = ActionTemplate.Replace(actionData, m =>
 								{
 									var number = int.Parse(m.Groups["num"].Value);
 									try

@@ -4,6 +4,7 @@ using System.Linq;
 using Elastic.Configuration.Extensions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Microsoft.Deployment.WindowsInstaller;
+using ReactiveUI;
 
 namespace Elastic.InstallerHosts
 {
@@ -25,8 +26,7 @@ namespace Elastic.InstallerHosts
 				var arguments = new List<string>();
 				foreach (var p in allArguments)
 				{
-					string v;
-					if (session.TryGetValue(p, out v))
+					if (session.TryGetValue(p, out var v))
 						arguments.Add($"{p}={v}");
 				}
 				_cachedSetupArguments = arguments.ToArray();
@@ -93,14 +93,14 @@ namespace Elastic.InstallerHosts
 		/// <summary>
 		/// Send an action start message. This only works with deferred custom actions
 		/// </summary>
-		public static MessageResult SendActionStart(this Microsoft.Deployment.WindowsInstaller.Session session, int totalTicks, string actionName, string message, string actionDataTemplate = null)
+		public static MessageResult SendActionStart(this Session session, int totalTicks, string actionName, string message, string actionDataTemplate = null)
 		{
 			// http://www.indigorose.com/webhelp/msifact/Program_Reference/LuaScript/Actions/MSI.ProcessMessage.htm
 			// [1] action name (must match the name in the MSI Tables), 
 			// [2] description, 
 			// [3] template for InstallMessage.ActionData messages e.g. [1], [2], 
 			//     etc. relate to the index of values sent in a proceeding ActionData
-			using (var record = new Record(actionName, message, actionDataTemplate ?? message))
+			using (var record = new Record(actionName, message, actionDataTemplate ?? string.Empty))
 			{
 				session.Message(InstallMessage.ActionStart, record);
 			}
@@ -126,7 +126,7 @@ namespace Elastic.InstallerHosts
 		/// <summary>
 		/// Send a progress message. This only works with deferred custom actions
 		/// </summary>
-		public static MessageResult SendProgress(this Microsoft.Deployment.WindowsInstaller.Session session, int tickIncrement, params object[] actionDataTemplateParameters)
+		public static MessageResult SendProgress(this Session session, int tickIncrement, params object[] actionDataTemplateParameters)
 		{
 			if (actionDataTemplateParameters.Any())
 			{
