@@ -27,20 +27,20 @@ namespace Elastic.ProcessHosts.Kibana.Process
 			if (string.IsNullOrEmpty(consoleLine)) return;
 			throw new NotImplementedException("Parking this for now");
 
-			try
-			{
-//				//var message = JsonConvert.DeserializeObject<KibanaLogMessage>(consoleLine);
-//				Type = message.Type;
-//				Date = message.Timestamp;
-//				Tags = message.Tags;
-//				ProcessId = message.ProcessId;
-//				State = message.State;
-//				Message = message.Message;
-			}
-			catch (Exception)
-			{
-				throw new Exception($"Cannot deserialize ${consoleLine}");
-			}
+//			try
+//			{
+////				//var message = JsonConvert.DeserializeObject<KibanaLogMessage>(consoleLine);
+////				Type = message.Type;
+////				Date = message.Timestamp;
+////				Tags = message.Tags;
+////				ProcessId = message.ProcessId;
+////				State = message.State;
+////				Message = message.Message;
+//			}
+//			catch (Exception)
+//			{
+//				throw new Exception($"Cannot deserialize ${consoleLine}");
+//			}
 		}
 
 		public bool TryGetStartedConfirmation(out string host, out int? port)

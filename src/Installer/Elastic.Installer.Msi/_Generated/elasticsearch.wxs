@@ -617,6 +617,9 @@
 
     <UI>
       <EmbeddedUI Id="Elastic.Installer.UI.dll" SourceFile="Elastic.Installer.UI.CA.dll" />
+
+      <ProgressText Action="InstallFiles" Template="Copying new files: [9][1]">Copying new files</ProgressText>
+      <ProgressText Action="StopServices" Template="Stopping Elasticsearch service">Stopping Elasticsearch service</ProgressText>
     </UI>
 
     <Upgrade Id="daaa2cba-a1ed-4f29-afbf-5478617b00f6">
