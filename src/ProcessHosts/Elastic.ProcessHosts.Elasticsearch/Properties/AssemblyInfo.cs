@@ -10,9 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompanyAttribute("Elasticsearch BV")]
 [assembly: AssemblyCopyrightAttribute("Apache License, version 2 (ALv2). Copyright Elasticsearch.")]
 [assembly: AssemblyTrademarkAttribute("Elasticsearch is a trademark of Elasticsearch BV, registered in the U.S. and in other countries.")]
-[assembly: AssemblyVersionAttribute("6.0.0")]
-[assembly: AssemblyFileVersionAttribute("6.0.0")]
-[assembly: AssemblyInformationalVersionAttribute("6.0.0-beta1")]
+[assembly: AssemblyVersionAttribute("5.5.2")]
+[assembly: AssemblyFileVersionAttribute("5.5.2")]
 namespace System {
     internal static class AssemblyVersionInformation {
         internal const System.String AssemblyTitle = "Elasticsearch, you know for search!";
@@ -23,8 +22,7 @@ namespace System {
         internal const System.String AssemblyCompany = "Elasticsearch BV";
         internal const System.String AssemblyCopyright = "Apache License, version 2 (ALv2). Copyright Elasticsearch.";
         internal const System.String AssemblyTrademark = "Elasticsearch is a trademark of Elasticsearch BV, registered in the U.S. and in other countries.";
-        internal const System.String AssemblyVersion = "6.0.0";
-        internal const System.String AssemblyFileVersion = "6.0.0";
-        internal const System.String AssemblyInformationalVersion = "6.0.0-beta1";
+        internal const System.String AssemblyVersion = "5.5.2";
+        internal const System.String AssemblyFileVersion = "5.5.2";
     }
 }

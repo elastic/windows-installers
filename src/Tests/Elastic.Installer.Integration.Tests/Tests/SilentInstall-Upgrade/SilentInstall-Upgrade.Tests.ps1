@@ -55,31 +55,6 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $version
 
-	# BUG: Service is not started *after* upgrade, start manually for now
-	Context "Elasticsearch service" {	
-		$service = Get-ElasticsearchService
-
-		It "Service is not null" {
-            $Service | Should Not Be $null
-        }
-
-		if ($service.Status -ne "Running") {
-			$service.Start()
-			$service.Refresh()
-			$startTime = Get-Date
-			$timeout = New-TimeSpan -Seconds 30
-
-			while ($service.Status -ne "Running") {
-				if ($(Get-Date) - $startTime -gt $timeout) {
-					throw "Attempted to start the service in $timeout, but did not start"
-				}
-
-				Start-Sleep -m 250
-				$service.Refresh()
-			}
-		}
-	}
-
     Context-ElasticsearchService
 
     Context-PingNode -XPackSecurityInstalled $true
