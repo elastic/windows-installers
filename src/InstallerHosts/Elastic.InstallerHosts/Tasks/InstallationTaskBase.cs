@@ -23,7 +23,11 @@ namespace Elastic.InstallerHosts.Tasks
 		protected string[] Args { get; set; }
 
 		protected string[] SanitizedArgs => 
-			Args.Select(a => a.Contains("PASSWORD") ? Regex.Replace(a, "(.*)=(.+)", "$1=<redacted>") : a).ToArray();
+			Args.Select(a =>
+			{
+				var parts = a.Split(new[] {'='}, 2);
+				return Model.HiddenProperties.Contains(parts[0]) ? $"{parts[0]}=**********" : a;
+			}).ToArray();
 
 		protected string ActionName => this.GetType().FullName;
 

@@ -32,9 +32,16 @@ namespace Elastic.Installer.Msi
 			// don't have to be set on the command line.
 			var setupParams = product.MsiParams;
 			var staticProperties = setupParams
-				.Where(v => v.Attribute.IsStatic)
-				.Select(a => new Property(a.Key, a.Value)
-			);
+				.Where(v => v.Attribute.IsStatic || v.Attribute.IsHidden || v.Attribute.IsSecure)
+				.Select(a =>
+				{
+					var property = new Property(a.Key, a.Value) { Attributes = new Attributes() };
+					if (a.Attribute.IsHidden)
+						property.Attributes.Add("Hidden", "yes");
+					if (a.Attribute.IsSecure)
+						property.Attributes.Add("Secure", "yes");
+					return property;
+				});
 
 			// Only set dynamic property if MSI is not installed and value is empty.
 			// Dynamic properties calculate the default value at MSI install time
