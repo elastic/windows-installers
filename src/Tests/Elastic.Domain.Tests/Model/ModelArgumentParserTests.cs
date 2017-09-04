@@ -15,6 +15,7 @@ namespace Elastic.Installer.Domain.Tests.Model
 		{
 			public bool IsValid => true;
 			public bool IsRelevant => true;
+			public string[] HiddenProperties { get; set; }
 			public void Refresh() { }
 			public void Validate() { }
 			public IList<ValidationFailure> ValidationFailures => null;
@@ -28,6 +29,7 @@ namespace Elastic.Installer.Domain.Tests.Model
 		{
 			public bool IsValid => true;
 			public bool IsRelevant => true;
+			public string[] HiddenProperties { get; set; }
 			public void Refresh() { }
 			public void Validate() { }
 			public IList<ValidationFailure> ValidationFailures => null;
@@ -109,7 +111,7 @@ namespace Elastic.Installer.Domain.Tests.Model
 
 			Action viewModelArgumentParser = () => new ModelArgumentParser(new IValidatableReactiveObject[] { new ModelA(), new ModelB() }, args);
 			var exception = viewModelArgumentParser.ShouldThrow<ArgumentException>()
-				.WithMessage("X can not be reused as argument option on ModelB");
+				.WithMessage("X can not be reused as argument option on ModelB as it already exists as a property on another model");
 		}
 	}
 }
