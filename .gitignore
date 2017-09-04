@@ -213,3 +213,4 @@ build/scripts/.fake
 # Integration tests
 **/Elastic.Installer.Integration.Tests/Tests/**/Vagrantfile
 src/.vs/
+paket-files/

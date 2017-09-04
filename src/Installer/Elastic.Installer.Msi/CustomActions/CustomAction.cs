@@ -11,10 +11,7 @@ namespace Elastic.Installer.Msi.CustomActions
 	{
 		protected IEnumerable<string> AllArguments { get; }
 
-		protected CustomAction(IEnumerable<string> allArguments)
-		{
-			this.AllArguments = allArguments;
-		}
+		protected CustomAction(IEnumerable<string> allArguments) => this.AllArguments = allArguments;
 
 		public abstract Type ProductType { get; }
 
@@ -51,7 +48,8 @@ namespace Elastic.Installer.Msi.CustomActions
 				Sequence = this.Sequence,
 				Execute = this.Execute,
 				Impersonate = !this.NeedsElevatedPrivileges,
-				UsesProperties = string.Join(",", this.AllArguments.Concat(new[] { "UILevel", "INSTALLDIRECTORY.bin", "VERSION", "REMOVE", "ProductName" }))
+				UsesProperties = string.Join(",", this.AllArguments.Concat(new [] { "UILevel", "INSTALLDIR.bin", "VERSION", "REMOVE", "ProductName" })),
+				Attributes = new Attributes {{ "HideTarget", "yes" }}
 			};
 		}
 	}
