@@ -27,9 +27,9 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			this.Session.Log($"Trying to execute StopServiceTask seeing service: " + seesService);
 			if (!seesService) return true;
 			var totalTicks = 1000;
-			this.Session.SendActionStart(totalTicks, ActionName, "Stopping existing Elasticsearch service");
+			this.Session.SendActionStart(totalTicks, ActionName, "Stopping existing Elasticsearch service", "Elasticsearch service: [1]");
 			this.ServiceStateProvider.StopIfRunning(TimeSpan.FromSeconds(60));
-			this.Session.SendProgress(1000, "Elasticsearch service stopped");
+			this.Session.SendProgress(1000, "stopped");
 			return true;
 		}
 	}

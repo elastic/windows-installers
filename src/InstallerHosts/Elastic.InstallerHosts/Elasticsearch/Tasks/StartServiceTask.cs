@@ -30,7 +30,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			this.Session.Log($"Trying to execute StartServiceTask seeing service: " + seesService);
 			if (!seesService) return true;
 			var totalTicks = 1000;
-			this.Session.SendActionStart(totalTicks, ActionName, "Starting Elasticsearch service");
+			this.Session.SendActionStart(totalTicks, ActionName, "Elasticsearch service", "Elasticsearch service: [1]");
 			this.ServiceStateProvider.StartAndWaitForRunning(TimeSpan.FromSeconds(60), 2000);
 			this.Session.SendProgress(1000, "Elasticsearch service started");
 			return true;
