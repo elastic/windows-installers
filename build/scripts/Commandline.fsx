@@ -99,17 +99,24 @@ Whether to skip unit tests.
 
     type DownloadFeed = XmlProvider< feedUrl >
 
-    type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)$", noMethodPrefix=true >
+    type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*?)?(?<Source>\w*?)(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)$", noMethodPrefix=true >
+
+    let private parseSource = function
+        | "r" -> Released
+        | hash when isNotNullOrEmpty hash -> BuildCandidate hash
+        | _ -> Compile
 
     let private parseVersion version =
         let m = VersionRegex().Match version
         if m.Success |> not then failwithf "Could not parse version from %s" version
+        let source = parseSource m.Source.Value
         { Product = m.Product.Value;
           FullVersion = m.Version.Value;
           Major = m.Major.Value |> int;
           Minor = m.Minor.Value |> int;
           Patch = m.Patch.Value |> int;
-          Prerelease = m.Prerelease.Value; }
+          Prerelease = m.Prerelease.Value; 
+          Source = source; }
 
     let private lastFeedVersion (product : Product) =
         // TODO: disallow prereleases for moment. Make build parameter in future?
@@ -149,7 +156,6 @@ Whether to skip unit tests.
         | "test"
         | "clean"
         | "downloadproducts"
-        | "unzipproducts"
         | "patchguids"
         | "unittest"
         | "prunefiles"
@@ -169,8 +175,9 @@ Whether to skip unit tests.
 
     let arguments =
         match filteredArgs with
-        | _ :: tail -> target :: tail
+        | IsTarget head :: tail -> head :: tail
         | [] -> [target]
+        | _ -> target :: filteredArgs
 
     let private (|IsVersionList|_|) candidate =
         let versionStrings = splitStr "," candidate
@@ -185,7 +192,8 @@ Whether to skip unit tests.
                         Major = m.Major.Value |> int;
                         Minor = m.Minor.Value |> int;
                         Patch = m.Patch.Value |> int;
-                        Prerelease = m.Prerelease.Value; })
+                        Prerelease = m.Prerelease.Value; 
+                        Source = parseSource m.Source.Value })
             | _ -> ()
         )      
         match versions with
@@ -302,15 +310,12 @@ Whether to skip unit tests.
                            products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                           
                        | ["integrate"; IsProductList products; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-                       
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                    
                        | ["integrate"; IsProductList products; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
                            products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion) 
                        | ["integrate"; IsProductList products] ->
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-                           
-                           
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)        
                        | ["integrate"; IsVersionList versions; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
@@ -326,7 +331,12 @@ Whether to skip unit tests.
                        | ["integrate"; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-
+                       | [IsProductList products; IsVersionList versions] ->
+                           products |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | [IsProductList products] ->
+                           products |> List.map(ProductVersions.CreateFromProduct lastFeedVersion)
+                       | [IsVersionList versions] ->
+                           All |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target; IsVersionList versions] ->
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target; IsProductList products] ->
@@ -335,12 +345,6 @@ Whether to skip unit tests.
                            products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target] ->
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-                       | [IsProductList products; IsVersionList versions] ->
-                           products |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
-                       | [IsVersionList versions] ->
-                           All |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
-                       | [IsProductList products] ->
-                           products |> List.map(ProductVersions.CreateFromProduct lastFeedVersion)
                        | [] ->
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
                        | _ ->

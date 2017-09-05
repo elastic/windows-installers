@@ -29,7 +29,8 @@ let productsToBuild = Commandline.parse()
 
 let productDescriptions = productsToBuild
                           |> List.map(fun p ->
-                                 p.Versions |> List.map(fun v -> sprintf "%s %s" p.Title v.FullVersion)
+                                 p.Versions 
+                                 |> List.map(fun v -> sprintf "%s %s (%s)" p.Title v.FullVersion v.Source.Description)
                              )
                           |> List.concat
                           |> String.concat Environment.NewLine
@@ -46,10 +47,6 @@ Target "Clean" (fun _ ->
 Target "DownloadProducts" (fun () ->
     productsToBuild
     |> List.iter (fun p -> p.Download())
-)
-
-Target "UnzipProducts" (fun () ->
-    productsToBuild |> List.iter (fun p -> p.Unzip())
 )
 
 Target "PatchGuids" (fun () ->
@@ -142,7 +139,6 @@ Target "Help" (fun () -> trace Commandline.usage)
 "Clean"
   ==> "PatchGuids"
   =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
-  ==> "UnzipProducts"
   ==> "PruneFiles"
   =?> ("UnitTest", (not ((getBuildParam "skiptests") = "1")))
   ==> "BuildServices"
