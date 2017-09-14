@@ -226,7 +226,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		public void AssertTask<TTask>(Func<ElasticsearchInstallationModel, ISession, MockFileSystem, TTask> createTask, Action<ElasticsearchInstallationModel, InstallationModelTester> assert)
 			where TTask : ElasticsearchInstallationTaskBase
 		{
-			var task = createTask(this.InstallationModel, NoopSession.Elasticsearch, this.FileSystem);
+			var task = createTask(this.InstallationModel, this.InstallationModel.Session, this.FileSystem);
 			Action a = () => task.Execute();
 			a.ShouldNotThrow();
 			assert(this.InstallationModel, this);

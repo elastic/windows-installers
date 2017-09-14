@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Configuration.Service;
+﻿using System;
+using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.InstallerHosts.Elasticsearch.Tasks;
 using FluentAssertions;
@@ -24,6 +25,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 			{
 				var fs = t.FileSystem;
 				var session = m.Session as NoopSession;
+				throw new Exception(session.ToString());
 				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should()
 					.BeFalse("{0} {1}", m.LocationsModel.DataDirectory, session);
 				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse("{0}", m.LocationsModel.ConfigDirectory);
