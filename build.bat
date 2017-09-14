@@ -10,4 +10,4 @@ IF EXIST paket.lock (
 	.paket\paket.exe install
 	IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 )
-"packages\build\FAKE\tools\Fake.exe" "build\\scripts\\Targets.fsx" "cmdline=%*"
+"packages\build\FAKE.x64\tools\FAKE.exe" "build\\scripts\\Targets.fsx" "cmdline=%*"
