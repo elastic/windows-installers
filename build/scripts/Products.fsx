@@ -2,11 +2,8 @@
 
 #r "FakeLib.dll"
 
-open System
 open System.Globalization
-open System.Text
 open System.IO
-open System.Text.RegularExpressions
 open Fake
 open Fake.FileHelper
 
@@ -82,7 +79,8 @@ module Products =
         Minor : int;
         Patch : int;
         Prerelease : string;
-        Source : Source
+        Source : Source;
+        RawValue: string;
     }
 
     type ProductVersions(product:Product, versions:Version list) =

@@ -4,6 +4,7 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
+. $currentDir\..\common\SemVer.ps1
 
 Describe "Silent Install with default arguments" {
 
@@ -21,7 +22,10 @@ Describe "Silent Install with default arguments" {
     $ProfileFolder = $env:ALLUSERSPROFILE
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
-    Context-EsConfigEnvironmentVariable -Expected $ExpectedConfigFolder
+    Context-EsConfigEnvironmentVariable -Expected @{ 
+		Version = $version 
+		Path = $ExpectedConfigFolder
+	}
 
     Context-PluginsInstalled
 
@@ -44,9 +48,9 @@ Describe "Silent Uninstall" {
 
 	Context-NodeNotRunning
 
-	Context-EnvironmentVariableNull -Name "CONF_DIR"
+	Context-EsConfigEnvironmentVariableNull
 
-	Context-EnvironmentVariableNull -Name "ES_HOME"
+	Context-EsHomeEnvironmentVariableNull
 
 	Context-MsiNotRegistered
 

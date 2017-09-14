@@ -1,3 +1,5 @@
+.\SemVer.ps1
+
 function Write-Log {
     [CmdletBinding()]
     Param
@@ -165,6 +167,7 @@ function Add-VagrantAzureProvider() {
 
 	vagrant plugin install $vagrantAzurePlugin --plugin-version $pluginVersion
 
+	# don't log the Azure SubscriptionId and Admin Username. https://github.com/Azure/vagrant-azure/issues/191
     $vagrantAzureRunInstanceFile = [Environment]::ExpandEnvironmentVariables("%USERPROFILE%\.vagrant.d\gems\2.2.5\gems\vagrant-azure-$pluginVersion\lib\vagrant-azure\action\run_instance.rb")
     $replacements = @{
         'env[:ui].info(" -- Subscription Id: #{config.subscription_id}")' = 'env[:ui].info(" -- Subscription Id: <redacted>")'
@@ -218,7 +221,7 @@ function Invoke-IntegrationTestsOnLocal($Location, $Version, $PreviousVersion, $
 
 	try {
 		vagrant up local    
-		vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersion '$PreviousVersion' -TestDirName '$testDirName'"
+		vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersions @($($($PreviousVersions | ForEach-Object { "'$_'" }) -join ",")) -TestDirName '$testDirName'"
 	}
 	finally {
 		vagrant destroy local -f
@@ -283,7 +286,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version, $PreviousVersion) {
 		$session = [System.Management.Automation.Runspaces.PSSession](Get-WinRmSession -DnsName $dnsName)
 		Copy-SyncedFoldersToRemote -Session $session
 		log "Run Pester bootstrap"	
-		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersion '$PreviousVersion' -TestDirName '$testDirName'"
+		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersions @($($($PreviousVersions | ForEach-Object { "'$_'" }) -join ",")) -TestDirName '$testDirName'"
 		Copy-SyncedFoldersFromRemote -Session $session -TestDirName $testDirName
 		Remove-PSSession $session
 	}
@@ -299,7 +302,7 @@ function Invoke-IntegrationTestsOnAzure($Location, $Version, $PreviousVersion) {
     }
 }
 
-function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $PreviousVersion, $Session) {
+function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $PreviousVersions, $Session) {
 	$currentLocation = Get-Location   
 	$testDirName = Split-Path $Location -Leaf
 	try {
@@ -311,7 +314,8 @@ function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $PreviousVersi
 		Copy-SyncedFoldersToRemote -Session $Session -SyncFolders $SyncFolders
 		log "Run Pester bootstrap"	
 		cd $currentLocation
-		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersion '$PreviousVersion' -TestDirName '$testDirName'"
+
+		vagrant powershell azure -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersions @($($($PreviousVersions | ForEach-Object { "'$_'" }) -join ",")) -TestDirName '$testDirName'"
 		cd $Location
 		Copy-SyncedFoldersFromRemote -Session $Session -TestDirName $testDirName	
 		cd $currentLocation
@@ -322,7 +326,7 @@ function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $PreviousVersi
 	}
 }
 
-function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Version, $PreviousVersion) {
+function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Version, $PreviousVersions) {
 
 	# run all tests on one vagrant box
 	if ($VagrantProvider -eq "quick-azure") {
@@ -349,7 +353,7 @@ function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Vers
 			Copy-SyncedFoldersToRemote -Session $session -SyncFolders $syncFolders
 			foreach ($dir in $TestDirs) {  
 				log "running tests in $dir"
-				Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version "$Version" -PreviousVersion "$PreviousVersion" -Session $session
+				Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version "$Version" -PreviousVersions $PreviousVersions -Session $session
 			}
 
 			Remove-PSSession $session
@@ -372,10 +376,10 @@ function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Vers
 			Copy-Item "$CurrentDir\common\Vagrantfile" -Destination $dir -Force
 
 			if ($VagrantProvider -eq "local") {
-				Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version -PreviousVersion $PreviousVersion
+				Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version -PreviousVersions $PreviousVersions 
 			} 
 			else {
-				Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version -PreviousVersion $PreviousVersion
+				Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version -PreviousVersions $PreviousVersions 
 			}
 		}
 	}
@@ -445,7 +449,7 @@ function Invoke-SilentInstall {
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
     log "running installer: msiexec.exe /i $Exe /qn /l install.log $QuotedArgs"
-    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/i $Exe /qn /l install.log $QuotedArgs" -Wait -PassThru).ExitCode
+    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/i $Exe /qn /l*v install.log $QuotedArgs" -Wait -PassThru).ExitCode
 
     if ($ExitCode) {
         log "last exit code not zero: $ExitCode" -l Error
@@ -468,13 +472,26 @@ function Invoke-SilentUninstall {
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
     log "running installer: msiexec.exe /x $Exe /qn /l uninstall.log $QuotedArgs"
-    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/x $Exe /qn /l uninstall.log $QuotedArgs" -Wait -PassThru).ExitCode
+    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/x $Exe /qn /l*v uninstall.log $QuotedArgs" -Wait -PassThru).ExitCode
 
     if ($ExitCode) {
         log "last exit code not zero: $ExitCode" -l Error
     }
 
     return $ExitCode
+}
+
+function Get-ConfigEnvironmentVariableForVersion($Version) {
+	if (!($Version)) {
+		$Version = $env:EsVersion
+	}
+
+	if ($Version.StartsWith("5")) {
+		return "ES_CONFIG"
+	}
+	else {
+		return "CONF_DIR"
+	}
 }
 
 function Ping-Node([System.Timespan]$Timeout, $Domain, $Port) {
@@ -546,22 +563,24 @@ function Get-TotalPhysicalMemory() {
     return (Get-WmiObject Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1mb
 }
 
-function Get-ElasticsearchYamlConfiguration() {
-	$EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
+function Get-ElasticsearchYamlConfiguration($Version) {
+	$esConfigEnvVar = Get-ConfigEnvironmentVariableForVersion -Version $Version
+	$EsConfig = Get-MachineEnvironmentVariable $esConfigEnvVar
     $EsData = Split-Path $EsConfig -Parent | Join-Path -ChildPath "data"
 	return Get-Content "$EsData\elasticsearch.yml"
 }
 
-function Add-XPackSecurityCredentials($Username, $Password, $Roles) {
+function Add-XPackSecurityCredentials($Username, $Password, $Roles, $Version) {
     if (!$Roles) {
         $Roles = @("superuser")
     }
 
+	$esConfigEnvVar = Get-ConfigEnvironmentVariableForVersion -Version $Version
     $Service = Get-ElasticsearchService
     $Service | Stop-Service
 
     $EsHome = Get-MachineEnvironmentVariable "ES_HOME"
-    $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
+    $EsConfig = Get-MachineEnvironmentVariable $esConfigEnvVar
     $EsUsersBat = Join-Path -Path $EsHome -ChildPath "bin\x-pack\users.bat"
     $ConcatRoles = [string]::Join(",", $Roles)
 
@@ -586,4 +605,18 @@ function Merge-Hashtables {
         }
     }
     return $Output
+}
+
+function Get-ExpectedServiceStatus($Version, $PreviousVersion) {	
+	$expectedStatus = "Running"
+
+	if ($PreviousVersion.Major -eq 5 -and $PreviousVersion.Minor -eq 5 `
+		-and $PreviousVersion.Patch -le 2 -and $PreviousVersion.SourceType -eq "Released" `
+	    -and $Version.Major -eq 5 -and $Version.Minor -eq 5 -and $Version.Patch -ge 3) {
+
+		Write-Output "Previous version is $($PreviousVersion.Description) and version is $($Version.Description). Expected status is Stopped."
+		$expectedStatus = "Stopped"
+	}
+
+	return $expectedStatus
 }

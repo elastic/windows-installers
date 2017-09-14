@@ -4,14 +4,17 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
+. $currentDir\..\common\SemVer.ps1
 
 $credentials = "elastic:changeme"
+$version = $Global:Version
+$previousVersion = $Global:PreviousVersions[0]
 
-Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous version" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install previous version $($previousVersion.Description)" {
 
-	$previousVersion = $env:PreviousEsVersion
-	
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $previousVersion
+	$v = $previousVersion.FullVersion
+
+    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v
 
     Context-ElasticsearchService
 
@@ -25,14 +28,17 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
     $ProfileFolder = $env:ALLUSERSPROFILE
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
-    Context-EsConfigEnvironmentVariable -Expected $ExpectedConfigFolder
+    Context-EsConfigEnvironmentVariable -Expected @{ 
+		Version = $v
+		Path = $ExpectedConfigFolder
+	}
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
     Context-MsiRegistered -Expected @{
-		Name = "Elasticsearch $previousVersion"
-		Caption = "Elasticsearch $previousVersion"
-		Version = $previousVersion
+		Name = "Elasticsearch $v"
+		Caption = "Elasticsearch $v"
+		Version = $v
 	}
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
@@ -41,23 +47,23 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
-    Context-ElasticsearchConfiguration
+    Context-ElasticsearchConfiguration -Expected @{
+		Version = $v
+	}
 
-    Context-JvmOptions
+    Context-JvmOptions -Expected @{
+		Version = $v
+	}
 
 	# Insert some data
-	Context-InsertData -Credentials "elastic:changeme"
+	Context-InsertData -Credentials $credentials
 }
 
-Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade from $($previousVersion.Description) to $($version.Description)" {
 
-	$version = $env:EsVersion
+	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $version
-
-    Context-ElasticsearchService
-
-    Context-PingNode -XPackSecurityInstalled $true
+    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v
 
     $ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -67,7 +73,18 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version
     $ProfileFolder = $env:ALLUSERSPROFILE
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
-    Context-EsConfigEnvironmentVariable -Expected $ExpectedConfigFolder
+    Context-EsConfigEnvironmentVariable -Expected @{ 
+		Version = $v 
+		Path = $ExpectedConfigFolder
+	}
+
+	$expectedStatus = Get-ExpectedServiceStatus -Version $version -PreviousVersion $previousVersion
+
+    Context-ElasticsearchService -Expected @{
+		Status = $expectedStatus
+	}
+
+	Context-PingNode -XPackSecurityInstalled $true
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
@@ -79,25 +96,29 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Upgrade to new version
 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
-    Context-ElasticsearchConfiguration
+    Context-ElasticsearchConfiguration -Expected @{
+		Version = $v
+	}
 
-    Context-JvmOptions
+    Context-JvmOptions -Expected @{
+		Version = $v
+	}
 
 	# Check inserted data still exists
 	Context-ReadData -Credentials $credentials
 }
 
-Describe -Tag 'PreviousVersion' "Silent Uninstall upgrade - Uninstall new version" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninstall $($version.Description)" {
 
-	$version = $env:EsVersion
+	$v = $version.FullVersion
 
-    Invoke-SilentUninstall -Version $version
+    Invoke-SilentUninstall -Version $v
 
 	Context-NodeNotRunning
 
-	Context-EnvironmentVariableNull -Name "CONF_DIR"
+	Context-EsConfigEnvironmentVariableNull
 
-	Context-EnvironmentVariableNull -Name "ES_HOME"
+	Context-EsHomeEnvironmentVariableNull
 
 	Context-MsiNotRegistered
 

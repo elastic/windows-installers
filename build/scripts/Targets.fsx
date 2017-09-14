@@ -9,12 +9,8 @@
 #load "Commandline.fsx"
 
 open System
-open System.Diagnostics
-open System.Text
 open System.IO
 open System.Management.Automation
-open System.Text.RegularExpressions
-open Microsoft.FSharp.Reflection
 open Fake
 open Fake.FileHelper
 open Scripts
@@ -107,16 +103,19 @@ Target "Integrate" (fun () ->
     let version = versions |> List.last                
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
     let vagrantProvider = getBuildParamOrDefault "vagrantprovider" "local"
-    let previousVersion = 
+    let previousVersions = 
         match versions.Length with
-        | 1 -> ""
-        | _ -> versions.[versions.Length - 2]
+        | 1 -> "@()"
+        | _ -> versions.[0..versions.Length - 2]
+               |> List.map(fun v -> sprintf "'%s'" v)
+               |> String.concat ","
+               |> sprintf "@(%s)"
         
-    let script = sprintf @"cd '%s'; .\Bootstrapper.ps1 -Tests '%s' -Version '%s' -PreviousVersion '%s' -VagrantProvider '%s'" 
+    let script = sprintf @"cd '%s'; .\Bootstrapper.ps1 -Tests '%s' -Version '%s' -PreviousVersions %s -VagrantProvider '%s'" 
                     IntegrationTestsDir 
                     integrationTestsTargets 
                     version 
-                    previousVersion 
+                    previousVersions 
                     vagrantProvider
         
     trace (sprintf "Running Powershell script: '%s'" script)

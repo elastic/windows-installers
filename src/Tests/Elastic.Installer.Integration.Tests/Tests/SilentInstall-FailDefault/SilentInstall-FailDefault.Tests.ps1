@@ -4,11 +4,12 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
+. $currentDir\..\common\SemVer.ps1
 
 Describe "Silent Failed Install with default arguments" {
 
 	$startDate = Get-Date
-	$version = $env:EsVersion
+	$version = $Global:Version
 
 	Context "Failed installation" {
 		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1")
@@ -22,9 +23,9 @@ Describe "Silent Failed Install with default arguments" {
 
 	Context-NodeNotRunning
 
-	Context-EnvironmentVariableNull -Name "CONF_DIR"
+	Context-EsConfigEnvironmentVariableNull
 
-	Context-EnvironmentVariableNull -Name "ES_HOME"
+	Context-EsHomeEnvironmentVariableNull
 
 	Context-MsiNotRegistered
 

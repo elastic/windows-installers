@@ -4,6 +4,7 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
+. $currentDir\..\common\SemVer.ps1
 
 Describe "Silent Install with no plugins" {
 
@@ -22,9 +23,9 @@ Describe "Silent Uninstall with no plugins" {
 
 	Context-NodeNotRunning
 
-	Context-EnvironmentVariableNull -Name "CONF_DIR"
+	Context-EsConfigEnvironmentVariableNull
 
-	Context-EnvironmentVariableNull -Name "ES_HOME"
+	Context-EsHomeEnvironmentVariableNull
 
 	Context-MsiNotRegistered
 

@@ -19,7 +19,8 @@ function Context-ElasticsearchService($Expected) {
             StartType="Automatic"
             Name="Elasticsearch"
             DisplayName="Elasticsearch"
-        } $Expected
+			StartIfNotRunning = $true
+		} $Expected
 
     Context "Elasticsearch service" {
         $Service = Get-ElasticsearchService
@@ -30,6 +31,18 @@ function Context-ElasticsearchService($Expected) {
 
         It "Service status is $($Expected.Status)" {
             $Service.Status | Should Be $($Expected.Status)
+
+			# BUG: Upgrading from Elasticsearch 5.5.0-2, to 5.5.3+, the service is not started after upgrading.
+			# Start the service if commanded to do so
+			if ($Expected.StartIfNotRunning -and ($Expected.Status -eq "StopPending" -or $Expected.Status -eq "Stopped")) {
+				Write-Output "Service is currently $($Service.Status). Attempting to start"
+				$timeSpan = New-TimeSpan -Seconds 10
+				if ($Service.Status -eq "StopPending") {
+					$Service.WaitForStatus("Stopped", $timeSpan)
+				}
+
+				$Service | Start-Service
+			}
         }
 
         It "Service can be stopped" {
@@ -120,25 +133,32 @@ function Context-EsHomeEnvironmentVariable($Expected) {
 }
 
 function Context-EsConfigEnvironmentVariable($Expected) {
-    Context "CONF_DIR Environment Variable" {
-        $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
+	$Expected = Merge-Hashtables @{
+        Version = $Global:Version.FullVersion
+        Path = Join-Path -Path $($env:ALLUSERSPROFILE) -ChildPath "Elastic\Elasticsearch\config"
+    } $Expected
 
-        It "CONF_DIR is not null" {
+	$esConfigEnvVar = Get-ConfigEnvironmentVariableForVersion -Version $Expected.Version
+
+    Context "$esConfigEnvVar Environment Variable" {
+        $EsConfig = Get-MachineEnvironmentVariable $esConfigEnvVar
+
+        It "$esConfigEnvVar is not null" {
             $EsConfig | Should Not Be $null
         }
 
-        It "CONF_DIR Environment variable set to $Expected" {
-            $EsConfig | Should Be $Expected
+        It "$esConfigEnvVar Environment variable set to $($Expected.Path)" {
+            $EsConfig | Should Be $Expected.Path
         }
     }
 }
 
 function Context-MsiRegistered($Expected) {
     $Expected = Merge-Hashtables @{
-            Name = "Elasticsearch $env:EsVersion"
-            Caption = "Elasticsearch $env:EsVersion"
-            # version is always without any prerelease suffix
-            Version = $($env:EsVersion).Split("-")[0]
+            Name = "Elasticsearch $Global:Version.FullVersion"
+            Caption = "Elasticsearch $Global:Version.FullVersion"
+            # Product Version is always without any prerelease suffix
+            Version = "$($Global:Version.Major).$($Global:Version.Minor).$($Global:Version.Patch)"
         } $Expected
 
 
@@ -246,20 +266,24 @@ function Context-ClusterNameAndNodeName($Expected) {
 }
 
 function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
+	$Expected = Merge-Hashtables @{
+        BootstrapMemoryLock = $false
+        NodeData = $true
+        NodeIngest = $true
+        NodeMaster = $true
+        NodeMaxLocalStorageNodes = 1
+		Version = $Global:Version.FullVersion
+    } $Expected
 
-    $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
+    $esConfigEnvVar = Get-ConfigEnvironmentVariableForVersion -Version $Expected.Version
+	$EsConfig = Get-MachineEnvironmentVariable $esConfigEnvVar
     $EsData = Split-Path $EsConfig -Parent | Join-Path -ChildPath "data"
     $EsLogs = Split-Path $EsConfig -Parent | Join-Path -ChildPath "logs"
 
-    $Expected = Merge-Hashtables @{
-            BootstrapMemoryLock = $false
-            NodeData = $true
-            NodeIngest = $true
-            NodeMaster = $true
-            NodeMaxLocalStorageNodes = 1
-            Data = $EsData
-            Logs = $EsLogs
-    } $Expected
+	$Expected = Merge-Hashtables @{
+		Data = $EsData
+        Logs = $EsLogs
+	} $Expected
 
     Context "Elasticsearch Yaml Configuration" {
 
@@ -300,31 +324,34 @@ function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
 }
 
 function Context-JvmOptions ($Expected) {
-    if (!($Expected)) {
-    	$totalPhysicalMemory = Get-TotalPhysicalMemory
-    	
-    	if ($totalPhysicalMemory -le 4096) {
-    		$Expected = $totalPhysicalMemory / 2
-    	}
-    	else {
-    		$Expected = 2048
-    	}
+	$totalPhysicalMemory = Get-TotalPhysicalMemory  	
+    if ($totalPhysicalMemory -le 4096) {
+    	$defaultMemory = $totalPhysicalMemory / 2
     }
+    else {
+    	$defaultMemory = 2048
+    }
+	
+	$Expected = Merge-Hashtables @{
+		Version = $Global:Version.FullVersion
+		Memory = $defaultMemory
+    } $Expected
 
     Context "JVM Configuration" {
-        $EsConfig = Get-MachineEnvironmentVariable "CONF_DIR"
+        $esConfigEnvVar = Get-ConfigEnvironmentVariableForVersion -Version $Expected.Version
+		$EsConfig = Get-MachineEnvironmentVariable $esConfigEnvVar
         $ConfigLines = "$EsConfig\jvm.options"
 
         It "jvm.options should exist in $EsConfig" {
             $ConfigLines | Should Exist
         }
 
-        It "Min Heap size should be set to $($Expected)m" {
-            $ConfigLines | Should Contain ([regex]::Escape("-Xmx$($Expected)m"))
+        It "Min Heap size should be set to $($Expected.Memory)m" {
+            $ConfigLines | Should Contain ([regex]::Escape("-Xmx$($Expected.Memory)m"))
         }
 
-        It "Max Heap size should be set to $($Expected)m" {
-            $ConfigLines | Should Contain ([regex]::Escape("-Xms$($Expected)m"))
+        It "Max Heap size should be set to $($Expected.Memory)m" {
+            $ConfigLines | Should Contain ([regex]::Escape("-Xms$($Expected.Memory)m"))
         }
     }
 }
@@ -452,11 +479,27 @@ function Context-EmptyInstallDirectory($Path) {
     }
 }
 
-function Context-EnvironmentVariableNull($Name) {
+function Context-EsConfigEnvironmentVariableNull($Version) {
+	if (!($Version)) {
+		$Version = $Global:Version.FullVersion
+	}
+
+	$Name = Get-ConfigEnvironmentVariableForVersion -Version $Version
+
 	Context "$Name Environment Variable" {
         $envVar = Get-MachineEnvironmentVariable $Name
         It "$Name Environment variable should be null" {
             $envVar | Should Be $null
+        }
+    }
+}
+
+function Context-EsHomeEnvironmentVariableNull() {
+	$EsHome = Get-MachineEnvironmentVariable "ES_HOME"
+
+	Context "ES_HOME Environment Variable" {
+        It "ES_HOME Environment variable should be null" {
+            $EsHome | Should Be $null
         }
     }
 }
