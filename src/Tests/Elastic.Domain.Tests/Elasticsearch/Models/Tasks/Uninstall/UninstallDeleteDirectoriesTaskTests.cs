@@ -22,10 +22,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 			(m, t) =>
 			{
 				var fs = t.FileSystem;
-				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeFalse();
+				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should().BeFalse("{0}", m.LocationsModel.DataDirectory);
+				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse("{0}", m.LocationsModel.ConfigDirectory);
+				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeFalse("{0}", m.LocationsModel.LogsDirectory);
+				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeFalse("{0}", m.LocationsModel.InstallDir);
 			}
 		);
 		
@@ -43,8 +43,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 			(m, t) =>
 			{
 				var fs = t.FileSystem;
-				fs.Directory.Exists(LocationsModel.DefaultProductInstallationDirectory).Should().BeFalse();
-				fs.Directory.Exists(LocationsModel.DefaultCompanyInstallationDirectory).Should().BeFalse();
+				fs.Directory.Exists(LocationsModel.DefaultProductInstallationDirectory).Should()
+					.BeFalse("{0}", LocationsModel.DefaultProductInstallationDirectory);
+				fs.Directory.Exists(LocationsModel.DefaultCompanyInstallationDirectory).Should()
+					.BeFalse("{0}", LocationsModel.DefaultCompanyInstallationDirectory);
 			}
 		);
 		[Fact] void LeavesParentFolderAloneIfOtherProductIsInstalled() =>
@@ -62,8 +64,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 			(m, t) =>
 			{
 				var fs = t.FileSystem;
-				fs.Directory.Exists(LocationsModel.DefaultProductInstallationDirectory).Should().BeFalse();
-				fs.Directory.Exists(LocationsModel.DefaultCompanyInstallationDirectory).Should().BeTrue();
+				fs.Directory.Exists(LocationsModel.DefaultProductInstallationDirectory).Should()
+					.BeFalse("{0}", LocationsModel.DefaultProductInstallationDirectory);
+				fs.Directory.Exists(LocationsModel.DefaultCompanyInstallationDirectory).Should()
+					.BeTrue("{0}", LocationsModel.DefaultCompanyInstallationDirectory);
 			}
 		);
 		
@@ -81,8 +85,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 			(m, t) =>
 			{
 				var fs = t.FileSystem;
-				fs.Directory.Exists(LocationsModel.DefaultProductDataDirectory).Should().BeFalse();
-				fs.Directory.Exists(LocationsModel.DefaultCompanyDataDirectory).Should().BeFalse();
+				fs.Directory.Exists(LocationsModel.DefaultProductDataDirectory).Should()
+					.BeFalse("{0}", LocationsModel.DefaultProductDataDirectory);
+				fs.Directory.Exists(LocationsModel.DefaultCompanyDataDirectory).Should()
+					.BeFalse("{0}", LocationsModel.DefaultCompanyDataDirectory);
 			}
 		);
 		
@@ -101,8 +107,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 			(m, t) =>
 			{
 				var fs = t.FileSystem;
-				fs.Directory.Exists(LocationsModel.DefaultProductDataDirectory).Should().BeFalse();
-				fs.Directory.Exists(LocationsModel.DefaultCompanyDataDirectory).Should().BeTrue();
+				fs.Directory.Exists(LocationsModel.DefaultProductDataDirectory).Should()
+					.BeFalse("{0}", LocationsModel.DefaultProductDataDirectory);
+				fs.Directory.Exists(LocationsModel.DefaultCompanyDataDirectory).Should()
+					.BeTrue("{0}", LocationsModel.DefaultCompanyDataDirectory);
 			}
 		);
 

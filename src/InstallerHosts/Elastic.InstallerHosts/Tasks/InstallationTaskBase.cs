@@ -43,13 +43,11 @@ namespace Elastic.InstallerHosts.Tasks
 
 		public bool Execute()
 		{
-			if (!this.Model.IsValid)
-			{
-				var errorPrefix = $"Can not execute {ActionName} the model that it was passed has the following errors";
-				var validationFailures = ValidationFailures(this.Model.ValidationFailures);
-				throw new Exception(errorPrefix + Environment.NewLine + validationFailures);
-			}
-			return this.ExecuteTask();
+			if (this.Model.IsValid) return this.ExecuteTask();
+			
+			var errorPrefix = $"Can not execute {ActionName} the model that it was passed has the following errors";
+			var validationFailures = ValidationFailures(this.Model.ValidationFailures);
+			throw new Exception(errorPrefix + Environment.NewLine + validationFailures);
 		}
 
 		public string ValidationFailures(IList<ValidationFailure> f) =>
@@ -67,6 +65,7 @@ namespace Elastic.InstallerHosts.Tasks
 			var destination = this.FileSystem.DirectoryInfo.FromDirectoryName(destinationDirectory);
 			CopyDirectory(source, destination);
 		}
+		
 		protected void CopyDirectory(DirectoryInfoBase source, DirectoryInfoBase target)
 		{
 			var fs = this.FileSystem;

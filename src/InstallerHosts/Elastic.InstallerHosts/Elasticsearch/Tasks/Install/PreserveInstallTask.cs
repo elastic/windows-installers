@@ -40,24 +40,26 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		private void MoveCurrentPlugins()
 		{
-			var path = this.FileSystem.Path;
+			var fs = this.FileSystem;
+			var path = fs.Path;
 			var pluginsDirectory = path.Combine(this.InstallationModel.LocationsModel.InstallDir, "plugins");
 			var tempPluginsDirectory = path.Combine(this.TempProductInstallationDirectory, "plugins");
 			//make sure if for some reason the tempPluginsDirectory is there its empty before copying over the current state
-			if (this.FileSystem.Directory.Exists(tempPluginsDirectory))
-				this.FileSystem.Directory.Delete(tempPluginsDirectory, true);
+			if (fs.Directory.Exists(tempPluginsDirectory))
+				fs.Directory.Delete(tempPluginsDirectory, true);
 
-			if (!this.FileSystem.Directory.Exists(pluginsDirectory)) return;
+			if (!fs.Directory.Exists(pluginsDirectory)) return;
 			
 			this.Session.Log($"Moving existing plugin directory from {pluginsDirectory} to {tempPluginsDirectory}");
 			
-			this.FileSystem.Directory.CreateDirectory(tempPluginsDirectory);
+			fs.Directory.CreateDirectory(tempPluginsDirectory);
 			
-			var source = this.FileSystem.DirectoryInfo.FromDirectoryName(pluginsDirectory);
+			var source = fs.DirectoryInfo.FromDirectoryName(pluginsDirectory);
+			var target = fs.DirectoryInfo.FromDirectoryName(tempPluginsDirectory);
 			foreach (var file in source.GetFiles())
-				file.MoveTo(path.Combine(tempPluginsDirectory, file.Name));
+				fs.File.Move(file.FullName, path.Combine(target.FullName, file.Name));
 			foreach (var dir in source.GetDirectories())
-				dir.MoveTo(path.Combine(tempPluginsDirectory, dir.Name));
+				fs.Directory.Move(dir.FullName, path.Combine(target.FullName, dir.Name));
 		}
 	}
 }

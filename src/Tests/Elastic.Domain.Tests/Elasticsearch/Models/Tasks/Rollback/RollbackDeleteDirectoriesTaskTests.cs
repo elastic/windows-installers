@@ -21,10 +21,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 			(m, t) =>
 			{
 				var fs = t.FileSystem;
-				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeFalse();
+				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should().BeFalse("{0}", m.LocationsModel.DataDirectory);
+				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse("{0}", m.LocationsModel.ConfigDirectory);
+				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeFalse("{0}", m.LocationsModel.LogsDirectory);
+				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeFalse("{0}", m.LocationsModel.InstallDir);
 			}
 		);
 
@@ -44,10 +44,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 			(m, t) =>
 			{
 				var fs = t.FileSystem;
-				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should().BeTrue();
-				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeTrue();
-				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeTrue();
-				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeTrue();
+				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should().BeTrue("{0}", m.LocationsModel.DataDirectory);
+				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeTrue("{0}", m.LocationsModel.ConfigDirectory);
+				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeTrue("{0}", m.LocationsModel.LogsDirectory);
+				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeTrue("{0}", m.LocationsModel.InstallDir);
 			}
 		);
 	}
