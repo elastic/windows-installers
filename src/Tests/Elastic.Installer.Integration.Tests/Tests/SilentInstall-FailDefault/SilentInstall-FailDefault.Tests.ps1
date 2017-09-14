@@ -6,10 +6,13 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
+Get-Version
+Get-PreviousVersions
+
 Describe "Silent Failed Install with default arguments" {
 
 	$startDate = Get-Date
-	$version = $Global:Version
+	$version = $Global:Version.FullVersion
 
 	Context "Failed installation" {
 		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1")

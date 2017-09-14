@@ -27,8 +27,8 @@ Param(
 )
 
 # Used in tests
-$Global:Version = ConvertTo-SemanticVersion $Version
-$Global:PreviousVersions = $PreviousVersions | ForEach-Object { ConvertTo-SemanticVersion $_ }
+$env:Version = $Version
+$env:PreviousVersions = $PreviousVersions -join ","
 
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 cd $currentDir

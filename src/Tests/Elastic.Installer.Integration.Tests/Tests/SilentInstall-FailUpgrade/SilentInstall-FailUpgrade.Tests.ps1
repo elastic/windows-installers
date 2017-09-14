@@ -7,6 +7,10 @@ Set-Location $currentDir
 . $currentDir\..\common\SemVer.ps1
 
 $credentials = "elastic:changeme"
+
+Get-Version
+Get-PreviousVersions
+
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
@@ -29,7 +33,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $v 
+		Version = $previousVersion
 		Path = $ExpectedConfigFolder
 	}
 
@@ -48,11 +52,11 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
 	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration -Expected @{
-		Version = $v
+		Version = $previousVersion
 	}
 
     Context-JvmOptions -Expected @{
-		Version = $v
+		Version = $previousVersion
 	}
 
 	Context-InsertData
@@ -112,7 +116,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $pv 
+		Version = $previousVersion
 		Path = $ExpectedConfigFolder
 	}
 
@@ -130,11 +134,11 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
 	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration -Expected @{
-		Version = $pv
+		Version = $previousVersion
 	}
 
     Context-JvmOptions -Expected @{
-		Version = $pv
+		Version = $previousVersion
 	}
 
 	# Check inserted data still exists

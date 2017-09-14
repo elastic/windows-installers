@@ -6,6 +6,9 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
+Get-Version
+Get-PreviousVersions
+
 $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
@@ -29,7 +32,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $v
+		Version = $previousVersion
 		Path = $ExpectedConfigFolder
 	}
 
@@ -48,11 +51,11 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
     Context-ElasticsearchConfiguration -Expected @{
-		Version = $v
+		Version = $previousVersion
 	}
 
     Context-JvmOptions -Expected @{
-		Version = $v
+		Version = $previousVersion
 	}
 
 	# Insert some data
@@ -74,7 +77,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $v 
+		Version = $version 
 		Path = $ExpectedConfigFolder
 	}
 
@@ -97,11 +100,11 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
     Context-ElasticsearchConfiguration -Expected @{
-		Version = $v
+		Version = $version
 	}
 
     Context-JvmOptions -Expected @{
-		Version = $v
+		Version = $version
 	}
 
 	# Check inserted data still exists

@@ -6,6 +6,9 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
+Get-Version
+Get-PreviousVersions
+
 Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins" {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")

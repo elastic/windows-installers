@@ -1,4 +1,4 @@
-.\SemVer.ps1
+. "$(Split-Path -parent $MyInvocation.MyCommand.Path)\SemVer.ps1"
 
 function Write-Log {
     [CmdletBinding()]
@@ -131,14 +131,23 @@ function Test-AtlasToken() {
 }
 
 function Test-HyperV() {
-    Write-Host "run Hyper-V check"
+
+	$currentPrincipal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
+
+	if (-not ($currentPrincipal.IsInRole(([Security.Principal.WindowsBuiltInRole]::Administrator)))) {
+		log "skipping Hyper-V check as current principal is not an Administrator"
+		return
+	}
+
+    log "run Hyper-V check" -l Debug
+
     #Requires -RunAsAdministrator
-    $HyperV = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
+    $HyperV = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All | Out-Null
 
     if ($HyperV -and ($HyperV.State -eq "Enabled")) {
         log "Hyper-V is enabled. If VirtualBox cannot start a VM, you _may_ need to disable this (Turn off in Windows features then restart) to allow VirtualBox to work" -l Warn
     }
-    Write-Host "finished Hyper-V check"
+    log "finished Hyper-V check" -l Debug
 }
 
 function Add-Vagrant() {
@@ -395,7 +404,7 @@ function Get-Installer([string] $Location, $Product, $Version) {
 	}
 
 	if (!$Version) {
-		$Version = $env:EsVersion
+		$Version = ($Global:Version).FullVersion
 	}
 
 	$exePath = "$Location\$Product\$Product-$Version.msi"
@@ -482,11 +491,12 @@ function Invoke-SilentUninstall {
 }
 
 function Get-ConfigEnvironmentVariableForVersion($Version) {
-	if (!($Version)) {
-		$Version = $env:EsVersion
+	if (! ($Version)) {
+		$Version = $Global:Version
 	}
 
-	if ($Version.StartsWith("5")) {
+	# Compiled versions *always* use CONF_DIR
+	if ($Version.Major -eq 5 -and $Version.SourceType -ne "Compile") {
 		return "ES_CONFIG"
 	}
 	else {
@@ -619,4 +629,17 @@ function Get-ExpectedServiceStatus($Version, $PreviousVersion) {
 	}
 
 	return $expectedStatus
+}
+
+function Get-Version() {
+	$Global:Version = ConvertTo-SemanticVersion $env:Version
+}
+
+function Get-PreviousVersions() {
+	if ($env:PreviousVersions) {
+		$Global:PreviousVersions = $($env:PreviousVersions).Split(",") | ForEach-Object { ConvertTo-SemanticVersion $_ }
+	}
+	else {
+		$Global:PreviousVersions = @()
+	}
 }

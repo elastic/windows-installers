@@ -129,6 +129,12 @@ Whether to skip unit tests.
         let m = VersionRegex().Match version
         if m.Success |> not then failwithf "Could not parse version from %s" version
         let source = parseSource m.Source.Value
+
+        let rawValue =
+            match source with
+            | Compile -> m.Version.Value
+            | _ -> sprintf "%s:%s" m.Source.Value m.Version.Value
+
         { Product = m.Product.Value;
           FullVersion = m.Version.Value;
           Major = m.Major.Value |> int;
@@ -136,7 +142,7 @@ Whether to skip unit tests.
           Patch = m.Patch.Value |> int;
           Prerelease = m.Prerelease.Value; 
           Source = source;
-          RawValue = version; }
+          RawValue = rawValue; }
 
     let private lastFeedVersion (product : Product) =
         // TODO: disallow prereleases for moment. Make build parameter in future?

@@ -6,10 +6,13 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
+Get-Version
+Get-PreviousVersions
+
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
-Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous version $($previousVersion.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous version $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
 
@@ -28,7 +31,7 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $v 
+		Version = $previousVersion
 		Path = $ExpectedConfigFolder
 	}
 
@@ -47,11 +50,11 @@ Describe -Tag 'PreviousVersion' "Silent Install upgrade - Install previous versi
 	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration -Expected @{
-		Version = $v
+		Version = $previousVersion
 	}
 
     Context-JvmOptions -Expected @{
-		Version = $v
+		Version = $previousVersion
 	}
 
 	# Insert some data
@@ -73,7 +76,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $v 
+		Version = $version 
 		Path = $ExpectedConfigFolder
 	}
 
@@ -96,18 +99,18 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration -Expected @{
-		Version = $v
+		Version = $version
 	}
 
     Context-JvmOptions -Expected @{
-		Version = $v
+		Version = $version
 	}
 
 	# Check inserted data still exists
 	Context-ReadData
 }
 
-Describe -Tag 'PreviousVersion' "Silent Uninstall upgrade - Uninstall new version $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade - Uninstall new version $($version.Description)" {
 
 	$v = $version.FullVersion
 

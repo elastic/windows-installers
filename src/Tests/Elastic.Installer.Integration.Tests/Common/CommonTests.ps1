@@ -134,7 +134,7 @@ function Context-EsHomeEnvironmentVariable($Expected) {
 
 function Context-EsConfigEnvironmentVariable($Expected) {
 	$Expected = Merge-Hashtables @{
-        Version = $Global:Version.FullVersion
+        Version = $Global:Version
         Path = Join-Path -Path $($env:ALLUSERSPROFILE) -ChildPath "Elastic\Elasticsearch\config"
     } $Expected
 
@@ -154,11 +154,13 @@ function Context-EsConfigEnvironmentVariable($Expected) {
 }
 
 function Context-MsiRegistered($Expected) {
+	$version = $Global:Version
+
     $Expected = Merge-Hashtables @{
-            Name = "Elasticsearch $Global:Version.FullVersion"
-            Caption = "Elasticsearch $Global:Version.FullVersion"
+            Name = "Elasticsearch $($version.FullVersion)"
+            Caption = "Elasticsearch $($version.FullVersion)"
             # Product Version is always without any prerelease suffix
-            Version = "$($Global:Version.Major).$($Global:Version.Minor).$($Global:Version.Patch)"
+            Version = "$($version.Major).$($version.Minor).$($version.Patch)"
         } $Expected
 
 
@@ -272,7 +274,7 @@ function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
         NodeIngest = $true
         NodeMaster = $true
         NodeMaxLocalStorageNodes = 1
-		Version = $Global:Version.FullVersion
+		Version = $Global:Version
     } $Expected
 
     $esConfigEnvVar = Get-ConfigEnvironmentVariableForVersion -Version $Expected.Version
@@ -294,31 +296,31 @@ function Context-ElasticsearchConfiguration ([HashTable]$Expected) {
         }
 
 		It "bootstrap.memory_lock set to $($Expected.BootstrapMemoryLock)" {
-			$ConfigLines | Should Contain "bootstrap.memory_lock: $($Expected.BootstrapMemoryLock.ToString().ToLowerInvariant())"
+			$ConfigLines | Should FileContentMatchExactly "bootstrap.memory_lock: $($Expected.BootstrapMemoryLock.ToString().ToLowerInvariant())"
 		}         
            
 		It "node.data set to to $($Expected.NodeData)" {
-			$ConfigLines | Should Contain "node.data: $($Expected.NodeData.ToString().ToLowerInvariant())"
+			$ConfigLines | Should FileContentMatchExactly "node.data: $($Expected.NodeData.ToString().ToLowerInvariant())"
 		}    
 
 		It "node.ingest set to $($Expected.NodeIngest)" {
-			$ConfigLines | Should Contain "node.ingest: $($Expected.NodeIngest.ToString().ToLowerInvariant())"
+			$ConfigLines | Should FileContentMatchExactly "node.ingest: $($Expected.NodeIngest.ToString().ToLowerInvariant())"
 		}
 
 		It "node.master set to $($Expected.NodeMaster)" {
-			$ConfigLines | Should Contain "node.master: $($Expected.NodeMaster.ToString().ToLowerInvariant())"
+			$ConfigLines | Should FileContentMatchExactly "node.master: $($Expected.NodeMaster.ToString().ToLowerInvariant())"
 		}
 
         It "node.max_local_storage_nodes set to $($Expected.NodeMaxLocalStorageNodes)" {
-            $ConfigLines | Should Contain "node.max_local_storage_nodes: $($Expected.NodeMaxLocalStorageNodes)"
+            $ConfigLines | Should FileContentMatchExactly "node.max_local_storage_nodes: $($Expected.NodeMaxLocalStorageNodes)"
         }
 
         It "path.data set to $($Expected.Data)" {
-            $ConfigLines | Should Contain ([regex]::Escape("path.data: $($Expected.Data)"))
+            $ConfigLines | Should FileContentMatchExactly ([regex]::Escape("path.data: $($Expected.Data)"))
         }
 
         It "path.logs set to $($Expected.Logs)" {
-            $ConfigLines | Should Contain ([regex]::Escape("path.logs: $($Expected.Logs)"))
+            $ConfigLines | Should FileContentMatchExactly ([regex]::Escape("path.logs: $($Expected.Logs)"))
         }
     }
 }
@@ -333,7 +335,7 @@ function Context-JvmOptions ($Expected) {
     }
 	
 	$Expected = Merge-Hashtables @{
-		Version = $Global:Version.FullVersion
+		Version = $Global:Version
 		Memory = $defaultMemory
     } $Expected
 
@@ -347,11 +349,11 @@ function Context-JvmOptions ($Expected) {
         }
 
         It "Min Heap size should be set to $($Expected.Memory)m" {
-            $ConfigLines | Should Contain ([regex]::Escape("-Xmx$($Expected.Memory)m"))
+            $ConfigLines | Should FileContentMatchExactly ([regex]::Escape("-Xmx$($Expected.Memory)m"))
         }
 
         It "Max Heap size should be set to $($Expected.Memory)m" {
-            $ConfigLines | Should Contain ([regex]::Escape("-Xms$($Expected.Memory)m"))
+            $ConfigLines | Should FileContentMatchExactly ([regex]::Escape("-Xms$($Expected.Memory)m"))
         }
     }
 }
@@ -481,7 +483,7 @@ function Context-EmptyInstallDirectory($Path) {
 
 function Context-EsConfigEnvironmentVariableNull($Version) {
 	if (!($Version)) {
-		$Version = $Global:Version.FullVersion
+		$Version = $Global:Version
 	}
 
 	$Name = Get-ConfigEnvironmentVariableForVersion -Version $Version

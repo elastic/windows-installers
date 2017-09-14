@@ -97,7 +97,7 @@ Target "Release" (fun () ->
 Target "Integrate" (fun () ->
     // TODO: Get the version for each different project
     let versions = productsToBuild.Head.Versions 
-                  |> List.map(fun v -> v.FullVersion)
+                  |> List.map(fun v -> v.RawValue)
     
     // last version in the list is the _target_ version    
     let version = versions |> List.last                

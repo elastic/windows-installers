@@ -6,7 +6,10 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
-Describe "Silent Install with default arguments" {
+Get-Version
+Get-PreviousVersions
+
+Describe "Silent Install with default arguments $(($Global:Version).FullVersion)" {
 
     Invoke-SilentInstall
 
@@ -22,10 +25,7 @@ Describe "Silent Install with default arguments" {
     $ProfileFolder = $env:ALLUSERSPROFILE
     $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
 
-    Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $version 
-		Path = $ExpectedConfigFolder
-	}
+    Context-EsConfigEnvironmentVariable
 
     Context-PluginsInstalled
 

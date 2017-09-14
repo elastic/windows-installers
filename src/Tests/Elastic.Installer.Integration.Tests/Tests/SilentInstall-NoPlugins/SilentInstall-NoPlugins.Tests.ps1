@@ -6,6 +6,9 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
+Get-Version
+Get-PreviousVersions
+
 Describe "Silent Install with no plugins" {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=")

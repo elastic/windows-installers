@@ -11,6 +11,9 @@ $DataDir = "C:\foo\data"
 $ConfigDir = "C:\bar\config"
 $LogsDir = "C:\baz\logs"
 
+Get-Version
+Get-PreviousVersions
+
 Describe "Silent Install with different install locations" {
 
     $InstallLocations = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir"
