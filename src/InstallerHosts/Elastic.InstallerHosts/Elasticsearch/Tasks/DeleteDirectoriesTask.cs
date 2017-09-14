@@ -6,6 +6,7 @@ using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
@@ -40,11 +41,14 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 				this.Session.Log($"Skipping {nameof(DeleteDirectoriesTask)}: Already installed and not currently uninstalling");
 				return true;
 			}
+			this.Session.Log($"Executing {nameof(DeleteDirectoriesTask)}");
 
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
-
 			if (!this.FileSystem.Directory.Exists(configDirectory))
+			{
+				this.Session.Log($"Config directory does not exist aborting {configDirectory}");
 				return true;
+			}
 
 			this.Session.SendActionStart(1000, ActionName, "Removing data, logs, and config directory",
 				"Removing directories: [1]");
@@ -65,12 +69,16 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			if (this.FileSystem.Directory.Exists(configDirectory))
 				this.DeleteDirectory(configDirectory);
 
-			this.Session.SendProgress(1000, "Data, logs, and config directories removed");
+			this.Session.SendProgress(1000, "data, logs, and config directories removed");
+			this.Session.Log("data, logs, and config directories removed");
 
 			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
 
 			if (!this.FileSystem.Directory.Exists(installDirectory))
+			{
+				this.Session.Log($"Install directory does not exist aborting {installDirectory}");
 				return true;
+			}
 
 			var directories = this.FileSystem.Directory.GetDirectories(installDirectory).ToList();
 
