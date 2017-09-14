@@ -53,18 +53,20 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			this.Session.SendActionStart(1000, ActionName, "Removing data, logs, and config directory",
 				"Removing directories: [1]");
 
-			var yamlConfiguration = ElasticsearchYamlConfiguration.FromFolder(configDirectory);
-			var dataDirectory = yamlConfiguration?.Settings?.DataPath ?? string.Empty;
-			var logsDirectory = yamlConfiguration?.Settings?.LogsPath ?? string.Empty;
+			var yamlConfiguration = ElasticsearchYamlConfiguration.FromFolder(configDirectory, this.FileSystem);
+			var dataDirectory = yamlConfiguration?.Settings?.DataPath ?? this.InstallationModel.LocationsModel.DataDirectory;
+			var logsDirectory = yamlConfiguration?.Settings?.LogsPath ?? this.InstallationModel.LocationsModel.LogsDirectory;
 
 			if (this.FileSystem.Directory.Exists(dataDirectory))
 				this.DeleteDirectory(dataDirectory);
+			else this.Session.Log($"Data Directory does not exist, skipping {dataDirectory}");
 
 			if (this.FileSystem.Directory.Exists(logsDirectory))
 			{
 				DumpElasticsearchLogOnRollback(logsDirectory);
 				this.DeleteDirectory(logsDirectory);
 			}
+			else this.Session.Log($"Data Directory does not exist, skipping {logsDirectory}");
 
 			if (this.FileSystem.Directory.Exists(configDirectory))
 				this.DeleteDirectory(configDirectory);

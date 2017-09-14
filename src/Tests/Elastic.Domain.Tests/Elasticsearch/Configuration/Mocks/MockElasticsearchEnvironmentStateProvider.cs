@@ -128,6 +128,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		void IElasticsearchEnvironmentStateProvider.UnsetOldConfigVariable()
 		{
 			this.UnsetOldConfigVariableWasCalled = true;
+			if (string.IsNullOrEmpty(this.OldConfigDirectoryMachineVariableCopy)) return;
 			this.OldConfigDirectoryMachineVariableCopy = this.OldConfigDirectoryMachineVariable;
 			this.OldConfigDirectoryMachineVariable = null;
 		}
@@ -136,6 +137,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		bool IElasticsearchEnvironmentStateProvider.RestoreOldConfigVariable()
 		{
 			this.RestoreOldConfigVariableWasCalled = true;
+			if (string.IsNullOrEmpty(this.OldConfigDirectoryMachineVariableCopy)) return false;
 			this.OldConfigDirectoryMachineVariable = this.OldConfigDirectoryMachineVariableCopy;
 			this.OldConfigDirectoryMachineVariableCopy = null;
 			return true;

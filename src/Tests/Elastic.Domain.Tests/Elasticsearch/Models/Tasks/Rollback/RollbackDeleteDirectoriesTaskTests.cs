@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO.Abstractions.TestingHelpers;
+using System.Linq;
+using System.Text;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.InstallerHosts.Elasticsearch.Tasks;
@@ -25,14 +28,16 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 			{
 				var fs = t.FileSystem;
 				var session = m.Session as NoopSession;
-				throw new Exception(session.ToString());
 				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should()
-					.BeFalse("{0} {1}", m.LocationsModel.DataDirectory, session);
+					.BeFalse("{0} {1} {2}", m.LocationsModel.DataDirectory, session, DumpFileSystem(fs));
 				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse("{0}", m.LocationsModel.ConfigDirectory);
 				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeFalse("{0}", m.LocationsModel.LogsDirectory);
 				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeFalse("{0}", m.LocationsModel.InstallDir);
 			}
 		);
+
+		public string DumpFileSystem(MockFileSystem fs) =>
+			fs.AllPaths.Aggregate(new StringBuilder().AppendLine("FileSystem:"), (sb, s) => sb.AppendLine($" {s}"), sb => sb.ToString());
 
 		[Fact] void RollbackToPreviousInstallationDoesNotRemoveDirectories() =>
 			WithValidPreflightChecks(s => s

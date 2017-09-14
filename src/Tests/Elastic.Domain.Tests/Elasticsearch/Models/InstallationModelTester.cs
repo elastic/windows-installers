@@ -58,11 +58,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			string[] args)
 		{
 			if (wixState == null) throw new ArgumentNullException(nameof(wixState));
-			if (javaState == null) throw new ArgumentNullException(nameof(javaState));
-			if (esState == null) throw new ArgumentNullException(nameof(esState));
 
-			this.JavaState = javaState;
-			this.EsState = esState;
+			this.JavaState = javaState ?? throw new ArgumentNullException(nameof(javaState));
+			this.EsState = esState ?? throw new ArgumentNullException(nameof(esState));
 			this.PluginState = pluginState;
 			this.JavaConfig = new JavaConfiguration(javaState);
 			var elasticsearchConfiguration = new ElasticsearchEnvironmentConfiguration(esState);
@@ -223,6 +221,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			)
 		);
 
+		public InstallationModelTester ExecuteTask<TTask>(Func<ElasticsearchInstallationModel, ISession, MockFileSystem, TTask> createTask)
+			where TTask : ElasticsearchInstallationTaskBase
+		{
+			var task = createTask(this.InstallationModel, this.InstallationModel.Session, this.FileSystem);
+			Action a = () => task.Execute();
+			a.ShouldNotThrow();
+			return this;
+		}
 		public void AssertTask<TTask>(Func<ElasticsearchInstallationModel, ISession, MockFileSystem, TTask> createTask, Action<ElasticsearchInstallationModel, InstallationModelTester> assert)
 			where TTask : ElasticsearchInstallationTaskBase
 		{

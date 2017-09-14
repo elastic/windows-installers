@@ -77,11 +77,10 @@ namespace Elastic.Configuration.EnvironmentBased
 		public void UnsetOldConfigVariable()
 		{
 			var configDirectory = Environment.GetEnvironmentVariable(ConfDirOld, EnvironmentVariableTarget.Machine);
-			if (!string.IsNullOrEmpty(configDirectory))
-			{
-				Environment.SetEnvironmentVariable(ConfDirOldRenamed, configDirectory, EnvironmentVariableTarget.Machine);
-				Environment.SetEnvironmentVariable(ConfDirOld, null, EnvironmentVariableTarget.Machine);
-			}
+			if (string.IsNullOrEmpty(configDirectory)) return;
+			
+			Environment.SetEnvironmentVariable(ConfDirOldRenamed, configDirectory, EnvironmentVariableTarget.Machine);
+			Environment.SetEnvironmentVariable(ConfDirOld, null, EnvironmentVariableTarget.Machine);
 		}
 
 		public bool RestoreOldConfigVariable()

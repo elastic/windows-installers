@@ -1,5 +1,6 @@
 ﻿using Elastic.InstallerHosts.Elasticsearch.Tasks;
 using Elastic.InstallerHosts.Elasticsearch.Tasks.Commit;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
 
@@ -11,19 +12,22 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 				.Wix(currentVersion: "5.5.0", existingVersion: "5.4.0")
 				.Session(rollback: true, uninstalling: false)
 			)
+			.ExecuteTask((m,s,fs) => new SetEnvironmentVariablesTask(m, s, fs))
 			.AssertTask(
 				(m, s, fs) =>
 				{
-					m.ElasticsearchEnvironmentConfiguration.SetEsConfigEnvironmentVariable("config");
-					m.ElasticsearchEnvironmentConfiguration.SetEsHomeEnvironmentVariable("home");
+					var env = m.ElasticsearchEnvironmentConfiguration.StateProvider; 
+					env.HomeDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace();
+					env.ConfigDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace();
+					env.NewConfigDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace();
 					return new RemoveEnvironmentVariablesTask(m, s, fs);
 				},
 				(m, t) =>
 				{
 					var env = m.ElasticsearchEnvironmentConfiguration.StateProvider; 
-					env.HomeDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace().And.Be("home");
-					env.NewConfigDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace().And.Be("config");
-					env.ConfigDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace().And.Be("config");
+					env.HomeDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace();
+					env.ConfigDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace();
+					env.NewConfigDirectoryMachineVariable.Should().NotBeNullOrWhiteSpace();
 				}
 			);
 		[Fact] void RollbackNewInstallation() => WithValidPreflightChecks(s=>s
