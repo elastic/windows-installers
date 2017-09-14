@@ -86,6 +86,7 @@
     </Compile>
     <Compile Include="Configuration\Service\ServiceInstallationManager.Designer.cs" />
     <Compile Include="Configuration\Service\ServiceStateProvider.cs" />
+    <Compile Include="Configuration\TempDirectoryConfiguration.cs" />
     <Compile Include="Configuration\Wix\InstallationDirection.cs" />
     <Compile Include="Configuration\Wix\IWixStateProvider.cs" />
     <Compile Include="Configuration\Wix\NoopWixStateProvider.cs" />

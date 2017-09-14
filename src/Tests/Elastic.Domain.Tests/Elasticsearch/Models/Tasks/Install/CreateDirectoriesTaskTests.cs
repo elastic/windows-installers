@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
-using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
 
-namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
+namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 {
 	public class CreateDirectoriesTaskTests : InstallationModelTestBase
 	{

@@ -5,10 +5,11 @@ using Elastic.Configuration.FileBased.Yaml;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
-	public class DeleteDirectoriesTask : ElasticsearchInstallationTask
+	public class DeleteDirectoriesTask : ElasticsearchInstallationTaskBase
 	{
 		private bool RollBack { get; }
 		public DeleteDirectoriesTask(string[] args, ISession session, bool rollBack) : base(args, session)
@@ -119,7 +120,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		private void RestoreConfigDirectory()
 		{
-			var tempconfigDirectory = this.FileSystem.Path.Combine(this.TempDirectory, "config");
+			var tempconfigDirectory = this.FileSystem.Path.Combine(this.TempProductInstallationDirectory, "config");
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
 			if (this.FileSystem.Directory.Exists(tempconfigDirectory))
 			{
@@ -133,7 +134,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		private void RestorePluginsDirectory()
 		{
 			var path = this.FileSystem.Path;
-			var pluginsTempDirectory = path.Combine(this.TempDirectory, "plugins");
+			var pluginsTempDirectory = path.Combine(this.TempProductInstallationDirectory, "plugins");
 			var pluginsDirectory = path.Combine(this.InstallationModel.LocationsModel.InstallDir, "plugins");
 
 			if (this.FileSystem.Directory.Exists(pluginsTempDirectory))

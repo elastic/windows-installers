@@ -63,17 +63,17 @@ namespace Elastic.InstallerHosts.Tasks
 
 		protected void CopyDirectory(string sourceDirectory, string destinationDirectory)
 		{
-			var source = new DirectoryInfo(sourceDirectory);
-			var destination = new DirectoryInfo(destinationDirectory);
+			var source = this.FileSystem.DirectoryInfo.FromDirectoryName(sourceDirectory);
+			var destination = this.FileSystem.DirectoryInfo.FromDirectoryName(destinationDirectory);
 			CopyDirectory(source, destination);
 		}
-
-		protected void CopyDirectory(DirectoryInfo source, DirectoryInfo target)
+		protected void CopyDirectory(DirectoryInfoBase source, DirectoryInfoBase target)
 		{
-			this.FileSystem.Directory.CreateDirectory(target.FullName);
+			var fs = this.FileSystem;
+			fs.Directory.CreateDirectory(target.FullName);
 
 			foreach (var file in source.GetFiles())
-				file.CopyTo(Path.Combine(target.FullName, file.Name), true);
+				fs.File.Copy(file.FullName, fs.Path.Combine(target.FullName, file.Name), true);
 
 			foreach (var directory in source.GetDirectories())
 			{
@@ -82,6 +82,4 @@ namespace Elastic.InstallerHosts.Tasks
 			}
 		}
 	}
-
-
 }

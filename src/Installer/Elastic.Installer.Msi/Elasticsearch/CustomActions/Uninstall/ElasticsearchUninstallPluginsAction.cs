@@ -17,5 +17,5 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 
 		[CustomAction]
 		public static ActionResult ElasticsearchUninstallPlugins(Session session) =>
-			session.Handle(() => new RemovePluginsTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
+			session.Handle(() => new UninstallPluginsTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}}

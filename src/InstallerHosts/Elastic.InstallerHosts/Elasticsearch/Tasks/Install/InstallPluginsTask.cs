@@ -3,9 +3,9 @@ using System.Linq;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
-	public class InstallPluginsTask : ElasticsearchInstallationTask
+	public class InstallPluginsTask : ElasticsearchInstallationTaskBase
 	{
 		public InstallPluginsTask(string[] args, ISession session) 
 			: base(args, session) { }

@@ -81,5 +81,7 @@ namespace Elastic.InstallerHosts
 		public bool IsUpgrading => this._session.IsUpgrading();
 
 		public bool IsRollback => this._session.GetMode(InstallRunMode.Rollback);
+		
+		public string ProductName => this.Get<string>("ProductName");
 	}
 }

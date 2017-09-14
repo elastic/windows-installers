@@ -2,14 +2,13 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
+namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 {
-	public class DeleteDirectoriesTaskTests : InstallationModelTestBase
+	public class RollbackDeleteDirectoriesTaskTests : InstallationModelTestBase
 	{
-		[Fact(Skip = "ignore for now")]
-		void DeleteDefaultDirectoriesOnCleanInstallRollback() =>
+		[Fact] void RollbackNewInstallationRemovesDirectories() =>
 			WithValidPreflightChecks(s => s
-				.Session(false)
+				.Session(rollback: true, uninstalling: false)
 			)
 			.AssertTask((m, s, fs) =>
 			{
@@ -29,33 +28,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 			}
 		);
 
-		[Fact(Skip = "ignore for now")]
-		void RemoveDirectoriesOnUninstall() =>
+		[Fact] void RollbackToPreviousInstallationDoesNotRemoveDirectories() =>
 			WithValidPreflightChecks(s => s
-				.Wix("5.0.1", "5.0.0")
-				.Session(true)
-			)
-			.AssertTask((m, s, fs) =>
-			{
-				fs.Directory.CreateDirectory(m.LocationsModel.DataDirectory);
-				fs.Directory.CreateDirectory(m.LocationsModel.ConfigDirectory);
-				fs.Directory.CreateDirectory(m.LocationsModel.LogsDirectory);
-				fs.Directory.CreateDirectory(m.LocationsModel.InstallDir);
-				return new DeleteDirectoriesTask(m, s, fs);
-			},
-			(m, t) =>
-			{
-				var fs = t.FileSystem;
-				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeFalse();
-				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeFalse();
-			}
-		);
-
-		[Fact]
-		void DoesNotDeleteDirectoriesOnPreviousInstallRollback() => WithValidPreflightChecks(s => s
-				.Wix("5.0.1", "5.0.0")
+				.Wix(currentVersion: "5.6.0", existingVersion: "5.5.0")
+				.Session(rollback: true, uninstalling: false)
 			)
 			.AssertTask((m, s, fs) =>
 			{

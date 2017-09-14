@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate
 {
-	public class ValidateArgumentsTask : ElasticsearchInstallationTask
+	public class ValidateArgumentsTask : ElasticsearchInstallationTaskBase
 	{
 		public ValidateArgumentsTask(string[] args, ISession session) : base(args, session) { }
 

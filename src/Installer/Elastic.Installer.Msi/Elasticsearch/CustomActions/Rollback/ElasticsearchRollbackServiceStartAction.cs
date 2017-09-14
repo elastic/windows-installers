@@ -17,6 +17,6 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 
 		[CustomAction]
 		public static ActionResult ElasticsearchRollbackServiceStart(Session session) =>
-			session.Handle(() => new StopServiceTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
+			session.Handle(() => new RollbackServiceTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }
