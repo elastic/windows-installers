@@ -25,7 +25,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 				var fs = t.FileSystem;
 				var session = m.Session as NoopSession;
 				fs.Directory.Exists(m.LocationsModel.DataDirectory).Should()
-					.BeFalse("{0} {1}", m.LocationsModel.DataDirectory, session)
+					.BeFalse("{0} {1}", m.LocationsModel.DataDirectory, session);
 				fs.Directory.Exists(m.LocationsModel.ConfigDirectory).Should().BeFalse("{0}", m.LocationsModel.ConfigDirectory);
 				fs.Directory.Exists(m.LocationsModel.LogsDirectory).Should().BeFalse("{0}", m.LocationsModel.LogsDirectory);
 				fs.Directory.Exists(m.LocationsModel.InstallDir).Should().BeFalse("{0}", m.LocationsModel.InstallDir);
