@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
-using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
 
-namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
+namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 {
 	public class CreateDirectoriesTaskTests : InstallationModelTestBase
 	{
@@ -87,9 +87,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
 				.FileSystem(fs => 
 				{
-					fs.AddDirectory(Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config"));
-					var conf = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config", "random-file.yml");
+					var configDir = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config");
+					var configDirSubDir = Path.Combine(configDir, "sub");
+					var conf = Path.Combine(configDir, "random-file.yml");
+					var subConf = Path.Combine(configDirSubDir, "sub-file.yml");
+					fs.AddDirectory(configDir);
+					fs.AddDirectory(configDirSubDir);
 					fs.AddFile(conf, new MockFileData("node.name: x"));
+					fs.AddFile(subConf, new MockFileData("node.name: y"));
 					return fs;
 				})
 			)
@@ -101,11 +106,21 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
 				(m, t) =>
 				{
 					m.LocationsModel.ConfigDirectory.Should().Be(EsConfig);
+					
 					var fs = t.FileSystem;
+					var configDir = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config");
+					var configDirSubDir = Path.Combine(configDir, "sub");
+					var conf = Path.Combine(configDir, "random-file.yml");
+					var subConf = Path.Combine(configDirSubDir, "sub-file.yml");
+
 					fs.Directory.Exists(EsConfig).Should().BeTrue();
-					var original = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config", "elasticsearch.yml");
 					var moved = Path.Combine(EsConfig, "random-file.yml");
+					var movedSubDir = Path.Combine(EsConfig, "sub");
+					var movedSub = Path.Combine(movedSubDir, "sub-file.yml");
 					fs.File.Exists(moved).Should().BeTrue();
+					fs.Directory.Exists(movedSubDir).Should().BeTrue();
+					fs.File.Exists(movedSub).Should().BeTrue();
+					var original = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config", "elasticsearch.yml");
 					fs.File.Exists(original).Should().BeFalse();
 				}
 			);

@@ -5,9 +5,9 @@ using Elastic.Configuration.FileBased.Yaml;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
-	public class EditElasticsearchYamlTask : ElasticsearchInstallationTask
+	public class EditElasticsearchYamlTask : ElasticsearchInstallationTaskBase
 	{
 		public EditElasticsearchYamlTask(string[] args, ISession session) : base(args, session) { }
 		public EditElasticsearchYamlTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 
