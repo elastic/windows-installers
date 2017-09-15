@@ -249,7 +249,7 @@ Java won't used compressed pointers.</value>
     <value>Could not find a valid Java installation.</value>
   </data>
   <data name="NoticeModelValidator_BadElasticsearchYamlFile" xml:space="preserve">
-    <value>The elasticsearch.yml file we found in CONF_DIR appears to be 
+    <value>The elasticsearch.yml file we found in ES_PATH_CONF appears to be 
 invalid  and prevented seeding current values.</value>
   </data>
   <data name="NoticeModel_FromPrerelease_Header" xml:space="preserve">

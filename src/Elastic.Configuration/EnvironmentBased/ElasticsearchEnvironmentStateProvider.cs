@@ -32,10 +32,12 @@ namespace Elastic.Configuration.EnvironmentBased
 
 	public class ElasticsearchEnvironmentStateProvider : IElasticsearchEnvironmentStateProvider
 	{
-		private const string ConfDir = "CONF_DIR";
 		private const string ConfDirOld = "ES_CONFIG";
 		private const string ConfDirOldRenamed = "ES_CONFIG_OLD";
-		private const string EsHome = "ES_HOME";
+
+		public const string ConfDir = "ES_PATH_CONF";
+		public const string EsHome = "ES_HOME";
+
 		public static ElasticsearchEnvironmentStateProvider Default { get; } = new ElasticsearchEnvironmentStateProvider();
 
 		public string HomeDirectoryUserVariable => Environment.GetEnvironmentVariable(EsHome, EnvironmentVariableTarget.User);
