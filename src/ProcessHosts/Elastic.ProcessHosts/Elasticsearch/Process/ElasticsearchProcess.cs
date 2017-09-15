@@ -44,9 +44,9 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			CheckForBadEnvironmentVariables(env);
 			
 			var homeDirectory = env.HomeDirectory?.TrimEnd('\\')
-				?? throw new StartupException("No ES_HOME variable set and no home directory could be inferred from the executable location");
+				?? throw new StartupException($"No {ElasticsearchEnvironmentStateProvider.EsHome} variable set and no home directory could be inferred from the executable location");
 			var configDirectory = env.ConfigDirectory?.TrimEnd('\\')
-				?? throw new StartupException("CONF_DIR was not explicitly set nor could it be determined from ES_HOME or the current executable location");
+				?? throw new StartupException($"{ElasticsearchEnvironmentStateProvider.ConfDir} was not explicitly set nor could it be determined from {ElasticsearchEnvironmentStateProvider.EsHome} or the current executable location");
 
 			this.HomeDirectory = homeDirectory;
 			this.ConfigDirectory = configDirectory;
@@ -166,11 +166,11 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 						break;
 					default:
 						if (esFlag && a.StartsWith("path.conf"))
-							throw new StartupException("setting -E path.conf is no longer supported", 
-								"You need to set CONF_DIR as a (process) environment variable to run from a different configuration directory");
+							throw new StartupException("setting -E path.conf is no longer supported",
+								$"You need to set {ElasticsearchEnvironmentStateProvider.ConfDir} as a (process) environment variable to run from a different configuration directory");
 						else if (esFlag && a.StartsWith("path.home"))
 							throw new StartupException("setting -E path.home is no longer supported", 
-								"You need to set ES_HOME as a (process) environment variable to run from a different home directory");
+								$"You need to set {ElasticsearchEnvironmentStateProvider.EsHome} as a (process) environment variable to run from a different home directory");
 						else
 							newArgs.Add(esFlag ? $"-E{a}" : a);
 						break;
