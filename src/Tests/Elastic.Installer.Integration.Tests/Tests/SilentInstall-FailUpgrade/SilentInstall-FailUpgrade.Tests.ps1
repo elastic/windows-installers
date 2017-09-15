@@ -42,7 +42,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
 		Caption = "Elasticsearch $v"
-		Version = $v
+		Version = "$($previousVersion.Major).$($previousVersion.Minor).$($previousVersion.Patch)"
 	}
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
@@ -126,7 +126,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $pv"
 		Caption = "Elasticsearch $pv"
-		Version = $pv
+		Version = "$($previousVersion.Major).$($previousVersion.Minor).$($previousVersion.Patch)"
 	}
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"

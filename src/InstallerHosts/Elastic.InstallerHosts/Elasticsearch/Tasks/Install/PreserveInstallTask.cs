@@ -44,6 +44,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			var path = fs.Path;
 			var pluginsDirectory = path.Combine(this.InstallationModel.LocationsModel.InstallDir, "plugins");
 			var tempPluginsDirectory = path.Combine(this.TempProductInstallationDirectory, "plugins");
+
 			//make sure if for some reason the tempPluginsDirectory is there its empty before copying over the current state
 			if (fs.Directory.Exists(tempPluginsDirectory))
 				fs.Directory.Delete(tempPluginsDirectory, true);
@@ -56,10 +57,18 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			
 			var source = fs.DirectoryInfo.FromDirectoryName(pluginsDirectory);
 			var target = fs.DirectoryInfo.FromDirectoryName(tempPluginsDirectory);
+
+			// copy and delete. move does not work across volumes.
 			foreach (var file in source.GetFiles())
-				fs.File.Move(file.FullName, path.Combine(target.FullName, file.Name));
+			{
+				fs.File.Copy(file.FullName, path.Combine(target.FullName, file.Name));
+				fs.File.Delete(file.FullName);
+			}
 			foreach (var dir in source.GetDirectories())
-				fs.Directory.Move(dir.FullName, path.Combine(target.FullName, dir.Name));
+			{
+				CopyDirectory(dir, fs.Directory.CreateDirectory(path.Combine(target.FullName, dir.Name)));
+				fs.Directory.Delete(dir.FullName, true);
+			}
 		}
 	}
 }
