@@ -5,10 +5,12 @@ using Elastic.Configuration.FileBased.Yaml;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
+using Microsoft.Deployment.WindowsInstaller;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
-	public class DeleteDirectoriesTask : ElasticsearchInstallationTask
+	public class DeleteDirectoriesTask : ElasticsearchInstallationTaskBase
 	{
 		private bool RollBack { get; }
 		public DeleteDirectoriesTask(string[] args, ISession session, bool rollBack) : base(args, session)
@@ -39,37 +41,47 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 				this.Session.Log($"Skipping {nameof(DeleteDirectoriesTask)}: Already installed and not currently uninstalling");
 				return true;
 			}
+			this.Session.Log($"Executing {nameof(DeleteDirectoriesTask)}");
 
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
-
 			if (!this.FileSystem.Directory.Exists(configDirectory))
+			{
+				this.Session.Log($"Config directory does not exist aborting {configDirectory}");
 				return true;
+			}
 
 			this.Session.SendActionStart(1000, ActionName, "Removing data, logs, and config directory",
 				"Removing directories: [1]");
 
-			var yamlConfiguration = ElasticsearchYamlConfiguration.FromFolder(configDirectory);
-			var dataDirectory = yamlConfiguration?.Settings?.DataPath ?? string.Empty;
-			var logsDirectory = yamlConfiguration?.Settings?.LogsPath ?? string.Empty;
+			var yamlConfiguration = ElasticsearchYamlConfiguration.FromFolder(configDirectory, this.FileSystem);
+			var dataDirectory = yamlConfiguration?.Settings?.DataPath ?? this.InstallationModel.LocationsModel.DataDirectory;
+			var logsDirectory = yamlConfiguration?.Settings?.LogsPath ?? this.InstallationModel.LocationsModel.LogsDirectory;
 
 			if (this.FileSystem.Directory.Exists(dataDirectory))
 				this.DeleteDirectory(dataDirectory);
+			else this.Session.Log($"Data Directory does not exist, skipping {dataDirectory}");
 
 			if (this.FileSystem.Directory.Exists(logsDirectory))
 			{
 				DumpElasticsearchLogOnRollback(logsDirectory);
 				this.DeleteDirectory(logsDirectory);
 			}
+			else this.Session.Log($"Logs Directory does not exist, skipping {logsDirectory}");
 
 			if (this.FileSystem.Directory.Exists(configDirectory))
 				this.DeleteDirectory(configDirectory);
+			else this.Session.Log($"Config Directory does not exist, skipping {configDirectory}");
 
-			this.Session.SendProgress(1000, "Data, logs, and config directories removed");
+			this.Session.SendProgress(1000, "data, logs, and config directories removed");
+			this.Session.Log("data, logs, and config directories removed");
 
 			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
 
 			if (!this.FileSystem.Directory.Exists(installDirectory))
+			{
+				this.Session.Log($"Install directory does not exist. aborting {installDirectory}");
 				return true;
+			}
 
 			var directories = this.FileSystem.Directory.GetDirectories(installDirectory).ToList();
 
@@ -119,43 +131,42 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		private void RestoreConfigDirectory()
 		{
-			var tempconfigDirectory = this.FileSystem.Path.Combine(this.TempDirectory, "config");
+			var tempconfigDirectory = this.FileSystem.Path.Combine(this.TempProductInstallationDirectory, "config");
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
-			if (this.FileSystem.Directory.Exists(tempconfigDirectory))
-			{
-				this.Session.Log("Restoring config directory");
-				this.FileSystem.Directory.Delete(configDirectory, true);
-				this.CopyDirectory(tempconfigDirectory, configDirectory);
-				this.FileSystem.Directory.Delete(tempconfigDirectory, true);
-			}
+			if (!this.FileSystem.Directory.Exists(tempconfigDirectory)) return;
+			
+			this.Session.Log("Restoring config directory");
+			this.FileSystem.Directory.Delete(configDirectory, true);
+			this.CopyDirectory(tempconfigDirectory, configDirectory);
+			this.FileSystem.Directory.Delete(tempconfigDirectory, true);
 		}
 
 		private void RestorePluginsDirectory()
 		{
-			var path = this.FileSystem.Path;
-			var pluginsTempDirectory = path.Combine(this.TempDirectory, "plugins");
+			var fs = this.FileSystem;
+			var path = fs.Path;
+			var pluginsTempDirectory = path.Combine(this.TempProductInstallationDirectory, "plugins");
 			var pluginsDirectory = path.Combine(this.InstallationModel.LocationsModel.InstallDir, "plugins");
 
-			if (this.FileSystem.Directory.Exists(pluginsTempDirectory))
-			{
-				this.Session.Log("Restoring plugins directory");
+			if (!fs.Directory.Exists(pluginsTempDirectory)) return;
+			
+			this.Session.Log("Restoring plugins directory");
 
-				// delete any plugins that might have been installed
-				var installDir = this.FileSystem.DirectoryInfo.FromDirectoryName(pluginsDirectory);
-				foreach (var file in installDir.GetFiles())
-					file.Delete();
-				foreach (var dir in installDir.GetDirectories())
-					dir.Delete(true);
+			// delete any plugins that might have been installed
+			var installDir = fs.DirectoryInfo.FromDirectoryName(pluginsDirectory);
+			foreach (var file in installDir.GetFiles())
+				fs.File.Delete(file.FullName);
+			foreach (var dir in installDir.GetDirectories())
+				fs.Directory.Delete(dir.FullName, true);
 
-				// restore old plugins
-				var directory = this.FileSystem.DirectoryInfo.FromDirectoryName(pluginsTempDirectory);
-				foreach (var file in directory.GetFiles())
-					file.MoveTo(path.Combine(pluginsDirectory, file.Name));
-				foreach (var dir in directory.GetDirectories())
-					dir.MoveTo(path.Combine(pluginsDirectory, dir.Name));
+			// restore old plugins
+			var directory = fs.DirectoryInfo.FromDirectoryName(pluginsTempDirectory);
+			foreach (var file in directory.GetFiles())
+				fs.File.Move(file.FullName, path.Combine(directory.FullName, file.Name));
+			foreach (var dir in directory.GetDirectories())
+				fs.Directory.Move(dir.FullName, path.Combine(directory.FullName, dir.Name));
 
-				this.FileSystem.Directory.Delete(pluginsTempDirectory, true);
-			}
+			this.FileSystem.Directory.Delete(pluginsTempDirectory, true);
 		}
 
 		private void DumpElasticsearchLogOnRollback(string logsDirectory)
@@ -179,5 +190,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			this.FileSystem.Directory.Delete(directory, true);
 			this.Session.SendProgress(1000, $"{directory} removed");
 		}
+		
+		protected bool IsDirectoryEmpty(string path) =>
+			this.FileSystem.Directory.Exists(path) && !this.FileSystem.Directory.EnumerateFileSystemEntries(path).Any();
 	}
 }

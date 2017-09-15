@@ -3,19 +3,20 @@ using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
-	public class StopServiceTask : ElasticsearchInstallationTask
+	public class RollbackServiceTask : ElasticsearchInstallationTaskBase
 	{
 		private IServiceStateProvider ServiceStateProvider { get; }
 
-		public StopServiceTask(string[] args, ISession session) : base(args, session)
+		public RollbackServiceTask(string[] args, ISession session) : base(args, session)
 		{
 			this.ServiceStateProvider = new ServiceStateProvider(session, "Elasticsearch");
 		}
 
-		public StopServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
+		public RollbackServiceTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem, IServiceStateProvider serviceConfig) 
 			: base(model, session, fileSystem)
 		{
 			this.ServiceStateProvider = serviceConfig;

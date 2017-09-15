@@ -6,6 +6,7 @@ using Elastic.Configuration.EnvironmentBased;
 using Elastic.Configuration.EnvironmentBased.Java;
 using Elastic.Configuration.FileBased.JvmOpts;
 using Elastic.Configuration.FileBased.Yaml;
+using Elastic.Installer.Domain.Configuration;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
@@ -15,6 +16,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Closing;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using FluentValidation.Results;
 
@@ -26,10 +28,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		public JavaConfiguration JavaConfig { get; }
 		public ElasticsearchYamlConfiguration EsConfig { get; }
 		public LocalJvmOptionsConfiguration JvmConfig { get; }
-		public MockElasticsearchEnvironmentStateProvider EsState { get; private set; }
-		public NoopPluginStateProvider PluginState { get; private set; }
-		public MockJavaEnvironmentStateProvider JavaState { get; private set; }
-		public MockFileSystem FileSystem { get; private set; }
+		public TempDirectoryConfiguration TempDirectoryConfiguration { get; }
+		public MockElasticsearchEnvironmentStateProvider EsState { get; }
+		public NoopPluginStateProvider PluginState { get; }
+		public MockJavaEnvironmentStateProvider JavaState { get; }
+		public MockFileSystem FileSystem { get; }
 
 		public InstallationModelTester() 
 			: this
@@ -40,7 +43,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 				new NoopServiceStateProvider(),
 				new NoopPluginStateProvider(),
 				new MockFileSystem(),
-				new NoopSession(),
+				NoopSession.Elasticsearch,
 				null
 			) { }
 
@@ -55,18 +58,19 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			string[] args)
 		{
 			if (wixState == null) throw new ArgumentNullException(nameof(wixState));
-			if (javaState == null) throw new ArgumentNullException(nameof(javaState));
-			if (esState == null) throw new ArgumentNullException(nameof(esState));
 
-			this.JavaState = javaState;
-			this.EsState = esState;
+			this.JavaState = javaState ?? throw new ArgumentNullException(nameof(javaState));
+			this.EsState = esState ?? throw new ArgumentNullException(nameof(esState));
 			this.PluginState = pluginState;
 			this.JavaConfig = new JavaConfiguration(javaState);
 			var elasticsearchConfiguration = new ElasticsearchEnvironmentConfiguration(esState);
 			this.EsConfig = ElasticsearchYamlConfiguration.FromFolder(elasticsearchConfiguration.ConfigDirectory, fileSystem);
 			this.JvmConfig = LocalJvmOptionsConfiguration.FromFolder(elasticsearchConfiguration.ConfigDirectory, fileSystem);
+			this.TempDirectoryConfiguration = new TempDirectoryConfiguration(session, esState, fileSystem);
 			this.InstallationModel = new ElasticsearchInstallationModel(
-				wixState, JavaConfig, elasticsearchConfiguration, serviceState, pluginState,  EsConfig, JvmConfig, session, args);
+				wixState, JavaConfig, elasticsearchConfiguration, serviceState, pluginState, 
+				EsConfig, JvmConfig, TempDirectoryConfiguration,
+				session, args);
 			this.FileSystem = fileSystem;
 		}
 
@@ -217,10 +221,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			)
 		);
 
-		public void AssertTask<TTask>(Func<ElasticsearchInstallationModel, ISession, MockFileSystem, TTask> createTask, Action<ElasticsearchInstallationModel, InstallationModelTester> assert)
-			where TTask : ElasticsearchInstallationTask
+		public InstallationModelTester ExecuteTask<TTask>(Func<ElasticsearchInstallationModel, ISession, MockFileSystem, TTask> createTask)
+			where TTask : ElasticsearchInstallationTaskBase
 		{
-			var task = createTask(this.InstallationModel, new NoopSession(), this.FileSystem);
+			var task = createTask(this.InstallationModel, this.InstallationModel.Session, this.FileSystem);
+			Action a = () => task.Execute();
+			a.ShouldNotThrow();
+			return this;
+		}
+		public void AssertTask<TTask>(Func<ElasticsearchInstallationModel, ISession, MockFileSystem, TTask> createTask, Action<ElasticsearchInstallationModel, InstallationModelTester> assert)
+			where TTask : ElasticsearchInstallationTaskBase
+		{
+			var task = createTask(this.InstallationModel, this.InstallationModel.Session, this.FileSystem);
 			Action a = () => task.Execute();
 			a.ShouldNotThrow();
 			assert(this.InstallationModel, this);

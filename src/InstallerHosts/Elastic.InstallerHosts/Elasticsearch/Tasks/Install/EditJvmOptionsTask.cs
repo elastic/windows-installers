@@ -3,9 +3,9 @@ using Elastic.Configuration.FileBased.JvmOpts;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
-	public class EditJvmOptionsTask : ElasticsearchInstallationTask
+	public class EditJvmOptionsTask : ElasticsearchInstallationTaskBase
 	{
 		public EditJvmOptionsTask(string[] args, ISession session) : base(args, session) { }
 		public EditJvmOptionsTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 

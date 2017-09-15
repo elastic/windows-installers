@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
-using System.Runtime.Remoting.Messaging;
 using Elastic.Configuration.FileBased.Yaml;
 using Elastic.Installer.Domain.Model.Elasticsearch.Config;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
-using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
 
-namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
+namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 {
 	public class EditElasticsearchYamlTaskTests : InstallationModelTestBase
 	{
