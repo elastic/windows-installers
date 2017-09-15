@@ -2,10 +2,11 @@
 using Elastic.Installer.Msi.CustomActions;
 using Elastic.InstallerHosts;
 using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate;
 using Microsoft.Deployment.WindowsInstaller;
 using WixSharp;
 
-namespace Elastic.Installer.Msi.Elasticsearch.CustomActions
+namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Immediate
 {
 	public class ElasticsearchValidateArgumentsAction : CustomAction<Elasticsearch>
 	{

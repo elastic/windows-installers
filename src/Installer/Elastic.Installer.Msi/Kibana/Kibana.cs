@@ -16,7 +16,7 @@ namespace Elastic.Installer.Msi.Kibana
 		public override IEnumerable<string> AllArguments => KibanaArgumentParser.AllArguments;
 
 		public override IEnumerable<ModelArgument> MsiParams =>
-			KibanaInstallationModel.Create(new NoopWixStateProvider(), new NoopSession()).ToMsiParams();
+			KibanaInstallationModel.Create(new NoopWixStateProvider(), NoopSession.Kibana).ToMsiParams();
 
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.KibanaProductCodes;
 

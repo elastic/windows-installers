@@ -12,5 +12,6 @@
 		bool IsInstalled { get; }
 		bool IsUpgrading { get; }
 		bool IsRollback { get; }
+		string ProductName { get; }
 	}
 }

@@ -2,15 +2,16 @@
 using System.Linq;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
-	public class RemovePluginsTask : ElasticsearchInstallationTask
+	public class UninstallPluginsTask : ElasticsearchInstallationTaskBase
 	{
-		public RemovePluginsTask(string[] args, ISession session) 
+		public UninstallPluginsTask(string[] args, ISession session) 
 			: base(args, session) { }
 
-		public RemovePluginsTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 
+		public UninstallPluginsTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 
 			: base(model, session, fileSystem) { }
 
 		protected override bool ExecuteTask()

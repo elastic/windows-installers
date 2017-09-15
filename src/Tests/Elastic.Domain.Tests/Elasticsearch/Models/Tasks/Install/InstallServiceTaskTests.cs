@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.ServiceProcess;
 using Elastic.Installer.Domain.Configuration.Service;
-using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
 
-namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks
+namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 {
 	public class InstallServiceTaskTests : InstallationModelTestBase
 	{
