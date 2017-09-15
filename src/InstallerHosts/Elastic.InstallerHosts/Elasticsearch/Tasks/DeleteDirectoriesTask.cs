@@ -162,9 +162,15 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			// restore old plugins
 			var directory = fs.DirectoryInfo.FromDirectoryName(pluginsTempDirectory);
 			foreach (var file in directory.GetFiles())
-				fs.File.Move(file.FullName, path.Combine(directory.FullName, file.Name));
+			{
+				fs.File.Copy(file.FullName, path.Combine(directory.FullName, file.Name));
+				fs.File.Delete(file.FullName);
+			}
 			foreach (var dir in directory.GetDirectories())
-				fs.Directory.Move(dir.FullName, path.Combine(directory.FullName, dir.Name));
+			{
+				CopyDirectory(dir, fs.Directory.CreateDirectory(path.Combine(directory.FullName, dir.Name)));
+				fs.Directory.Delete(dir.FullName, true);
+			}
 
 			this.FileSystem.Directory.Delete(pluginsTempDirectory, true);
 		}
