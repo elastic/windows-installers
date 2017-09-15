@@ -1,0 +1,124 @@
+$currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
+Set-Location $currentDir
+
+# mapped sync folder for common scripts
+. $currentDir\..\common\Utils.ps1
+. $currentDir\..\common\CommonTests.ps1
+. $currentDir\..\common\SemVer.ps1
+
+Get-Version
+Get-PreviousVersions
+
+$version = $Global:Version
+$previousVersion = $Global:PreviousVersions[0]
+
+$InstallDir = "E:\Elastic\"
+$DataDir = "E:\Data"
+$ConfigDir = "E:\Config"
+$LogsDir = "E:\Logs"
+$ExeArgs = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
+
+Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Install previous version $($previousVersion.Description)" {
+
+	$v = $previousVersion.FullVersion
+
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v
+
+    Context-ElasticsearchService
+
+    Context-PingNode -XPackSecurityInstalled $true
+
+    Context-EsHomeEnvironmentVariable -Expected $InstallDir
+
+    Context-EsConfigEnvironmentVariable -Expected @{ 
+		Version = $previousVersion
+		Path = $ConfigDir
+	}
+
+    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
+
+    Context-MsiRegistered -Expected @{
+		Name = "Elasticsearch $v"
+		Caption = "Elasticsearch $v"
+		Version = $v
+	}
+
+    Context-ServiceRunningUnderAccount -Expected "LocalSystem"
+
+    Context-EmptyEventLog
+
+	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
+
+    Context-ElasticsearchConfiguration -Expected @{
+		Version = $previousVersion
+	}
+
+    Context-JvmOptions -Expected @{
+		Version = $previousVersion
+	}
+
+	# Insert some data
+	Context-InsertData -Credentials $credentials
+}
+
+Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgrade from $($previousVersion.Description) to $($version.Description)" {
+
+	$v = $version.FullVersion
+
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v
+
+    Context-EsHomeEnvironmentVariable -Expected $InstallDir
+
+    Context-EsConfigEnvironmentVariable -Expected @{ 
+		Version = $version 
+		Path = $ConfigDir
+	}
+
+	$expectedStatus = Get-ExpectedServiceStatus -Version $version -PreviousVersion $previousVersion
+
+    Context-ElasticsearchService -Expected @{
+		Status = $expectedStatus
+	}
+
+	Context-PingNode -XPackSecurityInstalled $true
+
+    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
+
+    Context-MsiRegistered
+
+    Context-ServiceRunningUnderAccount -Expected "LocalSystem"
+
+    Context-EmptyEventLog
+
+	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
+
+    Context-ElasticsearchConfiguration -Expected @{
+		Version = $version
+	}
+
+    Context-JvmOptions -Expected @{
+		Version = $version
+	}
+
+	# Check inserted data still exists
+	Context-ReadData -Credentials $credentials
+}
+
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume - Uninstall $($version.Description)" {
+
+	$v = $version.FullVersion
+
+    Invoke-SilentUninstall -Version $v
+
+	Context-NodeNotRunning
+
+	Context-EsConfigEnvironmentVariableNull
+
+	Context-EsHomeEnvironmentVariableNull
+
+	Context-MsiNotRegistered
+
+	Context-ElasticsearchServiceNotInstalled
+
+	Context-EmptyInstallDirectory -Path $InstallDir
+}
