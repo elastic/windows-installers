@@ -9,6 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
+$credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
@@ -40,7 +41,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
 		Caption = "Elasticsearch $v"
-		Version = $v
+		Version = "$($previousVersion.Major).$($previousVersion.Minor).$($previousVersion.Patch)"
 	}
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
@@ -51,6 +52,8 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
 
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $previousVersion
+		Data = $DataDir
+		Logs = $LogsDir
 	}
 
     Context-JvmOptions -Expected @{
@@ -94,6 +97,8 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $version
+		Data = $DataDir
+		Logs = $LogsDir
 	}
 
     Context-JvmOptions -Expected @{

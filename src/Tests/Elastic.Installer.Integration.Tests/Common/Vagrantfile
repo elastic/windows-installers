@@ -87,6 +87,6 @@ def create_partition()
 	$newSize = $c.Size - 1GB
 	Resize-Partition -DiskNumber $c.DiskNumber -PartitionNumber $c.PartitionNumber -Size $newSize
 	$newParititon = New-Partition -DiskNumber $c.DiskNumber -UseMaximumSize -DriveLetter E
-	Format-Volume -DriveLetter $newParititon.DriveLetter -FileSystem NTFS -Force -NewFileSystemLabel 'Elastic'
+	Format-Volume -DriveLetter $newParititon.DriveLetter -FileSystem NTFS -NewFileSystemLabel 'Elastic' -Force -Confirm:$false
   SHELL
 end

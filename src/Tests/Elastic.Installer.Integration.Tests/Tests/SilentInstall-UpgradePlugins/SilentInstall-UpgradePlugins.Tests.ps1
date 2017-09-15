@@ -41,7 +41,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
 		Caption = "Elasticsearch $v"
-		Version = $v
+		Version = "$($previousVersion.Major).$($previousVersion.Minor).$($previousVersion.Patch)"
 	}
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
