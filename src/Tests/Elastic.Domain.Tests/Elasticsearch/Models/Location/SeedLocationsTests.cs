@@ -20,7 +20,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 				step.ConfigureLocations.Should().BeTrue();
 			});
 
-		[Fact] void ConfigDirectoryReflectsCONF_DIR() => WithValidPreflightChecks(s => s
+		[Fact] void ConfigDirectoryReflectsES_PATH_CONF() => WithValidPreflightChecks(s => s
 			.Elasticsearch(e => e
 				.EsConfigMachineVariable(_customConfig)
 			))
