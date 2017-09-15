@@ -2,10 +2,11 @@
 using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Commit
 {
-	public class CleanupInstallTask : ElasticsearchInstallationTask
+	public class CleanupInstallTask : ElasticsearchInstallationTaskBase
 	{
 		public CleanupInstallTask(string[] args, ISession session) : base(args, session) {}
 
@@ -14,19 +15,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 		protected override bool ExecuteTask()
 		{
-			if (this.FileSystem.Directory.Exists(this.TempDirectory))
-			{
-				try
-				{
-					this.FileSystem.Directory.Delete(this.TempDirectory, true);
-				}
-				catch (Exception e)
-				{
-					// log, but continue.
-					this.Session.Log($"Exception deleting {this.TempDirectory}: {e}");
-				}
-			}
-
+			this.InstallationModel.TempDirectoryConfiguration.CleanUp();
 			return true;
 		}
 	}

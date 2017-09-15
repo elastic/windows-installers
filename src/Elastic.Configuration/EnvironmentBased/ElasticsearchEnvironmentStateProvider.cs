@@ -7,6 +7,7 @@ namespace Elastic.Configuration.EnvironmentBased
 	public interface IElasticsearchEnvironmentStateProvider
 	{
 		string RunningExecutableLocation { get; }
+		string TempDirectoryVariable { get; }
 		
 		string HomeDirectoryUserVariable { get; }
 		string HomeDirectoryMachineVariable { get; }
@@ -15,11 +16,16 @@ namespace Elastic.Configuration.EnvironmentBased
 		string ConfigDirectoryUserVariable { get; }
 		string ConfigDirectoryMachineVariable { get; }
 		string ConfigDirectoryProcessVariable { get; }
+		
+		string NewConfigDirectoryMachineVariable { get; }
+		string OldConfigDirectoryMachineVariable { get; }
+		string OldConfigDirectoryMachineVariableCopy { get; }
 
 		string GetEnvironmentVariable(string variable);
 
 		void SetEsHomeEnvironmentVariable(string esHome);
 		void SetEsConfigEnvironmentVariable(string esConfig);
+		void SetOldEsConfigEnvironmentVariable(string esConfig);
 		void UnsetOldConfigVariable();
 		bool RestoreOldConfigVariable();
 	}
@@ -37,19 +43,23 @@ namespace Elastic.Configuration.EnvironmentBased
 		public string HomeDirectoryProcessVariable => Environment.GetEnvironmentVariable(EsHome, EnvironmentVariableTarget.Process);
 		public string RunningExecutableLocation => new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
 
+		public string TempDirectoryVariable => Environment.ExpandEnvironmentVariables("%TEMP%");
 		
 		public string ConfigDirectoryUserVariable => 
 			Environment.GetEnvironmentVariable(ConfDir, EnvironmentVariableTarget.User)
 			?? Environment.GetEnvironmentVariable(ConfDirOld, EnvironmentVariableTarget.User);
 
-		public string ConfigDirectoryMachineVariable =>
-			Environment.GetEnvironmentVariable(ConfDir, EnvironmentVariableTarget.Machine)
-			?? Environment.GetEnvironmentVariable(ConfDirOld, EnvironmentVariableTarget.Machine);
+		public string ConfigDirectoryMachineVariable => NewConfigDirectoryMachineVariable ?? OldConfigDirectoryMachineVariable;
+
+		public string NewConfigDirectoryMachineVariable => Environment.GetEnvironmentVariable(ConfDir, EnvironmentVariableTarget.Machine); 
+		public string OldConfigDirectoryMachineVariable => Environment.GetEnvironmentVariable(ConfDirOld, EnvironmentVariableTarget.Machine); 
+		public string OldConfigDirectoryMachineVariableCopy => Environment.GetEnvironmentVariable(ConfDirOldRenamed, EnvironmentVariableTarget.Machine); 
 		
 		public string ConfigDirectoryProcessVariable => 
 			Environment.GetEnvironmentVariable(ConfDir, EnvironmentVariableTarget.Process)
 			?? Environment.GetEnvironmentVariable(ConfDirOld, EnvironmentVariableTarget.Process);
 
+		
 		public string GetEnvironmentVariable(string variable) =>
 			Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Process)
 			?? Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.User)
@@ -61,14 +71,16 @@ namespace Elastic.Configuration.EnvironmentBased
 		public void SetEsConfigEnvironmentVariable(string esConfig) =>
 			Environment.SetEnvironmentVariable(ConfDir, esConfig, EnvironmentVariableTarget.Machine);
 		
+		public void SetOldEsConfigEnvironmentVariable(string esConfig) =>
+			Environment.SetEnvironmentVariable(ConfDirOld, esConfig, EnvironmentVariableTarget.Machine);
+		
 		public void UnsetOldConfigVariable()
 		{
 			var configDirectory = Environment.GetEnvironmentVariable(ConfDirOld, EnvironmentVariableTarget.Machine);
-			if (!string.IsNullOrEmpty(configDirectory))
-			{
-				Environment.SetEnvironmentVariable(ConfDirOldRenamed, configDirectory, EnvironmentVariableTarget.Machine);
-				Environment.SetEnvironmentVariable(ConfDirOld, null, EnvironmentVariableTarget.Machine);
-			}
+			if (string.IsNullOrEmpty(configDirectory)) return;
+			
+			Environment.SetEnvironmentVariable(ConfDirOldRenamed, configDirectory, EnvironmentVariableTarget.Machine);
+			Environment.SetEnvironmentVariable(ConfDirOld, null, EnvironmentVariableTarget.Machine);
 		}
 
 		public bool RestoreOldConfigVariable()

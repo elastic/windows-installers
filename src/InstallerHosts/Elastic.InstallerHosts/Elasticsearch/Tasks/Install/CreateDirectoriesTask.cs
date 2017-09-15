@@ -1,13 +1,10 @@
-﻿using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
-using static System.Environment;
-using static System.Reflection.Assembly;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
-	public class CreateDirectoriesTask : ElasticsearchInstallationTask
+	public class CreateDirectoriesTask : ElasticsearchInstallationTaskBase
 	{
 		public CreateDirectoriesTask(string[] args, ISession session) : base(args, session) { }
 		public CreateDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
@@ -111,7 +108,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 				}
 				foreach (var dir in this.FileSystem.Directory.EnumerateDirectories(installConfigDirectory))
 				{
-					var to = this.FileSystem.Path.Combine(configDirectory, dir);
+					var directoryName = this.FileSystem.DirectoryInfo.FromDirectoryName(dir).Name;
+					var to = this.FileSystem.Path.Combine(configDirectory, directoryName);
 					//do not overwrite existing directories
 					if (this.FileSystem.Directory.Exists(to)) continue;
 

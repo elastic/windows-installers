@@ -30,7 +30,7 @@ namespace Elastic.InstallerHosts.Kibana
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
 			var wix = new DemoWixStateProvider();
-			var model = KibanaInstallationModel.Create(wix, new NoopSession());
+			var model = KibanaInstallationModel.Create(wix, NoopSession.Kibana);
 
 			var window = new MainWindow(model, new ManualResetEvent(false));
 			model.InstallUITask = async () =>

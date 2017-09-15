@@ -14,7 +14,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 		public override IEnumerable<string> AllArguments => ElasticsearchArgumentParser.AllArguments;
 
 		public override IEnumerable<ModelArgument> MsiParams =>
-			ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), new NoopSession()).ToMsiParams();
+			ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), NoopSession.Elasticsearch).ToMsiParams();
 
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.ElasticsearchProductCodes;
 
