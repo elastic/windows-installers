@@ -1,4 +1,4 @@
-#I @"../../packages/build/FAKE/tools"
+#I "../../packages/build/FAKE.x64/tools"
 #I @"../../packages/build/Fsharp.Data/lib/net40"
 #I @"../../packages/build/FSharp.Text.RegexProvider/lib/net40"
 
