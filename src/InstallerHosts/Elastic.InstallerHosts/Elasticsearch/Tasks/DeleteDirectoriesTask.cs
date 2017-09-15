@@ -66,10 +66,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 				DumpElasticsearchLogOnRollback(logsDirectory);
 				this.DeleteDirectory(logsDirectory);
 			}
-			else this.Session.Log($"Data Directory does not exist, skipping {logsDirectory}");
+			else this.Session.Log($"Logs Directory does not exist, skipping {logsDirectory}");
 
 			if (this.FileSystem.Directory.Exists(configDirectory))
 				this.DeleteDirectory(configDirectory);
+			else this.Session.Log($"Config Directory does not exist, skipping {configDirectory}");
 
 			this.Session.SendProgress(1000, "data, logs, and config directories removed");
 			this.Session.Log("data, logs, and config directories removed");
@@ -78,7 +79,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 
 			if (!this.FileSystem.Directory.Exists(installDirectory))
 			{
-				this.Session.Log($"Install directory does not exist aborting {installDirectory}");
+				this.Session.Log($"Install directory does not exist. aborting {installDirectory}");
 				return true;
 			}
 
