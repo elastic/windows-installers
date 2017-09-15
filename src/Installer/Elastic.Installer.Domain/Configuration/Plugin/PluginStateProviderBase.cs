@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 
 namespace Elastic.Installer.Domain.Configuration.Plugin
@@ -153,7 +154,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 				CreateNoWindow = true,
 				UseShellExecute = false
 			};
-			start.EnvironmentVariables["CONF_DIR"] = configDirectory;
+			start.EnvironmentVariables[ElasticsearchEnvironmentStateProvider.ConfDir] = configDirectory;
 			return new Process { StartInfo = start };
 		}
 

@@ -495,12 +495,12 @@ function Get-ConfigEnvironmentVariableForVersion($Version) {
 		$Version = $Global:Version
 	}
 
-	# Compiled versions *always* use CONF_DIR
+	# Compiled versions *always* use ES_PATH_CONF
 	if ($Version.Major -eq 5 -and $Version.SourceType -ne "Compile") {
 		return "ES_CONFIG"
 	}
 	else {
-		return "CONF_DIR"
+		return "ES_PATH_CONF"
 	}
 }
 
