@@ -48,6 +48,7 @@
     <Compile Include="CustomActions\CustomAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Commit\ElasticsearchCleanupAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\ElasticsearchCustomActionOrder.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Immediate\ElasticsearchValidateArgumentsAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchConfigurationAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchDirectoriesAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchEnvironmentAction.cs" />
@@ -66,7 +67,6 @@
     <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallEnvironmentAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallPluginsAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallServiceAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\ElasticsearchValidateArgumentsAction.cs" />
     <Compile Include="Elasticsearch\Elasticsearch.cs" />
     <Compile Include="Kibana\CustomActions\Install\KibanaServiceStopAction.cs" />
     <Compile Include="Kibana\CustomActions\Install\KibanaEnvironmentAction.cs" />

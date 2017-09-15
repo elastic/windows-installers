@@ -96,15 +96,19 @@
     <Compile Include="Elasticsearch\Models\InvalidExternalStates\JavaStateTests.cs" />
     <Compile Include="Elasticsearch\Models\InstallationModelArgumentsTestsBase.cs" />
     <Compile Include="Elasticsearch\Models\InstallationModelArgumentsTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\InstallPluginsTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Commit\CleanUpInstallTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\CreateDirectoriesTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\EditElasticsearchYamlTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\EditJvmOptionTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\InstallPluginsTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\InstallServiceTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\PreserveInstallTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\SetEnvironmentVariablesTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Rollback\RollbackDeleteDirectoriesTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Rollback\RollbackRemoveEnvironmentVariablesTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\UninstallServiceTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\InstallServiceTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\EditJvmOptionTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\EditElasticsearchYamlTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\DeleteDirectoriesTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\CreateDirectoriesTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\SetEnvironmentVariablesTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\RemoveEnvironmentVariablesTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Uninstall\UninstallDeleteDirectoriesTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Uninstall\UninstallRemoveEnvironmentVariablesTaskTests.cs" />
     <Compile Include="Elasticsearch\Process\ConsoleSession.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchProcessTester.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchProcessTesterStateProvider.cs" />
@@ -166,7 +170,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)\%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)\%(Filename)')" />
   </Target>
   <Import Project="..\..\..\.paket\paket.targets" />
   <Choose>

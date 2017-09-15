@@ -10,6 +10,7 @@ using Elastic.Configuration.EnvironmentBased;
 using Elastic.Configuration.EnvironmentBased.Java;
 using Elastic.Configuration.FileBased.JvmOpts;
 using Elastic.Configuration.FileBased.Yaml;
+using Elastic.Installer.Domain.Configuration;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix;
@@ -32,6 +33,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 	{
 		public JavaConfiguration JavaConfiguration { get; }
 		public ElasticsearchEnvironmentConfiguration ElasticsearchEnvironmentConfiguration { get; }
+		public TempDirectoryConfiguration TempDirectoryConfiguration { get; }
 		private readonly ElasticsearchYamlConfiguration _yamlConfiguration;
 
 		public NoticeModel NoticeModel { get; }
@@ -58,12 +60,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			IPluginStateProvider pluginStateProvider,
 			ElasticsearchYamlConfiguration yamlConfiguration,
 			LocalJvmOptionsConfiguration localJvmOptions,
+			TempDirectoryConfiguration tempDirectoryConfiguration,
 			ISession session,
 			string[] args
 		) : base(wixStateProvider, session, args)
 		{
 			this.JavaConfiguration = javaConfiguration ?? throw new ArgumentNullException(nameof(javaConfiguration));
 			this.ElasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
+			this.TempDirectoryConfiguration = tempDirectoryConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
 
 			var versionConfig = new VersionConfiguration(wixStateProvider, this.Session.IsInstalled);
@@ -188,8 +192,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
 			var jvmConfig = LocalJvmOptionsConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
-			return new ElasticsearchInstallationModel(wixState, javaConfig, esEnvironmentConfig, serviceState, pluginState, esConfig,
-				jvmConfig, session, args);
+			var tempDirConfig = new TempDirectoryConfiguration(session, ElasticsearchEnvironmentStateProvider.Default, null);
+			return new ElasticsearchInstallationModel(wixState, 
+				javaConfig, esEnvironmentConfig, serviceState, pluginState, esConfig, jvmConfig, tempDirConfig,
+				session, args);
 		}
 
 		bool javaInstalled;

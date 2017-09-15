@@ -3,9 +3,9 @@ using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
-	public class InstallServiceTask : ElasticsearchInstallationTask
+	public class InstallServiceTask : ElasticsearchInstallationTaskBase
 	{
 		private IServiceStateProvider ServiceStateProvider { get; }
 
