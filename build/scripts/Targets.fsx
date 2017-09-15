@@ -1,4 +1,4 @@
-﻿#I "../../packages/build/FAKE/tools"
+﻿#I "../../packages/build/FAKE.x64/tools"
 #I "../../packages/build/System.Management.Automation/lib/net45"
 
 #r "FakeLib.dll"
