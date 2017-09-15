@@ -13,30 +13,30 @@ $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install previous version $($previousVersion.Description)" {
+$InstallDir = "E:\Elastic\"
+$DataDir = "E:\Data"
+$ConfigDir = "E:\Config"
+$LogsDir = "E:\Logs"
+$ExeArgs = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
+
+Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Install previous version $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v
 
     Context-ElasticsearchService
 
     Context-PingNode -XPackSecurityInstalled $true
 
-    $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
-
-    Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
-
-    $ProfileFolder = $env:ALLUSERSPROFILE
-    $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
+    Context-EsHomeEnvironmentVariable -Expected $InstallDir
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
 		Version = $previousVersion
-		Path = $ExpectedConfigFolder
+		Path = $ConfigDir
 	}
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
@@ -52,6 +52,8 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $previousVersion
+		Data = $DataDir
+		Logs = $LogsDir
 	}
 
     Context-JvmOptions -Expected @{
@@ -62,23 +64,17 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 	Context-InsertData -Credentials $credentials
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade from $($previousVersion.Description) to $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgrade from $($previousVersion.Description) to $($version.Description)" {
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v
 
-    $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
-
-    Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
-
-    $ProfileFolder = $env:ALLUSERSPROFILE
-    $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
+    Context-EsHomeEnvironmentVariable -Expected $InstallDir
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
 		Version = $version 
-		Path = $ExpectedConfigFolder
+		Path = $ConfigDir
 	}
 
 	$expectedStatus = Get-ExpectedServiceStatus -Version $version -PreviousVersion $previousVersion
@@ -89,7 +85,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
 	Context-PingNode -XPackSecurityInstalled $true
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 
     Context-MsiRegistered
 
@@ -101,6 +97,8 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $version
+		Data = $DataDir
+		Logs = $LogsDir
 	}
 
     Context-JvmOptions -Expected @{
@@ -111,7 +109,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 	Context-ReadData -Credentials $credentials
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninstall $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume - Uninstall $($version.Description)" {
 
 	$v = $version.FullVersion
 
@@ -127,8 +125,5 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninst
 
 	Context-ElasticsearchServiceNotInstalled
 
-	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
-
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-EmptyInstallDirectory -Path $InstallDir
 }
