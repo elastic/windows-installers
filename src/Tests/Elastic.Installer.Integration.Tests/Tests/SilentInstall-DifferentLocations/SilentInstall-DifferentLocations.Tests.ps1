@@ -4,11 +4,15 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
+. $currentDir\..\common\SemVer.ps1
 
 $InstallDir = "C:\temp dir\Elasticsearch\"
 $DataDir = "C:\foo\data"
 $ConfigDir = "C:\bar\config"
 $LogsDir = "C:\baz\logs"
+
+Get-Version
+Get-PreviousVersions
 
 Describe "Silent Install with different install locations" {
 
@@ -22,7 +26,9 @@ Describe "Silent Install with different install locations" {
 
     Context-EsHomeEnvironmentVariable -Expected $InstallDir
 
-    Context-EsConfigEnvironmentVariable -Expected $ConfigDir
+    Context-EsConfigEnvironmentVariable -Expected @{  
+		Path = $ConfigDir
+	}
 
     Context-PluginsInstalled
 
@@ -34,7 +40,10 @@ Describe "Silent Install with different install locations" {
   
     Context-ClusterNameAndNodeName
 
-    Context-ElasticsearchConfiguration -Expected @{Data = $DataDir; Logs = $LogsDir }
+    Context-ElasticsearchConfiguration -Expected @{
+		Data = $DataDir 
+		Logs = $LogsDir 
+	}
 
     Context-JvmOptions
 }
@@ -45,9 +54,9 @@ Describe "Silent Uninstall with different install locations" {
 
 	Context-NodeNotRunning
 
-	Context-EnvironmentVariableNull -Name "CONF_DIR"
+	Context-EsConfigEnvironmentVariableNull
 
-	Context-EnvironmentVariableNull -Name "ES_HOME"
+	Context-EsHomeEnvironmentVariableNull
 
 	Context-MsiNotRegistered
 

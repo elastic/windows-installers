@@ -16,6 +16,8 @@
     is a wildcard to describe the test directories in .\Tests which contain tests to run
 .Parameter Version
 	the version of the product under test
+.Parameter PreviousVersions
+	previous versions of the product to test upgrades against
 .Parameter VagrantProvider
 	the vagrant provider to use:
 	- local = local vagrant box with virtualbox provider
@@ -29,23 +31,23 @@ Param(
     [string] $Tests="*",
 
     [Parameter(Mandatory=$true)]
-	[ValidatePattern("\d+\.\d+\.\d+((?:\-[\w\-]+))?")]
+	[ValidatePattern("^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$")]
     [string] $Version,    
     
     [Parameter(Mandatory=$false)]
-	[ValidatePattern("^$|\d+\.\d+\.\d+((?:\-[\w\-]+))?")]
-    [string] $PreviousVersion,
+	[ValidateScript({ $_ | ForEach-Object { $_ -match "^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$" } })]
+    [string[]] $PreviousVersions=@(),
 
 	[Parameter(Mandatory=$false)]
 	[ValidateSet("local", "azure", "quick-azure")] 
 	[string] $VagrantProvider="local"
 )
 
-$currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
+$currentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 cd $currentDir
 
-# load utils
 . $currentDir\Common\Utils.ps1
+. $currentDir\Common\SemVer.ps1
 
 Set-DebugMode
 
@@ -56,16 +58,19 @@ $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"
 # Preconditions
 ###############
 
-$installer = Get-Installer -location $buildOutDir -Version $Version
+$semanticVersion = ConvertTo-SemanticVersion $Version
+
+$installer = Get-Installer -location $buildOutDir -Version $semanticVersion.FullVersion
 if ($installer -eq $null) {
-    log "No $Version installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
+    log "No $($semanticVersion.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
     Exit 1
 }
 
-if ($PreviousVersion) {
-	$installer = Get-Installer -location $buildOutDir -Version $PreviousVersion
+foreach($previousVersion in $PreviousVersions) {
+	$semanticVersion = ConvertTo-SemanticVersion $previousVersion
+	$installer = Get-Installer -location $buildOutDir -Version $semanticVersion.FullVersion
 	if ($installer -eq $null) {
-		log "No $PreviousVersion installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
+		log "No $($semanticVersion.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
 		Exit 1
 	}
 }
@@ -94,6 +99,6 @@ else {
 
 log "running $testcount test scenario(s)"
 
-Invoke-IntegrationTests -CurrentDir $currentDir -TestDirs $testDirs -VagrantProvider $VagrantProvider -Version $Version -PreviousVersion $PreviousVersion
+Invoke-IntegrationTests -CurrentDir $currentDir -TestDirs $testDirs -VagrantProvider $VagrantProvider -Version $Version -PreviousVersions $PreviousVersions
 
 cd $currentDir
