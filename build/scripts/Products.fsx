@@ -2,11 +2,8 @@
 
 #r "FakeLib.dll"
 
-open System
 open System.Globalization
-open System.Text
 open System.IO
-open System.Text.RegularExpressions
 open Fake
 open Fake.FileHelper
 
@@ -27,6 +24,10 @@ module Paths =
     let UnitTestsDir = "src/Tests/Elastic.Domain.Tests"
 
     let ArtifactDownloadsUrl = "https://artifacts.elastic.co/downloads"
+
+    let StagingDownloadsUrl product version hash = 
+        sprintf "https://staging.elastic.co/%s-%s/downloads/windows-installers/%s/%s-%s.msi" 
+            version hash product product version
 
 module Products =
     open Paths
@@ -60,6 +61,17 @@ module Products =
 
     let All = [Elasticsearch; Kibana]
 
+    type Source =
+        | Compile
+        | Released
+        | BuildCandidate of hash:string
+
+        member this.Description =
+            match this with
+            | Compile -> "compiled from source"
+            | Released -> "official release"
+            | BuildCandidate hash -> sprintf "build candidate %s" hash
+
     type Version = {
         Product : string;
         FullVersion : string;
@@ -67,6 +79,8 @@ module Products =
         Minor : int;
         Patch : int;
         Prerelease : string;
+        Source : Source;
+        RawValue: string;
     }
 
     type ProductVersions(product:Product, versions:Version list) =
@@ -75,34 +89,30 @@ module Products =
         member this.Name = product.Name
         member this.Title = product.Title
 
-        member this.DownloadUrls =
-            this.Versions
-            |> List.map(fun v ->
+        member private this.DownloadUrl (version:Version) =
+            match version.Source with
+            | Compile ->
                 match product with
                 | Elasticsearch ->
-                    sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl v.FullVersion
+                    sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl version.FullVersion
                 | Kibana ->               
-                    sprintf "%s/kibana/kibana-%s-windows-x86.zip" ArtifactDownloadsUrl v.FullVersion                       
-            )
-        
-        member this.ZipFiles =
-            InDir |> CreateDir
-            let fullPathInDir = InDir |> Path.GetFullPath
-            this.Versions
-            |> List.map(fun v ->
-                Path.Combine(fullPathInDir, sprintf "%s-%s.zip" this.Name v.FullVersion)
-            )
+                    sprintf "%s/kibana/kibana-%s-windows-x86.zip" ArtifactDownloadsUrl version.FullVersion 
+            | Released ->
+                sprintf "%s/%s/%s-%s.msi" ArtifactDownloadsUrl this.Name this.Name version.FullVersion 
+            | BuildCandidate hash ->
+                StagingDownloadsUrl this.Name version.FullVersion hash
 
-        member this.ExtractedDirectories =
-            InDir |> CreateDir
+        member private this.ZipFile (version:Version) =
+            let fullPathInDir = InDir |> Path.GetFullPath
+            Path.Combine(fullPathInDir, sprintf "%s-%s.zip" this.Name version.FullVersion)
+
+        member private this.ExtractedDirectory (version:Version) =
             let fullPathInDir = InDir |> Path.GetFullPath            
-            this.Versions
-            |> List.map (fun v ->
-                Path.Combine(fullPathInDir, sprintf "%s-%s" this.Name v.FullVersion)
-            )
+            Path.Combine(fullPathInDir, sprintf "%s-%s" this.Name version.FullVersion)
 
         member this.BinDirs = 
             this.Versions
+            |> List.filter (fun v -> v.Source = Compile)
             |> List.map(fun v -> InDir @@ sprintf "%s-%s/bin/" this.Name v.FullVersion)
 
         member this.ServiceDir =
@@ -110,35 +120,47 @@ module Products =
 
         member this.ServiceBinDir = this.ServiceDir @@ "bin/AnyCPU/Release/"
 
-        member this.Unzip () =
-            List.zip3 this.ExtractedDirectories this.ZipFiles this.Versions
-            |> List.iter(fun (extractedDirectory, zipFile, version) ->
-                if directoryExists extractedDirectory |> not && fileExists zipFile
-                then
-                    tracefn "Unzipping %s %s" this.Name zipFile
-                    Unzip InDir zipFile
-                    match this.Product with
-                        | Kibana ->
-                            let original = sprintf "kibana-%s-windows-x86" version.FullVersion
-                            if directoryExists original |> not then
-                                Rename (InDir @@ (sprintf "kibana-%s" version.FullVersion)) (InDir @@ original)
-                        | _ -> ()
-                else tracefn "Extracted directory %s already exists" extractedDirectory                
-            )
+        member this.DownloadPath (version:Version) =
+            let fullPathInDir = InDir |> Path.GetFullPath 
+            let releaseFile version dir =
+                let downloadUrl = this.DownloadUrl version     
+                Path.Combine(fullPathInDir, dir, Path.GetFileName downloadUrl)
+            match version.Source with
+            | Compile ->  this.ZipFile version
+            | Released -> releaseFile version "releases"
+            | BuildCandidate hash -> releaseFile version hash
 
         member this.Download () =
-            let locations = List.zip this.DownloadUrls this.ZipFiles
-            locations
-            |> List.iter(fun location ->          
-                match location with
-                | (_, zip) when fileExists zip ->
-                    tracefn "Already downloaded %s to %s" this.Name zip
-                | (url, zip) ->
+            this.Versions
+            |> List.iter (fun version ->
+                match (this.DownloadUrl version, this.DownloadPath version) with
+                | (_, file) when fileExists file ->
+                    tracefn "Already downloaded %s to %s" this.Name file
+                | (url, file) ->
                     tracefn "Downloading %s from %s" this.Name url 
+                    let targetDirectory = file |> Path.GetDirectoryName
+                    if (directoryExists targetDirectory |> not) then CreateDir targetDirectory
                     use webClient = new System.Net.WebClient()
-                    location |> webClient.DownloadFile
-                    tracefn "Done downloading %s from %s to %s" this.Name url zip 
-            )  
+                    (url, file) |> webClient.DownloadFile
+                    tracefn "Done downloading %s from %s to %s" this.Name url file 
+
+                match version.Source with
+                | Compile -> 
+                    let extractedDirectory = this.ExtractedDirectory version
+                    let zipFile = this.DownloadPath version
+                    if directoryExists extractedDirectory |> not
+                    then
+                        tracefn "Unzipping %s %s" this.Name zipFile
+                        Unzip InDir zipFile
+                        match this.Product with
+                            | Kibana ->
+                                let original = sprintf "kibana-%s-windows-x86" version.FullVersion
+                                if directoryExists original |> not then
+                                    Rename (InDir @@ (sprintf "kibana-%s" version.FullVersion)) (InDir @@ original)
+                            | _ -> ()
+                    else tracefn "Extracted directory %s already exists" extractedDirectory   
+                | _ -> ()
+            )
 
         static member CreateFromProduct (productToVersion:Product -> Version list) (product: Product)  =
             ProductVersions(product, productToVersion product)

@@ -23,32 +23,44 @@ module Commandline =
     let usage = """
 USAGE:
 
-build <target> [Products] [Versions] [Params] [skiptests]
+build.bat [Target] [Products] [Versions] [Target specific params] [skiptests]
 
-Targets:
+Target:
+-------
 
 * buildinstallers
   - default target if none provided. Builds installers for products
+
 * buildservices
   - Builds services for products
+
 * clean
   - cleans build output folders
+
 * unittest
   - build and unit test
+
 * downloadproducts
-  - downloads the product zip files if not already downloaded
-* unzipproducts
-  - unzips product zip files if not already unzipped
+  - downloads the products if not already downloaded, and unzips them
+    if not already unzipped
+
 * release [Products] [Versions] [CertFile] [PasswordFile]
   - create a release versions of each MSI by building and then signing the service executable and installer for each.
   - when CertFile and PasswordFile are specified, these will be used for signing otherwise the values in ELASTIC_CERT_FILE
     and ELASTIC_CERT_PASSWORD environment variables will be used
+
+  Example: build.bat release es 5.5.3 C:/path_to_cert_file C:/path_to_password_file
+
 * integrate [Products] [Versions] [VagrantProvider] [TestTargets] [skiptests]  -
-  - run integration tests. Can filter tests by wildcard [testtargets]
+  - run integration tests. Can filter tests by wildcard [TestTargets]
+
+  Example: build.bat integrate es 5.5.1,5.5.2 local * skiptests
+
 * help or ?
   - show this usage summary
 
 Products:
+---------
 
 optional comma separated collection of products to build. can use
 
@@ -64,17 +76,22 @@ optional comma separated collection of products to build. can use
     - build kibana
 
 Versions:
+---------
 
-Optional version(s) to build. Multiple versions can be specified separated by commas. 
+optional version(s) to build. Multiple versions can be specified, separated by commas. 
 
-When specified, for build targets other than release, the version zip files will
-be downloaded and extracted to build/in directory if they don't already exist.
+When specified, for build targets other than release, the product version zip files will
+be downloaded and extracted to build/in directory if they don't already exist. 
+
+A release version can be downloaded for integration tests by prefixing the version with r: e.g. r:5.5.2
+A build candidate version can be downloaded for integration tests by prefixing the version with [buildhash]: e.g. e824d65e:5.6.0
 
 when not specified
     - for build targets other than release, the latest non-prelease version of each product will be downloaded
     - for release, the build/in directory will be checked and a single version found there will be used
 
 TestTargets:
+------------
 
 Wildcard pattern for integration tests to target within test directories 
 in <root>/src/Tests/Elastic.Installer.Integration.Tests/Tests.
@@ -82,13 +99,15 @@ in <root>/src/Tests/Elastic.Installer.Integration.Tests/Tests.
 When not specified, defaults to *
 
 VagrantProvider:
+----------------
 
 The provider that vagrant should use to bring up vagrant boxes
-    - local: use Virtualbox on the localhost
+    - local: use Virtualbox on the local machine
     - azure: use Azure provider to provision a machine on Azure for each integration test scenario
-    - quick-azure: use Azure provider to provision a single machine on Azure on which to run all integration tests
+    - quick-azure: use Azure provider to provision a single machine on Azure on which to run all integration tests sequentially
 
 skiptests:
+----------
 
 Whether to skip unit tests.
 
@@ -99,17 +118,31 @@ Whether to skip unit tests.
 
     type DownloadFeed = XmlProvider< feedUrl >
 
-    type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)$", noMethodPrefix=true >
+    type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?((?<Source>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)$", noMethodPrefix=true >
+
+    let private parseSource = function
+        | "r" -> Released
+        | hash when isNotNullOrEmpty hash -> BuildCandidate hash
+        | _ -> Compile
 
     let private parseVersion version =
         let m = VersionRegex().Match version
         if m.Success |> not then failwithf "Could not parse version from %s" version
+        let source = parseSource m.Source.Value
+
+        let rawValue =
+            match source with
+            | Compile -> m.Version.Value
+            | _ -> sprintf "%s:%s" m.Source.Value m.Version.Value
+
         { Product = m.Product.Value;
           FullVersion = m.Version.Value;
           Major = m.Major.Value |> int;
           Minor = m.Minor.Value |> int;
           Patch = m.Patch.Value |> int;
-          Prerelease = m.Prerelease.Value; }
+          Prerelease = m.Prerelease.Value; 
+          Source = source;
+          RawValue = rawValue; }
 
     let private lastFeedVersion (product : Product) =
         // TODO: disallow prereleases for moment. Make build parameter in future?
@@ -149,7 +182,6 @@ Whether to skip unit tests.
         | "test"
         | "clean"
         | "downloadproducts"
-        | "unzipproducts"
         | "patchguids"
         | "unittest"
         | "prunefiles"
@@ -169,8 +201,9 @@ Whether to skip unit tests.
 
     let arguments =
         match filteredArgs with
-        | _ :: tail -> target :: tail
+        | IsTarget head :: tail -> head :: tail
         | [] -> [target]
+        | _ -> target :: filteredArgs
 
     let private (|IsVersionList|_|) candidate =
         let versionStrings = splitStr "," candidate
@@ -185,7 +218,9 @@ Whether to skip unit tests.
                         Major = m.Major.Value |> int;
                         Minor = m.Minor.Value |> int;
                         Patch = m.Patch.Value |> int;
-                        Prerelease = m.Prerelease.Value; })
+                        Prerelease = m.Prerelease.Value; 
+                        Source = parseSource m.Source.Value;
+                        RawValue = v; })
             | _ -> ()
         )      
         match versions with
@@ -302,15 +337,12 @@ Whether to skip unit tests.
                            products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                           
                        | ["integrate"; IsProductList products; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-                       
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                    
                        | ["integrate"; IsProductList products; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
                            products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion) 
                        | ["integrate"; IsProductList products] ->
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-                           
-                           
+                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)        
                        | ["integrate"; IsVersionList versions; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
@@ -326,7 +358,12 @@ Whether to skip unit tests.
                        | ["integrate"; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-
+                       | [IsProductList products; IsVersionList versions] ->
+                           products |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
+                       | [IsProductList products] ->
+                           products |> List.map(ProductVersions.CreateFromProduct lastFeedVersion)
+                       | [IsVersionList versions] ->
+                           All |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target; IsVersionList versions] ->
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target; IsProductList products] ->
@@ -335,12 +372,6 @@ Whether to skip unit tests.
                            products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target] ->
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
-                       | [IsProductList products; IsVersionList versions] ->
-                           products |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
-                       | [IsVersionList versions] ->
-                           All |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
-                       | [IsProductList products] ->
-                           products |> List.map(ProductVersions.CreateFromProduct lastFeedVersion)
                        | [] ->
                            All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
                        | _ ->
