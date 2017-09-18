@@ -85,7 +85,7 @@ module Builder =
             ]
     
     let BuildService (product : ProductVersions) =
-        List.zip product.Versions product.BinDirs
+        List.zip (product.Versions |> List.filter(fun v-> v.Source = Compile)) product.BinDirs
         |> List.iter(fun (version, binDir) ->
             patchAssemblyInformation product version 
             
@@ -100,20 +100,29 @@ module Builder =
         )
 
     let BuildMsi (product : ProductVersions) =
-        !! (MsiDir @@ "*.csproj")
-        |> MSBuildRelease MsiBuildDir "Build"
-        |> ignore
+        if (product.Versions |> List.exists (fun v -> v.Source = Compile)) then
+            !! (MsiDir @@ "*.csproj")
+            |> MSBuildRelease MsiBuildDir "Build"
+            |> ignore
+
+        let outMsiPath (product:ProductVersions) (version:Version) = 
+            OutDir @@ product.Name @@ (sprintf "%s-%s.msi" product.Name version.FullVersion)
 
         product.Versions
-        |> List.iter(fun version ->
-            let exitCode = ExecProcess (fun info ->
-                            info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir
-                            info.WorkingDirectory <- MsiDir
-                            info.Arguments <- [product.Name; version.FullVersion; Path.GetFullPath(InDir); getBuildParam "release"] |> String.concat " "
-                           ) <| TimeSpan.FromMinutes 20.
+        |> List.iter(fun version -> 
+           match version.Source with
+           | Compile ->
+               let exitCode = ExecProcess (fun info ->
+                                info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir
+                                info.WorkingDirectory <- MsiDir
+                                info.Arguments <- [product.Name; version.FullVersion; Path.GetFullPath(InDir); getBuildParam "release"] |> String.concat " "
+                               ) <| TimeSpan.FromMinutes 20.
     
-            if exitCode <> 0 then failwithf "Error building MSI for %s" product.Name
-            let finalMsi = OutDir @@ product.Name @@ (sprintf "%s-%s.msi" product.Name version.FullVersion)
-            CopyFile finalMsi (MsiDir @@ (sprintf "%s.msi" product.Name))
-            Sign finalMsi product
+               if exitCode <> 0 then failwithf "Error building MSI for %s" product.Name
+               let finalMsi = outMsiPath product version
+               CopyFile finalMsi (MsiDir @@ (sprintf "%s.msi" product.Name))
+               Sign finalMsi product
+           | _ ->
+               if not <| fileExists (product.DownloadPath version) then failwithf "No file found at %s" (product.DownloadPath version)
+               CopyFile (outMsiPath product version) (product.DownloadPath version)
         )
