@@ -13,10 +13,10 @@ $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
-$InstallDir = "E:\Elastic\"
-$DataDir = "E:\Data"
-$ConfigDir = "E:\Config"
-$LogsDir = "E:\Logs"
+$InstallDir = "D:\Elastic\"
+$DataDir = "D:\Data"
+$ConfigDir = "D:\Config"
+$LogsDir = "D:\Logs"
 $ExeArgs = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
 
 Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Install previous version $($previousVersion.Description)" {
