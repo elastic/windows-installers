@@ -54,7 +54,6 @@ Vagrant.configure("2") do |config|
     azure.vm.provision "chocolatey", 	type: "shell", inline: configure_chocolatey() 
     azure.vm.provision "powershellget", type: "shell", inline: configure_powershellget()   
     azure.vm.provision "java", 			type: "shell", inline: configure_java()  
-    azure.vm.provision "partition", 	type: "shell", inline: create_partition()  
   end
 
 end
@@ -80,13 +79,18 @@ end
 
 def create_partition()
   return <<-SHELL
-	$c = Get-Disk | Get-Partition | Where-Object { $_.DriveLetter -eq 'C' }
-	if (-not ($c)) {
-		throw 'No C Drive available'
+	$partitions = Get-Disk | Get-Partition
+	$driveLetter = 'D'
+	$d = $partitions | Where-Object { $_.DriveLetter -eq $driveLetter }
+	if (-not $d) {
+		$c = $partitions | Where-Object { $_.DriveLetter -eq 'C' }
+		if (-not ($c)) {
+			throw 'No C Drive available'
+		}
+		$newSize = $c.Size - 1GB
+		Resize-Partition -DiskNumber $c.DiskNumber -PartitionNumber $c.PartitionNumber -Size $newSize
+		$newParititon = New-Partition -DiskNumber $c.DiskNumber -UseMaximumSize -DriveLetter $driveLetter
+		Format-Volume -DriveLetter $newParititon.DriveLetter -FileSystem NTFS -NewFileSystemLabel 'Elastic' -Force -Confirm:$false
 	}
-	$newSize = $c.Size - 1GB
-	Resize-Partition -DiskNumber $c.DiskNumber -PartitionNumber $c.PartitionNumber -Size $newSize
-	$newParititon = New-Partition -DiskNumber $c.DiskNumber -UseMaximumSize -DriveLetter E
-	Format-Volume -DriveLetter $newParititon.DriveLetter -FileSystem NTFS -NewFileSystemLabel 'Elastic' -Force -Confirm:$false
   SHELL
 end
