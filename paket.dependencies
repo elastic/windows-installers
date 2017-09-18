@@ -39,7 +39,7 @@ group tests
 group build
     source https://www.nuget.org/api/v2
 
-    nuget FAKE
+	nuget FAKE.x64
     nuget FSharp.Data
 	nuget FSharp.Text.RegexProvider
     nuget FSharp.Configuration
