@@ -137,7 +137,7 @@ Target "Help" (fun () -> trace Commandline.usage)
 
 "Clean"
   ==> "PatchGuids"
-  =?> ("DownloadProducts", (not ((getBuildParam "release") = "1")))
+  ==> "DownloadProducts"
   ==> "PruneFiles"
   =?> ("UnitTest", (not ((getBuildParam "skiptests") = "1")))
   ==> "BuildServices"
