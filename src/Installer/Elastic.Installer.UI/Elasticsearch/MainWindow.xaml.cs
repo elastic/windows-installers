@@ -34,6 +34,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Config;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using Elastic.Installer.UI.Elasticsearch.Steps;
 using Elastic.Installer.UI.Shared.Steps;
 using FluentValidation.Internal;
@@ -122,7 +123,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 		private readonly IDictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>> StepModelToControl =
 			new Dictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>>
 		{
-			{ typeof(NoticeModel), (m, s) =>  Step(s, new NoticeView { ViewModel = m as NoticeModel }, 
+			{ typeof(NoticeModel), (m, s) => Step(s, new NoticeView { ViewModel = m as NoticeModel }, 
 				ViewResources.MainWindow_Help_Header, string.Format(ViewResources.MainWindow_Help, "Elasticsearch")) },
 			{ typeof(LocationsModel), (m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, 
 				ViewResources.LocationsView_Elasticsearch_Help_Header, ViewResources.LocationsView_Elasticsearch_Help)  },
@@ -132,8 +133,16 @@ namespace Elastic.Installer.UI.Elasticsearch
 				ViewResources.ConfigurationView_Elasticsearch_Help_Header, ViewResources.ConfigurationView_Elasticsearch_Help) },
 			{ typeof(PluginsModel), (m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, 
 				ViewResources.PluginsView_Elasticsearch_Help_Header, ViewResources.PluginsView_Elasticsearch_Help) },
+			{ typeof(XPackModel), (m, s) => Step(s, new XPackView { ViewModel = m as XPackModel }, 
+				ViewResources.PluginsView_Elasticsearch_Help_Header, ViewResources.PluginsView_Elasticsearch_Help) },
 			{ typeof(ClosingModel), (m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null, null) },
 		};
+		private readonly IDictionary<Type, MetroTabItem> CachedTabs = new Dictionary<Type, MetroTabItem>();
+		private SolidColorBrush _defaultTabForeground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+		private SolidColorBrush _hoverTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
+		private SolidColorBrush _disabledTabForeground = new SolidColorBrush(Color.FromRgb(160, 160, 160));
+		private SolidColorBrush _selectedTabForeground =new SolidColorBrush(Color.FromRgb(0, 169, 224));
+		private SolidColorBrush _badTabForeground= new SolidColorBrush(Color.FromRgb(233, 73, 152));
 
 		private static void Step(StepWithHelp step, UserControl view, string helpHeaderText, string help)
 		{
@@ -144,85 +153,99 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 		private void TabNavigation()
 		{
-			var defaultTabForeground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-			var hoverTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
-			var disabledTabForeground = new SolidColorBrush(Color.FromRgb(160, 160, 160));
-			var selectedTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
-			var badTabForeground = new SolidColorBrush(Color.FromRgb(233, 73, 152));
-
-			this.OneWayBind(ViewModel, vm => vm.Steps, view => view.StepsTab.ItemsSource, s => s.Select((m, i) =>
-			{
-				var step = new StepWithHelp
-				{
-					Margin = new Thickness(0, 10, 0, 0),
-					VerticalAlignment = VerticalAlignment.Stretch,
-					HorizontalAlignment = HorizontalAlignment.Stretch,
-				};
-				StepModelToControl[m.GetType()](m, step);
-				var headerLabel = new Label
-				{
-					Content = m.Header,
-					FontSize = 26,
-					Margin = new Thickness(-4, 0, 0, 0)
-				};
-
-				Action reset = () =>
-				{
-					headerLabel.Cursor = Cursors.Arrow;
-					headerLabel.Foreground = defaultTabForeground;
-					if (this.ViewModel.TabSelectedIndex == i)
-						headerLabel.Foreground = selectedTabForeground;
-					if (!this.ViewModel.Steps[i].IsValid)
-						headerLabel.Foreground = badTabForeground;
-				};
-
-				headerLabel.MouseLeave += (ss, e) => reset();
-				headerLabel.MouseLeftButtonDown += (ss, e) => reset();
-				headerLabel.MouseEnter += (ss, e) =>
-				{
-					if (this.ViewModel.TabSelectedIndex == i) return;
-					headerLabel.Cursor = Cursors.Hand;
-					headerLabel.Foreground = hoverTabForeground;
-				};
-
-				var tab = new MetroTabItem { Content = step, Header = headerLabel };
-				return tab;
-			}), null);
-
+			DrawTabs();
+			this.ViewModel.Steps.Changed.Subscribe(e => DrawTabs());
+			
 			this.Bind(ViewModel, vm => vm.TabSelectedIndex, view => view.StepsTab.SelectedIndex);
 
-			//Make sure tabs are colored according to state
-			//selected is blue, errror is red, smaller then max allowed tab is disabled and grey
 			this.WhenAnyValue(vm => vm.ViewModel.TabSelectedIndex, vm => vm.ViewModel.TabSelectionMax)
-				.Subscribe(t =>
-				{
-					var selected = t.Item1;
-					var max = t.Item2;
-					var i = 0;
-					foreach (var child in this.StepsTab.Items.OfType<MetroTabItem>())
-					{
-						var label = child.FindChildren<Label>().First();
-						child.IsEnabled = true;
-						label.IsEnabled = true;
+				.Subscribe(t => RedrawTabColours(selected: t.Item1, max: t.Item2));
+		}
 
-						label.Foreground = defaultTabForeground;
-						if (i == selected)
-						{
-							label.Foreground = selectedTabForeground;
-						}
-						if (!this.ViewModel.Steps[i].IsValid)
-							label.Foreground = badTabForeground;
-						if (i > max)
-						{
-							child.IsEnabled = false;
-							label.IsEnabled = false;
-							label.Foreground = disabledTabForeground;
-						}
-						if (selected >= this.ViewModel.Steps.Count - 1)
-							child.Visibility = Visibility.Collapsed;
-						i++;
-					}
-				});
+		private void RedrawTabColours(int selected, int max)
+		{
+			var i = 0;
+			foreach (var step in this.ViewModel.Steps)
+			{
+				if (!this.CachedTabs.TryGetValue(step.GetType(), out var child)) continue;
+
+				var label = child.FindChildren<Label>().First();
+				child.IsEnabled = true;
+				label.IsEnabled = true;
+
+				label.Foreground = _defaultTabForeground;
+				if (i == selected)
+					label.Foreground = _selectedTabForeground;
+
+				if (!step.IsValid)
+					label.Foreground = _badTabForeground;
+
+				if (i > max)
+				{
+					child.IsEnabled = false;
+					label.IsEnabled = false;
+					label.Foreground = _disabledTabForeground;
+				}
+				if (selected >= this.ViewModel.Steps.Count - 1)
+					child.Visibility = Visibility.Collapsed;
+				i++;
+			}
+		}
+
+		private void DrawTabs()
+		{
+			var i = 0;
+			var tabs = new List<MetroTabItem>();
+			foreach (var step in this.ViewModel.Steps)
+			{
+				var tab = CreateTab(step, i);
+				tabs.Add(tab);
+			}
+			this.StepsTab.ItemsSource = tabs;
+		}
+
+		private MetroTabItem CreateTab(IStep m, int i)
+		{
+			var type = m.GetType();
+			if (this.CachedTabs.TryGetValue(type, out var tabItem))
+				return tabItem;
+			
+			var step = new StepWithHelp
+			{
+				Margin = new Thickness(0, 10, 0, 0),
+				VerticalAlignment = VerticalAlignment.Stretch,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+			};
+			StepModelToControl[type](m, step);
+			var headerLabel = new Label
+			{
+				Content = m.Header,
+				FontSize = 26,
+				Margin = new Thickness(-4, 0, 0, 0)
+			};
+
+			Action reset = () =>
+			{
+				headerLabel.Cursor = Cursors.Arrow;
+				headerLabel.Foreground = this._defaultTabForeground;
+				if (this.ViewModel.TabSelectedIndex == i)
+					headerLabel.Foreground = this._selectedTabForeground;
+				if (!this.ViewModel.Steps[i].IsValid)
+					headerLabel.Foreground = this._badTabForeground;
+			};
+
+			headerLabel.MouseLeave += (ss, e) => reset();
+			headerLabel.MouseLeftButtonDown += (ss, e) => reset();
+			headerLabel.MouseEnter += (ss, e) =>
+			{
+				if (this.ViewModel.TabSelectedIndex == i) return;
+				headerLabel.Cursor = Cursors.Hand;
+				headerLabel.Foreground = this._hoverTabForeground;
+			};
+
+			var tab = new MetroTabItem {Content = step, Header = headerLabel};
+			this.CachedTabs.Add(type, tab);
+			return tab;
 		}
 
 		private void SetupViewModelCommands()

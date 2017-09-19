@@ -23,6 +23,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Config;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using FluentValidation.Results;
 using ReactiveUI;
 
@@ -40,6 +41,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		public LocationsModel LocationsModel { get; }
 		public ConfigurationModel ConfigurationModel { get; }
 		public PluginsModel PluginsModel { get; }
+		public XPackModel XPackModel { get; }
 		public ServiceModel ServiceModel { get; }
 		public ClosingModel ClosingModel { get; }
 
@@ -89,6 +91,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				vm => vm.LocationsModel.ConfigDirectory
 			);
 			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);
+			var observeXPackEnabled = this.WhenAnyValue(vm => vm.PluginsModel.XPackEnabled);
+			this.XPackModel = new XPackModel(observeXPackEnabled);
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,
@@ -97,32 +101,32 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			var observeElasticsearchLog = this.WhenAnyValue(vm => vm.LocationsModel.ElasticsearchLog);
 
 			var installXPack = this.PluginsModel.DefaultPlugins().Contains("x-pack");
-			var observeInstallXPack = this.PluginsModel.AvailablePlugins.ItemChanged
-				.Where(x => x.PropertyName == nameof(Plugin.Selected) && x.Sender.PluginType == PluginType.XPack)
-				.Select(x => x.Sender.Selected);
 
 			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, installXPack, observeHost, observeInstallationLog,
-				observeElasticsearchLog, observeInstallXPack, serviceStateProvider);
-			this.AllSteps = new ReactiveList<IStep>
+				observeElasticsearchLog, observeXPackEnabled, serviceStateProvider);
+			
+			this.AllSteps.AddRange(new List<IStep>
 			{
 				this.NoticeModel,
 				this.LocationsModel,
 				this.ServiceModel,
 				this.ConfigurationModel,
 				this.PluginsModel,
+				this.XPackModel,
 				this.ClosingModel
-			};
-			this.Steps = this.AllSteps.CreateDerivedCollection(x => x, x => x.IsRelevant);
+			});
+			this.AllSteps.ChangeTrackingEnabled = true;
 
 			var observeValidationChanges = this.WhenAny(
 				vm => vm.NoticeModel.ValidationFailures,
 				vm => vm.LocationsModel.ValidationFailures,
 				vm => vm.ConfigurationModel.ValidationFailures,
 				vm => vm.PluginsModel.ValidationFailures,
+				vm => vm.XPackModel.ValidationFailures,
 				vm => vm.ServiceModel.ValidationFailures,
 				vm => vm.ClosingModel.ValidationFailures,
 				vm => vm.TabSelectedIndex,
-				(welcome, locations, configuration, plugins, service, install, index) =>
+				(welcome, locations, configuration, plugins, xpack, service, install, index) =>
 				{
 					var firstInvalidScreen = this.Steps.FirstOrDefault(s => !s.IsValid) ?? this.ClosingModel;
 					return firstInvalidScreen;
@@ -140,15 +144,20 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 					vm => vm.LocationsModel.IsValid,
 					vm => vm.ConfigurationModel.IsValid,
 					vm => vm.PluginsModel.IsValid,
+					vm => vm.XPackModel.IsValid,
 					vm => vm.ServiceModel.IsValid,
 					vm => vm.ClosingModel.IsValid,
-					(welcome, locations, configuration, plugins, service, install) =>
+					(welcome, locations, configuration, plugins, xpack, service, install) =>
 					{
+                        var count = this.Steps.Count;
+						var steps = this.Steps.Select(s => s.GetType().Name).ToList();
 						var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
 						return firstInvalidScreen?.i ?? (this.Steps.Count - 1);
 					})
 				.Subscribe(selected =>
 				{
+					var count = this.Steps.Count;
+					var steps = this.Steps.Select(s => s.GetType().Name).ToList();
 					this.TabSelectionMax = selected;
 					//if one of the steps prior to the current selection is invalid jump back
 					if (this.TabSelectedIndex > this.TabSelectionMax)
@@ -156,6 +165,23 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 					this.CurrentStepValidationFailures = this.ActiveStep.ValidationFailures;
 				});
+
+			this.Steps.Changed.Subscribe(e =>
+			{
+				var count = this.Steps.Count;
+				var steps = this.Steps.Select(s => s.GetType().Name).ToList();
+				
+				var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
+				var selectedTabIndex = firstInvalidScreen?.i ?? (this.Steps.Count - 1);
+				this.TabSelectionMax = selectedTabIndex;
+				
+				//if one of the steps prior to the current selection is invalid jump back
+				if (this.TabSelectedIndex > this.TabSelectionMax)
+					this.TabSelectedIndex = this.TabSelectionMax;
+
+				this.CurrentStepValidationFailures = this.ActiveStep.ValidationFailures;
+
+			});
 
 			this.Install = ReactiveCommand.CreateAsyncTask(observeValidationChanges.Select(s => s.IsValid), _ =>
 			{
@@ -282,6 +308,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			sb.AppendLine(nameof(ElasticsearchInstallationModel));
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
 			sb.AppendLine($"- {nameof(ValidationFailures)} = " + ValidationFailuresString(this.ValidationFailures));
+			sb.AppendLine($"- {nameof(CurrentStepValidationFailures)} = " + ValidationFailuresString(this.CurrentStepValidationFailures));
 			sb.AppendLine($"- {nameof(MsiLogFileLocation)} = " + MsiLogFileLocation);
 			sb.AppendLine($"- {nameof(JavaInstalled)} = " + JavaInstalled);
 			sb.AppendLine($"- {nameof(JavaMisconfigured)} = " + JavaMisconfigured);
@@ -292,6 +319,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			sb.AppendLine(this.ServiceModel.ToString());
 			sb.AppendLine(this.ConfigurationModel.ToString());
 			sb.AppendLine(this.PluginsModel.ToString());
+			sb.AppendLine(this.XPackModel.ToString());
 			return sb.ToString();
 		}
 

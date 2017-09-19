@@ -1,0 +1,15 @@
+﻿<controls:StepControl x:Class="Elastic.Installer.UI.Elasticsearch.Steps.XPackView"
+                      x:TypeArguments="plugins:XPackModel, steps:XPackView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
+                      xmlns:steps="clr-namespace:Elastic.Installer.UI.Elasticsearch.Steps"
+                      xmlns:plugins="clr-namespace:Elastic.Installer.Domain.Model.Elasticsearch.XPack;assembly=Elastic.Installer.Domain"
+                      mc:Ignorable="d"
+                      d:DataContext="{d:DesignInstance d:Type=plugins:XPackModel }"
+                      d:DesignHeight="300" d:DesignWidth="600">
+  <Grid>
+  </Grid>
+</controls:StepControl>

@@ -8,6 +8,8 @@ namespace Elastic.Installer.Domain.Model.Base
 		/// <summary>Whether this model is relevant in the global scheme of things</summary>
 		bool IsRelevant { get; }
 
+		bool IsVisible { get; }
+		
 		bool IsSelected { get; set;  }
 
 		string Header { get; }
@@ -22,6 +24,12 @@ namespace Elastic.Installer.Domain.Model.Base
 		{
 			get => isRelevant;
 			protected set => this.RaiseAndSetIfChanged(ref isRelevant, value);
+		}
+		bool isVisible = true;
+		public bool IsVisible
+		{
+			get => isVisible;
+			protected set => this.RaiseAndSetIfChanged(ref isVisible, value);
 		}
 		bool isSelected = true;
 		public bool IsSelected

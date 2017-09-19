@@ -1,4 +1,9 @@
-﻿using Elastic.Installer.Domain.Properties;
+﻿using System;
+using System.Linq;
+using Elastic.Installer.Domain.Model.Base.Plugins;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
+using Elastic.Installer.Domain.Model.Kibana.Plugins;
+using Elastic.Installer.Domain.Properties;
 using FluentAssertions;
 using Xunit;
 
@@ -69,7 +74,41 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			tester.IsValidOnStep(m => m.PluginsModel);
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_InstallText);
 			tester.ClickNext();
+		}
+		
+		[Fact] public void HappyFlowWithXPackMakesItToInstallByOnlyClickingNext()
+		{
+			var tester = WithValidPreflightChecks();
+			tester.IsValidOnFirstStep();
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
+			tester.ClickNext();
 
+			tester.IsValidOnStep(m => m.ServiceModel);
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
+			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.ConfigurationModel);
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
+			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.PluginsModel);
+			tester.InstallationModel.XPackModel.IsRelevant.Should().BeFalse();
+			var step = tester.InstallationModel.PluginsModel;
+			var xpackPlugin = step.AvailablePlugins.First(p => p.PluginType == PluginType.XPack);
+			xpackPlugin.Selected = true;
+			tester.InstallationModel.XPackModel.IsRelevant.Should().BeTrue();
+			
+			tester.ClickNext();
+			tester.IsInvalidOnStep(m => m.XPackModel, errors => errors.ShouldHaveErrors(
+				"Password is required"
+			));
+
+			tester.InstallationModel.XPackModel.XPackUserPassword = Guid.NewGuid().ToString();
+
+			tester.CanClickNext();
+		
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_InstallText);
+			tester.ClickNext();
 		}
 	}
 }

@@ -165,7 +165,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		{
 			var c = false;
 			this.InstallationModel.Next.CanExecuteObservable.Subscribe(cc => c = cc);
-			c.Should().Be(canClick);
+			c.Should().Be(canClick, "errors {0}", this.InstallationModel);
 			return this;
 		}
 
