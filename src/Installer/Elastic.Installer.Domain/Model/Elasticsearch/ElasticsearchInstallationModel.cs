@@ -132,11 +132,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 					return firstInvalidScreen;
 				});
 			observeValidationChanges
-				.Subscribe(selected =>
+				.Subscribe(firstInvalidStep =>
 				{
-					var step = this.Steps[this.TabSelectedIndex];
-					var failures = step.ValidationFailures;
-					this.CurrentStepValidationFailures = selected.ValidationFailures;
+					this.TabFirstInvalidIndex = this.Steps
+						.Select((s, i) => new {s, i = (int?)i})
+						.Where(t => !t.s.IsValid)
+						.Select(t => t.i)
+						.FirstOrDefault();
+					this.FirstInvalidStepValidationFailures = firstInvalidStep.ValidationFailures;
 				});
 
 			this.WhenAny(
@@ -163,7 +166,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 					if (this.TabSelectedIndex > this.TabSelectionMax)
 						this.TabSelectedIndex = this.TabSelectionMax;
 
-					this.CurrentStepValidationFailures = this.ActiveStep.ValidationFailures;
+					this.FirstInvalidStepValidationFailures = this.ActiveStep.ValidationFailures;
 				});
 
 			this.Steps.Changed.Subscribe(e =>
@@ -179,7 +182,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				if (this.TabSelectedIndex > this.TabSelectionMax)
 					this.TabSelectedIndex = this.TabSelectionMax;
 
-				this.CurrentStepValidationFailures = this.ActiveStep.ValidationFailures;
+				this.FirstInvalidStepValidationFailures = this.ActiveStep.ValidationFailures;
 
 			});
 
@@ -308,7 +311,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			sb.AppendLine(nameof(ElasticsearchInstallationModel));
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
 			sb.AppendLine($"- {nameof(ValidationFailures)} = " + ValidationFailuresString(this.ValidationFailures));
-			sb.AppendLine($"- {nameof(CurrentStepValidationFailures)} = " + ValidationFailuresString(this.CurrentStepValidationFailures));
+			sb.AppendLine($"- {nameof(FirstInvalidStepValidationFailures)} = " + ValidationFailuresString(this.FirstInvalidStepValidationFailures));
 			sb.AppendLine($"- {nameof(MsiLogFileLocation)} = " + MsiLogFileLocation);
 			sb.AppendLine($"- {nameof(JavaInstalled)} = " + JavaInstalled);
 			sb.AppendLine($"- {nameof(JavaMisconfigured)} = " + JavaMisconfigured);

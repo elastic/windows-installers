@@ -101,7 +101,7 @@ namespace Elastic.Installer.Domain.Model.Kibana
 				{
 					var step = this.Steps[this.TabSelectedIndex];
 					var failures = step.ValidationFailures;
-					this.CurrentStepValidationFailures = selected.ValidationFailures;
+					this.FirstInvalidStepValidationFailures = selected.ValidationFailures;
 				});
 
 			this.WhenAny(
@@ -124,7 +124,7 @@ namespace Elastic.Installer.Domain.Model.Kibana
 					if (this.TabSelectedIndex > this.TabSelectionMax)
 						this.TabSelectedIndex = this.TabSelectionMax;
 
-					this.CurrentStepValidationFailures = this.ActiveStep.ValidationFailures;
+					this.FirstInvalidStepValidationFailures = this.ActiveStep.ValidationFailures;
 				});
 
 			this.Install = ReactiveCommand.CreateAsyncTask(observeValidationChanges.Select(s => s.IsValid), _ =>

@@ -77,7 +77,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 			this.Bind(ViewModel, vm => vm.NextButtonText, view => view.NextButton.Content);
 
-			this.WhenAny(view => view.ViewModel.CurrentStepValidationFailures, v => v.GetValue().Count)
+			this.WhenAny(view => view.ViewModel.FirstInvalidStepValidationFailures, v => v.GetValue().Count)
 				.Subscribe(errorCount =>
 				{
 					if (errorCount == 0) this.ValidationErrorLink.Text = null;
@@ -138,11 +138,11 @@ namespace Elastic.Installer.UI.Elasticsearch
 			{ typeof(ClosingModel), (m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null, null) },
 		};
 		private readonly IDictionary<Type, MetroTabItem> CachedTabs = new Dictionary<Type, MetroTabItem>();
-		private SolidColorBrush _defaultTabForeground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-		private SolidColorBrush _hoverTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
-		private SolidColorBrush _disabledTabForeground = new SolidColorBrush(Color.FromRgb(160, 160, 160));
-		private SolidColorBrush _selectedTabForeground =new SolidColorBrush(Color.FromRgb(0, 169, 224));
-		private SolidColorBrush _badTabForeground= new SolidColorBrush(Color.FromRgb(233, 73, 152));
+		private readonly SolidColorBrush _defaultTabForeground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+		private readonly SolidColorBrush _hoverTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
+		private readonly SolidColorBrush _disabledTabForeground = new SolidColorBrush(Color.FromRgb(160, 160, 160));
+		private readonly SolidColorBrush _selectedTabForeground =new SolidColorBrush(Color.FromRgb(0, 169, 224));
+		private readonly SolidColorBrush _badTabForeground= new SolidColorBrush(Color.FromRgb(233, 73, 152));
 
 		private static void Step(StepWithHelp step, UserControl view, string helpHeaderText, string help)
 		{
@@ -158,38 +158,44 @@ namespace Elastic.Installer.UI.Elasticsearch
 			
 			this.Bind(ViewModel, vm => vm.TabSelectedIndex, view => view.StepsTab.SelectedIndex);
 
-			this.WhenAnyValue(vm => vm.ViewModel.TabSelectedIndex, vm => vm.ViewModel.TabSelectionMax)
-				.Subscribe(t => RedrawTabColours(selected: t.Item1, max: t.Item2));
+			this.WhenAnyValue(view => view.ViewModel.TabSelectedIndex, view => view.ViewModel.TabSelectionMax)
+				.Subscribe(t => RedrawTabColors(selected: t.Item1, max: t.Item2));
 		}
 
-		private void RedrawTabColours(int selected, int max)
+		private void RedrawTabColors(int selected, int max)
 		{
 			var i = 0;
 			foreach (var step in this.ViewModel.Steps)
 			{
-				if (!this.CachedTabs.TryGetValue(step.GetType(), out var child)) continue;
-
-				var label = child.FindChildren<Label>().First();
-				child.IsEnabled = true;
-				label.IsEnabled = true;
-
-				label.Foreground = _defaultTabForeground;
-				if (i == selected)
-					label.Foreground = _selectedTabForeground;
-
-				if (!step.IsValid)
-					label.Foreground = _badTabForeground;
-
-				if (i > max)
-				{
-					child.IsEnabled = false;
-					label.IsEnabled = false;
-					label.Foreground = _disabledTabForeground;
-				}
-				if (selected >= this.ViewModel.Steps.Count - 1)
-					child.Visibility = Visibility.Collapsed;
+				if (!this.RedrawTabColor(selected, max, step, i)) continue;
 				i++;
 			}
+		}
+
+		private bool RedrawTabColor(int selected, int max, IStep step, int i)
+		{
+			if (!this.CachedTabs.TryGetValue(step.GetType(), out var child)) return false;
+
+			var label = child.FindChildren<Label>().First();
+			child.IsEnabled = true;
+			label.IsEnabled = true;
+
+			label.Foreground = _defaultTabForeground;
+			if (i == selected)
+				label.Foreground = _selectedTabForeground;
+
+			if (!step.IsValid)
+				label.Foreground = _badTabForeground;
+
+			if (i > max)
+			{
+				child.IsEnabled = false;
+				label.IsEnabled = false;
+				label.Foreground = _disabledTabForeground;
+			}
+			if (selected >= this.ViewModel.Steps.Count - 1)
+				child.Visibility = Visibility.Collapsed;
+			return true;
 		}
 
 		private void DrawTabs()
@@ -200,8 +206,10 @@ namespace Elastic.Installer.UI.Elasticsearch
 			{
 				var tab = CreateTab(step, i);
 				tabs.Add(tab);
+				i++;
 			}
 			this.StepsTab.ItemsSource = tabs;
+			this.RedrawTabColors(this.ViewModel.TabSelectedIndex, this.ViewModel.TabSelectionMax);
 		}
 
 		private MetroTabItem CreateTab(IStep m, int i)
@@ -217,6 +225,9 @@ namespace Elastic.Installer.UI.Elasticsearch
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 			};
 			StepModelToControl[type](m, step);
+
+			var model = this.ViewModel;
+			void Reset() => RedrawTabColor(model.TabSelectedIndex, model.TabSelectionMax, m, i);
 			var headerLabel = new Label
 			{
 				Content = m.Header,
@@ -224,21 +235,11 @@ namespace Elastic.Installer.UI.Elasticsearch
 				Margin = new Thickness(-4, 0, 0, 0)
 			};
 
-			Action reset = () =>
-			{
-				headerLabel.Cursor = Cursors.Arrow;
-				headerLabel.Foreground = this._defaultTabForeground;
-				if (this.ViewModel.TabSelectedIndex == i)
-					headerLabel.Foreground = this._selectedTabForeground;
-				if (!this.ViewModel.Steps[i].IsValid)
-					headerLabel.Foreground = this._badTabForeground;
-			};
-
-			headerLabel.MouseLeave += (ss, e) => reset();
-			headerLabel.MouseLeftButtonDown += (ss, e) => reset();
+			headerLabel.MouseLeave += (ss, e) => Reset();
+			headerLabel.MouseLeftButtonDown += (ss, e) => Reset();
 			headerLabel.MouseEnter += (ss, e) =>
 			{
-				if (this.ViewModel.TabSelectedIndex == i) return;
+				if (model.TabSelectedIndex == i) return;
 				headerLabel.Cursor = Cursors.Hand;
 				headerLabel.Foreground = this._hoverTabForeground;
 			};
@@ -277,12 +278,15 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 			this.ViewModel.ShowCurrentStepErrors.Subscribe(async x =>
 			{
-				var message = string.Join(Environment.NewLine, this.ViewModel.CurrentStepValidationFailures.Select(v => v.ErrorMessage.ValidationMessage()));
+				if (this.ViewModel.TabFirstInvalidIndex.HasValue)
+					this.ViewModel.TabSelectedIndex = this.ViewModel.TabFirstInvalidIndex.Value;
+				var message = string.Join(Environment.NewLine, this.ViewModel.FirstInvalidStepValidationFailures.Select(v => v.ErrorMessage.ValidationMessage()));
 				await this.ShowMessageAsync(
 					ViewResources.MainWindow_ValidationErrors,
 					message,
 					MessageDialogStyle.Affirmative,
 					new MetroDialogSettings()).ConfigureAwait(true);
+				
 			});
 			this.ViewModel.Exit.Subscribe(x =>
 			{
