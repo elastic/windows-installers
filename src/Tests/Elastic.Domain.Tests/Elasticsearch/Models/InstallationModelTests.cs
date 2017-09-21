@@ -99,12 +99,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			tester.InstallationModel.XPackModel.IsRelevant.Should().BeTrue();
 			
 			tester.ClickNext();
-			tester.IsInvalidOnStep(m => m.XPackModel, errors => errors.ShouldHaveErrors(
-				"Password is required"
-			));
-
-			tester.InstallationModel.XPackModel.ElasticUserPassword = Guid.NewGuid().ToString();
-
+			//Basic license selected by default
+			tester.IsValidOnStep(m => m.XPackModel);
 			tester.CanClickNext();
 		
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_InstallText);

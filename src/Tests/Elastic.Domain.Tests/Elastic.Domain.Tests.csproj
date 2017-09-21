@@ -109,6 +109,7 @@
     <Compile Include="Elasticsearch\Models\Tasks\UninstallServiceTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Uninstall\UninstallDeleteDirectoriesTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Uninstall\UninstallRemoveEnvironmentVariablesTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\XPack\XPackArgumentsTests.cs" />
     <Compile Include="Elasticsearch\Process\ConsoleSession.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchProcessTester.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchProcessTesterStateProvider.cs" />

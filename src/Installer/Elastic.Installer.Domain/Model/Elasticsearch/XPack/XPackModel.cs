@@ -19,9 +19,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		{
 			xPackEnabled.Subscribe(t =>
 			{
-				this._xPackLicenseDefault = t ? DefaultXPackLicenseMode : (XPackLicenseMode?)null;
 				this.IsRelevant = t;
-				this.XPackLicense = this._xPackLicenseDefault;
+				this.XPackLicense = !t ? (XPackLicenseMode?)null : _lastSetXpackLicenseMode;
 			});
 			canAutomaticallySetupUsers.Subscribe(b=>
 			{
@@ -34,7 +33,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 
 		public sealed override void Refresh()
 		{
-			this.XPackLicense = this._xPackLicenseDefault;
 			this.ElasticUserPassword = null;
 			this.KibanaUserPassword = null;
 			this.LogstashSystemUserPassword = null;
@@ -86,15 +84,19 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			set => this.RaiseAndSetIfChanged(ref this.generateUsersLater, value);
 		}
 
-		XPackLicenseMode? _xPackLicenseDefault;
+		XPackLicenseMode _lastSetXpackLicenseMode = DefaultXPackLicenseMode;
 		XPackLicenseMode? xPackLicense;
 		[StaticArgument(nameof(XPackLicense))]
 		public XPackLicenseMode? XPackLicense
 		{
 			get => this.xPackLicense;
-			set => this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
+			set
+			{
+				if (value.HasValue) this._lastSetXpackLicenseMode = value.Value;
+				this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
+			}
 		}
-		
+
 		public bool NeedsPassword =>
 			this.IsRelevant 
 			&& this.CanAutomaticallySetupUsers 

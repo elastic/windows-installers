@@ -218,6 +218,13 @@ namespace Elastic.Installer.Domain.Model
 				{
 					((Action<ReactiveList<string>>)setter)(new ReactiveList<string>(a.Value.Split(',').Select(v => v.Trim())));
 				}
+				else if (p == typeof(XPackLicenseMode?))
+				{
+					if (Enum.TryParse<XPackLicenseMode>(a.Value, ignoreCase: true, result: out var licenseMode))
+						((Action<XPackLicenseMode?>)setter)(licenseMode);
+					else 
+						((Action<XPackLicenseMode?>)setter)(null);
+				}
 				else if (p == typeof(bool))
 				{
 					var s = ((Action<bool>)setter);

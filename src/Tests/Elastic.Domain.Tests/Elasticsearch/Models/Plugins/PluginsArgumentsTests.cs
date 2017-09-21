@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using FluentAssertions;
 using Xunit;
 
@@ -33,6 +34,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 		{
 			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(2).And.Contain("analysis-phonetic");
 			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(2);
+		});
+		
+		[Fact] void XPackSetsBasicLicenseAutomatically() => Argument(nameof(PluginsModel.Plugins), "x-pack", (m, v) =>
+		{
+			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("x-pack");
+			m.XPackModel.IsRelevant.Should().BeTrue();
+			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
 		});
 
 		[Fact] void PluginsHttpProxyHost() => Argument(

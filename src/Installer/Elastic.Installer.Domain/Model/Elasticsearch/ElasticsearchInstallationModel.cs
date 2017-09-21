@@ -96,6 +96,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				.Select(t => t.Item1 && t.Item2);
 			this.XPackModel = new XPackModel(observeXPackEnabled, canAutomaticallySetup);
 
+			this.WhenAnyValue(vm => vm.XPackModel.XPackLicense)
+				.Subscribe(l =>
+				{
+					var xPackPlugin = this.PluginsModel.AvailablePlugins.First(p => p.PluginType == PluginType.XPack);
+					xPackPlugin.Selected = l.HasValue;
+				});
+
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
