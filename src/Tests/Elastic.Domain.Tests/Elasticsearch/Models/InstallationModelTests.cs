@@ -103,7 +103,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 				"Password is required"
 			));
 
-			tester.InstallationModel.XPackModel.XPackUserPassword = Guid.NewGuid().ToString();
+			tester.InstallationModel.XPackModel.ElasticUserPassword = Guid.NewGuid().ToString();
 
 			tester.CanClickNext();
 		

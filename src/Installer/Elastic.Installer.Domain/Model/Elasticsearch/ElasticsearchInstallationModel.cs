@@ -92,7 +92,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			);
 			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);
 			var observeXPackEnabled = this.WhenAnyValue(vm => vm.PluginsModel.XPackEnabled);
-			this.XPackModel = new XPackModel(observeXPackEnabled);
+			var canAutomaticallySetup = this.WhenAnyValue(vm => vm.ServiceModel.StartAfterInstall, vm => vm.ServiceModel.InstallAsService)
+				.Select(t => t.Item1 && t.Item2);
+			this.XPackModel = new XPackModel(observeXPackEnabled, canAutomaticallySetup);
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,

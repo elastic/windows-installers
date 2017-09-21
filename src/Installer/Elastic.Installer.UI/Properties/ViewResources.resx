@@ -271,6 +271,61 @@
     <value>Installing Elasticsearch {0}</value>
     <comment>{0} = Elasticsearch Version</comment>
   </data>
+  
+  
+  
+  <data name="XPackView_LicenseLabel" xml:space="preserve">
+    <value>License</value>
+  </data>
+  
+  <data name="XPackView_UsersLabel" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="XPackView_ElasticUserLabel" xml:space="preserve">
+    <value>elastic</value>
+  </data>
+  <data name="XPackView_KibanaUserLabel" xml:space="preserve">
+    <value>kibana</value>
+  </data>
+  <data name="XPackView_LogstashSystemUserLabel" xml:space="preserve">
+    <value>logstash system</value>
+  </data>
+  <data name="XPackView_OverrideGeneratePasswordsLabel" xml:space="preserve">
+    <value>Defer setting up users till later</value>
+  </data>
+  <data name="XPackView_EnableXPackSecurity" xml:space="preserve">
+    <value>Enable X-Pack Security</value>
+  </data>
+  <data name="XPackView_SecurityLabel" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="XPackView_ChooseYourLicense" xml:space="preserve">
+    <value>Which license is for me?</value>
+  </data>
+  <data name="XPackView_TrialLicense" xml:space="preserve">
+    <value>Trial License</value>
+  </data>
+  <data name="XPackView_BasicLicense" xml:space="preserve">
+    <value>Basic License</value>
+  </data>
+  <data name="XPackView_TrialDescription" xml:space="preserve">
+    <value>Access to all X-Pack enterprise features for 30 days, including machine learning, graph, watcher and others.
+    </value>
+  </data>
+  <data name="XPackView_BasicDescription" xml:space="preserve">
+    <value>Only access to the basic (free) license for 30 days. 
+    </value>
+  </data>
+  <data name="XPackView_SubscriptionsLink" xml:space="preserve">
+    <value>Full overview of licences and subscriptions</value>
+  </data>
+  <data name="XPackView_ManualUserConfigurationNeeded" xml:space="preserve">
+    <value>Elasticsearch system users need to be setup manually. Either we are not installing as a service that gets started after installation or you've manually opted out.</value>
+  </data>
+  <data name="XPackView_ManualUserConfigurationLink" xml:space="preserve">
+    <value>How to setup users manually</value>
+  </data>
+
   <data name="MainWindow_InstallingTitle" xml:space="preserve">
     <value>Installing...</value>
   </data>
@@ -282,6 +337,9 @@
   </data>
   <data name="MainWindow_TabItemPlugins" xml:space="preserve">
     <value>Plugins</value>
+  </data>
+  <data name="MainWindow_TabItemXPack" xml:space="preserve">
+    <value>X-Pack</value>
   </data>
   <data name="MainWindow_TabItemService" xml:space="preserve">
     <value>Service</value>
@@ -452,6 +510,12 @@ We've only listed the official Elasticsearch plugins here, but there are many mo
 
 It is common for many companies to set up a proxy through which resources will be downloaded from the internet. As such, you may need to specify the host name and port of a corporate proxy to allow the installer to successfully install plugins. Since official Elasticsearch plugins are installed from 
 https://artifacts.elastic.co, a HTTPS proxy can be specified.</value>
+  </data>
+  <data name="XPackView_Elasticsearch_Help_Header" xml:space="preserve">
+    <value>X-Pack Help</value>
+  </data>
+  <data name="XPackView_Elasticsearch_Help" xml:space="preserve">
+    <value>TODO</value>
   </data>
   <data name="ServiceView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Service Help</value>

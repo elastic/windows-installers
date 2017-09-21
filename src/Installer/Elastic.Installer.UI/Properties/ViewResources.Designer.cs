@@ -433,7 +433,7 @@ namespace Elastic.Installer.UI.Properties {
         ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
         ///
-        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important [rest of string was truncated]&quot;;.
+        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important no [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Elasticsearch_Help {
             get {
@@ -485,7 +485,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
         ///
-        ///[b]Base Path[/b]: Enables you to specify a pa [rest of string was truncated]&quot;;.
+        ///[b]Base Path[/b]: Enables you to specify a path to  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Kibana_Help {
             get {
@@ -762,7 +762,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Index Name[/b]: Kibana uses an index in Elasticsearch to store saved searches, visualizations and dashboards. Kibana creates a new index if the index doesn’t already exist.
         ///
-        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that t [rest of string was truncated]&quot;;.
+        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that the Kiba [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConnectingView_Kibana_Help {
             get {
@@ -1042,7 +1042,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Config[/b]: The directory where Elasticsearch will store its configuration files.
         ///
-        ///It is a best practice to keep your logs, config, and data directories separa [rest of string was truncated]&quot;;.
+        ///It is best practice to keep your logs, config, and data directories separate from your home  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string LocationsView_Elasticsearch_Help {
             get {
@@ -1263,6 +1263,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string MainWindow_TabItemWelcome {
             get {
                 return ResourceManager.GetString("MainWindow_TabItemWelcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-Pack.
+        /// </summary>
+        public static string MainWindow_TabItemXPack {
+            get {
+                return ResourceManager.GetString("MainWindow_TabItemXPack", resourceCulture);
             }
         }
         
@@ -1752,6 +1761,170 @@ namespace Elastic.Installer.UI.Properties {
         public static string SilentSetup_UninstallVariables {
             get {
                 return ResourceManager.GetString("SilentSetup_UninstallVariables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only access to the basic (free) license for 30 days. 
+        ///    .
+        /// </summary>
+        public static string XPackView_BasicDescription {
+            get {
+                return ResourceManager.GetString("XPackView_BasicDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic License.
+        /// </summary>
+        public static string XPackView_BasicLicense {
+            get {
+                return ResourceManager.GetString("XPackView_BasicLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Which license is for me?.
+        /// </summary>
+        public static string XPackView_ChooseYourLicense {
+            get {
+                return ResourceManager.GetString("XPackView_ChooseYourLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        public static string XPackView_Elasticsearch_Help {
+            get {
+                return ResourceManager.GetString("XPackView_Elasticsearch_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X-Pack Help.
+        /// </summary>
+        public static string XPackView_Elasticsearch_Help_Header {
+            get {
+                return ResourceManager.GetString("XPackView_Elasticsearch_Help_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to elastic.
+        /// </summary>
+        public static string XPackView_ElasticUserLabel {
+            get {
+                return ResourceManager.GetString("XPackView_ElasticUserLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable X-Pack Security.
+        /// </summary>
+        public static string XPackView_EnableXPackSecurity {
+            get {
+                return ResourceManager.GetString("XPackView_EnableXPackSecurity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to kibana.
+        /// </summary>
+        public static string XPackView_KibanaUserLabel {
+            get {
+                return ResourceManager.GetString("XPackView_KibanaUserLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License.
+        /// </summary>
+        public static string XPackView_LicenseLabel {
+            get {
+                return ResourceManager.GetString("XPackView_LicenseLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to logstash system.
+        /// </summary>
+        public static string XPackView_LogstashSystemUserLabel {
+            get {
+                return ResourceManager.GetString("XPackView_LogstashSystemUserLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How to setup users manually.
+        /// </summary>
+        public static string XPackView_ManualUserConfigurationLink {
+            get {
+                return ResourceManager.GetString("XPackView_ManualUserConfigurationLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elasticsearch system users need to be setup manually. Either we are not installing as a service that gets started after installation or you&apos;ve manually opted out..
+        /// </summary>
+        public static string XPackView_ManualUserConfigurationNeeded {
+            get {
+                return ResourceManager.GetString("XPackView_ManualUserConfigurationNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defer setting up users till later.
+        /// </summary>
+        public static string XPackView_OverrideGeneratePasswordsLabel {
+            get {
+                return ResourceManager.GetString("XPackView_OverrideGeneratePasswordsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security.
+        /// </summary>
+        public static string XPackView_SecurityLabel {
+            get {
+                return ResourceManager.GetString("XPackView_SecurityLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full overview of licences and subscriptions.
+        /// </summary>
+        public static string XPackView_SubscriptionsLink {
+            get {
+                return ResourceManager.GetString("XPackView_SubscriptionsLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access to all X-Pack enterprise features for 30 days, including machine learning, graph, watcher and others.
+        ///    .
+        /// </summary>
+        public static string XPackView_TrialDescription {
+            get {
+                return ResourceManager.GetString("XPackView_TrialDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trial License.
+        /// </summary>
+        public static string XPackView_TrialLicense {
+            get {
+                return ResourceManager.GetString("XPackView_TrialLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users.
+        /// </summary>
+        public static string XPackView_UsersLabel {
+            get {
+                return ResourceManager.GetString("XPackView_UsersLabel", resourceCulture);
             }
         }
     }

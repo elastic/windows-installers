@@ -13,16 +13,20 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 {
 	public class XPackModel : StepBase<XPackModel, XPackModelValidator>
 	{
-		public const XPackLicenseMode DefaultXPackLicenseMode = XPackLicenseMode.Trial;
+		public const XPackLicenseMode DefaultXPackLicenseMode = XPackLicenseMode.Basic;
 		
-		public XPackModel(IObservable<bool> xPackEnabled)
+		public XPackModel(IObservable<bool> xPackEnabled, IObservable<bool> canAutomaticallySetupUsers)
 		{
 			xPackEnabled.Subscribe(t =>
 			{
 				this._xPackLicenseDefault = t ? DefaultXPackLicenseMode : (XPackLicenseMode?)null;
 				this.IsRelevant = t;
-				this.IsVisible = t;
-				this.Refresh();
+				this.XPackLicense = this._xPackLicenseDefault;
+			});
+			canAutomaticallySetupUsers.Subscribe(b=>
+			{
+				this.CanAutomaticallySetupUsers = b;
+				this.GenerateUsersLater = !b;
 			});
 			this.Header = "X-Pack";
 			this.Refresh();
@@ -31,23 +35,55 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		public sealed override void Refresh()
 		{
 			this.XPackLicense = this._xPackLicenseDefault;
-			this.XPackUsername = "elastic";
-			this.XPackUserPassword = null;
+			this.ElasticUserPassword = null;
+			this.KibanaUserPassword = null;
+			this.LogstashSystemUserPassword = null;
+			this.XPackSecurityEnabled = true;
 		}
 		
-		string _xPackUsername;
-		[StaticArgument(nameof(_xPackUsername))]
-		public string XPackUsername
+		string elasticUserPassword;
+		[StaticArgument(nameof(ElasticUserPassword), IsHidden = true)]
+		public string ElasticUserPassword
 		{
-			get => this._xPackUsername;
-			set => this.RaiseAndSetIfChanged(ref this._xPackUsername, value);
+			get => this.elasticUserPassword;
+			set => this.RaiseAndSetIfChanged(ref this.elasticUserPassword, value);
 		}
-		string xPackUserPassword;
-		[StaticArgument(nameof(xPackUserPassword))]
-		public string XPackUserPassword
+		string kibanaUserPassword;
+		[StaticArgument(nameof(KibanaUserPassword), IsHidden = true)]
+		public string KibanaUserPassword
 		{
-			get => this.xPackUserPassword;
-			set => this.RaiseAndSetIfChanged(ref this.xPackUserPassword, value);
+			get => this.kibanaUserPassword;
+			set => this.RaiseAndSetIfChanged(ref this.kibanaUserPassword, value);
+		}
+		string logstashSystemUserPassword;
+		[StaticArgument(nameof(LogstashSystemUserPassword), IsHidden = true)]
+		public string LogstashSystemUserPassword
+		{
+			get => this.logstashSystemUserPassword;
+			set => this.RaiseAndSetIfChanged(ref this.logstashSystemUserPassword, value);
+		}
+		
+		bool canAutomaticallySetupUsers;
+		public bool CanAutomaticallySetupUsers
+		{
+			get => this.canAutomaticallySetupUsers;
+			set => this.RaiseAndSetIfChanged(ref this.canAutomaticallySetupUsers, value);
+		}
+		
+		bool xPackSecurityEnabled;
+		[StaticArgument(nameof(XPackSecurityEnabled))]
+		public bool XPackSecurityEnabled
+		{
+			get => this.xPackSecurityEnabled;
+			set => this.RaiseAndSetIfChanged(ref this.xPackSecurityEnabled, value);
+		}
+		
+		bool generateUsersLater;
+		[StaticArgument(nameof(GenerateUsersLater))]
+		public bool GenerateUsersLater
+		{
+			get => this.generateUsersLater;
+			set => this.RaiseAndSetIfChanged(ref this.generateUsersLater, value);
 		}
 
 		XPackLicenseMode? _xPackLicenseDefault;
@@ -58,6 +94,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			get => this.xPackLicense;
 			set => this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
 		}
+		
+		public bool NeedsPassword =>
+			this.IsRelevant 
+			&& this.CanAutomaticallySetupUsers 
+			&& this.XPackLicense == XPackLicenseMode.Trial
+			&& !this.GenerateUsersLater
+			&& this.XPackSecurityEnabled;
 		
 		public override string ToString()
 		{

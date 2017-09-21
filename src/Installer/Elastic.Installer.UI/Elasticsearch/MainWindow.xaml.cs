@@ -134,7 +134,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 			{ typeof(PluginsModel), (m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, 
 				ViewResources.PluginsView_Elasticsearch_Help_Header, ViewResources.PluginsView_Elasticsearch_Help) },
 			{ typeof(XPackModel), (m, s) => Step(s, new XPackView { ViewModel = m as XPackModel }, 
-				ViewResources.PluginsView_Elasticsearch_Help_Header, ViewResources.PluginsView_Elasticsearch_Help) },
+				ViewResources.XPackView_Elasticsearch_Help_Header, ViewResources.XPackView_Elasticsearch_Help) },
 			{ typeof(ClosingModel), (m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null, null) },
 		};
 		private readonly IDictionary<Type, MetroTabItem> CachedTabs = new Dictionary<Type, MetroTabItem>();

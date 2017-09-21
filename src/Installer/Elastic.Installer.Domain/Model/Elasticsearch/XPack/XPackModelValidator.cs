@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Properties;
+﻿using System;
+using Elastic.Installer.Domain.Properties;
 using FluentValidation;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
@@ -9,13 +10,20 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 
 		public XPackModelValidator()
 		{
-			RuleFor(c => c.XPackUsername)
-				.NotEmpty().WithMessage("Username is required")
-				.When(m => m.IsRelevant);
-
-			RuleFor(c => c.XPackUserPassword)
-				.NotEmpty().WithMessage("Password is required")
-				.When(m => m.IsRelevant);
+			RuleFor(c => c.ElasticUserPassword)
+				.NotEmpty().WithMessage("`elastic` user's password is required")
+				.When(NeedsPassword);
+			
+			RuleFor(c => c.KibanaUserPassword)
+				.NotEmpty().WithMessage("`kibana` user's password is required")
+				.When(NeedsPassword);
+			
+			RuleFor(c => c.LogstashSystemUserPassword)
+				.NotEmpty().WithMessage("`logstash_system` user's password is required")
+				.When(NeedsPassword);
+			
 		}
+
+		private static bool NeedsPassword(XPackModel m) => m.NeedsPassword;
 	}
 }

@@ -4,6 +4,7 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
                       xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
                       xmlns:steps="clr-namespace:Elastic.Installer.UI.Elasticsearch.Steps"
                       xmlns:plugins="clr-namespace:Elastic.Installer.Domain.Model.Elasticsearch.XPack;assembly=Elastic.Installer.Domain"
@@ -11,5 +12,112 @@
                       d:DataContext="{d:DesignInstance d:Type=plugins:XPackModel }"
                       d:DesignHeight="300" d:DesignWidth="600">
   <Grid>
+    <Grid.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+          <ResourceDictionary Source="pack://application:,,,/Elastic.Installer.UI;component/ResourceDictionary.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+    </Grid.Resources>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="20"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="50" />
+      <RowDefinition Height="95" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="45" />
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="LicenseLabel" Content="{x:Static resx:ViewResources.XPackView_LicenseLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+      <ComboBox Grid.Row="0" Grid.Column="1" x:Name="LicenseDropDown" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+    </Grid>
+    <Grid Grid.Column="0" x:Name="SecurityGrid" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="45" />
+        <RowDefinition Height="45"/>
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="SecurityLabel" Content="{x:Static resx:ViewResources.XPackView_SecurityLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+      <CheckBox Grid.Row="0" Grid.Column="1" x:Name="EnableXPackSecurityCheckBox" Content="{x:Static resx:ViewResources.XPackView_EnableXPackSecurity}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
+      <Label Grid.Row="1" Grid.Column="0" x:Name="UserLabel" Content="{x:Static resx:ViewResources.XPackView_UsersLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+      <CheckBox Grid.Row="1" Grid.Column="1" x:Name="SkipPasswordGenerationCheckBox" Content="{x:Static resx:ViewResources.XPackView_OverrideGeneratePasswordsLabel}" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
+    </Grid> 
+    <Grid Grid.Column="0" x:Name="UserGrid" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="45"/>
+        <RowDefinition Height="45"/>
+        <RowDefinition Height="45"/>
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="ElasticUserLabel" Content="{x:Static resx:ViewResources.XPackView_ElasticUserLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <PasswordBox Grid.Row="0" Grid.Column="1" x:Name="ElasticPasswordBox" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <Label Grid.Row="1" Grid.Column="0" x:Name="KibanaUserLabel" Content="{x:Static resx:ViewResources.XPackView_KibanaUserLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="KibanaUserPasswordBox" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+      <Label Grid.Row="2" Grid.Column="0" x:Name="LogstashSystemLabel" Content="{x:Static resx:ViewResources.XPackView_LogstashSystemUserLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="LogstashSystemPasswordBox" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+    </Grid>
+    <Grid Grid.Column="0" x:Name="ManualSetupGrid" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <TextBox x:Name="ManualConfigurationNeededTextBox" Grid.Row="0" Grid.Column="0" Text="{x:Static resx:ViewResources.XPackView_ManualUserConfigurationNeeded}"
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,20,0,10" Foreground="{DynamicResource AccentColorBrush2}"
+               TextWrapping="Wrap" 
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
+               ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+       <Button Grid.Row="1" Grid.Column="0" x:Name="OpenManualUserConfigurationLink"  Style="{DynamicResource Link}" 
+             FontWeight="Bold" 
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.XPackView_ManualUserConfigurationLink}" 
+             HorizontalAlignment="Left" VerticalAlignment="Top" />
+    </Grid>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="2" Grid.RowSpan="4">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="45"/>
+        <RowDefinition Height="30"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="30"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="40"/>
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" x:Name="ChooseYourLicenseLabel" Content="{x:Static resx:ViewResources.XPackView_ChooseYourLicense}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+      <Label Grid.Row="1" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource AccentColorBrush}" x:Name="BasicLicenseLabel" Content="{x:Static resx:ViewResources.XPackView_BasicLicense}" HorizontalAlignment="Left" VerticalAlignment="Top" />
+      <TextBox x:Name="BasicDescriptionTextBox" Grid.Row="2" Grid.Column="0" Text="{x:Static resx:ViewResources.XPackView_BasicDescription}"
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" Foreground="{DynamicResource AccentColorBrush}"
+               TextWrapping="Wrap" 
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
+               ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+      <Label Grid.Row="3" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource AccentColorBrush}" x:Name="TrialLicenseLabel" Content="{x:Static resx:ViewResources.XPackView_TrialLicense}" HorizontalAlignment="Left" VerticalAlignment="Top" />
+      <TextBox x:Name="TrialDescriptionTextBox" Grid.Row="4" Grid.Column="0" Text="{x:Static resx:ViewResources.XPackView_TrialDescription}"
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" Foreground="{DynamicResource AccentColorBrush}"
+               TextWrapping="Wrap" 
+               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
+               ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+        <Button Grid.Row="5" Grid.Column="0" x:Name="OpenSupscriptionsLink"  Style="{DynamicResource Link}" 
+             FontWeight="Bold" 
+             Margin="6, 12, 0,0"
+             Content="{x:Static resx:ViewResources.XPackView_SubscriptionsLink}" 
+             HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+    </Grid>
   </Grid>
 </controls:StepControl>
