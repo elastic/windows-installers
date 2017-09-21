@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 {
-	public class XPackArgumentsTests : InstallationModelArgumentsTestsBase
+	public class XPackLicenseArgumentsTests : InstallationModelArgumentsTestsBase
 	{
 		[Fact] void CanPassTrialLicense() => Argument(nameof(XPackModel.XPackLicense), "Trial", (m, v) =>
 		{

@@ -25,7 +25,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			canAutomaticallySetupUsers.Subscribe(b=>
 			{
 				this.CanAutomaticallySetupUsers = b;
-				this.GenerateUsersLater = !b;
+				this.SkipSettingPasswords = !b;
 			});
 			this.Header = "X-Pack";
 			this.Refresh();
@@ -76,12 +76,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			set => this.RaiseAndSetIfChanged(ref this.xPackSecurityEnabled, value);
 		}
 		
-		bool generateUsersLater;
-		[StaticArgument(nameof(GenerateUsersLater))]
-		public bool GenerateUsersLater
+		bool skipSettingPasswords;
+		[StaticArgument(nameof(SkipSettingPasswords))]
+		public bool SkipSettingPasswords
 		{
-			get => this.generateUsersLater;
-			set => this.RaiseAndSetIfChanged(ref this.generateUsersLater, value);
+			get => this.skipSettingPasswords;
+			set => this.RaiseAndSetIfChanged(ref this.skipSettingPasswords, value);
 		}
 
 		XPackLicenseMode _lastSetXpackLicenseMode = DefaultXPackLicenseMode;
@@ -101,7 +101,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.IsRelevant 
 			&& this.CanAutomaticallySetupUsers 
 			&& this.XPackLicense == XPackLicenseMode.Trial
-			&& !this.GenerateUsersLater
+			&& !this.SkipSettingPasswords
 			&& this.XPackSecurityEnabled;
 		
 		public override string ToString()

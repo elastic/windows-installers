@@ -41,7 +41,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.LogstashSystemPasswordBox.Events().PasswordChanged
 				.Subscribe(a => this.ViewModel.LogstashSystemUserPassword = this.LogstashSystemPasswordBox.Password);
 
-			this.Bind(ViewModel, vm => vm.GenerateUsersLater, v => v.SkipPasswordGenerationCheckBox.IsChecked);
+			this.Bind(ViewModel, vm => vm.SkipSettingPasswords, v => v.SkipPasswordGenerationCheckBox.IsChecked);
 			this.Bind(ViewModel, vm => vm.XPackSecurityEnabled, v => v.EnableXPackSecurityCheckBox.IsChecked);
 
 			foreach (var name in Enum.GetNames(typeof(XPackLicenseMode)))
@@ -53,7 +53,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			this.ViewModel.WhenAnyValue(
 					vm => vm.XPackLicense,
-					vm => vm.GenerateUsersLater,
+					vm => vm.SkipSettingPasswords,
 					vm => vm.XPackSecurityEnabled,
 					vm => vm.CanAutomaticallySetupUsers,
 					vm => vm.IsRelevant
