@@ -217,186 +217,6 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The name of the cluster. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_ClusterName {
-            get {
-                return ResourceManager.GetString("InstallOptions_ClusterName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The config directory. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_ConfigDirectory {
-            get {
-                return ResourceManager.GetString("InstallOptions_ConfigDirectory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The data directory. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_DataDirectory {
-            get {
-                return ResourceManager.GetString("InstallOptions_DataDirectory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether this node is a Data node. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_DataNode {
-            get {
-                return ResourceManager.GetString("InstallOptions_DataNode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The heap memory that will be allocated to the Elasticsearch Java Process. This should be more than 250mb and ideally less than 32GB (so that Java uses compressed pointers). Defaults to {0}mb for this installation.
-        /// </summary>
-        public static string InstallOptions_HeapSize {
-            get {
-                return ResourceManager.GetString("InstallOptions_HeapSize", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether this node is an Ingest node. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_IngestNode {
-            get {
-                return ResourceManager.GetString("InstallOptions_IngestNode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The installation directory. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_InstallDirectory {
-            get {
-                return ResourceManager.GetString("InstallOptions_InstallDirectory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether to lock the process address space in RAM, preventing any Elasticsearch memory from being swapped out. This uses VirtualLock on Windows. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_LockMemory {
-            get {
-                return ResourceManager.GetString("InstallOptions_LockMemory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The logs directory. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_LogsDirectory {
-            get {
-                return ResourceManager.GetString("InstallOptions_LogsDirectory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether this node is a Master node. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_MasterNode {
-            get {
-                return ResourceManager.GetString("InstallOptions_MasterNode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The name of the node. Defaults to {0} for this installation.
-        /// </summary>
-        public static string InstallOptions_NodeName {
-            get {
-                return ResourceManager.GetString("InstallOptions_NodeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A comma-separated list of plugins to install as part of the Elasticsearch installation.
-        /// </summary>
-        public static string InstallOptions_Plugins {
-            get {
-                return ResourceManager.GetString("InstallOptions_Plugins", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether to automatically start the service after Windows starts/restarts, if installing as a Windows Service. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_ServiceAutomatic {
-            get {
-                return ResourceManager.GetString("InstallOptions_ServiceAutomatic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether to install Elasticsearch as a Windows service. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_ServiceInstall {
-            get {
-                return ResourceManager.GetString("InstallOptions_ServiceInstall", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The name of the Windows service, if installing as a Windows Service. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_ServiceName {
-            get {
-                return ResourceManager.GetString("InstallOptions_ServiceName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Password for the specified Username, if installing as a Windows Service.
-        /// </summary>
-        public static string InstallOptions_ServicePassword {
-            get {
-                return ResourceManager.GetString("InstallOptions_ServicePassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether to run the service using {0} if installing as a Windows Service. Defaults to {1}. If this value is false and {2} is not specified, the service will be run using {3}.
-        /// </summary>
-        public static string InstallOptions_ServiceRunAsNetworkService {
-            get {
-                return ResourceManager.GetString("InstallOptions_ServiceRunAsNetworkService", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether to start the service after installation, if installing as a Windows Service. Defaults to {0}.
-        /// </summary>
-        public static string InstallOptions_ServiceStart {
-            get {
-                return ResourceManager.GetString("InstallOptions_ServiceStart", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Whether to run the service using a specified Username, if installing as a Windows Service.
-        /// </summary>
-        public static string InstallOptions_ServiceUsername {
-            get {
-                return ResourceManager.GetString("InstallOptions_ServiceUsername", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A comma-separated list of hosts to use for unicast discovery.
-        /// </summary>
-        public static string InstallOptions_UnicastHosts {
-            get {
-                return ResourceManager.GetString("InstallOptions_UnicastHosts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Configuration.
         /// </summary>
         public static string LocationsModelValidator_Configuration {
@@ -1088,6 +908,33 @@ namespace Elastic.Installer.Domain.Properties {
         public static string SetupView_NextText {
             get {
                 return ResourceManager.GetString("SetupView_NextText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;elastic&apos; password needs to be atleast 6 characters.
+        /// </summary>
+        public static string XPackModelValidator_ElasticPasswordRequired {
+            get {
+                return ResourceManager.GetString("XPackModelValidator_ElasticPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;kibana&apos; password needs to be atleast 6 characters.
+        /// </summary>
+        public static string XPackModelValidator_KibanaPasswordRequired {
+            get {
+                return ResourceManager.GetString("XPackModelValidator_KibanaPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;logstash_system&apos; password needs to be atleast 6 characters.
+        /// </summary>
+        public static string XPackModelValidator_LogstashPasswordRequired {
+            get {
+                return ResourceManager.GetString("XPackModelValidator_LogstashPasswordRequired", resourceCulture);
             }
         }
     }

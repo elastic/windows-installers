@@ -6,24 +6,38 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 {
 	public class XPackModelValidator : AbstractValidator<XPackModel>
 	{
-		public static readonly string NodeNameNotEmpty = TextResources.ConfigurationModelValidator_NodeName_NotEmpty;
+		public static readonly string ElasticPasswordRequired = TextResources.XPackModelValidator_ElasticPasswordRequired;
+		public static readonly string KibanaPasswordRequired = TextResources.XPackModelValidator_KibanaPasswordRequired;
+		public static readonly string LogstashPasswordRequired = TextResources.XPackModelValidator_LogstashPasswordRequired;
 
 		public XPackModelValidator()
 		{
 			RuleFor(c => c.ElasticUserPassword)
-				.NotEmpty().WithMessage("`elastic` user's password is required")
+				.NotEmpty()
+				.WithMessage(ElasticPasswordRequired)
+				.When(NeedsPassword)
+				.Length(6, int.MaxValue)
+				.WithMessage(ElasticPasswordRequired)
 				.When(NeedsPassword);
 			
 			RuleFor(c => c.KibanaUserPassword)
-				.NotEmpty().WithMessage("`kibana` user's password is required")
+				.NotEmpty()
+				.WithMessage(KibanaPasswordRequired)
+				.When(NeedsPassword)
+				.Length(6, int.MaxValue)
+				.WithMessage(KibanaPasswordRequired)
 				.When(NeedsPassword);
 			
 			RuleFor(c => c.LogstashSystemUserPassword)
-				.NotEmpty().WithMessage("`logstash_system` user's password is required")
+				.NotEmpty()
+				.WithMessage(LogstashPasswordRequired)
+				.When(NeedsPassword)
+				.Length(6, int.MaxValue)
+				.WithMessage(LogstashPasswordRequired)
 				.When(NeedsPassword);
 			
 		}
 
-		private static bool NeedsPassword(XPackModel m) => m.NeedsPassword;
+		private static bool NeedsPassword(XPackModel m) => m.NeedsPasswords;
 	}
 }

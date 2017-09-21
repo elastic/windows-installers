@@ -351,85 +351,6 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
   <data name="PluginType_XPack" xml:space="preserve">
     <value>X-Pack</value>
   </data>
-  <data name="InstallOptions_ClusterName" xml:space="preserve">
-    <value>The name of the cluster. Defaults to {0}</value>
-    <comment>{0} = Default Cluster Name</comment>
-  </data>
-  <data name="InstallOptions_ConfigDirectory" xml:space="preserve">
-    <value>The config directory. Defaults to {0}</value>
-    <comment>{0} = Default Config Directory</comment>
-  </data>
-  <data name="InstallOptions_DataDirectory" xml:space="preserve">
-    <value>The data directory. Defaults to {0}</value>
-    <comment>{0} = Default Data Directory</comment>
-  </data>
-  <data name="InstallOptions_DataNode" xml:space="preserve">
-    <value>Whether this node is a Data node. Defaults to {0}</value>
-    <comment>{0} = Is this a Data Node</comment>
-  </data>
-  <data name="InstallOptions_HeapSize" xml:space="preserve">
-    <value>The heap memory that will be allocated to the Elasticsearch Java Process. This should be more than 250mb and ideally less than 32GB (so that Java uses compressed pointers). Defaults to {0}mb for this installation</value>
-    <comment>{0} = Default Heap Size</comment>
-  </data>
-  <data name="InstallOptions_IngestNode" xml:space="preserve">
-    <value>Whether this node is an Ingest node. Defaults to {0}</value>
-    <comment>{0} = Is this an Ingest Node</comment>
-  </data>
-  <data name="InstallOptions_InstallDirectory" xml:space="preserve">
-    <value>The installation directory. Defaults to {0}</value>
-    <comment>{0} = Default Install Directory</comment>
-  </data>
-  <data name="InstallOptions_LockMemory" xml:space="preserve">
-    <value>Whether to lock the process address space in RAM, preventing any Elasticsearch memory from being swapped out. This uses VirtualLock on Windows. Defaults to {0}</value>
-    <comment>{0} = Default lock memory value</comment>
-  </data>
-  <data name="InstallOptions_LogsDirectory" xml:space="preserve">
-    <value>The logs directory. Defaults to {0}</value>
-    <comment>{0} = Default Logs Directory</comment>
-  </data>
-  <data name="InstallOptions_MasterNode" xml:space="preserve">
-    <value>Whether this node is a Master node. Defaults to {0}</value>
-    <comment>{0} = Is this a Master Node</comment>
-  </data>
-  <data name="InstallOptions_NodeName" xml:space="preserve">
-    <value>The name of the node. Defaults to {0} for this installation</value>
-    <comment>{0} = Default Node Name</comment>
-  </data>
-  <data name="InstallOptions_Plugins" xml:space="preserve">
-    <value>A comma-separated list of plugins to install as part of the Elasticsearch installation</value>
-  </data>
-  <data name="InstallOptions_ServiceAutomatic" xml:space="preserve">
-    <value>Whether to automatically start the service after Windows starts/restarts, if installing as a Windows Service. Defaults to {0}</value>
-    <comment>{0} = Default Start Service after Windows Starts/Restarts</comment>
-  </data>
-  <data name="InstallOptions_ServiceInstall" xml:space="preserve">
-    <value>Whether to install Elasticsearch as a Windows service. Defaults to {0}</value>
-    <comment>{0} = Default Install as a Service value</comment>
-  </data>
-  <data name="InstallOptions_ServiceName" xml:space="preserve">
-    <value>The name of the Windows service, if installing as a Windows Service. Defaults to {0}</value>
-    <comment>{0} = Default Windows Service name</comment>
-  </data>
-  <data name="InstallOptions_ServicePassword" xml:space="preserve">
-    <value>Password for the specified Username, if installing as a Windows Service</value>
-  </data>
-  <data name="InstallOptions_ServiceRunAsNetworkService" xml:space="preserve">
-    <value>Whether to run the service using {0} if installing as a Windows Service. Defaults to {1}. If this value is false and {2} is not specified, the service will be run using {3}</value>
-    <comment>{0} = Network Service Account
-{1} = Default Network Service Account Name
-{2} = Service Username Install Option Name
-{3} = Local System Service Account</comment>
-  </data>
-  <data name="InstallOptions_ServiceStart" xml:space="preserve">
-    <value>Whether to start the service after installation, if installing as a Windows Service. Defaults to {0}</value>
-    <comment>{0} = Default Start Service after installation</comment>
-  </data>
-  <data name="InstallOptions_ServiceUsername" xml:space="preserve">
-    <value>Whether to run the service using a specified Username, if installing as a Windows Service</value>
-  </data>
-  <data name="InstallOptions_UnicastHosts" xml:space="preserve">
-    <value>A comma-separated list of hosts to use for unicast discovery</value>
-  </data>
   <data name="SetupView_ExitText" xml:space="preserve">
     <value>Exit</value>
   </data>
@@ -475,6 +396,15 @@ PLEASE NOTE: an uninstall will always remove the data folder be sure you move it
     <value>Plugin installation is online, meaning you need a connection to the 
     internet to commence. Either deselect all plugins or connect 
     to the internet and refresh the installer.</value>
+  </data>
+  <data name="XPackModelValidator_ElasticPasswordRequired" xml:space="preserve">
+    <value>'elastic' password needs to be atleast 6 characters</value>
+  </data>
+  <data name="XPackModelValidator_KibanaPasswordRequired" xml:space="preserve">
+    <value>'kibana' password needs to be atleast 6 characters</value>
+  </data>
+  <data name="XPackModelValidator_LogstashPasswordRequired" xml:space="preserve">
+    <value>'logstash_system' password needs to be atleast 6 characters</value>
   </data>
   <data name="PluginsModelValidator_InvalidHttpProxyHost" xml:space="preserve">
     <value>HTTP proxy host is unknown. Enter a valid host name </value>

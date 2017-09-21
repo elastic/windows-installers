@@ -70,13 +70,13 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					
 					if (!isTrialLicense || !securityEnabled)
 						this.UserGrid.Visibility = Collapsed;
-					else if (!this.ViewModel.NeedsPassword)
+					else if (!this.ViewModel.NeedsPasswords)
 						this.UserGrid.Visibility = Collapsed;
 					else this.UserGrid.Visibility = Visible;
 					
 					this.ManualSetupGrid.Visibility =
 						!isTrialLicense || !securityEnabled
-							? Collapsed : (!this.ViewModel.NeedsPassword ? Visible : Collapsed);
+							? Collapsed : (!this.ViewModel.NeedsPasswords ? Visible : Collapsed);
 
 					this.UserLabel.Visibility = isTrialLicense && securityEnabled ? Visible : Collapsed;
 					this.SkipPasswordGenerationCheckBox.Visibility = isTrialLicense && securityEnabled ? Visible : Collapsed;

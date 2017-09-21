@@ -97,7 +97,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			}
 		}
 
-		public bool NeedsPassword =>
+		public bool NeedsPasswords =>
 			this.IsRelevant 
 			&& this.CanAutomaticallySetupUsers 
 			&& this.XPackLicense == XPackLicenseMode.Trial
@@ -109,8 +109,17 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			var sb = new StringBuilder();
 			sb.AppendLine(nameof(XPackModel));
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
+			sb.AppendLine($"- {nameof(NeedsPasswords)} = " + NeedsPasswords);
 			if (XPackLicense.HasValue)
 				sb.AppendLine($"- {nameof(XPackLicense)} = " + Enum.GetName(typeof(XPackLicenseMode), XPackLicense.Value));
+			else
+				sb.AppendLine($"- {nameof(XPackLicense)} = null");
+			sb.AppendLine($"- {nameof(this.CanAutomaticallySetupUsers)} = " + CanAutomaticallySetupUsers);
+			sb.AppendLine($"- {nameof(this.SkipSettingPasswords)} = " + SkipSettingPasswords);
+			sb.AppendLine($"- {nameof(this.XPackSecurityEnabled)} = " + SkipSettingPasswords);
+			sb.AppendLine($"- {nameof(this.ElasticUserPassword)} = " + !string.IsNullOrWhiteSpace(ElasticUserPassword));
+			sb.AppendLine($"- {nameof(this.KibanaUserPassword)} = " + !string.IsNullOrWhiteSpace(KibanaUserPassword));
+			sb.AppendLine($"- {nameof(this.LogstashSystemUserPassword)} = " + !string.IsNullOrWhiteSpace(LogstashSystemUserPassword));
 			return sb.ToString();
 		}
 
