@@ -49,6 +49,38 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			set => this.RaiseAndSetIfChanged(ref this.hasInternetConnection, value);
 		}
 
+		private string httpProxy;
+		[StaticArgument(nameof(HttpProxyHost))]
+		public string HttpProxyHost
+		{
+			get => this.httpProxy;
+			set => this.RaiseAndSetIfChanged(ref this.httpProxy, value);
+		}			
+		
+		private int? httpProxyPort;
+		[StaticArgument(nameof(HttpProxyPort))]
+		public int? HttpProxyPort
+		{
+			get => this.httpProxyPort;
+			set => this.RaiseAndSetIfChanged(ref this.httpProxyPort, value);
+		}		
+		
+		private string httpsProxyHost;
+		[StaticArgument(nameof(HttpsProxyHost))]
+		public string HttpsProxyHost
+		{
+			get => this.httpsProxyHost;
+			set => this.RaiseAndSetIfChanged(ref this.httpsProxyHost, value);
+		}
+		
+		private int? httpsProxyPort;
+		[StaticArgument(nameof(HttpsProxyPort))]
+		public int? HttpsProxyPort
+		{
+			get => this.httpsProxyPort;
+			set => this.RaiseAndSetIfChanged(ref this.httpsProxyPort, value);
+		}	
+
 		protected override IEnumerable<Plugin> GetPlugins()
 		{
 			yield return new Plugin
