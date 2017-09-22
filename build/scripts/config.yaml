@@ -62,7 +62,7 @@ elasticsearch:
     - version: 6.0.0-beta2
       guid: 50f217e3-97b7-47ba-95f7-685f7db0c8aa
     - version: 6.0.0-rc1
-      guid: 9f373edb-d845-435d-8705-76e9e2a11e6a
+      guid: 23c31d4d-6990-4c2e-92c5-4dd3348d3e07
     - version: 6.0.0
       guid: e962ab93-6e24-4128-bacb-93422cdcd50d
     - version: 6.1.0
