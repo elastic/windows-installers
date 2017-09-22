@@ -98,7 +98,10 @@
     <Compile Include="Elasticsearch\Models\InstallationModelArgumentsTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Commit\CleanUpInstallTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Install\CreateDirectoriesTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\Install\EditElasticsearchYamlTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\EditElasticsearchYaml\EditElasticsearchYamlConfigurationModelTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\EditElasticsearchYaml\EditElasticsearchYamlServiceModelTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\EditElasticsearchYaml\EditElasticsearchYamlTaskTests.cs" />
+    <Compile Include="Elasticsearch\Models\Tasks\Install\EditElasticsearchYaml\EditElasticsearchYamlXPackModelTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Install\EditJvmOptionTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Install\InstallPluginsTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Install\InstallServiceTaskTests.cs" />

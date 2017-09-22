@@ -94,8 +94,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			tester.IsValidOnStep(m => m.PluginsModel);
 			tester.InstallationModel.XPackModel.IsRelevant.Should().BeFalse();
 			var step = tester.InstallationModel.PluginsModel;
-			var xpackPlugin = step.AvailablePlugins.First(p => p.PluginType == PluginType.XPack);
-			xpackPlugin.Selected = true;
+			step.ChangeXPackSelection(true);
 			tester.InstallationModel.XPackModel.IsRelevant.Should().BeTrue();
 			
 			tester.ClickNext();

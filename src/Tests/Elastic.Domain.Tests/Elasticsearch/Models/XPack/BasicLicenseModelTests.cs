@@ -17,10 +17,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 				.ClickNext()
 				.ClickNext()
 				.IsValidOnStep(m => m.PluginsModel)
-				.OnStep(m => m.PluginsModel, m =>
+				.OnStep(m => m.PluginsModel, step =>
 				{
-					var xPackPlugin = m.AvailablePlugins.First(p => p.PluginType == PluginType.XPack);
-					xPackPlugin.Selected = true;
+					step.ChangeXPackSelection(true);
 				})
 				.IsValidOnStep(m => m.PluginsModel)
 				.ClickNext();

@@ -99,8 +99,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.WhenAnyValue(vm => vm.XPackModel.XPackLicense)
 				.Subscribe(l =>
 				{
-					var xPackPlugin = this.PluginsModel.AvailablePlugins.First(p => p.PluginType == PluginType.XPack);
-					xPackPlugin.Selected = l.HasValue;
+					this.PluginsModel.ChangeXPackSelection(l.HasValue);
 				});
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;

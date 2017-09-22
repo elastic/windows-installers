@@ -8,12 +8,11 @@ using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
 
-namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
+namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.EditElasticsearchYaml
 {
 	public class EditElasticsearchYamlTaskTests : InstallationModelTestBase
 	{
-		[Fact]
-		void PicksUpExistingConfiguration() => WithValidPreflightChecks(s => s
+		[Fact] void PicksUpExistingConfiguration() => WithValidPreflightChecks(s => s
 				.Elasticsearch(e => e
 					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
@@ -40,8 +39,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact]
-		void WritesExpectedDefauts() => WithValidPreflightChecks(s => s
+		[Fact] void WritesExpectedDefauts() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -78,8 +76,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact]
-		void DefaultMaxLocalStorageNodesNotService() => WithValidPreflightChecks(s => s
+		[Fact] void DefaultMaxLocalStorageNodesNotService() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -105,8 +102,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact]
-		void CustomConfigValues() => WithValidPreflightChecks(s => s
+		[Fact] void CustomConfigValues() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
