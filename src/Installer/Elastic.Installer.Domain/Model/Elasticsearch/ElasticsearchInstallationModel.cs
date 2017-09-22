@@ -96,11 +96,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				.Select(t => t.Item1 && t.Item2);
 			this.XPackModel = new XPackModel(observeXPackEnabled, canAutomaticallySetup);
 
-			this.WhenAnyValue(vm => vm.XPackModel.XPackLicense)
-				.Subscribe(l =>
-				{
-					this.PluginsModel.ChangeXPackSelection(l.HasValue);
-				});
+//			this.WhenAnyValue(vm => vm.XPackModel.XPackLicense)
+//				.Subscribe(l =>
+//				{
+//					this.PluginsModel.ChangeXPackSelection(l.HasValue);
+//				});
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,
@@ -272,7 +272,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 		public override void Refresh()
 		{
-			foreach (var step in this.Steps) step.Refresh();
+			foreach (var step in this.AllSteps) step.Refresh();
 
 			this.JavaInstalled = JavaConfiguration.JavaInstalled;
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;

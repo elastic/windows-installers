@@ -34,7 +34,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		{
 			var args = new[] {$"{key.Split('.').Last()}={value}"};
 			var models = model.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] {model}).ToList();
-			var viewModelArgumentParser = new ModelArgumentParser(models, args);
+			var viewModelArgumentParser = new ElasticsearchArgumentParser(models, args);
 			assert(model, value);
 
 			var msiParams = model.ToMsiParamsString();
@@ -80,7 +80,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			{
 				var args = this.Arguments.Select(t => $"{t.Item1.Split('.').Last()}={t.Item3}").ToArray();
 				var models = this._model.AllSteps.Cast<IValidatableReactiveObject>().Concat(new[] {this._model}).ToList();
-				var viewModelArgumentParser = new ModelArgumentParser(models, args);
+				var viewModelArgumentParser = new ElasticsearchArgumentParser(models, args);
 				assert(this._model);
 
 				var msiParams = this._model.ToMsiParamsString();

@@ -356,6 +356,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 			SetSessionValues(this.ViewModel.ConfigurationModel);
 			SetSessionValues(this.ViewModel.ServiceModel);
 			SetSessionValues(this.ViewModel.PluginsModel);
+			SetSessionValues(this.ViewModel.XPackModel);
 
 			this._progressCounter = new InstallProgressCounter();
 			this.StepsTab.Visibility = Visibility.Hidden;

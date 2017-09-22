@@ -52,9 +52,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			}
 			else
 			{
-				settings.XPackLicenseSelfGeneratedType = xPack.XPackLicense.HasValue
-					? Enum.GetName(typeof(XPackLicenseMode), xPack.XPackLicense.Value)?.ToLowerInvariant()
-					: null;
+				settings.XPackLicenseSelfGeneratedType = Enum.GetName(typeof(XPackLicenseMode), xPack.XPackLicense)?.ToLowerInvariant();
 				settings.XPackSecurityEnabled = !xPack.XPackSecurityEnabled ? false : (bool?) null;
 			}
 		}

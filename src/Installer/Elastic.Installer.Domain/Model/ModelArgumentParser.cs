@@ -119,8 +119,8 @@ namespace Elastic.Installer.Domain.Model
 					a.Value = MsiString(((Func<ReactiveList<string>>)getter)());
 				else if (p == typeof(bool))
 					a.Value = MsiString(((Func<bool>)getter)());
-				else if (p == typeof(XPackLicenseMode?))
-					a.Value = MsiString(((Func<XPackLicenseMode?>)getter)());
+				else if (p == typeof(XPackLicenseMode))
+					a.Value = MsiString(((Func<XPackLicenseMode>)getter)());
 				else
 					throw new Exception($"{p.FullName} has no supported getter");
 
@@ -218,12 +218,12 @@ namespace Elastic.Installer.Domain.Model
 				{
 					((Action<ReactiveList<string>>)setter)(new ReactiveList<string>(a.Value.Split(',').Select(v => v.Trim())));
 				}
-				else if (p == typeof(XPackLicenseMode?))
+				else if (p == typeof(XPackLicenseMode))
 				{
-					if (Enum.TryParse<XPackLicenseMode>(a.Value, ignoreCase: true, result: out var licenseMode))
-						((Action<XPackLicenseMode?>)setter)(licenseMode);
-					else 
-						((Action<XPackLicenseMode?>)setter)(null);
+					if (string.IsNullOrWhiteSpace(a.Value)) 
+						((Action<XPackLicenseMode>)setter)(XPackModel.DefaultXPackLicenseMode);
+					else if (Enum.TryParse<XPackLicenseMode>(a.Value, ignoreCase: true, result: out var licenseMode))
+						((Action<XPackLicenseMode>)setter)(licenseMode);
 				}
 				else if (p == typeof(bool))
 				{

@@ -20,7 +20,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			xPackEnabled.Subscribe(t =>
 			{
 				this.IsRelevant = t;
-				this.XPackLicense = !t ? (XPackLicenseMode?)null : _lastSetXpackLicenseMode;
 			});
 			canAutomaticallySetupUsers.Subscribe(b=>
 			{
@@ -40,21 +39,21 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		}
 		
 		string elasticUserPassword;
-		[StaticArgument(nameof(ElasticUserPassword), IsHidden = true)]
+		[Argument(nameof(ElasticUserPassword), IsHidden = true)]
 		public string ElasticUserPassword
 		{
 			get => this.elasticUserPassword;
 			set => this.RaiseAndSetIfChanged(ref this.elasticUserPassword, value);
 		}
 		string kibanaUserPassword;
-		[StaticArgument(nameof(KibanaUserPassword), IsHidden = true)]
+		[Argument(nameof(KibanaUserPassword), IsHidden = true)]
 		public string KibanaUserPassword
 		{
 			get => this.kibanaUserPassword;
 			set => this.RaiseAndSetIfChanged(ref this.kibanaUserPassword, value);
 		}
 		string logstashSystemUserPassword;
-		[StaticArgument(nameof(LogstashSystemUserPassword), IsHidden = true)]
+		[Argument(nameof(LogstashSystemUserPassword), IsHidden = true)]
 		public string LogstashSystemUserPassword
 		{
 			get => this.logstashSystemUserPassword;
@@ -69,7 +68,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		}
 		
 		bool xPackSecurityEnabled;
-		[StaticArgument(nameof(XPackSecurityEnabled))]
+		[Argument(nameof(XPackSecurityEnabled))]
 		public bool XPackSecurityEnabled
 		{
 			get => this.xPackSecurityEnabled;
@@ -77,22 +76,20 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		}
 		
 		bool skipSettingPasswords;
-		[StaticArgument(nameof(SkipSettingPasswords))]
+		[Argument(nameof(SkipSettingPasswords))]
 		public bool SkipSettingPasswords
 		{
 			get => this.skipSettingPasswords;
 			set => this.RaiseAndSetIfChanged(ref this.skipSettingPasswords, value);
 		}
 
-		XPackLicenseMode _lastSetXpackLicenseMode = DefaultXPackLicenseMode;
-		XPackLicenseMode? xPackLicense;
-		[StaticArgument(nameof(XPackLicense))]
-		public XPackLicenseMode? XPackLicense
+		XPackLicenseMode xPackLicense;
+		[Argument(nameof(XPackLicense))]
+		public XPackLicenseMode XPackLicense
 		{
 			get => this.xPackLicense;
 			set
 			{
-				if (value.HasValue) this._lastSetXpackLicenseMode = value.Value;
 				this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
 			}
 		}
@@ -109,11 +106,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			var sb = new StringBuilder();
 			sb.AppendLine(nameof(XPackModel));
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
+			sb.AppendLine($"- {nameof(IsRelevant)} = " + IsRelevant);
 			sb.AppendLine($"- {nameof(NeedsPasswords)} = " + NeedsPasswords);
-			if (XPackLicense.HasValue)
-				sb.AppendLine($"- {nameof(XPackLicense)} = " + Enum.GetName(typeof(XPackLicenseMode), XPackLicense.Value));
-			else
-				sb.AppendLine($"- {nameof(XPackLicense)} = null");
+			sb.AppendLine($"- {nameof(XPackLicense)} = " + Enum.GetName(typeof(XPackLicenseMode), XPackLicense));
 			sb.AppendLine($"- {nameof(this.CanAutomaticallySetupUsers)} = " + CanAutomaticallySetupUsers);
 			sb.AppendLine($"- {nameof(this.SkipSettingPasswords)} = " + SkipSettingPasswords);
 			sb.AppendLine($"- {nameof(this.XPackSecurityEnabled)} = " + SkipSettingPasswords);
