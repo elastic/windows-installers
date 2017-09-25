@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Reactive.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using Elastic.Installer.Domain.Model.Base.Plugins;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
@@ -28,6 +26,16 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 		protected override void InitializeBindings()
 		{
 			this.OneWayBind(ViewModel, vm => vm.AvailablePlugins, v => v.PluginsListBox.ItemsSource);
+
+			this.HttpProxyPortNumericUpDown.Minimum = PluginsModel.HttpPortMinimum;
+			this.HttpProxyPortNumericUpDown.Maximum = PluginsModel.PortMaximum;
+			this.HttpsProxyPortNumericUpDown.Minimum = PluginsModel.HttpsPortMinimum;
+			this.HttpsProxyPortNumericUpDown.Maximum = PluginsModel.PortMaximum;
+
+			this.Bind(ViewModel, vm => vm.HttpProxyHost, v => v.HttpProxyHostTextbox.Text);
+			this.Bind(ViewModel, vm => vm.HttpProxyPort, v => v.HttpProxyPortNumericUpDown.Value, null, new NullableIntToNullableDoubleConverter(), new NullableDoubleToNullableIntConverter());
+			this.Bind(ViewModel, vm => vm.HttpsProxyHost, v => v.HttpsProxyHostTextbox.Text);
+			this.Bind(ViewModel, vm => vm.HttpsProxyPort, v => v.HttpsProxyPortNumericUpDown.Value, null, new NullableIntToNullableDoubleConverter(), new NullableDoubleToNullableIntConverter());
 		}
 
 		private void OnActualCheckboxClick(object sender, RoutedEventArgs e)

@@ -103,11 +103,11 @@
       <TextBox Grid.Row="1" Grid.Column="1" x:Name="NetworkHostTextBox" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
       <Label Grid.Row="2" Grid.Column="0" x:Name="HttpPortLabel" Content="{x:Static resx:ViewResources.ConfigurationView_HttpPortLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
       <mahapps:NumericUpDown  Grid.Row="2" Grid.Column="1" x:Name="HttpPortTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" 
-         StringFormat="{}{0:0}" 
+         StringFormat="{}{0:0}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
       />
       <Label Grid.Row="2" Grid.Column="2" x:Name="TransportPortLabel" Content="{x:Static resx:ViewResources.ConfigurationView_TransportPortLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
       <mahapps:NumericUpDown  Grid.Row="2" Grid.Column="3" x:Name="TransportPortTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" 
-          StringFormat="{}{0:0}" 
+          StringFormat="{}{0:0}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
       />
       
       

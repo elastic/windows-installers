@@ -865,6 +865,24 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTTP proxy host is unknown. Enter a valid host name .
+        /// </summary>
+        public static string PluginsModelValidator_InvalidHttpProxyHost {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_InvalidHttpProxyHost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HTTPS proxy host is unknown. Enter a valid host name.
+        /// </summary>
+        public static string PluginsModelValidator_InvalidHttpsProxyHost {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_InvalidHttpsProxyHost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugin installation is online, meaning you need a connection to the 
         ///    internet to commence. Either deselect all plugins or connect 
         ///    to the internet and refresh the installer..

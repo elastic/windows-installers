@@ -19,7 +19,7 @@ namespace Elastic.Installer.UI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ViewResources {
@@ -1359,7 +1359,9 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), custom discovery, and more.
         ///
-        ///We&apos;ve only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually..
+        ///We&apos;ve only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins are downloaded at installation time.
+        ///
+        ///It is common for many companies to set up a HTTP proxy through which resources will be downloaded from th [rest of string was truncated]&quot;;.
         /// </summary>
         public static string PluginsView_Elasticsearch_Help {
             get {
@@ -1377,11 +1379,47 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTTP host/port.
+        /// </summary>
+        public static string PluginsView_HttpProxyHostLabel {
+            get {
+                return ResourceManager.GetString("PluginsView_HttpProxyHostLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HTTPS host/port.
+        /// </summary>
+        public static string PluginsView_HttpsProxyHostLabel {
+            get {
+                return ResourceManager.GetString("PluginsView_HttpsProxyHostLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugins are a way to enhance the basic Kibana functionality in a custom manner.  We&apos;ve only listed the official Kibanas plugins here, but there are many more community plugins that can be installed manually..
         /// </summary>
         public static string PluginsView_Kibana_Help {
             get {
                 return ResourceManager.GetString("PluginsView_Kibana_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugins.
+        /// </summary>
+        public static string PluginsView_PluginsLabel {
+            get {
+                return ResourceManager.GetString("PluginsView_PluginsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proxies.
+        /// </summary>
+        public static string PluginsView_ProxiesLabel {
+            get {
+                return ResourceManager.GetString("PluginsView_ProxiesLabel", resourceCulture);
             }
         }
         

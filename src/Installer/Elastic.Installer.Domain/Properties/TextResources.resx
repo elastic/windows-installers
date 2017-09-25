@@ -476,4 +476,10 @@ PLEASE NOTE: an uninstall will always remove the data folder be sure you move it
     internet to commence. Either deselect all plugins or connect 
     to the internet and refresh the installer.</value>
   </data>
+  <data name="PluginsModelValidator_InvalidHttpProxyHost" xml:space="preserve">
+    <value>HTTP proxy host is unknown. Enter a valid host name </value>
+  </data>
+  <data name="PluginsModelValidator_InvalidHttpsProxyHost" xml:space="preserve">
+    <value>HTTPS proxy host is unknown. Enter a valid host name</value>
+  </data>
 </root>

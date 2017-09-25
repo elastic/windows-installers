@@ -12,6 +12,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 {
 	public class PluginsModel : PluginsModelBase<PluginsModel, PluginsModelValidator>
 	{
+		public const int HttpPortMinimum = 80;
+		public const int HttpsPortMinimum = 443;
+		public const int PortMaximum = 65535;
+
 		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies)
 			: base(pluginStateProvider)
 		{

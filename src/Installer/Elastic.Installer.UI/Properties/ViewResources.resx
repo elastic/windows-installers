@@ -448,7 +448,17 @@ This installer will walk you through various steps to help you configure and ins
   <data name="PluginsView_Elasticsearch_Help" xml:space="preserve">
     <value>Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), custom discovery, and more.
 
-We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually.</value>
+We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins are downloaded at installation time.
+
+It is common for many companies to set up a HTTP proxy through which resources will be downloaded from the internet. As such, you may need to specify the host name and port of a corporate proxy to allow the installer to successfully install plugins. Since official Elasticsearch plugins are installed from https://artifacts.elastic.co, a HTTPS proxy would be used, if specified.
+
+[b]HTTP host[/b]: This setting specifies the host of the HTTP proxy through which plugins will be downloaded.
+
+[b]HTTP port[/b]: This setting specifies the port of the HTTP proxy through which plugins will be downloaded. If not specified, defaults to port 80.
+
+[b]HTTPS host[/b]: This setting specifies the host of the HTTPS proxy through which plugins will be downloaded.
+
+[b]HTTPS port[/b]: This setting specifies the port of the HTTPS proxy through which plugins will be downloaded. If not specified, defaults to port 443.</value>
   </data>
   <data name="ServiceView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Service Help</value>
@@ -756,5 +766,17 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   </data>
   <data name="ClosingView_KibanaRunningAtHeaderWithCredentials" xml:space="preserve">
     <value>Open Kibana in the browser (User name: elastic, Password: changeme)</value>
+  </data>
+  <data name="PluginsView_HttpProxyHostLabel" xml:space="preserve">
+    <value>HTTP host/port</value>
+  </data>
+  <data name="PluginsView_HttpsProxyHostLabel" xml:space="preserve">
+    <value>HTTPS host/port</value>
+  </data>
+  <data name="PluginsView_PluginsLabel" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="PluginsView_ProxiesLabel" xml:space="preserve">
+    <value>Proxies</value>
   </data>
 </root>
