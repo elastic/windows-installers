@@ -51,6 +51,7 @@
     <Compile Include="Elasticsearch\Tasks\Install\InstallServiceTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\PreserveInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetEnvironmentVariablesTask.cs" />
+    <Compile Include="Elasticsearch\Tasks\Install\SetupXPackPasswordsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\StartServiceTask.cs" />
     <Compile Include="Elasticsearch\Tasks\RemoveEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Rollback\RollbackServiceTask.cs" />
