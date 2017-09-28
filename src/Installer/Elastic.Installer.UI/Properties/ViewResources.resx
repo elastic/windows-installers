@@ -405,7 +405,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 
 [b]Node name[/b]: The unique name given to this particular Elasticsearch node.
 
-[b]Node role[/b]: The type of role(s) this node should have.  If no roles are assigned, then it will act as a client node, and only route requests to other nodes in your cluster.
+[b]Node role[/b]: The type(s) of role(s) this node should have.  If no roles are assigned, then it will act as a coordinating node, and only route requests to other nodes in your cluster.
 
 [b]Memory[/b]: The amount of memory to allocate to the JVM heap for Elasticsearch.  The standard rule of thumb is to allocate 50% of available memory to the heap, but never exceed 30.5 GB, leaving the remaining 50% free to ensure there is enough for kernel file system caches.  The 30.5 GB limit is recommended in order to prevent the JVM from entering 64-bit address space, which will result in a performance degradation.
 
@@ -429,9 +429,9 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 
 [b]Logs[/b]: The directory where Elasticsearch will write its log files to.
 
-[b]Config[/b]: The directory where Elasticsearch will its configuration files.
+[b]Config[/b]: The directory where Elasticsearch will store its configuration files.
 
-It is best practice to keep your logs, config, and data directories separate from your home directory.  This keeps your data and configuration safe from overwriting when upgrading to newer versions of Elasticsearch.</value>
+It is a best practice to keep your logs, config, and data directories separate from your home directory.  This keeps your data and configuration safe from overwriting when upgrading to newer versions of Elasticsearch.</value>
   </data>
   <data name="MainWindow_Help_Header" xml:space="preserve">
     <value>Installation Help</value>
@@ -439,14 +439,14 @@ It is best practice to keep your logs, config, and data directories separate fro
   <data name="MainWindow_Help" xml:space="preserve">
     <value>Heya! Welcome the {0} Windows intaller.
 
-This installer will walk you through various steps to help you conifigure and install {0} on your system.  To make things easier, we've gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you'll definitely want to change.</value>
+This installer will walk you through various steps to help you configure and install {0} on your system.  To make things easier, we've gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you may want to change.</value>
     <comment>{0} = Product name</comment>
   </data>
   <data name="PluginsView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Plugin Help</value>
   </data>
   <data name="PluginsView_Elasticsearch_Help" xml:space="preserve">
-    <value>Plugins are a way to enhance the basic Elasticsearch functionality in a custom manner.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), native scripts, custom discovery and more.
+    <value>Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), custom discovery, and more.
 
 We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually.</value>
   </data>
@@ -661,7 +661,7 @@ Alternatively, you may choose to not install Elasticsearch as a service and run 
     <value>Browse</value>
   </data>
   <data name="ConfigurationView_Kibana_Help" xml:space="preserve">
-    <value>This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We're only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
+    <value>This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We're only exposing common settings here that you may commonly want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
 
 
 [b]Host[/b]: This setting specifies the host of the back end server.

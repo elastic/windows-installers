@@ -19,7 +19,7 @@ namespace Elastic.Installer.Domain.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class TextResources {
@@ -188,16 +188,7 @@ namespace Elastic.Installer.Domain.Properties {
                 return ResourceManager.GetString("ConfigurationModelValidator_TransportPortMinimum", resourceCulture);
             }
         }
-	    //
-        /// <summary>
-        ///   Looks up a localized string similar to that lets the user know you need an internet connection to install plugins
-        /// </summary>
-        public static string PluginsModelValidator_NoInternet {
-            get {
-                return ResourceManager.GetString("PluginsModelValidator_NoInternet", resourceCulture);
-            }
-        }
-	    
+        
         /// <summary>
         ///   Looks up a localized string similar to A URL to Elasticsearch must be specified..
         /// </summary>
@@ -637,7 +628,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The elasticsearch.yml file we found in ES_CONFIG appears to be 
+        ///   Looks up a localized string similar to The elasticsearch.yml file we found in ES_PATH_CONF appears to be 
         ///invalid  and prevented seeding current values..
         /// </summary>
         public static string NoticeModelValidator_BadElasticsearchYamlFile {
@@ -647,7 +638,8 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A higher version is already installed.  In order to downgrade, you must uninstall this version first..
+        ///   Looks up a localized string similar to A higher version is already installed.  In order to downgrade, you must uninstall this version first.
+        ///PLEASE NOTE: an uninstall will always remove the data folder be sure you move it elsewhere if you need to keep it..
         /// </summary>
         public static string NoticeModelValidator_HigherVersionInstalled {
             get {
@@ -675,7 +667,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        /// Looks up a localized string similar that warns the user about running a 32bit JVM
+        ///   Looks up a localized string similar to Found a 32 bit java installation as the default in the registry, elasticsearch requires a 64bit JVM.
         /// </summary>
         public static string NoticeModelValidator_Using32BitJava {
             get {
@@ -738,7 +730,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ICU Analysis plugin integrates Lucene ICU module into elasticsearch, adding ICU relates analysis components..
+        ///   Looks up a localized string similar to The ICU Analysis plugin integrates the Lucene ICU module into Elasticsearch, adding extended Unicode support using the ICU libraries, including better analysis of Asian languages, Unicode normalization, Unicode-aware case folding, collation support, and transliteration..
         /// </summary>
         public static string PluginsModel_ICUAnalysis {
             get {
@@ -747,7 +739,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ingest attachment plugin lets Elasticsearch extract file attachments in common formats (such as PPT, XLS, and PDF) by using the Apache text extraction library Tika.  You can use the ingest attachment plugin as a replacement for the mapper attachment plugin..
+        ///   Looks up a localized string similar to The ingest attachment plugin lets Elasticsearch extract file attachments in common formats (such as PPT, XLS, and PDF) by using the Apache text and metadata extraction library Tika.  You can use the ingest attachment plugin as a replacement for the mapper attachment plugin..
         /// </summary>
         public static string PluginsModel_IngestAttachment {
             get {
@@ -756,7 +748,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The GeoIP processor adds information about the geographical location of IP addresses, based on data from the Maxmind databases. This processor adds this information by default under the geoip field..
+        ///   Looks up a localized string similar to The GeoIP processor adds information about the geographical location of IP addresses, based on data from Geo-IP databases. This processor adds this information by default under the geoip field..
         /// </summary>
         public static string PluginsModel_IngestGeoIP {
             get {
@@ -765,7 +757,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Japanese (kuromoji) Analysis plugin integrates Lucene kuromoji analysis module into elasticsearch..
+        ///   Looks up a localized string similar to The Japanese (kuromoji) Analysis plugin integrates the Lucene kuromoji analysis module into Elasticsearch..
         /// </summary>
         public static string PluginsModel_JapaneseAnalysis {
             get {
@@ -792,7 +784,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The mapper-murmur3 plugin provides the ability to compute hash of field values at index-time and store them in the index. This can sometimes be helpful when running cardinality aggregations on high-cardinality and large string fields..
+        ///   Looks up a localized string similar to The mapper-murmur3 plugin provides the ability to compute a hash of field values at index-time and store them in the index. This can sometimes be helpful when running cardinality aggregations on high-cardinality and large string fields..
         /// </summary>
         public static string PluginsModel_MapperMurmur3 {
             get {
@@ -837,7 +829,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Smart Chinese Analysis plugin integrates Lucene Smart Chinese analysis module into elasticsearch..
+        ///   Looks up a localized string similar to The Smart Chinese Analysis plugin integrates the Lucene Smart Chinese analysis module into Elasticsearch..
         /// </summary>
         public static string PluginsModel_SmartChineseAnalysis {
             get {
@@ -846,7 +838,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Stempel (Polish) Analysis plugin integrates Lucene stempel (Polish) analysis module into elasticsearch..
+        ///   Looks up a localized string similar to The Stempel (Polish) Analysis plugin integrates the Lucene Stempel (Polish) analysis module into Elasticsearch..
         /// </summary>
         public static string PluginsModel_StempelPolishAnalysis {
             get {
@@ -855,7 +847,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Store SMB plugin works around for a bug in Windows SMB and Java on Windows..
+        ///   Looks up a localized string similar to The Store SMB plugin works around a bug in Windows SMB and Java on Windows..
         /// </summary>
         public static string PluginsModel_StoreSmb {
             get {
@@ -864,11 +856,22 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. A 30 day fully featured trial license is provided upon first installation..
+        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, machine learning, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation..
         /// </summary>
         public static string PluginsModel_XPack {
             get {
                 return ResourceManager.GetString("PluginsModel_XPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin installation is online, meaning you need a connection to the 
+        ///    internet to commence. Either deselect all plugins or connect 
+        ///    to the internet and refresh the installer..
+        /// </summary>
+        public static string PluginsModelValidator_NoInternet {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_NoInternet", resourceCulture);
             }
         }
         

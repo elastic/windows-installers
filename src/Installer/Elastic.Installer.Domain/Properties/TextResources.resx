@@ -189,16 +189,16 @@ Java won't used compressed pointers.</value>
     <value>The Azure Repository plugin adds support for using Azure as a repository for Snapshot/Restore.</value>
   </data>
   <data name="PluginsModel_ClojureLanguagePlugin" xml:space="preserve">
-    <value>An elasticsearch plugin written in Clojure that provides clojure as a scripting language for elasticsearch queries.</value>
+    <value>An Elasticsearch plugin written in Clojure that provides clojure as a scripting language for Elasticsearch queries.</value>
   </data>
   <data name="PluginsModel_HdfsRepository" xml:space="preserve">
     <value>Allows Elasticsearch to use the Haddop file-system as a repository for snapshot/restore.</value>
   </data>
   <data name="PluginsModel_ICUAnalysis" xml:space="preserve">
-    <value>The ICU Analysis plugin integrates Lucene ICU module into elasticsearch, adding ICU relates analysis components.</value>
+    <value>The ICU Analysis plugin integrates the Lucene ICU module into Elasticsearch, adding extended Unicode support using the ICU libraries, including better analysis of Asian languages, Unicode normalization, Unicode-aware case folding, collation support, and transliteration.</value>
   </data>
   <data name="PluginsModel_JapaneseAnalysis" xml:space="preserve">
-    <value>The Japanese (kuromoji) Analysis plugin integrates Lucene kuromoji analysis module into elasticsearch.</value>
+    <value>The Japanese (kuromoji) Analysis plugin integrates the Lucene kuromoji analysis module into Elasticsearch.</value>
   </data>
   <data name="PluginsModel_JavaScriptLanguagePlugin" xml:space="preserve">
     <value>The JavaScript language plugin allows to have javascript (or js) as the language of scripts to execute.</value>
@@ -210,10 +210,10 @@ Java won't used compressed pointers.</value>
     <value>The Python (jython) language plugin allows to have python as the language of scripts to execute.</value>
   </data>
   <data name="PluginsModel_SmartChineseAnalysis" xml:space="preserve">
-    <value>The Smart Chinese Analysis plugin integrates Lucene Smart Chinese analysis module into elasticsearch.</value>
+    <value>The Smart Chinese Analysis plugin integrates the Lucene Smart Chinese analysis module into Elasticsearch.</value>
   </data>
   <data name="PluginsModel_StempelPolishAnalysis" xml:space="preserve">
-    <value>The Stempel (Polish) Analysis plugin integrates Lucene stempel (Polish) analysis module into elasticsearch.</value>
+    <value>The Stempel (Polish) Analysis plugin integrates the Lucene Stempel (Polish) analysis module into Elasticsearch.</value>
   </data>
   <data name="PluginType_Analysis" xml:space="preserve">
     <value>Analysis</value>
@@ -316,13 +316,13 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
     <value>The Google Compute Engine Discovery plugin uses the GCE API for unicast discovery.</value>
   </data>
   <data name="PluginsModel_IngestAttachment" xml:space="preserve">
-    <value>The ingest attachment plugin lets Elasticsearch extract file attachments in common formats (such as PPT, XLS, and PDF) by using the Apache text extraction library Tika.  You can use the ingest attachment plugin as a replacement for the mapper attachment plugin.</value>
+    <value>The ingest attachment plugin lets Elasticsearch extract file attachments in common formats (such as PPT, XLS, and PDF) by using the Apache text and metadata extraction library Tika.  You can use the ingest attachment plugin as a replacement for the mapper attachment plugin.</value>
   </data>
   <data name="PluginsModel_IngestGeoIP" xml:space="preserve">
-    <value>The GeoIP processor adds information about the geographical location of IP addresses, based on data from the Maxmind databases. This processor adds this information by default under the geoip field.</value>
+    <value>The GeoIP processor adds information about the geographical location of IP addresses, based on data from Geo-IP databases. This processor adds this information by default under the geoip field.</value>
   </data>
   <data name="PluginsModel_MapperMurmur3" xml:space="preserve">
-    <value>The mapper-murmur3 plugin provides the ability to compute hash of field values at index-time and store them in the index. This can sometimes be helpful when running cardinality aggregations on high-cardinality and large string fields.</value>
+    <value>The mapper-murmur3 plugin provides the ability to compute a hash of field values at index-time and store them in the index. This can sometimes be helpful when running cardinality aggregations on high-cardinality and large string fields.</value>
   </data>
   <data name="PluginsModel_MapperSize" xml:space="preserve">
     <value>The mapper-size plugin provides the _size meta field which, when enabled, indexes the size in bytes of the original _source field.</value>
@@ -331,10 +331,10 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
     <value>The Phonetic Analysis plugin provides token filters which convert tokens to their phonetic representation using Soundex, Metaphone, and a variety of other algorithms.</value>
   </data>
   <data name="PluginsModel_StoreSmb" xml:space="preserve">
-    <value>The Store SMB plugin works around for a bug in Windows SMB and Java on Windows.</value>
+    <value>The Store SMB plugin works around a bug in Windows SMB and Java on Windows.</value>
   </data>
   <data name="PluginsModel_XPack" xml:space="preserve">
-    <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation.</value>
+    <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, machine learning, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation.</value>
   </data>
   <data name="PluginType_ApiExtensions" xml:space="preserve">
     <value>API Extensions</value>
