@@ -478,14 +478,14 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
+        ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you may commonly want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
         ///
         ///[b]Host[/b]: This setting specifies the host of the back end server.
         ///
         ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
         ///
-        ///[b]Base Path[/b]: Enables you to specify a p [rest of string was truncated]&quot;;.
+        ///[b]Base Path[/b]: Enables you to specify a pa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Kibana_Help {
             get {
@@ -1040,9 +1040,9 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Logs[/b]: The directory where Elasticsearch will write its log files to.
         ///
-        ///[b]Config[/b]: The directory where Elasticsearch will its configuration files.
+        ///[b]Config[/b]: The directory where Elasticsearch will store its configuration files.
         ///
-        ///It is best practice to keep your logs, config, and data directories separate from  [rest of string was truncated]&quot;;.
+        ///It is a best practice to keep your logs, config, and data directories separa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string LocationsView_Elasticsearch_Help {
             get {
@@ -1139,7 +1139,7 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Heya! Welcome the {0} Windows intaller.
         ///
-        ///This installer will walk you through various steps to help you conifigure and install {0} on your system.  To make things easier, we&apos;ve gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you&apos;ll definitely want to change..
+        ///This installer will walk you through various steps to help you configure and install {0} on your system.  To make things easier, we&apos;ve gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you may want to change..
         /// </summary>
         public static string MainWindow_Help {
             get {
@@ -1357,7 +1357,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugins are a way to enhance the basic Elasticsearch functionality in a custom manner.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), native scripts, custom discovery and more.
+        ///   Looks up a localized string similar to Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), custom discovery, and more.
         ///
         ///We&apos;ve only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually..
         /// </summary>
