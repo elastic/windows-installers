@@ -730,7 +730,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ICU Analysis plugin integrates Lucene ICU module into elasticsearch, adding ICU relates analysis components..
+        ///   Looks up a localized string similar to The ICU Analysis plugin integrates the Lucene ICU module into Elasticsearch, adding extended Unicode support using the ICU libraries, including better analysis of Asian languages, Unicode normalization, Unicode-aware case folding, collation support, and transliteration..
         /// </summary>
         public static string PluginsModel_ICUAnalysis {
             get {
@@ -739,7 +739,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ingest attachment plugin lets Elasticsearch extract file attachments in common formats (such as PPT, XLS, and PDF) by using the Apache text extraction library Tika.  You can use the ingest attachment plugin as a replacement for the mapper attachment plugin..
+        ///   Looks up a localized string similar to The ingest attachment plugin lets Elasticsearch extract file attachments in common formats (such as PPT, XLS, and PDF) by using the Apache text and metadata extraction library Tika.  You can use the ingest attachment plugin as a replacement for the mapper attachment plugin..
         /// </summary>
         public static string PluginsModel_IngestAttachment {
             get {
@@ -748,7 +748,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The GeoIP processor adds information about the geographical location of IP addresses, based on data from the Maxmind databases. This processor adds this information by default under the geoip field..
+        ///   Looks up a localized string similar to The GeoIP processor adds information about the geographical location of IP addresses, based on data from Geo-IP databases. This processor adds this information by default under the geoip field..
         /// </summary>
         public static string PluginsModel_IngestGeoIP {
             get {
@@ -757,7 +757,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Japanese (kuromoji) Analysis plugin integrates Lucene kuromoji analysis module into elasticsearch..
+        ///   Looks up a localized string similar to The Japanese (kuromoji) Analysis plugin integrates the Lucene kuromoji analysis module into Elasticsearch..
         /// </summary>
         public static string PluginsModel_JapaneseAnalysis {
             get {
@@ -784,7 +784,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The mapper-murmur3 plugin provides the ability to compute hash of field values at index-time and store them in the index. This can sometimes be helpful when running cardinality aggregations on high-cardinality and large string fields..
+        ///   Looks up a localized string similar to The mapper-murmur3 plugin provides the ability to compute a hash of field values at index-time and store them in the index. This can sometimes be helpful when running cardinality aggregations on high-cardinality and large string fields..
         /// </summary>
         public static string PluginsModel_MapperMurmur3 {
             get {
@@ -829,7 +829,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Smart Chinese Analysis plugin integrates Lucene Smart Chinese analysis module into elasticsearch..
+        ///   Looks up a localized string similar to The Smart Chinese Analysis plugin integrates the Lucene Smart Chinese analysis module into Elasticsearch..
         /// </summary>
         public static string PluginsModel_SmartChineseAnalysis {
             get {
@@ -838,7 +838,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Stempel (Polish) Analysis plugin integrates Lucene stempel (Polish) analysis module into elasticsearch..
+        ///   Looks up a localized string similar to The Stempel (Polish) Analysis plugin integrates the Lucene Stempel (Polish) analysis module into Elasticsearch..
         /// </summary>
         public static string PluginsModel_StempelPolishAnalysis {
             get {
@@ -847,7 +847,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Store SMB plugin works around for a bug in Windows SMB and Java on Windows..
+        ///   Looks up a localized string similar to The Store SMB plugin works around a bug in Windows SMB and Java on Windows..
         /// </summary>
         public static string PluginsModel_StoreSmb {
             get {
@@ -856,7 +856,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation..
+        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, machine learning, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation..
         /// </summary>
         public static string PluginsModel_XPack {
             get {
