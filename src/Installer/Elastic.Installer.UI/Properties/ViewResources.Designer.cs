@@ -478,14 +478,14 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
+        ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]kibana.yml[/b] located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you may commonly want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
         ///
         ///[b]Host[/b]: This setting specifies the host of the back end server.
         ///
         ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
         ///
-        ///[b]Base Path[/b]: Enables you to specify a p [rest of string was truncated]&quot;;.
+        ///[b]Base Path[/b]: Enables you to specify a pa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Kibana_Help {
             get {
@@ -1042,7 +1042,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Config[/b]: The directory where Elasticsearch will store its configuration files.
         ///
-        ///It is a best practice to keep your logs, config, and data directories separate from  [rest of string was truncated]&quot;;.
+        ///It is a best practice to keep your logs, config, and data directories separa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string LocationsView_Elasticsearch_Help {
             get {
