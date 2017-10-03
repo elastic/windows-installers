@@ -37,6 +37,9 @@ Target:
 * clean
   - cleans build output folders
 
+* patchguids
+  - ensures a product GUID exists for the specified products and versions
+
 * unittest
   - build and unit test
 
