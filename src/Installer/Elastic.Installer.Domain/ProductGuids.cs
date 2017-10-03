@@ -38,6 +38,8 @@ namespace Elastic.Installer.Domain
 			{ "5.5.3", new Guid("1f75dce6-5c9e-43c4-ad23-72d94bfec22d") },
 			{ "5.6.0", new Guid("72029505-94e9-4c29-a604-1da02d9d0402") },
 			{ "5.6.1", new Guid("5e6f4d7a-9220-4432-9e5f-c9a9ab184dea") },
+			{ "5.6.2", new Guid("650ba327-fac0-4276-a8c2-a3b5d458773c") },
+			{ "5.6.3", new Guid("4f50ce6b-f115-46c3-8902-d915250c3370") },
 			{ "6.0.0-beta1", new Guid("f234f31d-f25c-4e64-8d3e-868f7b7ece97") },
 			{ "6.0.0-beta2", new Guid("50f217e3-97b7-47ba-95f7-685f7db0c8aa") },
 			{ "6.0.0-rc1", new Guid("23c31d4d-6990-4c2e-92c5-4dd3348d3e07") },
