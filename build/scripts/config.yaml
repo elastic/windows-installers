@@ -58,7 +58,7 @@ elasticsearch:
     - version: 5.6.1
       guid: 5e6f4d7a-9220-4432-9e5f-c9a9ab184dea
     - version: 5.6.2
-	  guid: 650ba327-fac0-4276-a8c2-a3b5d458773c
+      guid: 650ba327-fac0-4276-a8c2-a3b5d458773c
     - version: 5.6.3
       guid: 4f50ce6b-f115-46c3-8902-d915250c3370
     - version: 6.0.0-beta1
