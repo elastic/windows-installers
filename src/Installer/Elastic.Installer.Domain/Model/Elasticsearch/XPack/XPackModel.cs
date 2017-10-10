@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Elastic.Configuration.FileBased.JvmOpts;
-using Elastic.Configuration.FileBased.Yaml;
 using Elastic.Installer.Domain.Model.Base;
-using Microsoft.VisualBasic.Devices;
 using ReactiveUI;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
@@ -35,6 +29,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.ElasticUserPassword = null;
 			this.KibanaUserPassword = null;
 			this.LogstashSystemUserPassword = null;
+			this.BootstrapPassword = null;
 			this.XPackSecurityEnabled = true;
 		}
 		
@@ -88,10 +83,15 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		public XPackLicenseMode XPackLicense
 		{
 			get => this.xPackLicense;
-			set
-			{
-				this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
-			}
+			set => this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
+		}
+
+		private string bootstrapPassword;
+		[Argument(nameof(BootstrapPassword), IsHidden = true)]
+		public string BootstrapPassword
+		{
+			get => this.bootstrapPassword;
+			set => this.RaiseAndSetIfChanged(ref this.bootstrapPassword, value);
 		}
 
 		public bool NeedsPasswords =>
@@ -112,6 +112,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			sb.AppendLine($"- {nameof(this.CanAutomaticallySetupUsers)} = " + CanAutomaticallySetupUsers);
 			sb.AppendLine($"- {nameof(this.SkipSettingPasswords)} = " + SkipSettingPasswords);
 			sb.AppendLine($"- {nameof(this.XPackSecurityEnabled)} = " + SkipSettingPasswords);
+			sb.AppendLine($"- {nameof(this.BootstrapPassword)} = " + !string.IsNullOrWhiteSpace(BootstrapPassword));
 			sb.AppendLine($"- {nameof(this.ElasticUserPassword)} = " + !string.IsNullOrWhiteSpace(ElasticUserPassword));
 			sb.AppendLine($"- {nameof(this.KibanaUserPassword)} = " + !string.IsNullOrWhiteSpace(KibanaUserPassword));
 			sb.AppendLine($"- {nameof(this.LogstashSystemUserPassword)} = " + !string.IsNullOrWhiteSpace(LogstashSystemUserPassword));

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO.Abstractions;
-using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
@@ -17,97 +17,56 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		protected override bool ExecuteTask()
 		{
-			var installationFolder = this.InstallationModel.LocationsModel.InstallDir;
-			installationFolder = @"c:\Data\elasticsearch-6.0.0-beta2";
-			var binary = this.FileSystem.Path.Combine(installationFolder, "bin", "x-pack", "setup-passwords") + ".bat";
-			//if (!this.FileSystem.File.Exists(binary)) return false;
-
 			var xPackModel = this.InstallationModel.XPackModel;
 			if (!xPackModel.IsRelevant || !xPackModel.NeedsPasswords) return true;
-			var p = new Process
+
+			var password = this.InstallationModel.XPackModel.BootstrapPassword;
+
+			using (var client = new HttpClient())
 			{
-				EnableRaisingEvents = true,
-				StartInfo =
+				var elasticUserPassword = this.InstallationModel.XPackModel.ElasticUserPassword;
+
+				if (!string.IsNullOrEmpty(elasticUserPassword))
 				{
-					FileName = binary,
-					Arguments = "interactive",
-					CreateNoWindow = true,
-					UseShellExecute = false,
-					RedirectStandardOutput = true,
-					RedirectStandardError = true,
-					RedirectStandardInput = true,
+					SetPassword(client, password, "elastic", elasticUserPassword);
+					this.Session.Log("Changed password for user [elastic]");
 				}
-			};
+
+				// change the elastic user password to use for subsequent users after updating it for elastic user
+				password = !string.IsNullOrEmpty(elasticUserPassword)
+					? elasticUserPassword
+					: password;
+
+				if (!string.IsNullOrEmpty(this.InstallationModel.XPackModel.KibanaUserPassword))
+				{
+					SetPassword(client, password, "kibana",  this.InstallationModel.XPackModel.KibanaUserPassword);
+					this.Session.Log("Changed password for user [kibana]");
+				}
+
+				if (!string.IsNullOrEmpty(this.InstallationModel.XPackModel.LogstashSystemUserPassword))
+				{
+					SetPassword(client, password, "logstash_system", this.InstallationModel.XPackModel.LogstashSystemUserPassword);
+					this.Session.Log("Changed password for user [logstash_system]");
+				}
+			}
 			
-			ApproachOne(p);
-			//ApproacheTwo(p);
-
-			p.WaitForExit();
-
-			var exitCode = p.ExitCode;
-			p.Close();
 			return true;
 		}
 
-		private void ApproacheTwo(Process p)
+		private void SetPassword(HttpClient client, string elasticUserPassword, string user, string password)
 		{
-			//p.StandardInput.BaseStream
-			p.Start();
-			
-			var bufferSize = 1024;
-			var read = 0;
-			do
-			{
-				var buffer = new byte[bufferSize];
-				for (read = 0; read < bufferSize; read++)
-				{
-					var eof = p.StandardOutput.EndOfStream;
-					var exited = p.HasExited;
-					
-					var readByte = p.StandardOutput.BaseStream.ReadByte();
-					if (readByte == -1)
-						break;
-					var c = (byte) readByte;
-					if (c == '\n' || c == ']' || c == ':')
-					{
-						break;
-					}
-					
-					buffer[read] = c;
-				}
-				var s = Encoding.UTF8.GetString(buffer, 0, read);
-			} while (read > 0);
-		}
+			var host = this.InstallationModel.ConfigurationModel.NetworkHost ?? "localhost";
+			var port = this.InstallationModel.ConfigurationModel.HttpPort;
 
-		private void ApproachOne(Process p)
-		{
-			var errors = false;
-			var steps = 0;
-			
-			p.ErrorDataReceived += (s, a) => errors = true;
-			p.OutputDataReceived += (sender, a) =>
+			using (var message = new HttpRequestMessage(HttpMethod.Put, $"http://{host}:{port}/_xpack/security/user/{user}/_password"))
 			{
-				var message = a.Data;
-				if (message == null) return;
-				if (message.StartsWith("Exception")) errors = true;
-				if (message.Trim().EndsWith("[y/N]"))
-				{
-					p.StandardInput.WriteLine("y");
-				}
-				if (string.IsNullOrEmpty(message.Trim()) && steps == 3)
-				{
-					p.StandardInput.WriteLine(this.InstallationModel.XPackModel.ElasticUserPassword);
-				}
-				steps++;
-			};
-			p.Start();
-			p.BeginOutputReadLine();
-			p.BeginErrorReadLine();
-//			p.StandardInput.WriteLine(this.InstallationModel.XPackModel.ElasticUserPassword);
-//			p.StandardInput.WriteLine(this.InstallationModel.XPackModel.KibanaUserPassword);
-//			p.StandardInput.WriteLine(this.InstallationModel.XPackModel.KibanaUserPassword);
-//			p.StandardInput.WriteLine(this.InstallationModel.XPackModel.LogstashSystemUserPassword);
-//			p.StandardInput.WriteLine(this.InstallationModel.XPackModel.LogstashSystemUserPassword);
+				var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"elastic:{elasticUserPassword}"));
+
+				message.Headers.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+				message.Content = new StringContent($"{{\"password\":\"{password}\"}}", Encoding.UTF8, "application/json");
+				var response = client.SendAsync(message).Result;
+				response.EnsureSuccessStatusCode();
+			}
 		}
 	}
 }

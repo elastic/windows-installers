@@ -48,7 +48,9 @@
     <Compile Include="CustomActions\CustomAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Commit\ElasticsearchCleanupAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\ElasticsearchCustomActionOrder.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Immediate\ElasticsearchBootstrapPasswordAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Immediate\ElasticsearchValidateArgumentsAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchBootstrapPasswordAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchConfigurationAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchDirectoriesAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchEnvironmentAction.cs" />
