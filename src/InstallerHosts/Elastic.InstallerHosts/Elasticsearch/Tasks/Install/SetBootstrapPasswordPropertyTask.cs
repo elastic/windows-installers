@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
@@ -21,6 +22,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			var length = 20;
 			var password = new StringBuilder();
+			var property = nameof(XPackModel.BootstrapPassword).ToUpperInvariant();
 
 			int GetValidIndex(RandomNumberGenerator rng, int max)
 			{
@@ -30,18 +32,19 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				{
 					rng.GetBytes(randomBytes);
 					value = BitConverter.ToInt32(randomBytes, 0) & int.MaxValue;
-				} while (value >= max * (int.MaxValue / max));
-
+				}
+				while (value >= max * (int.MaxValue / max));
 				return value % max;
 			}
 
 			using (var rng = new RNGCryptoServiceProvider())
 			{
-				for (var i = 0; i < 20; i++)
+				for (var i = 0; i < length; i++)
 					password.Append(BootstrapChars[GetValidIndex(rng, BootstrapChars.Length)]);
 			}
 		
-			Session.Set("BOOTSTRAPPASSWORD", password.ToString());
+			Session.Log($"Setting {property} to a randomly generated {length} character string");
+			Session.Set(property, password.ToString());
 			return true;
 		}
 	}

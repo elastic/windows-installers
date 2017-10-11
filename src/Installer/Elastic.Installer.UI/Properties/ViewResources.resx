@@ -190,7 +190,7 @@
     <value>What's Next?</value>
   </data>
   <data name="ClosingView_ElasticsearchRunningAtHeaderWithCredentials" xml:space="preserve">
-    <value>Open Elasticsearch in the browser (User name: elastic, Password: changeme)</value>
+    <value>Open Elasticsearch in the browser</value>
   </data>
   <data name="ClosingView_FindYourClient" xml:space="preserve">
     <value>Find a client for your favorite language</value>
@@ -271,13 +271,9 @@
     <value>Installing Elasticsearch {0}</value>
     <comment>{0} = Elasticsearch Version</comment>
   </data>
-  
-  
-  
   <data name="XPackView_LicenseLabel" xml:space="preserve">
     <value>License</value>
   </data>
-  
   <data name="XPackView_UsersLabel" xml:space="preserve">
     <value>Users</value>
   </data>
@@ -291,7 +287,7 @@
     <value>logstash system</value>
   </data>
   <data name="XPackView_OverrideGeneratePasswordsLabel" xml:space="preserve">
-    <value>Defer setting up users till later</value>
+    <value>Defer setting up users until later</value>
   </data>
   <data name="XPackView_EnableXPackSecurity" xml:space="preserve">
     <value>Enable X-Pack Security</value>
@@ -309,23 +305,22 @@
     <value>Basic License</value>
   </data>
   <data name="XPackView_TrialDescription" xml:space="preserve">
-    <value>Access to all X-Pack enterprise features for 30 days, including machine learning, graph, watcher and others.
+    <value>Access to all X-Pack Enterprise features for 30 days, including Machine Learning, Graph, Alerting, Security, and others.
     </value>
   </data>
   <data name="XPackView_BasicDescription" xml:space="preserve">
-    <value>Only access to the basic (free) license for 30 days. 
+    <value>Only access to the Basic (free) license for 30 days. 
     </value>
   </data>
   <data name="XPackView_SubscriptionsLink" xml:space="preserve">
     <value>Full overview of licences and subscriptions</value>
   </data>
   <data name="XPackView_ManualUserConfigurationNeeded" xml:space="preserve">
-    <value>Elasticsearch system users need to be setup manually. Either we are not installing as a service that gets started after installation or you've manually opted out.</value>
+    <value>Elasticsearch system users need to be setup manually. Either you are not installing as a service that gets started after installation, or you've opted to start Elasticsearch manually when needed.</value>
   </data>
   <data name="XPackView_ManualUserConfigurationLink" xml:space="preserve">
     <value>How to setup users manually</value>
   </data>
-
   <data name="MainWindow_InstallingTitle" xml:space="preserve">
     <value>Installing...</value>
   </data>
@@ -515,7 +510,25 @@ https://artifacts.elastic.co, a HTTPS proxy can be specified.</value>
     <value>X-Pack Help</value>
   </data>
   <data name="XPackView_Elasticsearch_Help" xml:space="preserve">
-    <value>TODO</value>
+    <value>This step allows you to specify how X-Pack is configured.
+
+[b]License[/b]: This setting specifies the type of license to apply to X-Pack. 
+
+    A [b]Basic license[/b] is free and provides access only to a subset of X-Pack features. 
+
+    A [b]Trial license[/b] provides access to all of the X-Pack Enterprise features, including Machine Learning, Graph, Alerting, Security, amongst others.
+
+    Both Basic and Trial licenses applied are valid for 30 days. You can register to receive a free 1 year Basic license at https://register.elastic.co/ and get in touch if you'd like to request information on other license types at https://www.elastic.co/subscriptions.
+
+[b]Enable X-Pack Security[/b]: Whether X-Pack Security should be enabled on the node. Enabling X-Pack Security will require authentication credentials to communicate with the cluster.
+
+[b]Defer setting up users until later[/b]: Whether the built-in user roles should be set up as part of installation. Setting these users up requires a running cluster as the credentials are stored within an index in the cluster.
+
+[b]elastic[/b]: The password for the built-in 'elastic' user account.
+
+[b]kibana[/b]: The password for the built-in 'kibana' user account.
+
+[b]logstash system[/b]: The password for the built-in 'logstash_system' user account.</value>
   </data>
   <data name="ServiceView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Service Help</value>
@@ -822,7 +835,20 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
     <value>https://www.elastic.co/guide/index.html</value>
   </data>
   <data name="ClosingView_KibanaRunningAtHeaderWithCredentials" xml:space="preserve">
-    <value>Open Kibana in the browser (User name: elastic, Password: changeme)</value>
+    <value>Open Kibana in the browser</value>
+  </data>
+  <data name="XPackView_ManualUserConfiguration" xml:space="preserve">
+    <value>https://www.elastic.co/guide/en/x-pack/{0}/setting-up-authentication.html#set-built-in-user-passwords</value>
+    <comment>{0} = major minor version</comment>
+  </data>
+  <data name="XPackView_OpenLicensesAndSubscriptions" xml:space="preserve">
+    <value>https://www.elastic.co/subscriptions</value>
+  </data>
+  <data name="XPackView_RegisterBasicLicense" xml:space="preserve">
+    <value>https://register.elastic.co/</value>
+  </data>
+  <data name="XPackView_RegisterBasicLicenseLink" xml:space="preserve">
+    <value>Register for a free Basic license </value>
   </data>
   <data name="PluginsView_SetHttpsProxy_Message" xml:space="preserve">
     <value>Configure a HTTPS proxy through which to download plugins as part of installation. A proxy can be specified in the form of host or host:port. If no port is specified, defaults to using port 443.</value>

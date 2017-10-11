@@ -43,7 +43,7 @@
       
       <TextBox x:Name="UpgradeTextBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
                Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" 
-               TextWrapping="Wrap"
+               TextWrapping="Wrap" BorderThickness="0"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
                ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
       

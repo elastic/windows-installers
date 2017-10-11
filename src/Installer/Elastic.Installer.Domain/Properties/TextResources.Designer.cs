@@ -676,7 +676,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, machine learning, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation..
+        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, graph and machine learning capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA..
         /// </summary>
         public static string PluginsModel_XPack {
             get {
@@ -912,7 +912,16 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;elastic&apos; password needs to be atleast 6 characters.
+        ///   Looks up a localized string similar to &apos;elastic&apos; password needs to be at least 6 characters.
+        /// </summary>
+        public static string XPackModelValidator_ElasticPasswordAtLeast6Characters {
+            get {
+                return ResourceManager.GetString("XPackModelValidator_ElasticPasswordAtLeast6Characters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;elastic&apos; password is required.
         /// </summary>
         public static string XPackModelValidator_ElasticPasswordRequired {
             get {
@@ -921,7 +930,16 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;kibana&apos; password needs to be atleast 6 characters.
+        ///   Looks up a localized string similar to &apos;kibana&apos; password needs to be at least 6 characters.
+        /// </summary>
+        public static string XPackModelValidator_KibanaPasswordAtLeast6Characters {
+            get {
+                return ResourceManager.GetString("XPackModelValidator_KibanaPasswordAtLeast6Characters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;kibana&apos; password is required.
         /// </summary>
         public static string XPackModelValidator_KibanaPasswordRequired {
             get {
@@ -930,7 +948,16 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;logstash_system&apos; password needs to be atleast 6 characters.
+        ///   Looks up a localized string similar to &apos;logstash_system&apos; password needs to be at least 6 characters.
+        /// </summary>
+        public static string XPackModelValidator_LogstashPasswordAtLeast6Characters {
+            get {
+                return ResourceManager.GetString("XPackModelValidator_LogstashPasswordAtLeast6Characters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;logstash_system&apos; is required.
         /// </summary>
         public static string XPackModelValidator_LogstashPasswordRequired {
             get {

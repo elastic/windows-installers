@@ -30,40 +30,57 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				StartInfo =
 				{
 					FileName = binary,
-					Arguments = "add -x -f",
+					Arguments = "add bootstrap.password -xf",
+					ErrorDialog = false,
 					CreateNoWindow = true,
 					UseShellExecute = false,
 					RedirectStandardOutput = true,
 					RedirectStandardError = true,
-					RedirectStandardInput = true,
-					EnvironmentVariables =
-					{
-						{ ElasticsearchEnvironmentStateProvider.ConfDir, this.InstallationModel.LocationsModel.ConfigDirectory }
-					}
+					RedirectStandardInput = true
 				}
 			};
+
+			p.StartInfo.EnvironmentVariables[ElasticsearchEnvironmentStateProvider.ConfDir] =
+				this.InstallationModel.LocationsModel.ConfigDirectory;
 
 			void OnDataReceived(object sender, DataReceivedEventArgs a)
 			{
 				var message = a.Data;
-				if (message != null)
-					this.Session.Log(message);
+				if (message != null) this.Session.Log(message);
 			}
 
-			p.ErrorDataReceived += OnDataReceived;
+			var errors = false;
+
+			void OnErrorsReceived(object sender, DataReceivedEventArgs a)
+			{
+				var message = a.Data;
+				if (message != null)
+				{
+					errors = true;
+					this.Session.Log(message);
+				}
+			}
+
+			p.ErrorDataReceived += OnErrorsReceived;
 			p.OutputDataReceived += OnDataReceived;
 			p.Start();
 
+			p.StandardInput.WriteLine(password);
+			p.StandardInput.Close();
+
 			p.BeginOutputReadLine();
 			p.BeginErrorReadLine();
-			p.StandardInput.WriteLine(password);
 			p.WaitForExit();
 
-			p.ErrorDataReceived -= OnDataReceived;
+			var exitCode = p.ExitCode;
+			if (exitCode != 0)
+				this.Session.Log($"elasticsearch-keystore process returned non-zero exit code: {exitCode}");
+
+			p.ErrorDataReceived -= OnErrorsReceived;
 			p.OutputDataReceived -= OnDataReceived;
 			p.Close();
 
-			return true;
+			return !errors && exitCode == 0;
 		}
 	}
 }

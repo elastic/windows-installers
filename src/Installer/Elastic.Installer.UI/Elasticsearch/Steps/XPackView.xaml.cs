@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using Elastic.Installer.UI.Controls;
+using Elastic.Installer.UI.Properties;
 using FluentValidation.Results;
 using ReactiveUI;
 using static System.Windows.Visibility;
@@ -43,6 +45,15 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			this.Bind(ViewModel, vm => vm.SkipSettingPasswords, v => v.SkipPasswordGenerationCheckBox.IsChecked);
 			this.Bind(ViewModel, vm => vm.XPackSecurityEnabled, v => v.EnableXPackSecurityCheckBox.IsChecked);
+			this.BindCommand(ViewModel, vm => vm.OpenLicensesAndSubscriptions, v => v.OpenSubscriptionsLink, nameof(OpenSubscriptionsLink.Click));
+			this.BindCommand(ViewModel, vm => vm.RegisterBasicLicense, v => v.RegisterBasicLicenseLink, nameof(RegisterBasicLicenseLink.Click));
+			this.BindCommand(ViewModel, vm => vm.OpenManualUserConfiguration, v => v.OpenManualUserConfigurationLink, nameof(OpenManualUserConfigurationLink.Click));
+
+			this.ViewModel.OpenLicensesAndSubscriptions.Subscribe(x => Process.Start(ViewResources.XPackView_OpenLicensesAndSubscriptions));
+			this.ViewModel.RegisterBasicLicense.Subscribe(x => Process.Start(ViewResources.XPackView_RegisterBasicLicense));
+
+			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
+			this.ViewModel.OpenManualUserConfiguration.Subscribe(x => Process.Start(string.Format(ViewResources.XPackView_ManualUserConfiguration, majorMinor)));
 
 			foreach (var name in Enum.GetNames(typeof(XPackLicenseMode)))
 				this.LicenseDropDown.Items.Add(new ComboBoxItem {Content = name});

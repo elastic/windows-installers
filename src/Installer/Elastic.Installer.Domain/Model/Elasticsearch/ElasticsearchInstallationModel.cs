@@ -94,7 +94,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			var observeXPackEnabled = this.WhenAnyValue(vm => vm.PluginsModel.XPackEnabled);
 			var canAutomaticallySetup = this.WhenAnyValue(vm => vm.ServiceModel.StartAfterInstall, vm => vm.ServiceModel.InstallAsService)
 				.Select(t => t.Item1 && t.Item2);
-			this.XPackModel = new XPackModel(observeXPackEnabled, canAutomaticallySetup);
+			this.XPackModel = new XPackModel(versionConfig, observeXPackEnabled, canAutomaticallySetup);
 
 //			this.WhenAnyValue(vm => vm.XPackModel.XPackLicense)
 //				.Subscribe(l =>

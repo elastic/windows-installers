@@ -334,7 +334,7 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
     <value>The Store SMB plugin works around a bug in Windows SMB and Java on Windows.</value>
   </data>
   <data name="PluginsModel_XPack" xml:space="preserve">
-    <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, machine learning, and graph capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA. By selecting to install X-Pack, A 30 day fully featured trial license is applied upon installation.</value>
+    <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, graph and machine learning capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
   </data>
   <data name="PluginType_ApiExtensions" xml:space="preserve">
     <value>API Extensions</value>
@@ -398,13 +398,22 @@ PLEASE NOTE: an uninstall will always remove the data folder be sure you move it
     to the internet and refresh the installer.</value>
   </data>
   <data name="XPackModelValidator_ElasticPasswordRequired" xml:space="preserve">
-    <value>'elastic' password needs to be atleast 6 characters</value>
+    <value>'elastic' password is required</value>
   </data>
   <data name="XPackModelValidator_KibanaPasswordRequired" xml:space="preserve">
-    <value>'kibana' password needs to be atleast 6 characters</value>
+    <value>'kibana' password is required</value>
   </data>
   <data name="XPackModelValidator_LogstashPasswordRequired" xml:space="preserve">
-    <value>'logstash_system' password needs to be atleast 6 characters</value>
+    <value>'logstash_system' is required</value>
+  </data>
+  <data name="XPackModelValidator_ElasticPasswordAtLeast6Characters" xml:space="preserve">
+    <value>'elastic' password needs to be at least 6 characters</value>
+  </data>
+  <data name="XPackModelValidator_KibanaPasswordAtLeast6Characters" xml:space="preserve">
+    <value>'kibana' password needs to be at least 6 characters</value>
+  </data>
+  <data name="XPackModelValidator_LogstashPasswordAtLeast6Characters" xml:space="preserve">
+    <value>'logstash_system' password needs to be at least 6 characters</value>
   </data>
   <data name="PluginsModelValidator_InvalidHttpProxyHost" xml:space="preserve">
     <value>HTTP proxy host is unknown. Enter a valid host name </value>

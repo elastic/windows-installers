@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Elastic.Installer.Domain.Model.Base.Plugins;
 using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using FluentAssertions;
 using Xunit;
@@ -47,9 +45,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 			})
 			.IsInvalidOnStep(m => m.XPackModel,errors => errors
 				.ShouldHaveErrors(
-					XPackModelValidator.ElasticPasswordRequired,
-					XPackModelValidator.KibanaPasswordRequired,
-					XPackModelValidator.LogstashPasswordRequired
+					XPackModelValidator.ElasticPasswordAtLeast6Characters,
+					XPackModelValidator.KibanaPasswordAtLeast6Characters,
+					XPackModelValidator.LogstashPasswordAtLeast6Characters
 				)
 			)
 			.CanClickNext(canClick: false);

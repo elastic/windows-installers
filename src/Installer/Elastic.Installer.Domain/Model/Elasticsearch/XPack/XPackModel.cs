@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Text;
+using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Model.Base;
 using ReactiveUI;
+using Semver;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 {
@@ -9,7 +11,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 	{
 		public const XPackLicenseMode DefaultXPackLicenseMode = XPackLicenseMode.Basic;
 		
-		public XPackModel(IObservable<bool> xPackEnabled, IObservable<bool> canAutomaticallySetupUsers)
+		public XPackModel(
+			VersionConfiguration versionConfig, 
+			IObservable<bool> xPackEnabled, 
+			IObservable<bool> canAutomaticallySetupUsers)
 		{
 			xPackEnabled.Subscribe(t =>
 			{
@@ -21,6 +26,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 				this.SkipSettingPasswords = !b;
 			});
 			this.Header = "X-Pack";
+			this.CurrentVersion = versionConfig.CurrentVersion;
+			this.OpenLicensesAndSubscriptions = ReactiveCommand.Create();
+			this.RegisterBasicLicense = ReactiveCommand.Create();
+			this.OpenManualUserConfiguration = ReactiveCommand.Create();
 			this.Refresh();
 		}
 
@@ -32,6 +41,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.BootstrapPassword = null;
 			this.XPackSecurityEnabled = true;
 		}
+
+		public SemVersion CurrentVersion { get; }
 		
 		string elasticUserPassword;
 		[Argument(nameof(ElasticUserPassword), IsHidden = true)]
@@ -100,7 +111,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			&& this.XPackLicense == XPackLicenseMode.Trial
 			&& !this.SkipSettingPasswords
 			&& this.XPackSecurityEnabled;
-		
+
+		public ReactiveCommand<object> OpenLicensesAndSubscriptions { get; }
+
+		public ReactiveCommand<object> RegisterBasicLicense { get; }
+
+		public ReactiveCommand<object> OpenManualUserConfiguration { get; }
+
 		public override string ToString()
 		{
 			var sb = new StringBuilder();

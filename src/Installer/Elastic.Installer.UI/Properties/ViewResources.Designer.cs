@@ -97,7 +97,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Elasticsearch in the browser (User name: elastic, Password: changeme).
+        ///   Looks up a localized string similar to Open Elasticsearch in the browser.
         /// </summary>
         public static string ClosingView_ElasticsearchRunningAtHeaderWithCredentials {
             get {
@@ -169,7 +169,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Kibana in the browser (User name: elastic, Password: changeme).
+        ///   Looks up a localized string similar to Open Kibana in the browser.
         /// </summary>
         public static string ClosingView_KibanaRunningAtHeaderWithCredentials {
             get {
@@ -433,7 +433,7 @@ namespace Elastic.Installer.UI.Properties {
         ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
         ///
-        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important no [rest of string was truncated]&quot;;.
+        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Elasticsearch_Help {
             get {
@@ -485,7 +485,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
         ///
-        ///[b]Base Path[/b]: Enables you to specify a path to  [rest of string was truncated]&quot;;.
+        ///[b]Base Path[/b]: Enables you to specify a p [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Kibana_Help {
             get {
@@ -762,7 +762,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Index Name[/b]: Kibana uses an index in Elasticsearch to store saved searches, visualizations and dashboards. Kibana creates a new index if the index doesn’t already exist.
         ///
-        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that the Kiba [rest of string was truncated]&quot;;.
+        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that t [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConnectingView_Kibana_Help {
             get {
@@ -1042,7 +1042,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Config[/b]: The directory where Elasticsearch will store its configuration files.
         ///
-        ///It is best practice to keep your logs, config, and data directories separate from your home  [rest of string was truncated]&quot;;.
+        ///It is best practice to keep your logs, config, and data directories separate from  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string LocationsView_Elasticsearch_Help {
             get {
@@ -1765,7 +1765,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only access to the basic (free) license for 30 days. 
+        ///   Looks up a localized string similar to Only access to the Basic (free) license for 30 days. 
         ///    .
         /// </summary>
         public static string XPackView_BasicDescription {
@@ -1793,7 +1793,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to This step allows you to specify how X-Pack is configured.
+        ///
+        ///[b]License[/b]: This setting specifies the type of license to apply to X-Pack. 
+        ///
+        ///    A [b]Basic license[/b] is free and provides access only to a subset of X-Pack features. 
+        ///
+        ///    A [b]Trial license[/b] provides access to all of the X-Pack Enterprise features, including Machine Learning, Graph, Alerting, Security, amongst others.
+        ///
+        ///    Both Basic and Trial licenses applied are valid for 30 days. You can register to receive a free 1 year Basic  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string XPackView_Elasticsearch_Help {
             get {
@@ -1856,6 +1864,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/x-pack/{0}/setting-up-authentication.html#set-built-in-user-passwords.
+        /// </summary>
+        public static string XPackView_ManualUserConfiguration {
+            get {
+                return ResourceManager.GetString("XPackView_ManualUserConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to How to setup users manually.
         /// </summary>
         public static string XPackView_ManualUserConfigurationLink {
@@ -1865,7 +1882,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Elasticsearch system users need to be setup manually. Either we are not installing as a service that gets started after installation or you&apos;ve manually opted out..
+        ///   Looks up a localized string similar to Elasticsearch system users need to be setup manually. Either you are not installing as a service that gets started after installation, or you&apos;ve opted to start Elasticsearch manually when needed..
         /// </summary>
         public static string XPackView_ManualUserConfigurationNeeded {
             get {
@@ -1874,11 +1891,38 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Defer setting up users till later.
+        ///   Looks up a localized string similar to https://www.elastic.co/subscriptions.
+        /// </summary>
+        public static string XPackView_OpenLicensesAndSubscriptions {
+            get {
+                return ResourceManager.GetString("XPackView_OpenLicensesAndSubscriptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defer setting up users until later.
         /// </summary>
         public static string XPackView_OverrideGeneratePasswordsLabel {
             get {
                 return ResourceManager.GetString("XPackView_OverrideGeneratePasswordsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://register.elastic.co/.
+        /// </summary>
+        public static string XPackView_RegisterBasicLicense {
+            get {
+                return ResourceManager.GetString("XPackView_RegisterBasicLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register for a free Basic license .
+        /// </summary>
+        public static string XPackView_RegisterBasicLicenseLink {
+            get {
+                return ResourceManager.GetString("XPackView_RegisterBasicLicenseLink", resourceCulture);
             }
         }
         
@@ -1901,7 +1945,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Access to all X-Pack enterprise features for 30 days, including machine learning, graph, watcher and others.
+        ///   Looks up a localized string similar to Access to all X-Pack Enterprise features for 30 days, including Machine Learning, Graph, Alerting, Security, and others.
         ///    .
         /// </summary>
         public static string XPackView_TrialDescription {
