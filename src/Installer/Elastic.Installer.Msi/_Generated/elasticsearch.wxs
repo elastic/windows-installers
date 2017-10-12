@@ -816,7 +816,7 @@
       <Custom Action="Set_ElasticsearchPluginsAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchPluginsAction" After="ElasticsearchJvmOptionsAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchBootstrapPasswordAction_Props" After="InstallInitialize" />
-      <Custom Action="ElasticsearchBootstrapPasswordAction" After="ElasticsearchPluginsAction">(NOT Installed) AND XPACKSECURITYENABLED~="true" AND XPACKLICENSE~="Trial" AND SKIPSETTINGPASSWORDS~="false"</Custom>
+      <Custom Action="ElasticsearchBootstrapPasswordAction" After="ElasticsearchPluginsAction">(NOT Installed) AND XPACKSECURITYENABLED~="true" AND XPACKLICENSE~="Trial"</Custom>
       <Custom Action="Set_ElasticsearchServiceInstallAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchServiceInstallAction" After="ElasticsearchBootstrapPasswordAction">(NOT Installed) AND INSTALLASSERVICE="true"</Custom>
       <Custom Action="Set_ElasticsearchServiceStartAction_Props" After="InstallInitialize" />
