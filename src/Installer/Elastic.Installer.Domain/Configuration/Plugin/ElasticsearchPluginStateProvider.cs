@@ -16,7 +16,6 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 		{
 			return (sender, args) =>
 			{
-				var process = (System.Diagnostics.Process)sender;
 				var message = args.Data;
 
 				if (string.IsNullOrEmpty(message)) return;
@@ -28,8 +27,6 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 				}
 			
 				this.Session.Log(message);
-				if (message.Contains("[y/N]"))
-					process.StandardInput.WriteLine("y");
 			};
 		}
 	}
