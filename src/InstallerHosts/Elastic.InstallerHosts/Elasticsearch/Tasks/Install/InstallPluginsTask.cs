@@ -31,7 +31,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			foreach (var plugin in plugins)
 			{
 				this.Session.SendProgress(ticksPerPlugin[0], $"installing {plugin}");
-				provider.Install(ticksPerPlugin[1], installDirectory, configDirectory, plugin);
+				provider.Install(ticksPerPlugin[1], installDirectory, configDirectory, plugin, "--batch");
 				this.Session.SendProgress(ticksPerPlugin[2], $"installed {plugin}");
 			}
 			return true;
