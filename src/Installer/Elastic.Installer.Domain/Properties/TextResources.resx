@@ -482,4 +482,18 @@ PLEASE NOTE: an uninstall will always remove the data folder be sure you move it
   <data name="PluginsModelValidator_InvalidHttpsProxyHost" xml:space="preserve">
     <value>HTTPS proxy host is unknown. Enter a valid host name</value>
   </data>
+  <data name="PluginsModelValidator_HttpProxyHostRequiredWhenPortSpecified" xml:space="preserve">
+    <value>HTTP proxy host is required when HTTP proxy port is specified.</value>
+  </data>
+  <data name="PluginsModelValidator_HttpsProxyHostRequiredWhenPortSpecified" xml:space="preserve">
+    <value>HTTPS proxy host is required when HTTPS proxy port is specified.</value>
+  </data>
+  <data name="PluginsModelValidator_InvalidHttpProxyPort" xml:space="preserve">
+    <value>HTTP proxy port must be between {0} and {1}.</value>
+    <comment>{0} = minimum port number. {1} = maximum port number</comment>
+  </data>
+  <data name="PluginsModelValidator_InvalidHttpsProxyPort" xml:space="preserve">
+    <value>HTTPS proxy port must be between {0} and {1}.</value>
+    <comment>{0} = minimum port number. {1} = maximum port number</comment>
+  </data>
 </root>

@@ -76,7 +76,8 @@
     <Grid Margin="10, 0, 10, 0">
       <Grid.RowDefinitions>
         <RowDefinition Height="*" />
-        <RowDefinition Height="75" />
+        <RowDefinition Height="45" />
+        <RowDefinition Height="30" />
       </Grid.RowDefinitions>
       <controls:MetroAnimatedSingleRowTabControl x:Name="StepsTab" Grid.Row="0" Padding="-5" Margin="0, 0, 0,0 "/>
       <Grid Grid.Row="1" Margin="5, 0,0,0">
@@ -84,6 +85,7 @@
           <ColumnDefinition Width="50"/>
           <ColumnDefinition Width="50"/>
           <ColumnDefinition Width="50"/>
+          <ColumnDefinition Width="100"/>
           <ColumnDefinition Width="*"/>
           <ColumnDefinition Width="100"/>
           <ColumnDefinition Width="10"/>
@@ -117,7 +119,8 @@
             </Rectangle.Fill>
           </Rectangle>
         </Button>
-        <TextBlock x:Name="ValidationErrorLink" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="SemiBold">
+        <Button x:Name="ProxyButton" Grid.Column="3" Content="Proxy" Command="{Binding Path=Proxy}" Height="40"  HorizontalAlignment="Left" Padding="0,0,0,0" VerticalAlignment="Top" Width="100" />
+        <TextBlock x:Name="ValidationErrorLink" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="SemiBold">
           <TextBlock.InputBindings>
             <MouseBinding Command="{Binding Path=ShowCurrentStepErrors}" MouseAction="LeftClick" />
           </TextBlock.InputBindings>
@@ -134,9 +137,10 @@
             </Style>
           </TextBlock.Style>
         </TextBlock>
-        <Button x:Name="BackButton" Grid.Column="4" Content="Back" Command="{Binding Path=Back}" Height="40"  HorizontalAlignment="Left" Padding="0,0,0,0" VerticalAlignment="Top" Width="100" />
-        <Button x:Name="NextButton" Grid.Column="6" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="100" Height="40" />
+        <Button x:Name="BackButton" Grid.Column="5" Content="Back" Command="{Binding Path=Back}" Height="40"  HorizontalAlignment="Left" Padding="0,0,0,0" VerticalAlignment="Top" Width="100" />
+        <Button x:Name="NextButton" Grid.Column="7" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Width="100" Height="40" />
       </Grid>
+      <Label x:Name="ProxyLabel" Grid.Row="2" HorizontalAlignment="Left" Padding="10,0,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush2}" FontSize="14"></Label>
     </Grid>
   </controls:MetroContentControl>
 </controls:MetroWindow>

@@ -254,7 +254,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 			this.ViewModel.ShowCurrentStepErrors.Subscribe(async x =>
 			{
-				var message = string.Join("\r\n", this.ViewModel.CurrentStepValidationFailures.Select(v => v.ErrorMessage.ValidationMessage()));
+				var message = string.Join(Environment.NewLine, this.ViewModel.CurrentStepValidationFailures.Select(v => v.ErrorMessage.ValidationMessage()));
 				await this.ShowMessageAsync(
 					ViewResources.MainWindow_ValidationErrors,
 					message,
@@ -266,6 +266,11 @@ namespace Elastic.Installer.UI.Elasticsearch
 				if (this.ViewModel.ClosingModel.OpenDocumentationAfterInstallation)
 					Process.Start(ViewResources.MainWindow_DocumentationLink);
 				this.Close();
+			});
+
+			this.ViewModel.Proxy.Subscribe(x =>
+			{
+
 			});
 
 			this.WhenAnyValue(view => view.ViewModel.NextButtonText)
@@ -281,6 +286,22 @@ namespace Elastic.Installer.UI.Elasticsearch
 						this.RefreshButton.Visibility = Visibility.Hidden;
 					}
 					else this.NextButton.Command = this.ViewModel.Install;
+				});
+
+			this.WhenAnyValue(view => view.ViewModel.PluginsModel.HttpsProxyHost, view => view.ViewModel.PluginsModel.HttpsProxyPort)
+				.Subscribe(hostAndPort =>
+				{
+					ProxyLabel.Content = hostAndPort.Item1 == null 
+						? null 
+						: $"Configured HTTPS proxy: {ViewModel.PluginsModel.HttpsProxyHostAndPort}";
+				});
+
+			this.WhenAnyValue(view => view.ViewModel.ProxyButtonVisible)
+				.Subscribe(visible =>
+				{
+					var visibility = visible ? Visibility.Visible : Visibility.Hidden;
+					ProxyButton.Visibility = visibility;
+					ProxyLabel.Visibility = visibility;
 				});
 		}
 
@@ -332,7 +353,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 				var pi = type.GetProperty(p, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
 				if (pi != null)
 				{
-					var value = this.ViewModel.ParsedArguments.MsiString((pi.GetValue(viewModel, null)));
+					var value = this.ViewModel.ParsedArguments.MsiString(pi.GetValue(viewModel, null));
 					_session.Set(p, value);
 				}
 			}
@@ -357,10 +378,10 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 		public void AnimateLogo() => this.AnimateCells("Yellow", "Pink", "Blue", "Torqoise");
 
-		public void AnimateCells(params string[] colors)
+		private void AnimateCells(params string[] colors)
 		{
 			var installed = this.ViewModel.ClosingModel.Installed;
-			//the logi animation is quite cheerful, let's not celebrate failure.
+			//the logo animation is quite cheerful, let's not celebrate failure.
 			if (!installed.HasValue || installed.Value == ClosingResult.Failed) return;
 
 			var resources = Application.Current.MainWindow.Resources.MergedDictionaries;

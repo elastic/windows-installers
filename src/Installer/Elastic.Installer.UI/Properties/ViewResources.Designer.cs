@@ -1361,7 +1361,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///We&apos;ve only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins are downloaded at installation time.
         ///
-        ///It is common for many companies to set up a HTTP proxy through which resources will be downloaded from th [rest of string was truncated]&quot;;.
+        ///It is common for many companies to set up a proxy through which resources will be downloaded from the int [rest of string was truncated]&quot;;.
         /// </summary>
         public static string PluginsView_Elasticsearch_Help {
             get {
@@ -1379,24 +1379,6 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HTTP host/port.
-        /// </summary>
-        public static string PluginsView_HttpProxyHostLabel {
-            get {
-                return ResourceManager.GetString("PluginsView_HttpProxyHostLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HTTPS host/port.
-        /// </summary>
-        public static string PluginsView_HttpsProxyHostLabel {
-            get {
-                return ResourceManager.GetString("PluginsView_HttpsProxyHostLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Plugins are a way to enhance the basic Kibana functionality in a custom manner.  We&apos;ve only listed the official Kibanas plugins here, but there are many more community plugins that can be installed manually..
         /// </summary>
         public static string PluginsView_Kibana_Help {
@@ -1406,20 +1388,20 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugins.
+        ///   Looks up a localized string similar to Configure a HTTPS proxy through which to download plugins as part of installation. A proxy can be specified in the form of host or host:port. If no port is specified, defaults to using port 443..
         /// </summary>
-        public static string PluginsView_PluginsLabel {
+        public static string PluginsView_SetHttpsProxy_Message {
             get {
-                return ResourceManager.GetString("PluginsView_PluginsLabel", resourceCulture);
+                return ResourceManager.GetString("PluginsView_SetHttpsProxy_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Proxies.
+        ///   Looks up a localized string similar to HTTPS proxy.
         /// </summary>
-        public static string PluginsView_ProxiesLabel {
+        public static string PluginsView_SetHttpsProxy_Title {
             get {
-                return ResourceManager.GetString("PluginsView_ProxiesLabel", resourceCulture);
+                return ResourceManager.GetString("PluginsView_SetHttpsProxy_Title", resourceCulture);
             }
         }
         

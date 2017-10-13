@@ -4,55 +4,13 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
-                      xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:controls="clr-namespace:Elastic.Installer.UI.Controls"
                       xmlns:steps="clr-namespace:Elastic.Installer.UI.Elasticsearch.Steps"
                       xmlns:plugins="clr-namespace:Elastic.Installer.Domain.Model.Elasticsearch.Plugins;assembly=Elastic.Installer.Domain"
                       mc:Ignorable="d"
                       d:DataContext="{d:DesignInstance d:Type=plugins:PluginsModel }"
                       d:DesignHeight="300" d:DesignWidth="600">
-  
-  
-  
-  <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
-
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
-
-    <Grid Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto"/>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="100"/>
-        <ColumnDefinition Width="Auto"/>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="100"/>
-      </Grid.ColumnDefinitions>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="40" />
-        <RowDefinition Height="45" />
-      </Grid.RowDefinitions>
-      <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ProxyLabel" 
-             Content="{x:Static resx:ViewResources.PluginsView_ProxiesLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
-
-      <Label x:Name="HttpProxyHostLabel" Grid.Row="1" Grid.Column="0"
-             Content="{x:Static resx:ViewResources.PluginsView_HttpProxyHostLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
-      <TextBox Grid.Row="1" Grid.Column="1" x:Name="HttpProxyHostTextbox" HorizontalAlignment="Stretch" Height="30" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,5,0" />
-      <mahapps:NumericUpDown  Grid.Row="1" Grid.Column="2" x:Name="HttpProxyPortNumericUpDown" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" 
-                              StringFormat="{}{0:0}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-      />
-      <Label x:Name="HttpsProxyHostLabel" Grid.Row="1" Grid.Column="3"
-             Content="{x:Static resx:ViewResources.PluginsView_HttpsProxyHostLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,10,0" />
-      <TextBox Grid.Row="1" Grid.Column="4" x:Name="HttpsProxyHostTextbox" HorizontalAlignment="Stretch" Height="30" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,5,0" />
-      <mahapps:NumericUpDown  Grid.Row="1" Grid.Column="5" x:Name="HttpsProxyPortNumericUpDown" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" 
-                              StringFormat="{}{0:0}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-      />
-    </Grid>
-
-    <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+  <Grid>
     <Grid.Resources>
       <ControlTemplate TargetType="CheckBox" x:Key="chkboxTemplate">
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -78,16 +36,8 @@
         </ControlTemplate.Triggers>
       </ControlTemplate>
     </Grid.Resources>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="*" />
-      </Grid.RowDefinitions>
 
-      <Label Grid.Row="0" Grid.Column="0" x:Name="PluginsLabel" Content="{x:Static resx:ViewResources.PluginsView_PluginsLabel}" 
-             HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
-
-      <ListBox x:Name="PluginsListBox"
-             Grid.Row="1" Grid.Column="0"
+    <ListBox x:Name="PluginsListBox"
              VerticalContentAlignment="Stretch"
              Background="Transparent"
              BorderBrush="Transparent"
@@ -121,7 +71,5 @@
         </GroupStyle>
       </ListBox.GroupStyle>
     </ListBox>
-  </Grid>
-  
   </Grid>
 </controls:StepControl>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Model.Base.Plugins;
@@ -12,6 +13,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 {
 	public class PluginsModel : PluginsModelBase<PluginsModel, PluginsModelValidator>
 	{
+		private static readonly Regex Scheme = new Regex(@".*?:\/\/(.*)");
+
 		public const int HttpPortMinimum = 80;
 		public const int HttpsPortMinimum = 443;
 		public const int PortMaximum = 65535;
@@ -36,6 +39,29 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			Observable.Timer(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(2))
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.Subscribe(async _ => await SetInternetConnection());
+
+			this.SetHttpsProxy = ReactiveCommand.CreateAsyncTask(async _ => await this.HttpsProxyUITask());
+			this.WhenAnyObservable(vm => vm.SetHttpsProxy)
+				.Subscribe(x =>
+				{
+					// handle the cancel dialog button. Don't remove the current values
+					if (x == null) return;
+					
+					if (x.Length == 0)
+					{
+						HttpsProxyHost = null;
+						HttpsProxyPort = null;
+						return;
+					}
+
+					x = Scheme.Replace(x, "$1");
+					var proxyParts = x.Split(new [] { ':' }, 2);
+					this.HttpsProxyHost = proxyParts[0];
+
+					this.HttpsProxyPort = proxyParts.Length == 2 && int.TryParse(proxyParts[1], out var port) 
+						? (int?) port 
+						: null;
+				});
 		}
 
 		private async Task SetInternetConnection()
@@ -83,7 +109,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		{
 			get => this.httpsProxyPort;
 			set => this.RaiseAndSetIfChanged(ref this.httpsProxyPort, value);
-		}	
+		}
+
+		public string HttpsProxyHostAndPort => this.HttpsProxyPort.HasValue
+			? $"{this.HttpsProxyHost}:{this.HttpsProxyPort}"
+			: this.HttpsProxyHost;
+
+		public Func<Task<string>> HttpsProxyUITask { get; set; }
+		public ReactiveCommand<string> SetHttpsProxy { get; }
 
 		protected override IEnumerable<Plugin> GetPlugins()
 		{
@@ -241,6 +274,16 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				DisplayName = "Store SMB",
 				Description = TextResources.PluginsModel_StoreSmb
 			};
+		}
+
+		public override void Refresh()
+		{
+			base.Refresh();
+
+			this.HttpProxyHost = null;
+			this.HttpProxyPort = null;
+			this.HttpsProxyHost = null;
+			this.HttpsProxyPort = null;		
 		}
 	}
 }

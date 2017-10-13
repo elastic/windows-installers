@@ -865,6 +865,24 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTTP proxy host is required when HTTP proxy port is specified..
+        /// </summary>
+        public static string PluginsModelValidator_HttpProxyHostRequiredWhenPortSpecified {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_HttpProxyHostRequiredWhenPortSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HTTPS proxy host is required when HTTPS proxy port is specified..
+        /// </summary>
+        public static string PluginsModelValidator_HttpsProxyHostRequiredWhenPortSpecified {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_HttpsProxyHostRequiredWhenPortSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HTTP proxy host is unknown. Enter a valid host name .
         /// </summary>
         public static string PluginsModelValidator_InvalidHttpProxyHost {
@@ -874,11 +892,29 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTTP proxy port must be between {0} and {1}..
+        /// </summary>
+        public static string PluginsModelValidator_InvalidHttpProxyPort {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_InvalidHttpProxyPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HTTPS proxy host is unknown. Enter a valid host name.
         /// </summary>
         public static string PluginsModelValidator_InvalidHttpsProxyHost {
             get {
                 return ResourceManager.GetString("PluginsModelValidator_InvalidHttpsProxyHost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HTTPS proxy port must be between {0} and {1}..
+        /// </summary>
+        public static string PluginsModelValidator_InvalidHttpsProxyPort {
+            get {
+                return ResourceManager.GetString("PluginsModelValidator_InvalidHttpsProxyPort", resourceCulture);
             }
         }
         
