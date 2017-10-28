@@ -179,10 +179,20 @@ namespace Elastic.Installer.Msi
 				});
 
 			var feature = document.Root.Descendants(ns + "Feature").Single();
+			var re = new Regex(@"\.\d+$");
 			foreach (var directory in directories)
 			{
 				var directoryId = directory.Attribute("Id").Value;
+				var directoryName = directory.Attribute("Name").Value;
 				var componentId = "Component." + directoryId;
+				
+				var duplicateNames = directory.Elements(ns + "Component")
+					.Where(c => re.IsMatch(c.Attribute("Id")?.Value ?? string.Empty));
+				foreach (var f in duplicateNames)
+				{
+					PatchDuplicateComponentId(f, directoryName);
+				}
+				
 				directory.AddFirst(new XElement(ns + "Component",
 					new XAttribute("Id", componentId),
 					new XAttribute("Guid", WixGuid.NewGuid()),
@@ -268,6 +278,41 @@ namespace Elastic.Installer.Msi
 				new XAttribute("Template", $"Stopping {_productTitle} service"),
 				new XText($"Stopping {_productTitle} service") // TODO: default template doesn't receive service name. Might be because it's not installed with ServiceInstall table?
 			));
+		}
+		
+		private static void PatchComponentRef(XElement f, string oldId, string newId)
+		{
+			var root = f.Document.Root;
+			var ns = root.Name.Namespace;
+			var componentRef = root.Descendants(ns + "ComponentRef").First(d => d.HasAttribute("Id", oldId));
+			componentRef.Attribute("Id").Remove();
+			componentRef.Add(new XAttribute("Id", newId));
+		}
+
+		private static void PatchDuplicateComponentFileId(XElement f, string newId)
+		{
+			var ns = f.Document.Root.Name.Namespace;
+			var componentFile = f?.Element(ns + "File");
+			var fileAttribute = componentFile?.Attribute("Id");
+			if (fileAttribute == null) return;
+			
+			fileAttribute.Remove();
+			componentFile.Add(new XAttribute("Id", newId));
+		}
+
+		private static void PatchDuplicateComponentId(XElement f, string directoryName)
+		{
+			var xAttribute = f?.Attribute("Id");
+			if (xAttribute == null) return;
+			
+			var id = xAttribute.Value;
+			xAttribute.Remove();
+			var newId = Regex.Replace(id, @"Component\.(.+).\d+", $"{directoryName}.$1").Replace("-","_");;
+			var newComponentId = $"Component.{newId}";
+			f.Add(new XAttribute("Id", newComponentId));
+			
+			PatchDuplicateComponentFileId(f, newId);
+			PatchComponentRef(f, id, newComponentId);
 		}
 	}
 }
