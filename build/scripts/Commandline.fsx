@@ -19,8 +19,8 @@ open FSharp.Text.RegexProvider
 open Products.Products
 open Products.Paths
 
-ServicePointManager.SecurityProtocol <- SecurityProtocolType.Tls12
-System.Net.ServicePointManager.ServerCertificateValidationCallback <- (fun _ _ _ _ -> true)
+ServicePointManager.SecurityProtocol <- SecurityProtocolType.Ssl3 ||| SecurityProtocolType.Tls ||| SecurityProtocolType.Tls11 ||| SecurityProtocolType.Tls12;
+ServicePointManager.ServerCertificateValidationCallback <- (fun _ _ _ _ -> true)
 
 module Commandline =
 
