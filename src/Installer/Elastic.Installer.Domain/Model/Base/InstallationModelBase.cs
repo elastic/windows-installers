@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Base.Closing;
+using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
 using Elastic.Installer.Domain.Properties;
 using FluentValidation;
 using FluentValidation.Results;
@@ -32,6 +33,7 @@ namespace Elastic.Installer.Domain.Model.Base
 
 		public ReactiveCommand<object> Next { get; }
 		public ReactiveCommand<object> Back { get; }
+		public ReactiveCommand<object> Proxy { get; }
 		public ReactiveCommand<object> Help { get; set; }
 		public ReactiveCommand<object> RefreshCurrentStep { get; }
 		public ReactiveCommand<object> ShowCurrentStepErrors { get; set; }
@@ -75,6 +77,7 @@ namespace Elastic.Installer.Domain.Model.Base
 			this.RefreshCurrentStep = ReactiveCommand.Create();
 			this.RefreshCurrentStep.Subscribe(x => { this.Steps[this.TabSelectedIndex].Refresh(); });
 			this.Exit = ReactiveCommand.Create();
+			this.Proxy = ReactiveCommand.Create();
 
 			this.WhenAny(vm => vm.TabSelectedIndex, v => v.GetValue())
 				.Subscribe(i =>
@@ -83,6 +86,7 @@ namespace Elastic.Installer.Domain.Model.Base
 					if (i == (c - 1)) this.NextButtonText = TextResources.SetupView_ExitText;
 					else if (i == (c - 2)) this.NextButtonText = TextResources.SetupView_InstallText;
 					else this.NextButtonText = TextResources.SetupView_NextText;
+					ProxyButtonVisible = c > 0 && ActiveStep is PluginsModel;
 				});
 
 			this.WhenAnyValue(view => view.ValidationFailures)
@@ -141,6 +145,13 @@ namespace Elastic.Installer.Domain.Model.Base
 		{
 			get => higherVersionAlreadyInstalled;
 			set => this.RaiseAndSetIfChanged(ref higherVersionAlreadyInstalled, value);
+		}
+
+		bool proxyButtonVisible;
+		public bool ProxyButtonVisible
+		{
+			get => proxyButtonVisible;
+			set => this.RaiseAndSetIfChanged(ref proxyButtonVisible, value);
 		}
 
 		public string ToMsiParamsString() => this.ParsedArguments.ToMsiParamsString();
