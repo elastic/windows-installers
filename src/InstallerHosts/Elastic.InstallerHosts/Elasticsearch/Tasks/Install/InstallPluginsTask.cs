@@ -1,5 +1,9 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
+using System.Text;
+using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 
@@ -26,12 +30,36 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			var provider = this.InstallationModel.PluginsModel.PluginStateProvider;
 			var ticksPerPlugin = new[] { 20, 1930, 50 };
 			var totalTicks = plugins.Count * ticksPerPlugin.Sum();
+			var environmentVariables = new Dictionary<string, string> { { ElasticsearchEnvironmentStateProvider.ConfDir, configDirectory } };			
+			var httpProxy = this.InstallationModel.PluginsModel.HttpProxyHost;
+			var httpsProxy = this.InstallationModel.PluginsModel.HttpsProxyHost;			
+			var esJavaOpts = new List<string>(4);
+			
+			if (!string.IsNullOrEmpty(httpProxy))
+			{
+				esJavaOpts.Add($"-Dhttp.proxyHost=\"{httpProxy}\"");
+				var httpProxyPort = this.InstallationModel.PluginsModel.HttpProxyPort;
+				if (httpProxyPort.HasValue)
+					esJavaOpts.Add($"-Dhttp.proxyPort={httpProxyPort}");
+			}
+			
+			if (!string.IsNullOrEmpty(httpsProxy))
+			{
+				esJavaOpts.Add($"-Dhttps.proxyHost=\"{httpsProxy}\"");
+				var httpsProxyPort = this.InstallationModel.PluginsModel.HttpsProxyPort;
+				if (httpsProxyPort.HasValue)
+					esJavaOpts.Add($"-Dhttps.proxyPort={httpsProxyPort}");
+			}
 
+			if (esJavaOpts.Any())
+				environmentVariables.Add("ES_JAVA_OPTS", string.Join(" ", esJavaOpts));
+					
 			this.Session.SendActionStart(totalTicks, ActionName, "Installing Elasticsearch plugins", "Elasticsearch plugin: [1]");
 			foreach (var plugin in plugins)
 			{
 				this.Session.SendProgress(ticksPerPlugin[0], $"installing {plugin}");
-				provider.Install(ticksPerPlugin[1], installDirectory, configDirectory, plugin, "--batch");
+				provider.Install(ticksPerPlugin[1], installDirectory, configDirectory, plugin, 
+					additionalArguments: new [] {"--batch"}, environmentVariables: environmentVariables);
 				this.Session.SendProgress(ticksPerPlugin[2], $"installed {plugin}");
 			}
 			return true;

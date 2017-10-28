@@ -555,3 +555,16 @@ function Context-NodeNotRunning($Domain, $Port, $Credentials) {
     }
 }
 
+function Context-FiddlerSessionContainsEntry() {
+	Context "Fiddler session" {
+		$session = Get-FiddlerSession
+		$artifactsUrl = "artifacts.elastic.co"
+
+		log $session
+
+		It "Contains $artifactsUrl" {
+			$session | Should Match ([regex]::Escape($artifactsUrl))
+		}
+	}
+}
+

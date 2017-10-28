@@ -76,7 +76,11 @@ start /wait msiexec.exe /i elasticsearch-5.5.0.msi /qn /l elastic-install.log NO
 | USEEXISTINGUSER                  | Run the service as the specified `USER` | `false` |
 | USER                             | Existing user to run the service as     ||
 | PASSWORD                         | Password for the existing user          ||
-| PLUGINS                          | Comma-delimited list of plugins to install | |
+| HTTPPROXYHOST                    | Hostname of the HTTP proxy to use when downloading plugins. If specified, this will be the proxy used to download plugins from any HTTP scheme resource ||
+| HTTPPROXYPORT                    | Port of the HTTP proxy to use when downloading plugins | 80 |
+| HTTPSPROXYHOST                   | Hostname of the HTTPS proxy to use when downloading plugins. If specified, this will be the proxy used to download plugins from any HTTPS scheme resource, including https://artifacts.elastic.co ||
+| HTTPSPROXYPORT                   | Port of the HTTPS proxy to use when downloading plugins | 443 |
+| PLUGINS                          | Comma-delimited list of plugins to install ||
 
 ## Running as a service
 

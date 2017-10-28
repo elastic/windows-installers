@@ -35,7 +35,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			_fileSystem = fileSystem;
 		}
 
-		public IList<string> InstalledPlugins(string installDirectory, string configDirectory)
+		public IList<string> InstalledPlugins(string installDirectory, string configDirectory, IDictionary<string, string> environmentVariables = null)
 		{
 			var pluginsDirectory = Path.Combine(installDirectory, "plugins");
 			if (!this._fileSystem.Directory.Exists(pluginsDirectory)
@@ -44,15 +44,17 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			
 			var command = "list";
 			var pluginScript = PluginScript(installDirectory);
-			var process = PluginProcess(configDirectory, pluginScript, command);
+			var process = PluginProcess(configDirectory, pluginScript, command, environmentVariables);
 			var sb = new StringBuilder();
-			DataReceivedEventHandler processOnOutputDataReceived = (sender, args) =>
+
+			void ProcessOnOutputDataReceived(object sender, DataReceivedEventArgs args)
 			{
 				var message = args.Data;
 				if (string.IsNullOrEmpty(message)) return;
 				sb.AppendLine(message);
-			};
-			var invokeResult = InvokeProcess(process, processOnOutputDataReceived);
+			}
+
+			var invokeResult = InvokeProcess(process, ProcessOnOutputDataReceived);
 			var exitCode = invokeResult.Item1;
 			var errors = invokeResult.Item2;
 			var errorOut = invokeResult.Item3;
@@ -72,15 +74,16 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 
 		public abstract DataReceivedEventHandler CreateInstallHandler(int perDownloadIncrement, string plugin);
 
-		public void Install(int pluginTicks, string installDirectory, string configDirectory, string plugin, params string[] additionalArguments)
+		public void Install(int pluginTicks, string installDirectory, string configDirectory, 
+			string plugin, string[] additionalArguments = null, IDictionary<string, string> environmentVariables = null)
 		{
 			var downloadingTicks = pluginTicks * 0.9;
 			var perDownloadIncrement = (int)Math.Floor(downloadingTicks / 100);
 			var installingTicks = pluginTicks - perDownloadIncrement * 100;
 
-			var command = $"install {plugin} {string.Join(" ", additionalArguments)}";
+			var command = $"install {plugin} {string.Join(" ", additionalArguments ?? Enumerable.Empty<string>())}";
 			var pluginScript = this.PluginScript(installDirectory);
-			var process = PluginProcess(configDirectory, pluginScript, command);
+			var process = PluginProcess(configDirectory, pluginScript, command, environmentVariables);
 			var processOnOutputDataReceived = CreateInstallHandler(perDownloadIncrement, plugin);
 			var invokeResult = InvokeProcess(process, processOnOutputDataReceived);
 			var exitCode = invokeResult.Item1;
@@ -91,19 +94,21 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode} ErrorCheck: {errors} ErrorOut:{errorOut}");
 		}
 
-		public void Remove(int pluginTicks, string installDirectory, string configDirectory, string plugin, params string[] additionalArguments)
+		public void Remove(int pluginTicks, string installDirectory, string configDirectory, 
+			string plugin, string[] additionalArguments = null, IDictionary<string, string> environmentVariables = null)
 		{
-			var command = $"remove {plugin} {string.Join(" ", additionalArguments)}";
+			var command = $"remove {plugin} {string.Join(" ", additionalArguments ?? Enumerable.Empty<string>())}";
 			var pluginScript = this.PluginScript(installDirectory);
-			var process = PluginProcess(configDirectory, pluginScript, command);
+			var process = PluginProcess(configDirectory, pluginScript, command, environmentVariables);
 
-			DataReceivedEventHandler processOnOutputDataReceived = (sender, args) =>
+			void ProcessOnOutputDataReceived(object sender, DataReceivedEventArgs args)
 			{
 				var message = args.Data;
 				if (string.IsNullOrEmpty(message)) return;
 				Session.Log(message);
-			};
-			var invokeResult = InvokeProcess(process, processOnOutputDataReceived);
+			}
+
+			var invokeResult = InvokeProcess(process, ProcessOnOutputDataReceived);
 			var exitCode = invokeResult.Item1;
 			var errors = invokeResult.Item2;
 			var errorOut = invokeResult.Item3;
@@ -119,6 +124,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 
 			var errorsBuilder = new StringBuilder();
 			var errors = false;
+			
 			process.ErrorDataReceived += (s, a) =>
 			{
 				if (string.IsNullOrEmpty(a.Data)) return;
@@ -140,7 +146,8 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			return Tuple.Create(exitCode, errors, errorsBuilder.ToString());
 		}
 
-		private static Process PluginProcess(string configDirectory, string pluginScript, string command)
+		private static Process PluginProcess(string configDirectory, string pluginScript, 
+			string command, IEnumerable<KeyValuePair<string,string>> environmentVariables = null)
 		{
 			var start = new ProcessStartInfo
 			{
@@ -153,14 +160,19 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 				CreateNoWindow = true,
 				UseShellExecute = false
 			};
-			start.EnvironmentVariables["CONF_DIR"] = configDirectory;
+
+			if (environmentVariables != null)
+			{
+				foreach (var environmentVariable in environmentVariables)
+					start.EnvironmentVariables[environmentVariable.Key] = environmentVariable.Value;
+			}
+			
 			return new Process { StartInfo = start };
 		}
 
 		private bool _hasInterNetConnection;
 		public async Task<bool> HasInternetConnection()
 		{
-			//if (_hasInterNetConnection) return true;
 			_hasInterNetConnection = await CanReadArtifactsUrl();
 			return _hasInterNetConnection;
 		}

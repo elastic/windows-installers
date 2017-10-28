@@ -27,6 +27,8 @@ namespace Elastic.Configuration.EnvironmentBased
 	{
 		public static ElasticsearchEnvironmentStateProvider Default { get; } = new ElasticsearchEnvironmentStateProvider();
 
+		public const string ConfDir = "CONF_DIR";
+
 		public string HomeDirectoryUserVariable => Environment.GetEnvironmentVariable("ES_HOME", EnvironmentVariableTarget.User);
 		public string HomeDirectoryMachineVariable => Environment.GetEnvironmentVariable("ES_HOME", EnvironmentVariableTarget.Machine);
 		public string HomeDirectoryProcessVariable => Environment.GetEnvironmentVariable("ES_HOME", EnvironmentVariableTarget.Process);

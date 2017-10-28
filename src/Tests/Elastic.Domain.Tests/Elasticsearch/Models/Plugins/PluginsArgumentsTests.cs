@@ -35,5 +35,37 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(2);
 		});
 
+		[Fact] void PluginsHttpProxyHost() => Argument(
+			nameof(PluginsModel.HttpProxyHost),
+			"localhost",
+			(m, v) =>
+			{
+				m.PluginsModel.HttpProxyHost.Should().NotBeNullOrEmpty().And.Be("localhost");
+			});
+
+		[Fact] void PluginsHttpProxyPort() => Argument(
+			nameof(PluginsModel.HttpProxyPort),
+			"8888",
+			(m, v) =>
+			{
+				m.PluginsModel.HttpProxyPort.Should().NotBeNull().And.Be(8888);
+			});
+
+		[Fact] void PluginsHttpsProxyHost() => Argument(
+			nameof(PluginsModel.HttpsProxyHost),
+			"localhost",
+			(m, v) =>
+			{
+				m.PluginsModel.HttpsProxyHost.Should().NotBeNullOrEmpty().And.Be("localhost");
+			});
+
+		[Fact] void PluginsHttpsProxyPort() => Argument(
+			nameof(PluginsModel.HttpsProxyPort),
+			"8888",
+			(m, v) =>
+			{
+				m.PluginsModel.HttpsProxyPort.Should().NotBeNull().And.Be(8888);
+			});
+
 	}
 }
