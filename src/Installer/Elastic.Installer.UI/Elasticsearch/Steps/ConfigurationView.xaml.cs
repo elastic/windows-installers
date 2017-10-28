@@ -118,7 +118,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 				this.MinimumMasterTextBox.StringFormat = ViewResources.ConfigurationView_MinimumMasterNodesNotSet;
 				this.MinimumMasterTextBox.FontWeight = FontWeights.Normal;
 				this.MinimumMasterTextBox.Foreground = this._defaultBrush;
-
 			}
 			else
 			{

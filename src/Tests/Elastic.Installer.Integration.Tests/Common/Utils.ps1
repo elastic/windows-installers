@@ -417,6 +417,23 @@ function Get-Installer([string] $Location, $Product, $Version) {
 	return Get-Item $exePath
 }
 
+function Start-Fiddler($Port=8888) {
+	& "$($env:LOCALAPPDATA)\Programs\Fiddler\Fiddler.exe" /noattach /noversioncheck /port:$Port
+}
+
+function Get-FiddlerSession() {
+	$exitCode = (Start-Process "$($env:LOCALAPPDATA)\Programs\Fiddler\ExecAction.exe" -ArgumentList "dump_session" -Wait -PassThru).ExitCode
+	if ($exitCode -ne 0) {
+		log "ExecAction exited with code: $exitCode" -Level Error
+	}
+
+	return Get-Content C:\session.har
+}
+
+function Stop-Fiddler() {
+	Get-Process Fiddler -ErrorAction Ignore | Stop-Process
+}
+
 function Add-Quotes (
         [System.Collections.ArrayList]
         [Parameter(Position=0)]
