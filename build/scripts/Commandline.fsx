@@ -122,8 +122,10 @@ Whether to skip unit tests.
 
     [<Literal>]
     let private feedUrl = "https://www.elastic.co/downloads/past-releases/feed"
+    [<Literal>]
+    let private feedExample = "feed-example.xml"
     
-    type DownloadFeed = XmlProvider< feedUrl >
+    type DownloadFeed = XmlProvider< feedExample >
 
     type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?((?<Source>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)$", noMethodPrefix=true >
 
