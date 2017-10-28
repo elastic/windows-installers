@@ -448,7 +448,10 @@ This installer will walk you through various steps to help you configure and ins
   <data name="PluginsView_Elasticsearch_Help" xml:space="preserve">
     <value>Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), custom discovery, and more.
 
-We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually.</value>
+We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins are downloaded at installation time.
+
+It is common for many companies to set up a proxy through which resources will be downloaded from the internet. As such, you may need to specify the host name and port of a corporate proxy to allow the installer to successfully install plugins. Since official Elasticsearch plugins are installed from 
+https://artifacts.elastic.co, a HTTPS proxy can be specified.</value>
   </data>
   <data name="ServiceView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Service Help</value>
@@ -756,5 +759,11 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   </data>
   <data name="ClosingView_KibanaRunningAtHeaderWithCredentials" xml:space="preserve">
     <value>Open Kibana in the browser (User name: elastic, Password: changeme)</value>
+  </data>
+  <data name="PluginsView_SetHttpsProxy_Message" xml:space="preserve">
+    <value>Configure a HTTPS proxy through which to download plugins as part of installation. A proxy can be specified in the form of host or host:port. If no port is specified, defaults to using port 443.</value>
+  </data>
+  <data name="PluginsView_SetHttpsProxy_Title" xml:space="preserve">
+    <value>HTTPS proxy</value>
   </data>
 </root>

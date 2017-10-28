@@ -35,7 +35,8 @@ namespace Elastic.InstallerHosts.Kibana.Tasks
 			foreach (var plugin in plugins)
 			{
 				this.Session.SendProgress(ticksPerPlugin[0], $"removing {plugin}");
-				provider.Remove(ticksPerPlugin[1], installDirectory, configDirectory, plugin, "--config", configFile);
+				var additionalArguments = new [] { "--config", configFile };
+				provider.Remove(ticksPerPlugin[1], installDirectory, configDirectory, plugin, additionalArguments);
 				this.Session.SendProgress(ticksPerPlugin[2], $"removed {plugin}");
 			}
 			return true;

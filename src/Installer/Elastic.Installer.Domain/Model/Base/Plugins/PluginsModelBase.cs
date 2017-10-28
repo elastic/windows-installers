@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using FluentValidation;
 using ReactiveUI;
@@ -50,9 +51,11 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			this.AvailablePlugins.Clear();
 			var plugins = this.GetPlugins();
 			this.AvailablePlugins.AddRange(plugins);
+			
+			var environmentVariables = new Dictionary<string, string> { { ElasticsearchEnvironmentStateProvider.ConfDir, this.ConfigDirectory } };
 			var selectedPlugins = !this.AlreadyInstalled
 				? this.DefaultPlugins()
-				: this.PluginStateProvider.InstalledPlugins(this.InstallDirectory, this.ConfigDirectory).ToList();
+				: this.PluginStateProvider.InstalledPlugins(this.InstallDirectory, this.ConfigDirectory, environmentVariables).ToList();
 			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))
 				plugin.Selected = true;
 		}
