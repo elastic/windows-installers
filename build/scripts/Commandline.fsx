@@ -20,6 +20,7 @@ open Products.Products
 open Products.Paths
 
 ServicePointManager.SecurityProtocol <- SecurityProtocolType.Tls12
+System.Net.ServicePointManager.ServerCertificateValidationCallback <- (fun _ _ _ _ -> true)
 
 module Commandline =
 
