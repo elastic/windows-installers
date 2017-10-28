@@ -20,18 +20,19 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 	public class JavaEnvironmentStateProvider : IJavaEnvironmentStateProvider
 	{
 		private const string JreRootPath = "SOFTWARE\\JavaSoft\\Java Runtime Environment";
+		private const string JreRootPathNew = "SOFTWARE\\JavaSoft\\JRE";
 		private const string JdkRootPath = "SOFTWARE\\JavaSoft\\Java Development Kit";
+		private const string JdkRootPathNew = "SOFTWARE\\JavaSoft\\JDK";
 		private const string JavaHome = "JAVA_HOME";
 
 		public string JavaHomeProcessVariable => Environment.GetEnvironmentVariable(JavaHome, EnvironmentVariableTarget.Process);
 		public string JavaHomeUserVariable => Environment.GetEnvironmentVariable(JavaHome, EnvironmentVariableTarget.User);
 		public string JavaHomeMachineVariable => Environment.GetEnvironmentVariable(JavaHome, EnvironmentVariableTarget.Machine);
 
-
-		public string JdkRegistry64 => RegistrySubKey(Registry64, JdkRootPath);
-		public string JdkRegistry32 => RegistrySubKey(Registry32, JdkRootPath);
-		public string JreRegistry64 => RegistrySubKey(Registry64, JreRootPath); 
-		public string JreRegistry32 => RegistrySubKey(Registry32, JreRootPath);
+		public string JdkRegistry64 => RegistrySubKey(Registry64, JdkRootPath) ?? RegistrySubKey(Registry64, JdkRootPathNew);
+		public string JdkRegistry32 => RegistrySubKey(Registry32, JdkRootPath) ?? RegistrySubKey(Registry32, JdkRootPathNew);
+		public string JreRegistry64 => RegistrySubKey(Registry64, JreRootPath) ?? RegistrySubKey(Registry64, JreRootPathNew); 
+		public string JreRegistry32 => RegistrySubKey(Registry32, JreRootPath) ?? RegistrySubKey(Registry32, JreRootPathNew);
 		
 		private static string RegistrySubKey(RegistryView view, string subKey)
 		{
