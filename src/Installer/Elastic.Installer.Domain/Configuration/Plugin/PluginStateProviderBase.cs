@@ -183,7 +183,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			{
 				using (var client = new MyWebClient())
 				{
-					using (var stream = await client.OpenReadTaskAsync(new Uri("https://artifacts.elastic.co")))
+					using (var stream = await client.OpenReadTaskAsync(new Uri("https://www.google.com")))
 						return stream != null;
 				}
 			}
