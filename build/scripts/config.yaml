@@ -61,12 +61,16 @@ elasticsearch:
       guid: 650ba327-fac0-4276-a8c2-a3b5d458773c
     - version: 5.6.3
       guid: 4f50ce6b-f115-46c3-8902-d915250c3370
+    - version: 5.6.4
+      guid: 53e2a74c-26c1-4dd7-b6fb-4f91af321b28
     - version: 6.0.0-beta1
       guid: f234f31d-f25c-4e64-8d3e-868f7b7ece97
     - version: 6.0.0-beta2
       guid: 50f217e3-97b7-47ba-95f7-685f7db0c8aa
     - version: 6.0.0-rc1
       guid: 23c31d4d-6990-4c2e-92c5-4dd3348d3e07
+    - version: 6.0.0-rc2
+      guid: 53e2a74c-26c1-4dd7-b6fb-4f91af321b28
     - version: 6.0.0
       guid: e962ab93-6e24-4128-bacb-93422cdcd50d
     - version: 6.1.0
