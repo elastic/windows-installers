@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title><![CDATA[Elasticsearch]]></title>
+        <description><![CDATA[Open Source Distributed Real Time Search & Analytics]]></description>
+        <link>https://www.elastic.co</link>
+        <generator>RSS for Node</generator>
+        <lastBuildDate>Sat, 28 Oct 2017 12:49:17 GMT</lastBuildDate>
+        <pubDate>Sat, 28 Oct 2017 12:49:16 GMT</pubDate>
+        <language><![CDATA[en-us]]></language>
+        <item>
+            <title><![CDATA[Logstash Contrib 1.4.5]]></title>
+            <link>https://www.elastic.co/downloads/past-releases/logstash-1-4-5</link>
+            <guid isPermaLink="true">https://www.elastic.co/downloads/past-releases/logstash-1-4-5</guid>
+        </item>
+        <item>
+            <title><![CDATA[Elasticsearch 5.6.3]]></title>
+            <description><![CDATA[Elasticsearch 5.6.3]]></description>
+            <link>https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-3</link>
+            <guid isPermaLink="true">https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-3</guid>
+            <pubDate>Tue, 10 Oct 2017 18:00:01 GMT</pubDate>
+        </item>
+    </channel>
+</rss>
