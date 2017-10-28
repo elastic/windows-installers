@@ -12,11 +12,14 @@ open System
 open System.Collections.Generic
 open System.IO
 open System.Text.RegularExpressions
+open System.Net
 open Fake
 open FSharp.Data
 open FSharp.Text.RegexProvider
 open Products.Products
 open Products.Paths
+
+ServicePointManager.SecurityProtocol <- SecurityProtocolType.Tls12
 
 module Commandline =
 
@@ -118,7 +121,7 @@ Whether to skip unit tests.
 
     [<Literal>]
     let private feedUrl = "https://www.elastic.co/downloads/past-releases/feed"
-
+    
     type DownloadFeed = XmlProvider< feedUrl >
 
     type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?((?<Source>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)$", noMethodPrefix=true >
