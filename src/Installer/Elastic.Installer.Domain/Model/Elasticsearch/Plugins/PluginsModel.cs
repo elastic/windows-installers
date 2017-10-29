@@ -77,6 +77,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		{
 			base.Refresh();
 			this.HasInternetConnection = true;
+
+			this.HttpProxyHost = null;
+			this.HttpProxyPort = null;
+			this.HttpsProxyHost = null;
+			this.HttpsProxyPort = null;		
 		}
 
 		private async Task SetInternetConnection()
@@ -297,14 +302,5 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			};
 		}
 
-		public override void Refresh()
-		{
-			base.Refresh();
-
-			this.HttpProxyHost = null;
-			this.HttpProxyPort = null;
-			this.HttpsProxyHost = null;
-			this.HttpsProxyPort = null;		
-		}
 	}
 }
