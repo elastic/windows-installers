@@ -73,7 +73,7 @@ namespace Elastic.Installer.UI.Kibana
 
 			this.Bind(ViewModel, vm => vm.NextButtonText, view => view.NextButton.Content);
 
-			this.WhenAny(view => view.ViewModel.CurrentStepValidationFailures, v => v.GetValue().Count)
+			this.WhenAny(view => view.ViewModel.FirstInvalidStepValidationFailures, v => v.GetValue().Count)
 				.Subscribe(errorCount =>
 				{
 					if (errorCount == 0) this.ValidationErrorLink.Text = null;
@@ -250,7 +250,7 @@ namespace Elastic.Installer.UI.Kibana
 
 			this.ViewModel.ShowCurrentStepErrors.Subscribe(async x =>
 			{
-				var message = string.Join("\r\n", this.ViewModel.CurrentStepValidationFailures.Select(v => v.ErrorMessage.ValidationMessage()));
+				var message = string.Join("\r\n", this.ViewModel.FirstInvalidStepValidationFailures.Select(v => v.ErrorMessage.ValidationMessage()));
 				await this.ShowMessageAsync(
 					ViewResources.MainWindow_ValidationErrors,
 					message,

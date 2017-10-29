@@ -35,7 +35,16 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				{
 					if (!any) this.HasInternetConnection = true;
 				});
-			
+
+			this.AvailablePlugins.ItemChanged
+				.Where(x => x.PropertyName == nameof(Plugin.Selected) && x.Sender.PluginType == PluginType.XPack)
+				.Select(x => x.Sender.Selected)
+				.Subscribe(selected =>
+				{
+					this.XPackEnabled = selected;
+					this.Validate();
+				});
+
 			Observable.Timer(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(2))
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.Subscribe(async _ => await SetInternetConnection());
@@ -64,16 +73,36 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				});
 		}
 
+		public override void Refresh()
+		{
+			base.Refresh();
+			this.HasInternetConnection = true;
+
+			this.HttpProxyHost = null;
+			this.HttpProxyPort = null;
+			this.HttpsProxyHost = null;
+			this.HttpsProxyPort = null;		
+		}
+
 		private async Task SetInternetConnection()
 		{
 			if (!this.Plugins.Any()) return;
-			
+
 			this.HasInternetConnection = await this.PluginStateProvider.HasInternetConnection();
 			this.Validate();
 		}
-		
-		bool hasInternetConnection;
-		public bool HasInternetConnection
+
+		bool xPackEnabled;
+
+		public bool XPackEnabled
+		{
+			get => this.xPackEnabled;
+			private set => this.RaiseAndSetIfChanged(ref this.xPackEnabled, value);
+		}
+
+		bool? hasInternetConnection;
+
+		public bool? HasInternetConnection
 		{
 			get => this.hasInternetConnection;
 			set => this.RaiseAndSetIfChanged(ref this.hasInternetConnection, value);
@@ -158,7 +187,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				Url = "analysis-kuromoji",
 				DisplayName = "Japanese (kuromoji) Analysis",
 				Description = TextResources.PluginsModel_JapaneseAnalysis
-
 			};
 
 			yield return new Plugin
@@ -167,7 +195,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				Url = "analysis-phonetic",
 				DisplayName = "Phonetic Analysis",
 				Description = TextResources.PluginsModel_Phonetic
-
 			};
 
 			yield return new Plugin
@@ -184,7 +211,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				Url = "analysis-stempel",
 				DisplayName = "Stempel Polish Analysis",
 				Description = TextResources.PluginsModel_StempelPolishAnalysis
-
 			};
 
 			yield return new Plugin
@@ -276,14 +302,5 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			};
 		}
 
-		public override void Refresh()
-		{
-			base.Refresh();
-
-			this.HttpProxyHost = null;
-			this.HttpProxyPort = null;
-			this.HttpsProxyHost = null;
-			this.HttpsProxyPort = null;		
-		}
 	}
 }

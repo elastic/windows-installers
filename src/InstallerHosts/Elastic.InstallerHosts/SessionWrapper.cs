@@ -12,13 +12,9 @@ namespace Elastic.InstallerHosts
 
 		public SessionWrapper(Session session) => this._session = session;
 
-		public T Get<T>(string property)
-		{
-			string value;
-			if (this._session.TryGetValue(property, out value))
-				return (T)Convert.ChangeType(value, typeof(T));
-			return default(T);
-		}
+		public T Get<T>(string property) => this._session.TryGetValue(property, out var value) 
+			? (T)Convert.ChangeType(value, typeof(T)) 
+			: default(T);
 
 		public void Set(string property, string value) => this._session.Set(property, value);
 

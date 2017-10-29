@@ -33,9 +33,9 @@
 
       <TextBox Grid.Row="1" Grid.Column="0" x:Name="ResultParagraphLabel" 
                Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" 
-               TextWrapping="Wrap"
+               TextWrapping="Wrap" BorderThickness="0"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
-               ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+               ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
     </Grid>
     <StackPanel Grid.Row="1" Grid.Column="0">
       <Grid x:Name="GridSuccess" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

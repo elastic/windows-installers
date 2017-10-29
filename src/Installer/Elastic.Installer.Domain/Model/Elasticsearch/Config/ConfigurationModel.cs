@@ -34,7 +34,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 		public const int PortMaximum = 65535;
 		public const int HttpPortDefault = 9200;
 		public const int TransportPortDefault = 9300;
-
+		
 		public ConfigurationModel(ElasticsearchYamlConfiguration yamlConfiguration, LocalJvmOptionsConfiguration localJvmOptions)
 		{
 			this.Header = "Configuration";
@@ -212,7 +212,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 		}
 
 		int? transportPort;
-
 		[StaticArgument(nameof(TransportPort))]
 		public int? TransportPort
 		{

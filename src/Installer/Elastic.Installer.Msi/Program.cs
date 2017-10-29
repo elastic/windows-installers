@@ -148,6 +148,7 @@ namespace Elastic.Installer.Msi
 			const string wixLocation = @"..\..\..\packages\WixSharp.wix.bin\tools\bin";
 			if (!Directory.Exists(wixLocation))
 				throw new Exception($"The directory '{wixLocation}' could not be found");
+			//Compiler.LightOptions = "-sw1076 -sw1079 -sval";
 			Compiler.WixLocation = wixLocation;
 			Compiler.BuildWxs(project, $@"_Generated\{_productName.ToLower()}.wxs", Compiler.OutputType.MSI);
 			Compiler.BuildMsi(project);

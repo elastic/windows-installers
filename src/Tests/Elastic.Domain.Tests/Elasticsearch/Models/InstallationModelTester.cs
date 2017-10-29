@@ -111,9 +111,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			this.InstallationModel.ActiveStep.Should().Be(step);
 			step.IsValid.Should().BeFalse("{0} should be invalid", step.GetType().Name);
 
-			this.InstallationModel.CurrentStepValidationFailures.Should().NotBeEmpty();
+			this.InstallationModel.FirstInvalidStepValidationFailures.Should().NotBeEmpty();
 			step.ValidationFailures.Should().NotBeEmpty()
-				.And.HaveCount(this.InstallationModel.CurrentStepValidationFailures.Count);
+				.And.HaveCount(this.InstallationModel.FirstInvalidStepValidationFailures.Count);
 
 			validateErrors?.Invoke(step.ValidationFailures);
 
@@ -125,7 +125,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			var firstStep = this.InstallationModel.Steps.First();
 			return IsValidOnStep(firstStep);
 		}
-
+		
 		public InstallationModelTester IsNotified(Action<NoticeModel> assert)
 		{
 			var step = this.InstallationModel.NoticeModel;
@@ -150,12 +150,19 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			return IsValidOnStep(step);
 		}
 
+		public InstallationModelTester IsOnStep(Func<ElasticsearchInstallationModel, IValidatableReactiveObject> selector)
+		{
+			var step = selector(this.InstallationModel);
+			this.InstallationModel.ActiveStep.Should().Be(step);
+			return this;
+		}
+
 		public InstallationModelTester IsValidOnStep(IValidatableReactiveObject step)
 		{
 			this.InstallationModel.ActiveStep.Should().Be(step);
-			step.IsValid.Should().BeTrue("error messages: {0}", this.InstallationModel.CurrentStepValidationFailures.ToUnitTestMessage());
+			step.IsValid.Should().BeTrue("error messages: {0}", this.InstallationModel.FirstInvalidStepValidationFailures.ToUnitTestMessage());
 
-			this.InstallationModel.CurrentStepValidationFailures.Should().BeEmpty();
+			this.InstallationModel.FirstInvalidStepValidationFailures.Should().BeEmpty();
 			step.ValidationFailures.Should().BeEmpty();
 
 			return this;
@@ -165,7 +172,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		{
 			var c = false;
 			this.InstallationModel.Next.CanExecuteObservable.Subscribe(cc => c = cc);
-			c.Should().Be(canClick);
+			c.Should().Be(canClick, "expected to be able to click next {0} model: {1}", canClick, this.InstallationModel);
+			return this;
+		}
+		public InstallationModelTester CanInstall(bool canInstall = true)
+		{
+			var c = false;
+			this.InstallationModel.Install.CanExecuteObservable.Subscribe(cc => c = cc);
+			c.Should().Be(canInstall, "expected to be able to click install {0} model: {1}", canInstall, this.InstallationModel);
 			return this;
 		}
 
@@ -186,7 +200,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		public InstallationModelTester ClickBack()
 		{
-			CanClickNext();
+			CanClickBack();
 			this.InstallationModel.Back.Execute(null);
 			return this;
 		}

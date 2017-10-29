@@ -1,4 +1,6 @@
-﻿using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
+using System.Linq;
+using Elastic.Installer.Domain.Model.Base.Plugins;
+using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
 using FluentAssertions;
 using Xunit;
 
@@ -24,6 +26,15 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 			})
 			.CanClickNext();
 
+		[Fact] void SelectingXPackIsPropagated() => this._model
+			.OnStep(m => m.PluginsModel, step =>
+			{
+				step.XPackEnabled.Should().BeFalse();
+				step.ChangeXPackSelection(true);
+				step.XPackEnabled.Should().BeTrue();
+
+			})
+			.CanClickNext();
 
 		[Fact] void IngestPluginsNotSelectedByDefault() => this._model
 			.OnStep(m => m.PluginsModel, step =>

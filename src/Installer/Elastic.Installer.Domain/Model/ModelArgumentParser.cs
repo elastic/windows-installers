@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Elastic.Installer.Domain.Model.Base;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using FluentValidation.Results;
 using ReactiveUI;
 
@@ -89,6 +90,8 @@ namespace Elastic.Installer.Domain.Model
 			}
 			if (v is bool)
 				return ((bool)v).ToString().ToLowerInvariant();
+			if (v is Enum)
+				return Enum.GetName(v.GetType(), v);
 
 			throw new Exception($"{v.GetType().FullName} has no supported getter");
 		}
@@ -116,6 +119,8 @@ namespace Elastic.Installer.Domain.Model
 					a.Value = MsiString(((Func<ReactiveList<string>>)getter)());
 				else if (p == typeof(bool))
 					a.Value = MsiString(((Func<bool>)getter)());
+				else if (p == typeof(XPackLicenseMode))
+					a.Value = MsiString(((Func<XPackLicenseMode>)getter)());
 				else
 					throw new Exception($"{p.FullName} has no supported getter");
 
@@ -212,6 +217,13 @@ namespace Elastic.Installer.Domain.Model
 				else if (p == typeof(ReactiveList<string>))
 				{
 					((Action<ReactiveList<string>>)setter)(new ReactiveList<string>(a.Value.Split(',').Select(v => v.Trim())));
+				}
+				else if (p == typeof(XPackLicenseMode))
+				{
+					if (string.IsNullOrWhiteSpace(a.Value)) 
+						((Action<XPackLicenseMode>)setter)(XPackModel.DefaultXPackLicenseMode);
+					else if (Enum.TryParse<XPackLicenseMode>(a.Value, ignoreCase: true, result: out var licenseMode))
+						((Action<XPackLicenseMode>)setter)(licenseMode);
 				}
 				else if (p == typeof(bool))
 				{

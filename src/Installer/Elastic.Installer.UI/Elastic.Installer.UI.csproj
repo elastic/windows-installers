@@ -102,6 +102,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elasticsearch\Steps\PluginsView.xaml.cs">
+      <DependentUpon>PluginsView.xaml</DependentUpon>
+    </Compile>
     <Content Include="Resources\Entypo-license.txt">
       <Paket>True</Paket>
     </Content>
@@ -158,8 +161,8 @@
     <Compile Include="Elasticsearch\Steps\LocationsView.xaml.cs">
       <DependentUpon>LocationsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Elasticsearch\Steps\PluginsView.xaml.cs">
-      <DependentUpon>PluginsView.xaml</DependentUpon>
+    <Compile Include="Elasticsearch\Steps\XPackView.xaml.cs">
+      <DependentUpon>XPackView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StepControl.cs" />
     <Compile Include="Elasticsearch\Steps\NoticeView.xaml.cs">
@@ -177,6 +180,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Elasticsearch\Steps\XPackView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Kibana\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

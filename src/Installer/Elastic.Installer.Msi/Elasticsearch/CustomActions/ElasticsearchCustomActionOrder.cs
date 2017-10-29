@@ -4,6 +4,7 @@
 	{
 		// Immediate actions
 		LogAllTheThings = 1,
+		BootstrapPasswordProperty = 2,
 
 		// Deferred actions
 		SetPreconditions = 2,
@@ -14,8 +15,10 @@
 		InstallConfiguration = 6,
 		InstallJvmOptions = 7,
 		InstallPlugins = 8,
-		InstallService = 9,
-		InstallStartService = 10,
+		BootstrapPassword = 9,
+		InstallService = 10,
+		InstallStartService = 11,
+		SetupXPackPasswords = 12,
 
 		// Rollback actions are played in reverse order
 		RollbackEnvironment = 1,

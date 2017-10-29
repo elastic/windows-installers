@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
+using System.Linq;
 using Elastic.Configuration.FileBased.Yaml;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using FluentAssertions;
 using Xunit;
 
@@ -26,6 +28,9 @@ node.max_local_storage_nodes: 1
 node.name: {nodeName}
 path.data: {folder}data
 path.logs: {folder}logs
+xpack.license.self_generated.type: trial
+xpack.security.enabled: false
+xpack.random_setting: something
 ";
 			var fs = FakeElasticsearchYaml(yaml);
 			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
@@ -39,6 +44,9 @@ path.logs: {folder}logs
 			settings.DataPath.Should().Be(folder + "data");
 			settings.LogsPath.Should().Be(folder + "logs");
 			settings.MaxLocalStorageNodes.Should().Be(1);
+			settings.XPackSecurityEnabled.Should().BeFalse();
+			settings.XPackLicenseSelfGeneratedType.Should().Be(nameof(XPackLicenseMode.Trial).ToLowerInvariant());
+			settings.Keys.Where(k => k.StartsWith("xpack")).Should().HaveCount(1);
 			optsFile.Save();
 
 			var fileContentsAfterSave = fs.File.ReadAllText(_path);
