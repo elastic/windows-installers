@@ -85,10 +85,10 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			{
 				switch (e.PropertyName)
 				{
-					case "ClusterName":
+					case nameof(ViewModel.ClusterName):
 						this.ClusterNameTextBox.BorderBrush = b;
 						continue;
-					case "NodeName":
+					case nameof(ViewModel.NodeName):
 						this.NodeNameTextBox.BorderBrush = b;
 						continue;
 				}

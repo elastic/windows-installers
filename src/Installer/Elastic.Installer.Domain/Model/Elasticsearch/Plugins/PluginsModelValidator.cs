@@ -19,7 +19,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		public PluginsModelValidator()
 		{
 			RuleFor(vm => vm.HasInternetConnection)
-				.Must(v => v)
+				.Must(v => !v.HasValue || v.Value)
 				.When(vm => vm.Plugins.Any())
 				.WithMessage(NoInternet);
 

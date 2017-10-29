@@ -6,6 +6,7 @@ using ReactiveUI;
 using System;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Windows.Media;
 using Elastic.Installer.Domain.Model.Base;
 
 namespace Elastic.Installer.UI.Controls

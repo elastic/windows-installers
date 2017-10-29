@@ -36,6 +36,7 @@ Vagrant.configure("2") do |config|
       azure.subscription_id = ENV['AZURE_SUBSCRIPTION_ID']
 
       azure.vm_name = "msiintegration"
+	  # swapped out for a random DNS name when running the test
       azure.dns_name = "AZURE_DNS_NAME"
       azure.vm_image_urn = 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter-smalldisk:latest'
       azure.vm_password = ENV['AZURE_VM_PASSWORD']
@@ -45,6 +46,7 @@ Vagrant.configure("2") do |config|
 	  azure.instance_ready_timeout = 600
 	  azure.instance_check_interval = 60
 	  azure.wait_for_destroy = true
+	  # swapped out for a random resource group name when running the test
 	  azure.resource_group_name = "AZURE_RESOURCE_GROUP_NAME"
 	  azure.location = "WestEurope"
 

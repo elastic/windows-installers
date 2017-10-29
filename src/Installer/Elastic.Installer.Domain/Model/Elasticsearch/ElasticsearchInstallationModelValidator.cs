@@ -37,12 +37,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			RuleFor(vm => vm.Steps)
 				.Must(steps => steps.Where(s => s != null).All(s => s.IsValid))
-				.When(vm => !vm.JavaInstalled
-							&& !vm.JavaMisconfigured
-							&& !vm.Using32BitJava
-							&& !vm.SameVersionAlreadyInstalled
-							&& !vm.HigherVersionAlreadyInstalled
-							&& !vm.BadElasticsearchYamlFile)
+				.When(vm => 
+					vm.Steps != null
+					&& !vm.JavaInstalled
+					&& !vm.JavaMisconfigured
+					&& !vm.Using32BitJava
+					&& !vm.SameVersionAlreadyInstalled
+					&& !vm.HigherVersionAlreadyInstalled
+					&& !vm.BadElasticsearchYamlFile)
 				.WithMessage(NotAllModelsAreValid);
 		}
 	}
