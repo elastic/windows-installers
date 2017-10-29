@@ -8,6 +8,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Config;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch
 {
@@ -21,6 +22,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			typeof(ConfigurationModel),
 			typeof(ServiceModel),
 			typeof(PluginsModel),
+			typeof(XPackModel),
 			typeof(ClosingModel)
 		};
 

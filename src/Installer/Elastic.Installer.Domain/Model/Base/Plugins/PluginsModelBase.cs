@@ -60,6 +60,12 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 				plugin.Selected = true;
 		}
 
+		public void ChangeXPackSelection(bool selected)
+		{
+			var xpackPlugin = this.AvailablePlugins.First(p => p.PluginType == PluginType.XPack);
+			xpackPlugin.Selected = selected;
+		}
+
 		public override string ToString()
 		{
 			var sb = new StringBuilder();

@@ -65,5 +65,13 @@ namespace Elastic.Configuration.FileBased.Yaml
 		public string TransportTcpPortString { get; set; }
 		
 		public int? TransportTcpPort => int.TryParse(TransportTcpPortString, out int port) ? port : (int?)null;
+		
+		[YamlMember("xpack.license.self_generated.type")]
+		[DefaultValue(null)]
+		public string XPackLicenseSelfGeneratedType { get; set; }
+		
+		[YamlMember("xpack.security.enabled")]
+		[DefaultValue(null)]
+		public bool? XPackSecurityEnabled { get; set; }
 	}
 }

@@ -118,6 +118,9 @@
     <Compile Include="Model\Elasticsearch\Notice\NoticeModelValidator.cs" />
     <Compile Include="Model\Elasticsearch\Plugins\PluginsModel.cs" />
     <Compile Include="Model\Elasticsearch\Plugins\PluginsModelValidator.cs" />
+    <Compile Include="Model\Elasticsearch\XPack\XPackModel.cs" />
+    <Compile Include="Model\Elasticsearch\XPack\XPackModelValidator.cs" />
+    <Compile Include="Model\Elasticsearch\XPack\XPackLicenseMode.cs" />
     <Compile Include="Model\Kibana\Closing\ClosingModel.cs" />
     <Compile Include="Model\Kibana\Closing\ClosingModelValidator.cs" />
     <Compile Include="Model\Kibana\Configuration\ConfigurationModel.cs" />

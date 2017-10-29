@@ -27,8 +27,9 @@ namespace Elastic.Installer.Domain.Model.Base
 
 		public ISession Session { get; }
 
-		public ReactiveList<IStep> AllSteps { get; protected set; } = new ReactiveList<IStep>();
-		public IReactiveDerivedList<IStep> Steps { get; protected set; } = new ReactiveList<IStep>().CreateDerivedCollection(x => x, x => true);
+		public ReactiveList<IStep> AllSteps { get; }
+		public IReactiveDerivedList<IStep> Steps { get; } 
+
 		public IStep ActiveStep => this.Steps[this.TabSelectedIndex];
 
 		public ReactiveCommand<object> Next { get; }
@@ -47,9 +48,13 @@ namespace Elastic.Installer.Domain.Model.Base
 			IWixStateProvider wixStateProvider,
 			ISession session,
 			string[] args
-			)
+		)
 		{
 			this.Session = session;
+
+			this.AllSteps = new ReactiveList<IStep> {ChangeTrackingEnabled = true};
+			this.Steps = this.AllSteps.CreateDerivedCollection(x => x, x => x.IsRelevant);
+			this.Steps.Changed.Subscribe(e => this.Steps.RaisePropertyChanged());
 
 			this._wixStateProvider = wixStateProvider ?? throw new ArgumentNullException(nameof(wixStateProvider));
 
@@ -59,17 +64,11 @@ namespace Elastic.Installer.Domain.Model.Base
 				(i, max) => i.GetValue() < max.GetValue());
 
 			this.Next = ReactiveCommand.Create(canMoveForwards);
-			this.Next.Subscribe(i =>
-			{
-				this.TabSelectedIndex = Math.Min(this.Steps.Count - 1, this.TabSelectedIndex + 1);
-			});
+			this.Next.Subscribe(i => { this.TabSelectedIndex = Math.Min(this.Steps.Count - 1, this.TabSelectedIndex + 1); });
 
 			var canMoveBackwards = this.WhenAny(vm => vm.TabSelectedIndex, i => i.GetValue() > 0);
 			this.Back = ReactiveCommand.Create(canMoveBackwards);
-			this.Back.Subscribe(i =>
-			{
-				this.TabSelectedIndex = Math.Max(0, this.TabSelectedIndex - 1);
-			});
+			this.Back.Subscribe(i => { this.TabSelectedIndex = Math.Max(0, this.TabSelectedIndex - 1); });
 
 			this.Help = ReactiveCommand.Create();
 			this.ShowLicenseBlurb = ReactiveCommand.Create();
@@ -79,13 +78,12 @@ namespace Elastic.Installer.Domain.Model.Base
 			this.Exit = ReactiveCommand.Create();
 			this.Proxy = ReactiveCommand.Create();
 
+			this.Steps.Changed.Subscribe((e => UpdateNextButtonText(this.TabSelectedIndex)));
 			this.WhenAny(vm => vm.TabSelectedIndex, v => v.GetValue())
 				.Subscribe(i =>
 				{
+					this.UpdateNextButtonText(i);
 					var c = this.Steps.Count;
-					if (i == (c - 1)) this.NextButtonText = TextResources.SetupView_ExitText;
-					else if (i == (c - 2)) this.NextButtonText = TextResources.SetupView_InstallText;
-					else this.NextButtonText = TextResources.SetupView_NextText;
 					ProxyButtonVisible = c > 0 && ActiveStep is PluginsModel;
 				});
 
@@ -96,6 +94,14 @@ namespace Elastic.Installer.Domain.Model.Base
 						.Where(v => PrerequisiteProperties.Contains(v.PropertyName))
 						.ToList();
 				});
+		}
+
+		private void UpdateNextButtonText(int i)
+		{
+			var c = this.Steps.Count;
+			if (i == (c - 1)) this.NextButtonText = TextResources.SetupView_ExitText;
+			else if (i == (c - 2)) this.NextButtonText = TextResources.SetupView_InstallText;
+			else this.NextButtonText = TextResources.SetupView_NextText;
 		}
 
 		string nextButtonText;
@@ -125,12 +131,19 @@ namespace Elastic.Installer.Domain.Model.Base
 			get => tabSelectedIndex;
 			set => this.RaiseAndSetIfChanged(ref tabSelectedIndex, value);
 		}
-
-		private IList<ValidationFailure> currentValidationFailures = new List<ValidationFailure>();
-		public IList<ValidationFailure> CurrentStepValidationFailures
+		
+		int? tabFirstInvalidIndex;
+		public int? TabFirstInvalidIndex
 		{
-			get => currentValidationFailures;
-			protected set => this.RaiseAndSetIfChanged(ref currentValidationFailures, value);
+			get => tabFirstInvalidIndex;
+			set => this.RaiseAndSetIfChanged(ref tabFirstInvalidIndex, value);
+		}
+
+		private IList<ValidationFailure> firstInvalidValidationFailures = new List<ValidationFailure>();
+		public IList<ValidationFailure> FirstInvalidStepValidationFailures
+		{
+			get => firstInvalidValidationFailures;
+			protected set => this.RaiseAndSetIfChanged(ref firstInvalidValidationFailures, value);
 		}
 
 		bool sameVersionAlreadyInstalled;
