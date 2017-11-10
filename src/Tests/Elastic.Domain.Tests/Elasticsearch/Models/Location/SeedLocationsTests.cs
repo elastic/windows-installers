@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
+using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using FluentAssertions;
 using Xunit;
 
@@ -16,7 +17,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			))
 			.OnStep(m => m.LocationsModel, step =>
 			{
-				step.InstallDir.Should().Be(_customHome);
+				var customHomeVersion = Path.Combine(_customHome, TestSetupStateProvider.DefaultTestVersion);
+				step.InstallDir.Should().Be(customHomeVersion);
 				step.ConfigureLocations.Should().BeTrue();
 			});
 

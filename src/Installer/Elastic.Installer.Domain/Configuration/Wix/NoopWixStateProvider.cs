@@ -6,6 +6,6 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 	{
 		public SemVersion ExistingVersion { get; set; }
 
-		public SemVersion CurrentVersion { get; set; }
+		public SemVersion CurrentVersion { get; set; } = "0.0.1-ignored";
 	}
 }

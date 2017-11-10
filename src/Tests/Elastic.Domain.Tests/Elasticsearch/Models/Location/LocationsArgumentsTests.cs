@@ -1,4 +1,6 @@
-﻿using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+﻿using System.IO;
+using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using FluentAssertions;
 using Xunit;
 
@@ -26,10 +28,16 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			m.LocationsModel.LogsDirectory.Should().Be(this.CustomConfig);
 		});
 
-		[Fact] void InstallDirectory() => Argument(nameof(LocationsModel.InstallDir), this.CustomHome, m =>
+		[Fact]
+		void InstallDirectory()
 		{
-			m.LocationsModel.InstallDir.Should().Be(this.CustomHome);
-			m.LocationsModel.ConfigureLocations.Should().BeTrue();
-		});
+			var customHome = this.CustomHome;
+			var customHomeVersion = Path.Combine(this.CustomHome, TestSetupStateProvider.DefaultTestVersion);
+			Argument(nameof(LocationsModel.InstallDir), customHome, customHomeVersion, (m, s) =>
+			{
+				m.LocationsModel.InstallDir.Should().Be(customHomeVersion);
+				m.LocationsModel.ConfigureLocations.Should().BeTrue();
+			});
+		}
 	}
 }

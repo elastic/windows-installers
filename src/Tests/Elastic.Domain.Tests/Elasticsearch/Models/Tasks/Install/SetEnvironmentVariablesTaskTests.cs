@@ -1,5 +1,7 @@
 ﻿
+using System.IO;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
@@ -30,7 +32,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				(m, s, fs) => new SetEnvironmentVariablesTask(m, s, fs),
 				(m, t) => 
 				{
-					t.EsState.LastSetEsHome.Should().Be(EsHome);
+					t.EsState.LastSetEsHome.Should().Be(Path.Combine(EsHome, TestSetupStateProvider.DefaultTestVersion));
 					t.EsState.LastSetEsConfig.Should().Be(EsConfig);
 					t.EsState.UnsetOldConfigVariableWasCalled.Should().BeTrue();
 				}

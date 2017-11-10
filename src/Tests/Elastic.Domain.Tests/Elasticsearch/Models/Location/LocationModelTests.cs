@@ -61,7 +61,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			.ClickRefresh()
 			.OnStep(m=>m.LocationsModel, step =>
 			{
-				step.InstallDir.Should().Be(LocationsModel.DefaultProductInstallationDirectory);
+				step.InstallDir.Should().Be(step.DefaultProductVersionInstallationDirectory);
 			});
 			
 	}

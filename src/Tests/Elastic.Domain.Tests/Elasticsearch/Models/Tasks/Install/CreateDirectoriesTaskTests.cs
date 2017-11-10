@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using Xunit;
@@ -12,6 +14,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 		private readonly string EsConfig = @"c:\es-config-folder";
 		private readonly string EsData = @"c:\es-data";
 		private readonly string EsLogs = @"c:\es-logs";
+		
 
 		[Fact] void CreatesDefaultDirectories() => WithValidPreflightChecks()
 			.AssertTask(
@@ -87,7 +90,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
 				.FileSystem(fs => 
 				{
-					var configDir = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config");
+					var configDir = Path.Combine(VersionSpecificInstallDirectory, "config");
 					var configDirSubDir = Path.Combine(configDir, "sub");
 					var conf = Path.Combine(configDir, "random-file.yml");
 					var subConf = Path.Combine(configDirSubDir, "sub-file.yml");
@@ -108,7 +111,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 					m.LocationsModel.ConfigDirectory.Should().Be(EsConfig);
 					
 					var fs = t.FileSystem;
-					var configDir = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "config");
+					var configDir = Path.Combine(VersionSpecificInstallDirectory, "config");
 					var configDirSubDir = Path.Combine(configDir, "sub");
 					var conf = Path.Combine(configDir, "random-file.yml");
 					var subConf = Path.Combine(configDirSubDir, "sub-file.yml");

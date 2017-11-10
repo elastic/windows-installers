@@ -1,4 +1,6 @@
-﻿using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+﻿using System.IO;
+using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using FluentAssertions;
 using Xunit;
 
@@ -8,6 +10,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 	{
 		private readonly InstallationModelTester _model;
 		private string _installDirectory = "C:\\elasticsearch";
+		private string VersionSpecificInstallDirectory => Path.Combine(this._installDirectory, TestSetupStateProvider.DefaultTestVersion);
 
 		public WritableLocationsTests()
 		{
@@ -94,9 +97,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			})
 			.IsInvalidOnStep(m => m.LocationsModel, errors => errors
 				.ShouldHaveErrors(
-					string.Format(LocationsModelValidator.DirectoryMustBeChildOf, LocationsModelValidator.LogsText, _installDirectory),
-					string.Format(LocationsModelValidator.DirectoryMustBeChildOf, LocationsModelValidator.DataText, _installDirectory),
-					string.Format(LocationsModelValidator.DirectoryMustBeChildOf, LocationsModelValidator.ConfigurationText, _installDirectory)
+					string.Format(LocationsModelValidator.DirectoryMustBeChildOf, LocationsModelValidator.LogsText, VersionSpecificInstallDirectory),
+					string.Format(LocationsModelValidator.DirectoryMustBeChildOf, LocationsModelValidator.DataText, VersionSpecificInstallDirectory),
+					string.Format(LocationsModelValidator.DirectoryMustBeChildOf, LocationsModelValidator.ConfigurationText, VersionSpecificInstallDirectory)
 				)
 			)
 			.CanClickNext(false);

@@ -36,10 +36,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		public static readonly string DefaultLogsDirectory = Path.Combine(DefaultProductDataDirectory, Logs);
 		public static readonly string DefaultDataDirectory = Path.Combine(DefaultProductDataDirectory, Data);
 		public static readonly string DefaultConfigDirectory = Path.Combine(DefaultProductDataDirectory, Config);
+		
+		public string DefaultProductVersionInstallationDirectory => Path.Combine(DefaultProductInstallationDirectory, CurrentVersion);
 
 		private bool _refreshing;
 		private readonly ElasticsearchEnvironmentConfiguration _elasticsearchEnvironmentConfiguration;
 		private readonly ElasticsearchYamlConfiguration _yamlConfiguration;
+
+		private string CurrentVersion { get; }
 
 		public LocationsModel(
 			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration,
@@ -50,6 +54,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this.Header = "Locations";
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
+			this.CurrentVersion = versionConfig.CurrentVersion.ToString();
 
 			this.Refresh();
 			this._refreshing = true;
@@ -183,8 +188,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		[Argument(nameof(InstallDir))]
 		public string InstallDir
 		{
-			get => installDirectory;
-			set {
+			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : Path.Combine(installDirectory, CurrentVersion);
+			set
+			{
 				this.RaiseAndSetIfChanged(ref installDirectory, value);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
