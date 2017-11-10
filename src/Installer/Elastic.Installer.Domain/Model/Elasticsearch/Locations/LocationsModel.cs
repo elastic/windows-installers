@@ -44,6 +44,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		private readonly ElasticsearchYamlConfiguration _yamlConfiguration;
 
 		private string CurrentVersion { get; }
+		private string ExistingVersion { get; }
 
 		public LocationsModel(
 			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration,
@@ -55,6 +56,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
 			this.CurrentVersion = versionConfig.CurrentVersion.ToString();
+			this.ExistingVersion = versionConfig.ExistingVersion?.ToString();
 
 			this.Refresh();
 			this._refreshing = true;
@@ -191,9 +193,27 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : Path.Combine(installDirectory, CurrentVersion);
 			set
 			{
-				this.RaiseAndSetIfChanged(ref installDirectory, value);
+				var rooted = GetRootedPathIfNecessary(value);
+				this.RaiseAndSetIfChanged(ref installDirectory, rooted);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
+		}
+
+		private string GetRootedPathIfNecessary(string value)
+		{
+			if (string.IsNullOrEmpty(value)) return value;
+			try
+			{
+				var directory = new DirectoryInfo(value);
+				if (directory.Name.Equals(CurrentVersion, StringComparison.OrdinalIgnoreCase)
+				    || directory.Name.Equals(ExistingVersion, StringComparison.OrdinalIgnoreCase))
+					return directory.Parent?.FullName;
+			}
+			catch
+			{
+				// ignored
+			}
+			return value;
 		}
 
 		string dataDirectory;
