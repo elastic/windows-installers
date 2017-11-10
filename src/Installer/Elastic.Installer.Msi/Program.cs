@@ -179,10 +179,24 @@ namespace Elastic.Installer.Msi
 				});
 
 			var feature = document.Root.Descendants(ns + "Feature").Single();
+			var re = new Regex(@"\.\d+$");
 			foreach (var directory in directories)
 			{
 				var directoryId = directory.Attribute("Id").Value;
 				var componentId = "Component." + directoryId;
+				var directoryName = directory.Attribute("Name").Value;
+
+				// WixSharp appends a .{DIGIT} to duplicate file names in different directories in installer e.g. plugin_descriptor.properties
+				// for Elasticsearch plugins. Problem is duplicated file names may not represent the same file path across versions so
+				// fix this by including the directory name in the file name.
+				var duplicateNamedComponents = directory.Elements(ns + "Component")
+					.Where(c => re.IsMatch(c.Attribute("Id").Value));
+
+				foreach (var component in duplicateNamedComponents)
+				{
+					PatchDuplicateComponentId(ns, component, directoryName);
+				}
+				
 				directory.AddFirst(new XElement(ns + "Component",
 					new XAttribute("Id", componentId),
 					new XAttribute("Guid", WixGuid.NewGuid()),
@@ -268,6 +282,44 @@ namespace Elastic.Installer.Msi
 				new XAttribute("Template", $"Stopping {_productTitle} service"),
 				new XText($"Stopping {_productTitle} service") // TODO: default template doesn't receive service name. Might be because it's not installed with ServiceInstall table?
 			));
+		}
+		
+		private static void PatchComponentRef(XNamespace ns, XElement component, string oldId, string newId)
+		{
+			var root = component.Document.Root;
+			var componentRef = root.Descendants(ns + "ComponentRef").First(d => d.HasAttribute("Id", oldId));
+			componentRef.Attribute("Id").Remove();
+			componentRef.Add(new XAttribute("Id", newId));
+		}
+
+		private static void PatchDuplicateComponentFileId(XNamespace ns, XElement component, string newId)
+		{
+			var componentFile = component.Element(ns + "File");
+			var fileAttribute = componentFile?.Attribute("Id");
+			if (fileAttribute == null) return;
+			
+			fileAttribute.Remove();
+			componentFile.Add(new XAttribute("Id", newId));
+		}
+
+		private static void PatchDuplicateComponentId(XNamespace ns, XElement component, string directoryName)
+		{
+			var idAttribute = component.Attribute("Id");
+			if (idAttribute == null) return;
+			
+			var id = idAttribute.Value;
+			idAttribute.Remove();
+
+			// include directory name in Component Id
+			var newId = Regex.Replace(id, @"Component\.(.+)\.\d+", $"{directoryName}.$1").Replace("-","_");
+			var newComponentId = $"Component.{newId}";
+			component.Add(new XAttribute("Id", newComponentId));
+
+			// generate a new guid based on the new Component Id
+			component.Attribute("Guid").Value = WixGuid.NewGuid(newComponentId).ToString().ToLowerInvariant();
+			
+			PatchDuplicateComponentFileId(ns, component, newId);
+			PatchComponentRef(ns, component, id, newComponentId);
 		}
 	}
 }
