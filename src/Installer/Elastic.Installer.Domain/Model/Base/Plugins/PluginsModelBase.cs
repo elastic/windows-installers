@@ -16,7 +16,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		protected ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
 
 		protected bool AlreadyInstalled { get; set; }
-		protected string InstallDirectory { get; set; }
+		protected string PreviousInstallDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 
 		protected abstract IEnumerable<Plugin> GetPlugins();
@@ -55,7 +55,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			var environmentVariables = new Dictionary<string, string> { { ElasticsearchEnvironmentStateProvider.ConfDir, this.ConfigDirectory } };
 			var selectedPlugins = !this.AlreadyInstalled
 				? this.DefaultPlugins()
-				: this.PluginStateProvider.InstalledPlugins(this.InstallDirectory, this.ConfigDirectory, environmentVariables).ToList();
+				: this.PluginStateProvider.InstalledPlugins(this.PreviousInstallDirectory, this.ConfigDirectory, environmentVariables).ToList();
 			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))
 				plugin.Selected = true;
 		}
