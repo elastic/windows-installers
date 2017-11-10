@@ -10,6 +10,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 	{
 		private readonly InstallationModelTester _model;
 		private string _installDirectory = "C:\\elasticsearch";
+		
+		private new string VersionSpecificInstallDirectory => Path.Combine(this._installDirectory, TestSetupStateProvider.DefaultTestVersion);
 
 		public WritableLocationsTests()
 		{
