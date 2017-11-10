@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Model.Kibana.Plugins
 			pluginDependencies.Subscribe(t =>
 			{
 				this._alreadyInstalled = t.Item1;
-				this.InstallDirectory = t.Item2;
+				this.PreviousInstallDirectory = t.Item2;
 				this.ConfigDirectory = t.Item3;
 			});
 		}

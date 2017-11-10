@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Net.Http.Headers;
 using System.Reflection.Emit;
@@ -105,7 +106,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 		[Fact] void MovesPluginFolder() => WithValidPreflightChecks(s => s
 				.FileSystem(fs =>
 				{
-					var pluginFolder = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "plugins");
+					var pluginFolder = Path.Combine(VersionSpecificInstallDirectory, "plugins");
 					var pluginSubFolder= Path.Combine(pluginFolder, "x-pack");
 					fs.AddDirectory(pluginFolder);
 					fs.AddDirectory(pluginSubFolder);
@@ -141,7 +142,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 					fs.File.Exists(subFolderFile).Should().BeTrue();
 					fs.File.ReadAllText(subFolderFile).Should().Be("hello space");
 					
-					var pluginsFolder = Path.Combine(LocationsModel.DefaultProductInstallationDirectory, "plugins");
+					var pluginsFolder = Path.Combine(VersionSpecificInstallDirectory, "plugins");
 					var xPackFolder = Path.Combine(pluginsFolder, "x-pack");
 					fs.Directory.Exists(pluginsFolder).Should().BeTrue();
 					//moved out during installation in order to accomodate a fast restore
