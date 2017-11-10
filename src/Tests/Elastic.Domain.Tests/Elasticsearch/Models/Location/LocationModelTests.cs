@@ -1,4 +1,5 @@
-﻿using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+﻿using System.IO;
+using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using FluentAssertions;
 using Xunit;
 
@@ -7,6 +8,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 	public class LocationModelTests : InstallationModelTestBase
 	{
 		private readonly InstallationModelTester _model;
+		private const string CustomInstallationFolder = @"C:\Elasticsearch";
 
 		public LocationModelTests()
 		{
@@ -62,7 +64,34 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			.OnStep(m=>m.LocationsModel, step =>
 			{
 				step.InstallDir.Should().Be(step.DefaultProductVersionInstallationDirectory);
+				step.PreviousInstallationDirectory.Should().BeNullOrEmpty();
 			});
+		
+		[Fact] void ValidLocationUsingPreviousVersion6X() => WithValidPreflightChecks(s=>s.Wix(currentVersion:"6.1.0", existingVersion: "6.0.0"))
+				.IsValidOnFirstStep()
+                .OnStep(m => m.LocationsModel, step =>
+                {
+	                step.InstallDir = CustomInstallationFolder;
+                })
+                .CanClickNext()
+                .OnStep(m=>m.LocationsModel, step =>
+                {
+                    step.InstallDir.Should().Be(Path.Combine(CustomInstallationFolder, "6.1.0"));
+                    step.PreviousInstallationDirectory.Should().Be(Path.Combine(CustomInstallationFolder, "6.0.0"));
+                });
+		
+		[Fact] void ValidLocationUsingPreviousVersion5X() => WithValidPreflightChecks(s=>s.Wix(currentVersion:"6.0.0", existingVersion: "5.0.0"))
+				.IsValidOnFirstStep()
+                .OnStep(m => m.LocationsModel, step =>
+                {
+	                step.InstallDir = CustomInstallationFolder;
+                })
+                .CanClickNext()
+                .OnStep(m=>m.LocationsModel, step =>
+                {
+                    step.InstallDir.Should().Be(Path.Combine(CustomInstallationFolder, "6.0.0"));
+                    step.PreviousInstallationDirectory.Should().Be(Path.Combine(CustomInstallationFolder));
+                });
 			
 	}
 }

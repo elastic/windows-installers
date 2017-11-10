@@ -25,7 +25,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			pluginDependencies.Subscribe(t =>
 			{
 				this.AlreadyInstalled = t.Item1;
-				this.InstallDirectory = t.Item2;
+				this.PreviousInstallDirectory = t.Item2;
 				this.ConfigDirectory = t.Item3;
 				this.Refresh();
 			});

@@ -42,6 +42,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		private bool _refreshing;
 		private readonly ElasticsearchEnvironmentConfiguration _elasticsearchEnvironmentConfiguration;
 		private readonly ElasticsearchYamlConfiguration _yamlConfiguration;
+		private readonly VersionConfiguration _versionConfig;
 
 		private string CurrentVersion { get; }
 		private string ExistingVersion { get; }
@@ -55,6 +56,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this.Header = "Locations";
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
+			_versionConfig = versionConfig;
 			this.CurrentVersion = versionConfig.CurrentVersion.ToString();
 			this.ExistingVersion = versionConfig.ExistingVersion?.ToString();
 
@@ -195,8 +197,26 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			{
 				var rooted = GetRootedPathIfNecessary(value);
 				this.RaiseAndSetIfChanged(ref installDirectory, rooted);
+				this.PreviousInstallationDirectory = DeterminePreviousInstallationLocation(value);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
+		}
+
+		string previousInstallationDirectory;
+		public string PreviousInstallationDirectory
+		{
+			get => previousInstallationDirectory;
+			set => this.RaiseAndSetIfChanged(ref previousInstallationDirectory, value);
+		}
+
+		private string DeterminePreviousInstallationLocation(string installDir)
+		{
+			if (string.IsNullOrEmpty(installDir)) return installDir;
+			if (!_versionConfig.ExistingVersionInstalled) return null;
+			if (_versionConfig.ExistingVersion.Major < 6) return installDir;
+			if (_versionConfig.CurrentVersion.Major < 6) return installDir;
+			var rooted = GetRootedPathIfNecessary(installDir);
+			return Path.Combine(rooted, ExistingVersion);
 		}
 
 		private string GetRootedPathIfNecessary(string value)
@@ -249,6 +269,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			sb.AppendLine($"- {nameof(PlaceWritableLocationsInSamePath)} = " + PlaceWritableLocationsInSamePath);
 			sb.AppendLine($"- {nameof(ConfigureLocations)} = " + ConfigureLocations);
 			sb.AppendLine($"- {nameof(InstallDir)} = " + InstallDir);
+			sb.AppendLine($"- {nameof(PreviousInstallationDirectory)} = " + PreviousInstallationDirectory);
 			sb.AppendLine($"- {nameof(DataDirectory)} = " + DataDirectory);
 			sb.AppendLine($"- {nameof(ConfigDirectory)} = " + ConfigDirectory);
 			sb.AppendLine($"- {nameof(LogsDirectory)} = " + LogsDirectory);
