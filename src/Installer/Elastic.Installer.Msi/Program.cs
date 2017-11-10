@@ -22,8 +22,8 @@ namespace Elastic.Installer.Msi
 			_productName = args[0].ToLowerInvariant();
 			_productTitle = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(_productName);
 
-			var product = GetProduct(_productName);
 			var version = args[1];
+			var product = GetProduct(_productName);
 			var distributionRoot = Path.Combine(args[2], $"{_productName}-{version}");
 
 			_releaseMode = args.Length > 3 && !string.IsNullOrEmpty(args[3]);

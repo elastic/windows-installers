@@ -36,10 +36,16 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		public static readonly string DefaultLogsDirectory = Path.Combine(DefaultProductDataDirectory, Logs);
 		public static readonly string DefaultDataDirectory = Path.Combine(DefaultProductDataDirectory, Data);
 		public static readonly string DefaultConfigDirectory = Path.Combine(DefaultProductDataDirectory, Config);
+		
+		public string DefaultProductVersionInstallationDirectory => Path.Combine(DefaultProductInstallationDirectory, CurrentVersion);
 
 		private bool _refreshing;
 		private readonly ElasticsearchEnvironmentConfiguration _elasticsearchEnvironmentConfiguration;
 		private readonly ElasticsearchYamlConfiguration _yamlConfiguration;
+		private readonly VersionConfiguration _versionConfig;
+
+		private string CurrentVersion { get; }
+		private string ExistingVersion { get; }
 
 		public LocationsModel(
 			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration,
@@ -50,6 +56,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this.Header = "Locations";
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
+			_versionConfig = versionConfig;
+			this.CurrentVersion = versionConfig.CurrentVersion.ToString();
+			this.ExistingVersion = versionConfig.ExistingVersion?.ToString();
 
 			this.Refresh();
 			this._refreshing = true;
@@ -183,11 +192,48 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		[Argument(nameof(InstallDir))]
 		public string InstallDir
 		{
-			get => installDirectory;
-			set {
-				this.RaiseAndSetIfChanged(ref installDirectory, value);
+			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : Path.Combine(installDirectory, CurrentVersion);
+			set
+			{
+				var rooted = GetRootedPathIfNecessary(value);
+				this.RaiseAndSetIfChanged(ref installDirectory, rooted);
+				this.PreviousInstallationDirectory = DeterminePreviousInstallationLocation(value);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
+		}
+
+		string previousInstallationDirectory;
+		public string PreviousInstallationDirectory
+		{
+			get => previousInstallationDirectory;
+			set => this.RaiseAndSetIfChanged(ref previousInstallationDirectory, value);
+		}
+
+		private string DeterminePreviousInstallationLocation(string installDir)
+		{
+			if (string.IsNullOrEmpty(installDir)) return installDir;
+			if (!_versionConfig.ExistingVersionInstalled) return null;
+			if (_versionConfig.ExistingVersion.Major < 6) return installDir;
+			if (_versionConfig.CurrentVersion.Major < 6) return installDir;
+			var rooted = GetRootedPathIfNecessary(installDir);
+			return Path.Combine(rooted, ExistingVersion);
+		}
+
+		private string GetRootedPathIfNecessary(string value)
+		{
+			if (string.IsNullOrEmpty(value)) return value;
+			try
+			{
+				var directory = new DirectoryInfo(value);
+				if (directory.Name.Equals(CurrentVersion, StringComparison.OrdinalIgnoreCase)
+				    || directory.Name.Equals(ExistingVersion, StringComparison.OrdinalIgnoreCase))
+					return directory.Parent?.FullName;
+			}
+			catch
+			{
+				// ignored
+			}
+			return value;
 		}
 
 		string dataDirectory;
@@ -223,6 +269,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			sb.AppendLine($"- {nameof(PlaceWritableLocationsInSamePath)} = " + PlaceWritableLocationsInSamePath);
 			sb.AppendLine($"- {nameof(ConfigureLocations)} = " + ConfigureLocations);
 			sb.AppendLine($"- {nameof(InstallDir)} = " + InstallDir);
+			sb.AppendLine($"- {nameof(PreviousInstallationDirectory)} = " + PreviousInstallationDirectory);
 			sb.AppendLine($"- {nameof(DataDirectory)} = " + DataDirectory);
 			sb.AppendLine($"- {nameof(ConfigDirectory)} = " + ConfigDirectory);
 			sb.AppendLine($"- {nameof(LogsDirectory)} = " + LogsDirectory);

@@ -87,7 +87,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			var pluginDependencies = this.WhenAnyValue(
 				vm => vm.NoticeModel.ExistingVersionInstalled,
-				vm => vm.LocationsModel.InstallDir,
+				vm => vm.LocationsModel.PreviousInstallationDirectory,
 				vm => vm.LocationsModel.ConfigDirectory
 			);
 			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);

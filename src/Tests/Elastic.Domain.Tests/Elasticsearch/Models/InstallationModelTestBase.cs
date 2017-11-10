@@ -8,6 +8,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 {
 	public class InstallationModelTestBase
 	{
+		protected string VersionSpecificInstallDirectory => Path.Combine(LocationsModel.DefaultProductInstallationDirectory, TestSetupStateProvider.DefaultTestVersion);
+		
 		protected InstallationModelTester Pristine() => InstallationModelTester.New();
 
 		protected InstallationModelTester WithValidPreflightChecks() => 
