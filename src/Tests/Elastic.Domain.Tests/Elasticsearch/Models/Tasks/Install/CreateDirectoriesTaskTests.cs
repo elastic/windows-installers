@@ -15,8 +15,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 		private readonly string EsData = @"c:\es-data";
 		private readonly string EsLogs = @"c:\es-logs";
 		
-
-		[Fact] void CreatesDefaultDirectories() => WithValidPreflightChecks()
+		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		void CreatesDefaultDirectories() => WithValidPreflightChecks()
 			.AssertTask(
 				(m, s, fs) =>
 				{
@@ -34,7 +34,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact] void CreatesUserDirectories() => WithValidPreflightChecks(s => s
+		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		void CreatesUserDirectories() => WithValidPreflightChecks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
@@ -59,7 +60,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact] void ExisitingDirectoriesAreReused() => WithValidPreflightChecks(s => s
+		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		void ExisitingDirectoriesAreReused() => WithValidPreflightChecks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
@@ -84,7 +86,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact] void DefaultConfigContentsCopied() => WithValidPreflightChecks(s => s
+		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		void DefaultConfigContentsCopied() => WithValidPreflightChecks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
@@ -102,10 +105,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				})
 			)
 			.AssertTask(
-				(m, s, fs) =>
-				{
-					return new CreateDirectoriesTask(m, s, fs);
-				},
+				(m, s, fs) => new CreateDirectoriesTask(m, s, fs),
 				(m, t) =>
 				{
 					m.LocationsModel.ConfigDirectory.Should().Be(EsConfig);

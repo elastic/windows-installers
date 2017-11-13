@@ -1,4 +1,6 @@
 ﻿using System.IO.Abstractions;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 
@@ -15,19 +17,24 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		protected override bool ExecuteTask()
 		{
 			this.Session.SendActionStart(TotalTicks, ActionName, "Creating directories", "Creating directories: [1]");
+  
+			var rule = new FileSystemAccessRule(
+				new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null),
+				FileSystemRights.Write,
+				InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit,
+				PropagationFlags.None,
+				AccessControlType.Allow);
 
-			CreateDataDirectory();
+			CreateDataDirectory(rule);
 
-			CreateLogsDirectory();
+			CreateLogsDirectory(rule);
 
-			CreateConfigDirectory();
+			CreateConfigDirectory(rule);
 
 			CreatePluginsDirectory();
 
 			return true;
 		}
-
-
 
 		private void CreatePluginsDirectory()
 		{
@@ -44,7 +51,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				this.Session.SendProgress(1000, $"using existing plugins directory {pluginsDirectory}");
 		}
 
-		private void CreateLogsDirectory()
+		private void CreateLogsDirectory(FileSystemAccessRule rule)
 		{
 			var logsDirectory = this.InstallationModel.LocationsModel.LogsDirectory;
 			if (!this.FileSystem.Directory.Exists(logsDirectory))
@@ -54,9 +61,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			}
 			else
 				this.Session.SendProgress(1000, "using existing logs directory " + logsDirectory);
+
+			SetAccessControl(logsDirectory, rule);
 		}
 
-		private void CreateDataDirectory()
+		private void CreateDataDirectory(FileSystemAccessRule rule)
 		{
 			var dataDirectory = this.InstallationModel.LocationsModel.DataDirectory;
 			if (!this.FileSystem.Directory.Exists(dataDirectory))
@@ -66,9 +75,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			}
 			else
 				this.Session.SendProgress(1000, "using existing data directory " + dataDirectory);
+
+			SetAccessControl(dataDirectory, rule);
 		}
 
-		private void CreateConfigDirectory()
+		private void CreateConfigDirectory(FileSystemAccessRule rule)
 		{
 			//create new config directory if it does not already exist
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
@@ -85,6 +96,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				this.FileSystem.Directory.CreateDirectory(configDirectory);
 				actionsTaken++;
 			}
+
+			SetAccessControl(configDirectory, rule);
 
 			//make sure we move files and folders in ES_HOME/config to new ES_CONFIG as long as they are different
 			if (this.FileSystem.Directory.Exists(installConfigDirectory) && !this.SamePathAs(installConfigDirectory, configDirectory))
@@ -125,6 +138,14 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				this.Session.SendProgress(2 - actionsTaken, completedMessage);
 
 			this.Session.Log(completedMessage);
+		}
+
+		private void SetAccessControl(string directory, FileSystemAccessRule rule)
+		{
+			var directoryInfo = FileSystem.DirectoryInfo.FromDirectoryName(directory);
+			var directorySecurity = directoryInfo.GetAccessControl();
+			directorySecurity.AddAccessRule(rule);
+			directoryInfo.SetAccessControl(directorySecurity);
 		}
 	}
 }
