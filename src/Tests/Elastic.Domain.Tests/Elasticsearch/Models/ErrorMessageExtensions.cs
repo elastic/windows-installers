@@ -14,10 +14,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			foreach (var m in messages)
 				f.Should().Contain(e => e.HasErrorMessage(m), "only has errors {0}", f.ToUnitTestMessage());
 		}
-		public static bool HasErrorMessage(this ValidationFailure f, string message)
-		{
-			return f.ErrorMessage == "• " + message || f.ErrorMessage == message;
-		}
+
+		public static bool HasErrorMessage(this ValidationFailure f, string message) => 
+			f.ErrorMessage == "• " + message || f.ErrorMessage == message;
 
 		public static string ToUnitTestMessage(this IList<ValidationFailure> f) => 
 			f.Aggregate(new StringBuilder(), (sb, v) => sb.AppendLine($"• '{v.PropertyName}': {v.ErrorMessage}"), (sb) => sb.ToString());
