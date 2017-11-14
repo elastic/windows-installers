@@ -25,6 +25,8 @@ Describe "Silent Install with setting up bootstrap password" {
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 
     Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:elastic" }
+
+	Copy-ElasticsearchLogToOut
 }
 
 Describe "Silent Uninstall with setting up bootstrap password" {

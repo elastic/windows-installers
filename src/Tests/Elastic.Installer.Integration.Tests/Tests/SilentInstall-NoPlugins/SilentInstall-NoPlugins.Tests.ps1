@@ -18,6 +18,8 @@ Describe "Silent Install with no plugins" {
     Context-PluginsInstalled -Expected @{ Plugins=@() }
 
     Context-ClusterNameAndNodeName
+
+	Copy-ElasticsearchLogToOut
 }
 
 Describe "Silent Uninstall with no plugins" {

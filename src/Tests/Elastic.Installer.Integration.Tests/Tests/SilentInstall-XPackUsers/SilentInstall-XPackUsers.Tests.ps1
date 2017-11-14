@@ -27,6 +27,8 @@ Describe "Silent Install with setting up x-pack users" {
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 
     Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:elastic" }
+
+	Copy-ElasticsearchLogToOut
 }
 
 Describe "Silent Uninstall with setting up x-pack users" {
