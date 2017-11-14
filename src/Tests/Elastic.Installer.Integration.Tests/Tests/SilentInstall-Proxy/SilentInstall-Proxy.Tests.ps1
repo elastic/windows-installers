@@ -13,7 +13,16 @@ Describe "Silent Install x-pack through HTTPS proxy" {
 	$port = 8888
 	Start-Fiddler -Port $port
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack","HTTPSPROXYHOST=localhost", "HTTPSPROXYPORT=$port")
+	$exeArgs = @(
+		"PLUGINS=x-pack",
+		"HTTPSPROXYHOST=localhost", 
+		"HTTPSPROXYPORT=$port",
+		"XPACKSECURITYENABLED=true", 
+		"XPACKLICENSE=Trial", 
+		"SKIPSETTINGPASSWORDS=true",
+		"BOOTSTRAPPASSWORD=changeme")
+
+    Invoke-SilentInstall -Exeargs $exeArgs
 
     Context-PingNode -XPackSecurityInstalled $true
 
@@ -24,9 +33,11 @@ Describe "Silent Install x-pack through HTTPS proxy" {
 	Context-FiddlerSessionContainsEntry
 
 	Stop-Fiddler
+
+	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with x-pack through HTTPS proxy" {
+Describe "Silent Uninstall x-pack through HTTPS proxy" {
 
     Invoke-SilentUninstall
 

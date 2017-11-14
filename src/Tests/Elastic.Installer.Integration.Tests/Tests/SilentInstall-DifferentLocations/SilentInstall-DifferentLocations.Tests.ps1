@@ -46,6 +46,8 @@ Describe "Silent Install with different install locations" {
 	}
 
     Context-JvmOptions
+
+	Copy-ElasticsearchLogToOut -Path "$LogsDir\elasticsearch.log"
 }
 
 Describe "Silent Uninstall with different install locations" {

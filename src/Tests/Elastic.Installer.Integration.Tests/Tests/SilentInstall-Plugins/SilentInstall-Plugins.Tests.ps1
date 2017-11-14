@@ -18,6 +18,8 @@ Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
     Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
+
+	Copy-ElasticsearchLogToOut
 }
 
 Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins" {

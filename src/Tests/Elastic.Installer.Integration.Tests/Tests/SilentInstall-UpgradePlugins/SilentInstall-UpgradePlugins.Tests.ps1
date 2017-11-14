@@ -66,7 +66,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v
+    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v -Upgrade
 
     $ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -109,6 +109,8 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
 	# Check inserted data still exists
 	Context-ReadData -Credentials $credentials
+	
+	Copy-ElasticsearchLogToOut
 }
 
 Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninstall $($version.Description)" {
