@@ -40,9 +40,11 @@ Describe "Silent Install with default arguments $(($Global:Version).FullVersion)
     Context-ElasticsearchConfiguration
 
     Context-JvmOptions
+
+	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall" {
+Describe "Silent Uninstall with default arguments $(($Global:Version).FullVersion)" {
 
     Invoke-SilentUninstall
 

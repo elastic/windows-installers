@@ -19,7 +19,7 @@ Describe "Silent Install with 1024mb heap size" {
 		Memory = $HeapSize
 	}
 
-    Invoke-SilentUninstall
+    Copy-ElasticsearchLogToOut
 }
 
 Describe "Silent Uninstall with 1024mb heap size" {

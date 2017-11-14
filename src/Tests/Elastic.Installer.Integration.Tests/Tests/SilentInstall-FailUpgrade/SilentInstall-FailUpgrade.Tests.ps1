@@ -69,12 +69,14 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
 	$startDate = Get-Date
 
 	Context "Failed installation" {
-		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1") -Version $v
+		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1") -Version $v -Upgrade
 
 		It "Exit code is 1603" {
 			$exitCode | Should Be 1603
 		}
 	}
+
+	Copy-ElasticsearchLogToOut
 
 	Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $v
 

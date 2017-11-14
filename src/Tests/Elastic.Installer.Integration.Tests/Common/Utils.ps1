@@ -266,13 +266,18 @@ function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PS
 	if (!$SyncFolders) {
 		$SyncFolders = @{
 			"/vagrant/install.log" = "./../../../../../build/out/$TestDirName-install.log"
+			"/vagrant/upgrade.log" = "./../../../../../build/out/$TestDirName-upgrade.log"
 			"/vagrant/uninstall.log" = "./../../../../../build/out/$TestDirName-uninstall.log"
-      		"/out/*.xml" = "./../../../../../build/out"
+			"/out/*.xml" = "./../../../../../build/out"
+			"/out/elasticsearch.log" = "./../../../../../build/out/$TestDirName-elasticsearch.log"
 		}
 	}
 	
 	foreach($syncFolderKey in $SyncFolders.Keys) {
-		Copy-Item -Path "C:$syncFolderKey" -Destination "$($SyncFolders.$syncFolderKey)" -Recurse -Force -FromSession $Session
+		$path = "C:$syncFolderKey"
+		if (Invoke-Command -Session $Session -ScriptBlock {Test-Path -Path $args[0]} -ArgumentList $path) {
+			Copy-Item -Path $path -Destination "$($SyncFolders.$syncFolderKey)" -Recurse -Force -FromSession $Session
+		}
 	}
 }
 
@@ -360,6 +365,7 @@ function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Vers
 			}
 
 			Copy-SyncedFoldersToRemote -Session $session -SyncFolders $syncFolders
+
 			foreach ($dir in $TestDirs) {  
 				log "running tests in $dir"
 				Invoke-IntegrationTestsOnQuickAzure -Location $dir -Version "$Version" -PreviousVersions $PreviousVersions -Session $session
@@ -421,7 +427,17 @@ function Start-Fiddler($Port=8888) {
 	& "$($env:LOCALAPPDATA)\Programs\Fiddler\Fiddler.exe" /noattach /noversioncheck /port:$Port
 }
 
-function Get-FiddlerSession() {
+function Get-FiddlerSession() {	
+	# Ensure the custom rules are in the Fiddler2 Scripts directory
+	$scriptsDir = "$([Environment]::GetFolderPath("MyDocuments"))\Fiddler2\Scripts"
+	if (-not(Test-Path $scriptsDir)) {
+		New-Item $scriptsDir -Type Directory | Out-Null
+	}
+
+	if (-not(Test-Path "$scriptsDir\CustomRules.js")) {
+		Copy-Item -Path "C:\common\CustomRules.js" -Destination $scriptsDir -Force
+	}
+
 	$exitCode = (Start-Process "$($env:LOCALAPPDATA)\Programs\Fiddler\ExecAction.exe" -ArgumentList "dump_session" -Wait -PassThru).ExitCode
 	if ($exitCode -ne 0) {
 		log "ExecAction exited with code: $exitCode" -Level Error
@@ -469,13 +485,23 @@ function Invoke-SilentInstall {
         $Exeargs,
 
 		[string]
-		$Version
+		$Version,
+
+		[switch]
+		$Upgrade
     )
 
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
-    log "running installer: msiexec.exe /i $Exe /qn /l install.log $QuotedArgs"
-    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/i $Exe /qn /l*v install.log $QuotedArgs" -Wait -PassThru).ExitCode
+	if ($Upgrade) {
+		$logFile = "upgrade.log"
+	} 
+	else {
+		$logFile = "install.log"
+	}
+	$argumentList = "/i $Exe /qn /l*v $logFile $QuotedArgs"
+    log "running installer: msiexec.exe $argumentList"
+    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList $argumentList -Wait -PassThru).ExitCode
 
     if ($ExitCode) {
         log "last exit code not zero: $ExitCode" -l Error
@@ -497,8 +523,11 @@ function Invoke-SilentUninstall {
 
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
-    log "running installer: msiexec.exe /x $Exe /qn /l uninstall.log $QuotedArgs"
-    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList "/x $Exe /qn /l*v uninstall.log $QuotedArgs" -Wait -PassThru).ExitCode
+	$logFile = "uninstall.log"
+	
+	$argumentList = "/x $Exe /qn /l*v $logFile $QuotedArgs"
+    log "running installer: msiexec.exe $argumentList"
+    $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList $argumentList -Wait -PassThru).ExitCode
 
     if ($ExitCode) {
         log "last exit code not zero: $ExitCode" -l Error
@@ -597,31 +626,6 @@ function Get-ElasticsearchYamlConfiguration($Version) {
 	return Get-Content "$EsData\elasticsearch.yml"
 }
 
-function Add-XPackSecurityCredentials($Username, $Password, $Roles, $Version) {
-    if (!$Roles) {
-        $Roles = @("superuser")
-    }
-
-	$esConfigEnvVar = Get-ConfigEnvironmentVariableForVersion -Version $Version
-    $Service = Get-ElasticsearchService
-    $Service | Stop-Service
-
-    $EsHome = Get-MachineEnvironmentVariable "ES_HOME"
-    $EsConfig = Get-MachineEnvironmentVariable $esConfigEnvVar
-    $EsUsersBat = Join-Path -Path $EsHome -ChildPath "bin\x-pack\users.bat"
-    $ConcatRoles = [string]::Join(",", $Roles)
-
-    # path.conf has to be double quoted to be passed as the complete argument for -E in PowerShell AND the value
-    # itself has to also be double quoted to be passed to the batch script, so the inner double quotes need to be
-    # escaped
-    $ExitCode = & "$EsUsersBat" useradd $Username -p $Password -r $ConcatRoles -E "`"path.conf=$EsConfig`""
-    if ($ExitCode) {
-        throw "Last exit code : $ExitCode"
-    }
-
-    $Service | Start-Service
-}
-
 function Merge-Hashtables {
     $Output = @{}
     foreach ($Hashtable in ($Input + $Args)) {
@@ -659,4 +663,8 @@ function Get-PreviousVersions() {
 	else {
 		$Global:PreviousVersions = @()
 	}
+}
+
+function Copy-ElasticsearchLogToOut($Path = "$(Join-Path -Path $($env:ALLUSERSPROFILE) -ChildPath "Elastic\Elasticsearch\logs\elasticsearch.log")") {
+	Copy-Item -Path $Path -Destination "$($PWD.Drive.Root)\out" -Force -ErrorAction Ignore
 }
