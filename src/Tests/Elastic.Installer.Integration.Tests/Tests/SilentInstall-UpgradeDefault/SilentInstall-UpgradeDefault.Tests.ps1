@@ -65,7 +65,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Version $v
+    Invoke-SilentInstall -Version $v -Upgrade
 
 	$ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -108,6 +108,8 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 
 	# Check inserted data still exists
 	Context-ReadData
+
+	Copy-ElasticsearchLogToOut
 }
 
 Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade - Uninstall new version $($version.Description)" {
