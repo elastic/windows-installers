@@ -24,9 +24,11 @@ Describe "Silent Install x-pack through HTTPS proxy" {
 	Context-FiddlerSessionContainsEntry
 
 	Stop-Fiddler
+
+	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with x-pack through HTTPS proxy" {
+Describe "Silent Uninstall x-pack through HTTPS proxy" {
 
     Invoke-SilentUninstall
 

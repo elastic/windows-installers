@@ -68,7 +68,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v -Upgrade
 
     Context-EsHomeEnvironmentVariable -Expected $InstallDir
 
@@ -107,6 +107,8 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 
 	# Check inserted data still exists
 	Context-ReadData -Credentials $credentials
+
+	Copy-ElasticsearchLogToOut
 }
 
 Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume - Uninstall $($version.Description)" {

@@ -90,7 +90,10 @@ def configure_fiddler()
 	if (-not(Test-Path $scriptsDir)) {
 		New-Item $scriptsDir -Type Directory | Out-Null
 	}
-	Copy-Item "C:\\common\\CustomRules.js" $scriptsDir
+	$customRules = "C:\\common\\CustomRules.js"
+	if (Test-Path -Path $customRules) {	
+		Copy-Item $customRules $scriptsDir
+	}
   SHELL
 end
 
