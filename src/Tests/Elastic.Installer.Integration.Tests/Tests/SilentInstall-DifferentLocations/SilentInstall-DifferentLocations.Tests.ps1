@@ -6,13 +6,13 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
-$InstallDir = "C:\temp dir\Elasticsearch\"
+Get-Version
+Get-PreviousVersions
+
+$InstallDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)"
 $DataDir = "C:\foo\data"
 $ConfigDir = "C:\bar\config"
 $LogsDir = "C:\baz\logs"
-
-Get-Version
-Get-PreviousVersions
 
 Describe "Silent Install with different install locations" {
 

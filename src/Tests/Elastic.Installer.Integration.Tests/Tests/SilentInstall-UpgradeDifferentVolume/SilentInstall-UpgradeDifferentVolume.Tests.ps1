@@ -13,15 +13,15 @@ $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
-$InstallDir = "D:\Elastic\"
+$InstallDir = "D:\Elastic"
 $DataDir = "D:\Data"
 $ConfigDir = "D:\Config"
 $LogsDir = "D:\Logs"
-$ExeArgs = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
 
 Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Install previous version $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
 
@@ -67,6 +67,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
 Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgrade from $($previousVersion.Description) to $($version.Description)" {
 
 	$v = $version.FullVersion
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
@@ -127,5 +128,5 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume - Un
 
 	Context-ElasticsearchServiceNotInstalled
 
-	Context-EmptyInstallDirectory -Path $InstallDir
+	Context-EmptyInstallDirectory -Path "$InstallDir\$($version.FullVersion)"
 }

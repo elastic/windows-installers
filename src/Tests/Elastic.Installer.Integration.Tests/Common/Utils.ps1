@@ -652,5 +652,22 @@ function Get-PreviousVersions() {
 }
 
 function Copy-ElasticsearchLogToOut($Path = "$(Join-Path -Path $($env:ALLUSERSPROFILE) -ChildPath "Elastic\Elasticsearch\logs\elasticsearch.log")") {
-	Copy-Item -Path $Path -Destination "$($PWD.Drive.Root)\out" -Force -ErrorAction Ignore
+	Copy-Item -Path $Path -Destination "$($PWD.Drive.Root)out" -Force -ErrorAction Ignore
+}
+
+function Get-ChildPath($Version) {
+	if (!$Version) {
+		$Version = $Global:Version
+	}
+
+	# anything released before 6.0.0 won't include version
+	if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -lt 0) `
+		-and $Version.SourceType -ne "Compile") {
+		$ChildPath = "Elastic\Elasticsearch\"
+	}
+	else {
+		$ChildPath = "Elastic\Elasticsearch\$($Version.FullVersion)"
+	}
+
+	return $ChildPath
 }
