@@ -2,6 +2,7 @@
 using Elastic.Installer.Msi.CustomActions;
 using Elastic.InstallerHosts;
 using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Uninstall;
 using Microsoft.Deployment.WindowsInstaller;
 using WixSharp;
 
@@ -11,9 +12,9 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 	{
 		public override string Name => nameof(ElasticsearchUninstallDirectoriesAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.UninstallDirectories;
-		public override Step Step => Step.RemoveEnvironmentStrings;
+		public override Step Step => Step.RemoveFolders;
 		public override When When => When.After;
-		public override Condition Condition => new Condition("(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=\"ALL\")");
+		public override Condition Condition => Condition.BeingRemoved;
 		
 		[CustomAction]
 		public static ActionResult ElasticsearchUninstallDirectories(Session session) =>

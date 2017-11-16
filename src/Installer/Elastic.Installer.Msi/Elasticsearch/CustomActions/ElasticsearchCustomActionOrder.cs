@@ -22,8 +22,7 @@
 		RollbackDirectories = 1,
 	
 		// Uninstall actions
-		UninstallPlugins = 1,
-		UninstallDirectories = 2,
+		UninstallDirectories = 1,
 
 		// Commit actons
 		CleanupInstall = 1,

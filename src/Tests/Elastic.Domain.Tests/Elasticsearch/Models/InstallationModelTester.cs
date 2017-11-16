@@ -15,7 +15,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Closing;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
-using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
+using Elastic.InstallerHosts.Elasticsearch.Tasks;
 using FluentAssertions;
 using FluentValidation.Results;
 

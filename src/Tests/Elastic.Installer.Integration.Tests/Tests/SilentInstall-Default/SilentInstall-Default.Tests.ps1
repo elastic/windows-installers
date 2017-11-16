@@ -17,14 +17,7 @@ Describe "Silent Install with default arguments $(($Global:Version).Description)
 
     Context-PingNode
 
-    $ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
-
-    Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
-
-    $ProfileFolder = $env:ALLUSERSPROFILE
-    $ExpectedConfigFolder = Join-Path -Path $ProfileFolder -ChildPath "Elastic\Elasticsearch\config"
+    Context-EsHomeEnvironmentVariable
 
     Context-EsConfigEnvironmentVariable
 
@@ -32,7 +25,7 @@ Describe "Silent Install with default arguments $(($Global:Version).Description)
 
     Context-MsiRegistered
 
-    Context-ServiceRunningUnderAccount -Expected "LocalSystem"
+    Context-ServiceRunningUnderAccount
 
     Context-EmptyEventLog
 
@@ -47,6 +40,10 @@ Describe "Silent Install with default arguments $(($Global:Version).Description)
 
 Describe "Silent Uninstall with default arguments $(($Global:Version).Description)" {
 
+	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
     Invoke-SilentUninstall
 
 	Context-NodeNotRunning
@@ -59,9 +56,7 @@ Describe "Silent Uninstall with default arguments $(($Global:Version).Descriptio
 
 	Context-ElasticsearchServiceNotInstalled
 
-	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
+	Context-EmptyInstallDirectory
 
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-DataDirectories -Path @($configDirectory, $dataDirectory, $logsDirectory) -DeleteAfter
 }

@@ -125,6 +125,12 @@ Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Ta
 		Path = $ExpectedConfigFolder
 	}
 
+	$dataDirectory = $ExpectedConfigFolder | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $ExpectedConfigFolder | Split-Path | Join-Path -ChildPath "logs"
+	Context-DirectoryExists -Path $ExpectedConfigFolder 
+	Context-DirectoryExists -Path $dataDirectory 
+	Context-DirectoryExists -Path $logsDirectory
+
     Context-PluginsInstalled
 
 	# previous version still installed
@@ -152,6 +158,10 @@ Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Ta
 
 Describe -Name "Silent Uninstall fail upgrade uninstall $($previousVersion.Description)" -Tags $tags {
 
+	$configDirectory = Get-ConfigEnvironmentVariableForVersion -Version $previousVersion | Get-MachineEnvironmentVariable
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
 	$v = $previousVersion.FullVersion
 
     Invoke-SilentUninstall -Version $previousVersion
@@ -166,9 +176,7 @@ Describe -Name "Silent Uninstall fail upgrade uninstall $($previousVersion.Descr
 
 	Context-ElasticsearchServiceNotInstalled
 
- 	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath $previousVersion
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
+	Context-EmptyInstallDirectory
 
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-DataDirectories -Version $previousVersion -Path @($configDirectory, $dataDirectory, $logsDirectory) -DeleteAfter
 }

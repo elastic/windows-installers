@@ -64,7 +64,6 @@
     <Compile Include="Elasticsearch\CustomActions\Rollback\ElasticsearchRollbackDirectoriesAction.cs" />
     <Compile Include="CustomActions\UninstallCustomAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallDirectoriesAction.cs" />
-    <Compile Include="Elasticsearch\CustomActions\Uninstall\ElasticsearchUninstallPluginsAction.cs" />
     <Compile Include="Elasticsearch\Elasticsearch.cs" />
     <Compile Include="Kibana\CustomActions\Install\KibanaServiceStopAction.cs" />
     <Compile Include="Kibana\CustomActions\Install\KibanaEnvironmentAction.cs" />

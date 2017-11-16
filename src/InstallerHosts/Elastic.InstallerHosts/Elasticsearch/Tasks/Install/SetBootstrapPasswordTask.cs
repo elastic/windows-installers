@@ -5,7 +5,6 @@ using System.Linq;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
-using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {

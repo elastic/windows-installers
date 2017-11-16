@@ -129,4 +129,6 @@ Describe -Name "Silent Uninstall upgrade different volume uninstall $($version.D
 	Context-ElasticsearchServiceNotInstalled
 
 	Context-EmptyInstallDirectory -Path "$InstallDir\$($version.FullVersion)"
+
+	Context-DataDirectories -Path @($ConfigDir, $DataDir, $LogsDir) -DeleteAfter
 }

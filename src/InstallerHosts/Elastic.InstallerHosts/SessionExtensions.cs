@@ -5,6 +5,7 @@ using Elastic.Configuration.Extensions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Microsoft.Deployment.WindowsInstaller;
 using ReactiveUI;
+using WixSharp;
 
 namespace Elastic.InstallerHosts
 {
@@ -60,19 +61,6 @@ namespace Elastic.InstallerHosts
 				session[property] = value;
 			else
 				session.CustomActionData[property] = value;
-		}
-
-		public static bool IsActive(this Session session)
-		{
-			try
-			{
-				var components = session.Components;
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
 		}
 
 		public static ActionResult Handle(this Session session, Func<bool> action)

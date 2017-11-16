@@ -38,4 +38,12 @@ Describe "Silent Failed Install with default arguments $(($Global:Version).Descr
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+
+	$configDirectory = "C:\ProgramData\Elastic\Elasticsearch\config"
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
+	Context-DirectoryNotExist -Path $configDirectory -DeleteAfter
+	Context-DirectoryNotExist -Path $dataDirectory -DeleteAfter
+	Context-DirectoryNotExist -Path $logsDirectory -DeleteAfter
 }

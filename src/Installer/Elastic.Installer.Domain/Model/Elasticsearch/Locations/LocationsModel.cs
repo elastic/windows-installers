@@ -139,12 +139,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this._refreshing = false;
 		}
 
-		protected bool SamePathAs(string pathA, string pathB)
+		public bool SamePathAs(string pathA, string pathB)
 		{
 			if (!string.IsNullOrEmpty(pathA) && !string.IsNullOrEmpty(pathB))
 			{
-				var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd('\\','/');
-				var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd('\\','/');
+				var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+				var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 				return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
 			}
 

@@ -29,7 +29,7 @@ namespace Elastic.Installer.Msi
 			// don't have to be set on the command line.
 			var setupParams = product.MsiParams;
 			var staticProperties = setupParams
-				.Where(v => v.Attribute.IsStatic || v.Attribute.IsHidden || v.Attribute.IsSecure)
+				.Where(v => (v.Attribute.IsStatic && !string.IsNullOrEmpty(v.Value)) || v.Attribute.IsHidden || v.Attribute.IsSecure)
 				.Select(a =>
 				{
 					var property = new Property(a.Key, a.Value) { Attributes = new Attributes() };
