@@ -22,7 +22,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
 			var provider = this.InstallationModel.PluginsModel.PluginStateProvider;
 			var environmentVariables = new Dictionary<string, string> { { ElasticsearchEnvironmentStateProvider.ConfDir, configDirectory } };
-			var plugins = provider.InstalledPlugins(installDirectory, configDirectory, environmentVariables);
+			var plugins = provider.InstalledPlugins(installDirectory, environmentVariables);
 
 			if (plugins.Count == 0)
 			{

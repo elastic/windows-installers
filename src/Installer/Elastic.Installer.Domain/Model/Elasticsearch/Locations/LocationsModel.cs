@@ -200,27 +200,27 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			{
 				var rooted = GetRootedPathIfNecessary(value);
 				this.RaiseAndSetIfChanged(ref installDirectory, rooted);
-				this.PreviousInstallationDirectory = DeterminePreviousInstallationLocation(value);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
 		}
 
 		string previousInstallationDirectory;
+		[SetPropertyActionArgument(nameof(PreviousInstallationDirectory), "[%" + ElasticsearchEnvironmentStateProvider.EsHome + "]", false)]
 		public string PreviousInstallationDirectory
 		{
 			get => previousInstallationDirectory;
 			set => this.RaiseAndSetIfChanged(ref previousInstallationDirectory, value);
 		}
 
-		private string DeterminePreviousInstallationLocation(string installDir)
-		{
-			if (string.IsNullOrEmpty(installDir)) return installDir;
-			if (!_versionConfig.ExistingVersionInstalled) return null;
-			if (_versionConfig.ExistingVersion.Major < 6) return installDir;
-			if (_versionConfig.CurrentVersion.Major < 6) return installDir;
-			var rooted = GetRootedPathIfNecessary(installDir);
-			return this.FileSystem.Path.Combine(rooted, ExistingVersion);
-		}
+		//private string DeterminePreviousInstallationLocation(string installDir)
+		//{
+		//	if (string.IsNullOrEmpty(installDir)) return installDir;
+		//	if (!_versionConfig.ExistingVersionInstalled) return null;
+		//	if (_versionConfig.ExistingVersion.Major < 6) return installDir;
+		//	if (_versionConfig.CurrentVersion.Major < 6) return installDir;
+		//	var rooted = GetRootedPathIfNecessary(installDir);
+		//	return Path.Combine(rooted, ExistingVersion);
+		//}
 
 		private string GetRootedPathIfNecessary(string value)
 		{

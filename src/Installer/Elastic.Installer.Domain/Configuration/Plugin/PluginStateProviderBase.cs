@@ -36,7 +36,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			_fileSystem = fileSystem;
 		}
 
-		public IList<string> InstalledPlugins(string installDirectory, string configDirectory, IDictionary<string, string> environmentVariables = null)
+		public IList<string> InstalledPlugins(string installDirectory, IDictionary<string, string> environmentVariables = null)
 		{
 			var pluginsDirectory = Path.Combine(installDirectory, "plugins");
 			if (!this._fileSystem.Directory.Exists(pluginsDirectory)
@@ -45,7 +45,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			
 			var command = "list";
 			var pluginScript = PluginScript(installDirectory);
-			var process = PluginProcess(configDirectory, pluginScript, command, environmentVariables);
+			var process = PluginProcess(pluginScript, command, environmentVariables);
 			var sb = new StringBuilder();
 
 			void ProcessOnOutputDataReceived(object sender, DataReceivedEventArgs args)
@@ -84,7 +84,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 
 			var command = $"install {plugin} {string.Join(" ", additionalArguments ?? Enumerable.Empty<string>())}";
 			var pluginScript = this.PluginScript(installDirectory);
-			var process = PluginProcess(configDirectory, pluginScript, command, environmentVariables);
+			var process = PluginProcess(pluginScript, command, environmentVariables);
 			var processOnOutputDataReceived = CreateInstallHandler(perDownloadIncrement, plugin);
 			var invokeResult = InvokeProcess(process, processOnOutputDataReceived);
 			var exitCode = invokeResult.Item1;
@@ -100,7 +100,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 		{
 			var command = $"remove {plugin} {string.Join(" ", additionalArguments ?? Enumerable.Empty<string>())}";
 			var pluginScript = this.PluginScript(installDirectory);
-			var process = PluginProcess(configDirectory, pluginScript, command, environmentVariables);
+			var process = PluginProcess(pluginScript, command, environmentVariables);
 
 			void ProcessOnOutputDataReceived(object sender, DataReceivedEventArgs args)
 			{
@@ -147,7 +147,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			return Tuple.Create(exitCode, errors, errorsBuilder.ToString());
 		}
 
-		private static Process PluginProcess(string configDirectory, string pluginScript, 
+		private static Process PluginProcess(string pluginScript, 
 			string command, IEnumerable<KeyValuePair<string,string>> environmentVariables = null)
 		{
 			var start = new ProcessStartInfo

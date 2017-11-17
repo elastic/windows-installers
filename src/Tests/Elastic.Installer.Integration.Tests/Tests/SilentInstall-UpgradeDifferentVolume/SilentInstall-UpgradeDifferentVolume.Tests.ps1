@@ -29,7 +29,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
 
     Context-PingNode -XPackSecurityInstalled $true
 
-    Context-EsHomeEnvironmentVariable -Expected $InstallDir
+    Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
 		Version = $previousVersion
@@ -71,7 +71,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
-    Context-EsHomeEnvironmentVariable -Expected $InstallDir
+    Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
 		Version = $version 

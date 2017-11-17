@@ -59,6 +59,7 @@ namespace Elastic.Installer.Msi
 
 			var project = new Project
 			{
+				EnvironmentVariables = product.EnvironmentVariables,
 				ProductId = product.ProductCode[version],
 				UpgradeCode = product.UpgradeCode,
 				GUID = product.UpgradeCode,
@@ -147,6 +148,18 @@ namespace Elastic.Installer.Msi
 			project.WixSourceGenerated += PatchWixSource;
 			project.IncludeWixExtension(WixExtension.NetFx);
 
+			var service = project
+				.ResolveWildCards()
+				.FindFile(f => f.Name.EndsWith($"{_productName}.exe")).First();
+
+			service.ServiceInstaller = new ServiceInstaller("Elasticsearch")
+			{
+				StartOn = SvcEvent.Install_Wait,
+				StopOn = SvcEvent.InstallUninstall_Wait,
+				RemoveOn = SvcEvent.Uninstall_Wait,
+			};
+
+
 			// needed for WixFailWhenDeferred custom action
 			if (!_releaseMode)
 				project.IncludeWixExtension(WixExtension.Util);
@@ -205,10 +218,10 @@ namespace Elastic.Installer.Msi
 				
 				directory.AddFirst(new XElement(ns + "Component",
 					new XAttribute("Id", componentId),
-					new XAttribute("Guid", WixGuid.NewGuid()),
+					new XAttribute("Guid", WixGuid.NewGuid(componentId)),
 					new XAttribute("Win64", "yes"),
 					new XElement(ns + "RemoveFile",
-						new XAttribute("Id", directoryId),
+						new XAttribute("Id", directoryId + ".all"),
 						new XAttribute("Name", "*"), // remove all files in dir
 						new XAttribute("On", "both")
 					),
@@ -228,7 +241,7 @@ namespace Elastic.Installer.Msi
 						new XAttribute("Name", "x-pack"),
 						new XElement(ns + "Component",
 							new XAttribute("Id", componentInstalldirBinXpack),
-							new XAttribute("Guid", WixGuid.NewGuid()),
+							new XAttribute("Guid", WixGuid.NewGuid(componentInstalldirBinXpack)),
 							new XAttribute("Win64", "yes"),
 							new XElement(ns + "RemoveFile",
 								new XAttribute("Id", installdirBinXpack),
@@ -248,22 +261,22 @@ namespace Elastic.Installer.Msi
 				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
 			}
 
-			var exeName = $"{_productName}.exe";
-			var exeComponent = document.Root.Descendants(ns + "Component")
-				.Where(c => c.Descendants(ns + "File").Any(f => f.Attribute("Id").Value == exeName))
-				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() })
-				.SingleOrDefault();
+			//var exeName = $"{_productName}.exe";
+			//var exeComponent = document.Root.Descendants(ns + "Component")
+			//	.Where(c => c.Descendants(ns + "File").Any(f => f.Attribute("Id").Value == exeName))
+			//	.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() })
+			//	.SingleOrDefault();
 
-			if (exeComponent == null)
-				throw new Exception($"No File element found with Id '{exeName}'");
+			//if (exeComponent == null)
+			//	throw new Exception($"No File element found with Id '{exeName}'");
 
-			var fileId = exeComponent.File.Attribute("Id").Value;
-			exeComponent.Component.Add(new XElement(ns + "ServiceControl",
-				new XAttribute("Id", fileId),
-				new XAttribute("Name", _productTitle), // MUST match the name of the service
-				new XAttribute("Stop", "both"),
-				new XAttribute("Wait", "yes")
-			));
+			//var fileId = exeComponent.File.Attribute("Id").Value;
+			//exeComponent.Component.Add(new XElement(ns + "ServiceControl",
+			//	new XAttribute("Id", fileId),
+			//	new XAttribute("Name", _productTitle), // MUST match the name of the service
+			//	new XAttribute("Stop", "both"),
+			//	new XAttribute("Wait", "yes")
+			//));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html

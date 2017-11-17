@@ -20,6 +20,8 @@ namespace Elastic.Installer.Msi
 
 		public abstract IEnumerable<ModelArgument> MsiParams { get; }
 
+		public virtual EnvironmentVariable[] EnvironmentVariables { get; }
+
 		public List<Dir> Files(string path) =>
 			Directory.GetDirectories(path)
 				.Where(directory => Directory.EnumerateFileSystemEntries(directory).Any())

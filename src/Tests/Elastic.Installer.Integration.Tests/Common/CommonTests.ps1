@@ -216,10 +216,11 @@ function Context-ServiceRunningUnderAccount($Expected) {
 
 function Context-EmptyEventLog() {
     Context "Event log" {
-        $ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic*
+		# convert to string so in the event of error we can see what the log entries actually are in the test output
+        $ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* | Format-List | Out-String
 
         It "Event log is empty" {
-            $ElasticsearchEventLogs | Should Be $null
+            $ElasticsearchEventLogs | Should BeNullOrEmpty
         }
     }
 }
@@ -358,14 +359,7 @@ function Context-JvmOptions ($Expected) {
     }
 }
 
-function Context-InsertData($Domain, $Port, $Credentials) {
-	if (!$Domain) {
-		$Domain = "localhost"
-	}
-
-	if (!$Port) {
-		$Port = "9200"
-	}
+function Context-InsertData($Domain = "localhost", $Port = 9200, $Credentials) {
 
 	Context "Insert Data" {
 		try {
@@ -417,14 +411,7 @@ function Context-InsertData($Domain, $Port, $Credentials) {
 	}
 }
 
-function Context-ReadData($Domain, $Port, $Credentials) {
-	if (!$Domain) {
-		$Domain = "localhost"
-	}
-
-	if (!$Port) {
-		$Port = "9200"
-	}
+function Context-ReadData($Domain = "localhost", $Port = 9200, $Credentials) {
 
 	Context "Read Data" {
 		try {

@@ -16,12 +16,18 @@ $previousVersion = $Global:PreviousVersions[0]
 Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install previous version $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
+	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $previousVersion
+	# set bootstrap password and x-pack security
+	if ($version.Major -ge 6) {
+		$ExeArgs = $ExeArgs + @("BOOTSTRAPPASSWORD=changeme","XPACKSECURITYENABLED=true") 
+	}
+
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled $TRUE
 
     $ProgramFiles = Get-ProgramFilesFolder
 	$ChildPath = Get-ChildPath $previousVersion
@@ -67,7 +73,14 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $version -Upgrade
+	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
+
+	# set bootstrap password and x-pack security
+	if ($version.Major -ge 6) {
+		$ExeArgs = $ExeArgs + @("BOOTSTRAPPASSWORD=changeme","XPACKSECURITYENABLED=true") 
+	}
+
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
     $ProgramFiles = Get-ProgramFilesFolder
 	$ChildPath = Get-ChildPath $version

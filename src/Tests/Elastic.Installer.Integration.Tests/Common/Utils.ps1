@@ -660,13 +660,12 @@ function Get-ChildPath($Version) {
 		$Version = $Global:Version
 	}
 
-	# anything released before 6.0.0 won't include version
-	if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -lt 0) `
-		-and $Version.SourceType -ne "Compile") {
+	# anything released before 6.0.0 won't include version in INSTALLDIR
+	if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -lt 0) -and $Version.SourceType -ne "Compile") {
 		$ChildPath = "Elastic\Elasticsearch\"
 	}
 	else {
-		$ChildPath = "Elastic\Elasticsearch\$($Version.FullVersion)"
+		$ChildPath = "Elastic\Elasticsearch\$($Version.FullVersion)\"
 	}
 
 	return $ChildPath

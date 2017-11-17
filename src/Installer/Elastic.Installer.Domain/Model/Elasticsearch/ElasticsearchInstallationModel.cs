@@ -96,12 +96,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				.Select(t => t.Item1 && t.Item2);
 			this.XPackModel = new XPackModel(versionConfig, observeXPackEnabled, canAutomaticallySetup);
 
-//			this.WhenAnyValue(vm => vm.XPackModel.XPackLicense)
-//				.Subscribe(l =>
-//				{
-//					this.PluginsModel.ChangeXPackSelection(l.HasValue);
-//				});
-
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
@@ -160,15 +154,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 					vm => vm.ClosingModel.IsValid,
 					(welcome, locations, configuration, plugins, xpack, service, install) =>
 					{
-                        var count = this.Steps.Count;
-						var steps = this.Steps.Select(s => s.GetType().Name).ToList();
 						var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
 						return firstInvalidScreen?.i ?? (this.Steps.Count - 1);
 					})
 				.Subscribe(selected =>
 				{
-					var count = this.Steps.Count;
-					var steps = this.Steps.Select(s => s.GetType().Name).ToList();
 					this.TabSelectionMax = selected;
 					//if one of the steps prior to the current selection is invalid jump back
 					if (this.TabSelectedIndex > this.TabSelectionMax)
@@ -179,9 +169,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			this.Steps.Changed.Subscribe(e =>
 			{
-				var count = this.Steps.Count;
-				var steps = this.Steps.Select(s => s.GetType().Name).ToList();
-				
 				var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
 				var selectedTabIndex = firstInvalidScreen?.i ?? (this.Steps.Count - 1);
 				this.TabSelectionMax = selectedTabIndex;

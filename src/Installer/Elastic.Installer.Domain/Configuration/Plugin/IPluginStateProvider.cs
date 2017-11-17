@@ -11,7 +11,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 		void Remove(int pluginTicks, string installDirectory, string configDirectory, 
 			string plugin, string[] additionalArguments = null, IDictionary<string, string> environmentVariables = null);
 		
-		IList<string> InstalledPlugins(string installDirectory, string configDirectory, IDictionary<string, string> environmentVariables = null);
+		IList<string> InstalledPlugins(string installDirectory, IDictionary<string, string> environmentVariables = null);
 
 		Task<bool> HasInternetConnection();
 	}

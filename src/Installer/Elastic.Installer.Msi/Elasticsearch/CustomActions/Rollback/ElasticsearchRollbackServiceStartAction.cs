@@ -8,15 +8,15 @@ using WixSharp;
 
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 {
-	public class ElasticsearchRollbackServiceStartAction : RollbackCustomAction<Elasticsearch>
-	{
-		public override string Name => nameof(ElasticsearchRollbackServiceStartAction);
-		public override int Order => (int)ElasticsearchCustomActionOrder.RollbackServiceStart;
-		public override When When => When.Before;
-		public override Step Step => new Step(nameof(ElasticsearchServiceStartAction));
+	//public class ElasticsearchRollbackServiceStartAction : RollbackCustomAction<Elasticsearch>
+	//{
+	//	public override string Name => nameof(ElasticsearchRollbackServiceStartAction);
+	//	public override int Order => (int)ElasticsearchCustomActionOrder.RollbackServiceStart;
+	//	public override When When => When.Before;
+	//	public override Step Step => new Step(nameof(ElasticsearchServiceStartAction));
 
-		[CustomAction]
-		public static ActionResult ElasticsearchRollbackServiceStart(Session session) =>
-			session.Handle(() => new RollbackServiceTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
-	}
+	//	[CustomAction]
+	//	public static ActionResult ElasticsearchRollbackServiceStart(Session session) =>
+	//		session.Handle(() => new RollbackServiceTask(session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
+	//}
 }
