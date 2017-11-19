@@ -89,8 +89,9 @@ namespace Elastic.Installer.Domain.Model.Base
 
 		public virtual string[] HiddenProperties =>
 			ModelArgumentParser.GetProperties(typeof(TModel))
-				.Where(p => p.GetCustomAttribute<ArgumentAttribute>().IsHidden)
-				.Select(p => p.Name.ToUpperInvariant())
+				.Select(p => p.GetCustomAttribute<ArgumentAttribute>())
+				.Where(a => a.IsHidden)
+				.Select(a => a.Name)
 				.ToArray();
 	}
 }

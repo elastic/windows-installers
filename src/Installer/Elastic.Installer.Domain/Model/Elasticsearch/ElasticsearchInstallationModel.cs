@@ -327,9 +327,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				sb.AppendLine($"  • '{v.PropertyName}': {v.ErrorMessage}"), sb => sb.ToString());
 
 		public override string[] HiddenProperties =>
-			ModelArgumentParser.GetProperties(this.GetType())			
-				.Where(p => p.GetCustomAttribute<ArgumentAttribute>().IsHidden)
-				.Select(p => p.Name.ToUpperInvariant())
+			ModelArgumentParser.GetProperties(this.GetType())		
+				.Select(p => p.GetCustomAttribute<ArgumentAttribute>())
+				.Where(a => a.IsHidden)
+				.Select(a => a.Name)
 				.Concat(this.Steps.SelectMany(s => s.HiddenProperties))				
 				.ToArray();
 	}
