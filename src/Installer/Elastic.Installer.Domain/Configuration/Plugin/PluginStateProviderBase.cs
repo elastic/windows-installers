@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 
 namespace Elastic.Installer.Domain.Configuration.Plugin
@@ -31,20 +30,23 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 
 		protected PluginStateProviderBase(string product, ISession session, IFileSystem fileSystem)
 		{
-			_product = product;
-			Session = session;
-			_fileSystem = fileSystem;
+			this._product = product;
+			this.Session = session;
+			this._fileSystem = fileSystem;
 		}
 
 		public IList<string> InstalledPlugins(string installDirectory, IDictionary<string, string> environmentVariables = null)
 		{
 			var pluginsDirectory = Path.Combine(installDirectory, "plugins");
-			if (!this._fileSystem.Directory.Exists(pluginsDirectory)
-			    || !this._fileSystem.Directory.EnumerateFileSystemEntries(pluginsDirectory).Any())
+			var pluginScript = PluginScript(installDirectory);
+
+			if (!this._fileSystem.File.Exists(pluginScript) ||
+				!this._fileSystem.Directory.Exists(pluginsDirectory) || 
+				!this._fileSystem.Directory.EnumerateFileSystemEntries(pluginsDirectory).Any())
 				return new List<string>();
 			
 			var command = "list";
-			var pluginScript = PluginScript(installDirectory);
+			
 			var process = PluginProcess(pluginScript, command, environmentVariables);
 			var sb = new StringBuilder();
 
@@ -68,8 +70,6 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 					.Where(p => !string.IsNullOrWhiteSpace(p))
 					.ToList();
 			
-			Session.Log($"installed plugins: {Environment.NewLine}{string.Join(Environment.NewLine, plugins)}");
-
 			return plugins;
 		}
 
@@ -183,16 +183,15 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			try
 			{
 				using (var client = new MyWebClient())
-				{
-					using (var stream = await client.OpenReadTaskAsync(new Uri("https://www.google.com")))
-						return stream != null;
-				}
+				using (var stream = await client.OpenReadTaskAsync(new Uri("https://www.google.com")))
+					return stream != null;
 			}
 			catch
 			{
 				return false;
 			}
 		}
+
 		private class MyWebClient : WebClient
 		{
 			protected override WebRequest GetWebRequest(Uri uri)

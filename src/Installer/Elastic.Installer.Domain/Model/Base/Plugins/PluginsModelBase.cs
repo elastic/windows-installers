@@ -13,7 +13,8 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		where TModelValidator : AbstractValidator<TModel>, new()
 	{
 		public IPluginStateProvider PluginStateProvider { get; }
-		protected ReactiveList<Plugin> _plugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
+		protected ReactiveList<Plugin> _availablePlugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
+		protected ReactiveList<string> _installedPlugins = new ReactiveList<string> { ChangeTrackingEnabled = true };
 
 		protected bool AlreadyInstalled { get; set; }
 		protected string PreviousInstallDirectory { get; set; }
@@ -25,14 +26,14 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 
 		public ReactiveList<Plugin> AvailablePlugins
 		{
-			get => _plugins;
-			set => this.RaiseAndSetIfChanged(ref _plugins, value);
+			get => _availablePlugins;
+			set => this.RaiseAndSetIfChanged(ref _availablePlugins, value);
 		}
 
 		[StaticArgument(nameof(Plugins))]
 		public IEnumerable<string> Plugins
 		{
-			get { return _plugins.Where(p => p.Selected).Select(p => p.Url); }
+			get { return _availablePlugins.Where(p => p.Selected).Select(p => p.Url); }
 			set
 			{
 				foreach (var p in AvailablePlugins) p.Selected = false;
@@ -40,6 +41,12 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 				foreach (var p in AvailablePlugins.Where(p => value.Contains(p.Url)))
 					p.Selected = true;
 			}
+		}
+
+		public ReactiveList<string> InstalledPlugins
+		{
+			get => _installedPlugins;
+			set => this.RaiseAndSetIfChanged(ref _installedPlugins, value);
 		}
 
 		protected PluginsModelBase(IPluginStateProvider pluginStateProvider)
@@ -51,14 +58,20 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		public override void Refresh()
 		{
 			this.AvailablePlugins.Clear();
-			var plugins = this.GetPlugins();
-			this.AvailablePlugins.AddRange(plugins);
+			this.InstalledPlugins.Clear();
+			this.AvailablePlugins.AddRange(this.GetPlugins());
 
-			var selectedPlugins = !this.AlreadyInstalled || string.IsNullOrEmpty(this.PreviousInstallDirectory)
-				? this.DefaultPlugins()
+			var installedPlugins = !this.AlreadyInstalled || string.IsNullOrEmpty(this.PreviousInstallDirectory)
+				? null
 				: this.PluginStateProvider.InstalledPlugins(this.PreviousInstallDirectory, EnvironmentVariables).ToList();
+
+			var selectedPlugins = installedPlugins ?? DefaultPlugins();
+
 			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))
 				plugin.Selected = true;
+
+			if (installedPlugins != null)
+				InstalledPlugins.AddRange(installedPlugins);
 		}
 
 		public void ChangeXPackSelection(bool selected)
@@ -73,6 +86,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			sb.AppendLine(this.GetType().Name);
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
 			sb.AppendLine($"- {nameof(Plugins)} = " + string.Join(", ", Plugins));
+			sb.AppendLine($"- {nameof(InstalledPlugins)} = " + string.Join(", ", InstalledPlugins));
 			return sb.ToString();
 		}
 

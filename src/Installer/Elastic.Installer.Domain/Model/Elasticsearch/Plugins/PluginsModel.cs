@@ -26,7 +26,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			EnvironmentVariables = new Dictionary<string, string>
 			{
 				{ElasticsearchEnvironmentStateProvider.ConfDir, this.ConfigDirectory},
-				// maybe listing plugins from Elasticsearch 5.x installation
+				// might be listing plugins from a Elasticsearch 5.x installation
 				{ElasticsearchEnvironmentStateProvider.ConfDirOld, this.ConfigDirectory}
 			};
 
