@@ -71,7 +71,7 @@ function Context-ElasticsearchService($Expected) {
     }
 }
 
-function Context-PingNode($XPackSecurityInstalled) {
+function Context-PingNode([switch]$XPackSecurityInstalled) {
     Context "Ping node" {
         $Response = Ping-Node
 
@@ -511,15 +511,7 @@ function Context-ElasticsearchServiceNotInstalled() {
     }
 }
 
-function Context-NodeNotRunning($Domain, $Port, $Credentials) {
-	if (!$Domain) {
-		$Domain = "localhost"
-	}
-
-	if (!$Port) {
-		$Port = "9200"
-	}
-
+function Context-NodeNotRunning($Domain = "localhost", $Port = 9200, $Credentials) {
 	Context "Ping node" {
         It "Elasticsearch node should not be running" {
             try {
@@ -527,7 +519,7 @@ function Context-NodeNotRunning($Domain, $Port, $Credentials) {
 					$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
 					$authHeaderValue = [Convert]::ToBase64String($bytes)
 					$response = Invoke-RestMethod "http://$($Domain):$Port" `
-								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)}
 				}
 				else {
 					$response = Invoke-RestMethod "http://$($Domain):$Port"

@@ -22,7 +22,7 @@ Describe "Silent Install with different install locations" {
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     Context-EsHomeEnvironmentVariable -Expected $InstallDir
 

@@ -27,7 +27,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled
 
     Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v"
 
@@ -84,7 +84,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 		Status = $expectedStatus
 	}
 
-	Context-PingNode -XPackSecurityInstalled $true
+	Context-PingNode -XPackSecurityInstalled
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 

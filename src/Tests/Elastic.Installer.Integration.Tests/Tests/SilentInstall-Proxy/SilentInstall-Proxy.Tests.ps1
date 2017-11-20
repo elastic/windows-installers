@@ -24,7 +24,7 @@ Describe "Silent Install x-pack through HTTPS proxy" {
 
     Invoke-SilentInstall -Exeargs $exeArgs
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 

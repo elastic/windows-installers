@@ -15,7 +15,7 @@ Describe "Silent Install with default arguments $(($Global:Version).FullVersion)
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
 	$ChildPath = Get-ChildPath

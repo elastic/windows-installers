@@ -20,7 +20,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous vers
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
 	$ChildPath = Get-ChildPath $previousVersion
@@ -88,7 +88,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 		Status = $expectedStatus
 	}
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     Context-PluginsInstalled
 

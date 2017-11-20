@@ -27,7 +27,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $TRUE
+    Context-PingNode -XPackSecurityInstalled
 
     $ProgramFiles = Get-ProgramFilesFolder
 	$ChildPath = Get-ChildPath $previousVersion
@@ -102,7 +102,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 		Status = $expectedStatus
 	}
 
-	Context-PingNode -XPackSecurityInstalled $true
+	Context-PingNode -XPackSecurityInstalled
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
@@ -110,7 +110,17 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
+	if ((Compare-SemanticVersion $previousVersion $(ConvertTo-SemanticVersion "6.0.0") -le 0) `
+		-and $previousVersion.SourceType -ne "Compile") {
+		# TODO: event log may contain events similar to:
+		#
+		# System.ComponentModel.Win32Exception (0x80004005): The system cannot find the file specified
+		# when running Cleanup action in the old installer uninstall process, 
+		# because the old install plugin script no longer exists.
+	}
+	else {
     Context-EmptyEventLog
+	}
 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 

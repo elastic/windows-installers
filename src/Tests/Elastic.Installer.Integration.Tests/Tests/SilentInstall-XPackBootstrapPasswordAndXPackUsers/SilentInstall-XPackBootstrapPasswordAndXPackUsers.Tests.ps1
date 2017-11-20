@@ -23,7 +23,7 @@ Describe "Silent Install with setting up bootstrap password and x-pack users" {
 
     Invoke-SilentInstall -Exeargs $exeArgs
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 

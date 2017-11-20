@@ -14,7 +14,7 @@ Describe "Silent Install with 1024mb heap size" {
 
     Invoke-SilentInstall -Exeargs @("SELECTEDMEMORY=$HeapSize")
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
     Context-JvmOptions -Expected @{
 		Memory = $HeapSize
 	}
