@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO.Abstractions;
+using System.Linq;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
@@ -18,10 +20,16 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		protected override bool ExecuteTask()
 		{
 			var xPackModel = this.InstallationModel.XPackModel;
-			if (!xPackModel.IsRelevant || !xPackModel.XPackSecurityEnabled || xPackModel.XPackLicense != XPackLicenseMode.Trial) return true;
+			var locationsModel = this.InstallationModel.LocationsModel;
+			var pluginsModel = this.InstallationModel.PluginsModel;
 
-			var installationDir = this.InstallationModel.LocationsModel.InstallDir;
-			var password = this.InstallationModel.XPackModel.BootstrapPassword;
+			// bootstrap password can *only* be set when X-Pack is installed
+			if (!xPackModel.IsRelevant || 
+				!pluginsModel.Plugins.Any(plugin => plugin.Equals("x-pack", StringComparison.OrdinalIgnoreCase)))
+				return true;
+
+			var installationDir = locationsModel.InstallDir;
+			var password = xPackModel.BootstrapPassword;
 			var binary = this.FileSystem.Path.Combine(installationDir, "bin", "elasticsearch-keystore.bat");
 
 			var p = new Process
@@ -40,8 +48,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				}
 			};
 
-			p.StartInfo.EnvironmentVariables[ElasticsearchEnvironmentStateProvider.ConfDir] =
-				this.InstallationModel.LocationsModel.ConfigDirectory;
+			p.StartInfo.EnvironmentVariables[ElasticsearchEnvironmentStateProvider.ConfDir] = locationsModel.ConfigDirectory;
 
 			void OnDataReceived(object sender, DataReceivedEventArgs a)
 			{
