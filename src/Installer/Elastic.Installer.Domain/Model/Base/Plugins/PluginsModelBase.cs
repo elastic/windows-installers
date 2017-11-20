@@ -21,6 +21,8 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 
 		protected abstract IEnumerable<Plugin> GetPlugins();
 
+		protected virtual Dictionary<string,string> EnvironmentVariables { get; set; } = new Dictionary<string, string>();
+
 		public ReactiveList<Plugin> AvailablePlugins
 		{
 			get => _plugins;
@@ -51,11 +53,10 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			this.AvailablePlugins.Clear();
 			var plugins = this.GetPlugins();
 			this.AvailablePlugins.AddRange(plugins);
-			
-			var environmentVariables = new Dictionary<string, string> { { ElasticsearchEnvironmentStateProvider.ConfDir, this.ConfigDirectory } };
+
 			var selectedPlugins = !this.AlreadyInstalled || string.IsNullOrEmpty(this.PreviousInstallDirectory)
 				? this.DefaultPlugins()
-				: this.PluginStateProvider.InstalledPlugins(this.PreviousInstallDirectory, environmentVariables).ToList();
+				: this.PluginStateProvider.InstalledPlugins(this.PreviousInstallDirectory, EnvironmentVariables).ToList();
 			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))
 				plugin.Selected = true;
 		}

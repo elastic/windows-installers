@@ -6,14 +6,13 @@ namespace Elastic.Configuration.EnvironmentBased
 {
 	public class ElasticsearchEnvironmentConfiguration
 	{
-		public static ElasticsearchEnvironmentConfiguration Default { get; } = new ElasticsearchEnvironmentConfiguration(new ElasticsearchEnvironmentStateProvider());
+		public static ElasticsearchEnvironmentConfiguration Default { get; } = 
+			new ElasticsearchEnvironmentConfiguration(new ElasticsearchEnvironmentStateProvider());
 
 		public IElasticsearchEnvironmentStateProvider StateProvider { get; }
 
-		public ElasticsearchEnvironmentConfiguration(IElasticsearchEnvironmentStateProvider stateProvider)
-		{
+		public ElasticsearchEnvironmentConfiguration(IElasticsearchEnvironmentStateProvider stateProvider) => 
 			StateProvider = stateProvider ?? new ElasticsearchEnvironmentStateProvider();
-		}
 
 		private string HomeDirectoryInferred
 		{
@@ -68,6 +67,14 @@ namespace Elastic.Configuration.EnvironmentBased
 				return string.IsNullOrEmpty(homeDir) ? null : Path.Combine(homeDir, "config");
 			}
 		}
+
+		public string PreviousInstallationDirectory => new[]
+			{
+				// TODO: Get the value of ES_HOME env var for the elasticsearch.exe process, if running
+				StateProvider.HomeDirectoryUserVariable,
+				StateProvider.HomeDirectoryMachineVariable,
+			}
+			.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v));
 
 		public string GetEnvironmentVariable(string variable) => this.StateProvider.GetEnvironmentVariable(variable);
 

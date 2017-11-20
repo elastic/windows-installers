@@ -22,7 +22,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 	{
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
-			var wix = new WixStateProvider(Product.Elasticsearch, "5.5.1");
+			var wix = new WixStateProvider(Product.Elasticsearch, "6.0.0");
 			var model = ElasticsearchInstallationModel.Create(wix, NoopSession.Elasticsearch);
 
 			var window = new MainWindow(model, new ManualResetEvent(false));

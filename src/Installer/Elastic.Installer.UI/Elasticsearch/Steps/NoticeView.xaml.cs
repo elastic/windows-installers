@@ -6,6 +6,7 @@ using Elastic.Installer.Domain.Properties;
 using Elastic.Installer.UI.Controls;
 using Elastic.Installer.UI.Properties;
 using ReactiveUI;
+using static System.Windows.Visibility;
 
 namespace Elastic.Installer.UI.Elasticsearch.Steps
 {
@@ -20,16 +21,13 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			set => SetValue(ViewModelProperty, value);
 		}
 
-		public NoticeView()
-		{
-			InitializeComponent();
-		}
+		public NoticeView() => InitializeComponent();
 
 		protected override void InitializeBindings()
 		{
 			this.OneWayBind(ViewModel, vm => vm.UpgradeText, view => view.UpgradeTextBox.Text);
 			this.OneWayBind(ViewModel, vm => vm.UpgradeTextHeader, view => view.UpgradeLabel.Content);
-			this.OneWayBind(ViewModel, vm => vm.LocationsModel.InstallDir, view => view.InstallationDirectoryLabel.Content);
+			this.OneWayBind(ViewModel, vm => vm.LocationsModel.PreviousInstallationDirectory, view => view.InstallationDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.DataDirectory, view => view.DataDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.ConfigDirectory, view => view.ConfigDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.LogsDirectory, view => view.LogsDirectoryLabel.Content);
@@ -40,16 +38,16 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 			this.WhenAny(view => view.ViewModel.ExistingVersionInstalled, v=>v.GetValue())
 				.Subscribe(v => {
-					this.ReadOnlyPropertiesGrid.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
-					this.ReadMoreOnUpgrades.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
+					this.ReadOnlyPropertiesGrid.Visibility = v ? Visible : Collapsed;
+					this.ReadMoreOnUpgrades.Visibility = v ? Visible : Collapsed;
 					this.ExistingVersionTextBox.Content = string.Format(TextResources.NoticeModel_ExistingVersion, this.ViewModel.ExistingVersion);
-					this.ExistingVersionTextBox.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
+					this.ExistingVersionTextBox.Visibility = v ? Visible : Collapsed;
 				});
 
 			this.WhenAny(view => view.ViewModel.InstalledAsService, v=>v.GetValue())
 				.Subscribe(v => {
-					this.RunAsServiceHeaderLabel.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
-					this.RunAsServiceLabel.Visibility = v ? Visibility.Visible : Visibility.Collapsed;
+					this.RunAsServiceHeaderLabel.Visibility = v ? Visible : Collapsed;
+					this.RunAsServiceLabel.Visibility = v ? Visible : Collapsed;
 				});
 		}
 	}

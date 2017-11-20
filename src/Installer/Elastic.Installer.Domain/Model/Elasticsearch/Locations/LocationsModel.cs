@@ -124,6 +124,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			//todo duplication?
 			this.InstallDir = this._elasticsearchEnvironmentConfiguration.TargetInstallationDirectory ?? DefaultProductInstallationDirectory;
 			this.ConfigDirectory = this._elasticsearchEnvironmentConfiguration.TargetInstallationConfigDirectory ?? DefaultConfigDirectory;
+			this.PreviousInstallationDirectory = this._elasticsearchEnvironmentConfiguration.PreviousInstallationDirectory;
 			this.DataDirectory = this._yamlConfiguration?.Settings?.DataPath ?? DefaultDataDirectory;
 			this.LogsDirectory = this._yamlConfiguration?.Settings?.LogsPath ?? DefaultLogsDirectory;
 
