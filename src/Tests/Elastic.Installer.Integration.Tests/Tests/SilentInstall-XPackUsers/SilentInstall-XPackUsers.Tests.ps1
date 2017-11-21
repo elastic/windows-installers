@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with setting up x-pack users" {
+Describe "Silent Install with setting up x-pack users $(($Global:Version).Description)" {
 
 	$exeArgs = @(
 		"PLUGINS=x-pack", 
@@ -31,7 +31,7 @@ Describe "Silent Install with setting up x-pack users" {
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with setting up x-pack users" {
+Describe "Silent Uninstall with setting up x-pack users $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 

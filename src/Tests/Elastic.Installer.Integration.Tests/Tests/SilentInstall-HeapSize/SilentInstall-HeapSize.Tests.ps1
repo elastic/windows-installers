@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with 1024mb heap size" {
+Describe "Silent Install with 1024mb heap size $(($Global:Version).Description)" {
     $HeapSize = 1024
 
     Invoke-SilentInstall -Exeargs @("SELECTEDMEMORY=$HeapSize")
@@ -22,7 +22,7 @@ Describe "Silent Install with 1024mb heap size" {
     Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with 1024mb heap size" {
+Describe "Silent Uninstall with 1024mb heap size $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 

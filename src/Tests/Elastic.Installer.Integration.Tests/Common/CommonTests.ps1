@@ -214,14 +214,39 @@ function Context-ServiceRunningUnderAccount($Expected) {
     }
 }
 
-function Context-EmptyEventLog() {
-    Context "Event log" {
-		# convert to string so in the event of error we can see what the log entries actually are in the test output
-        $ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* | Format-List | Out-String
+function Context-EmptyEventLog($Version) {
 
-        It "Event log is empty" {
-            $ElasticsearchEventLogs | Should BeNullOrEmpty
-        }
+	if (!$Version) {
+		$Version = $Global:Version
+	}
+
+    Context "Event log" {
+
+		if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -le 0) `
+			-and $Version.SourceType -ne "Compile") {
+
+			$failedMessage = "ElasticsearchCleanupAction.cs"
+			# event log may contain events similar to:
+			#
+			# System.ComponentModel.Win32Exception (0x80004005): The system cannot find the file specified
+			# 
+			# when running Cleanup action in the old installer uninstall process, 
+			# because the old install plugin script no longer exists. Filter these out
+			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* `
+				| Where { $_.Message -NotMatch $failedMessage } | Format-List | Out-String
+
+			It "Event log doesn't contain unexpected messages" {
+				$ElasticsearchEventLogs | Should BeNullOrEmpty
+			}
+		}
+		else {
+			# convert to string so in the event of error we can see what the log entries actually are in the test output
+			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* | Format-List | Out-String
+
+			It "Event log is empty" {
+				$ElasticsearchEventLogs | Should BeNullOrEmpty
+			}
+		}
     }
 }
 

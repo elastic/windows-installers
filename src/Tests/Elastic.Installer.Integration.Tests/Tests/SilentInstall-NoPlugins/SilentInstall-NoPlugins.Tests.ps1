@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with no plugins" {
+Describe "Silent Install with no plugins $(($Global:Version).Description)" {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=")
 
@@ -22,7 +22,7 @@ Describe "Silent Install with no plugins" {
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with no plugins" {
+Describe "Silent Uninstall with no plugins $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 

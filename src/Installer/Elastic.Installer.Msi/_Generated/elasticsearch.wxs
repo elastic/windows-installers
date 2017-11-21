@@ -803,7 +803,7 @@
       <Custom Action="ElasticsearchUninstallPluginsAction" After="StopServices">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchRollbackDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchRollbackDirectoriesAction" Before="ElasticsearchDirectoriesAction" />
-      <Custom Action="ElasticsearchSetBootstrapPasswordAction" After="ElasticsearchValidateArgumentsAction">(NOT Installed) AND XPACKSECURITYENABLED~="true" AND BOOTSTRAPPASSWORD=""</Custom>
+      <Custom Action="ElasticsearchSetBootstrapPasswordAction" After="ElasticsearchValidateArgumentsAction">(NOT Installed) AND BOOTSTRAPPASSWORD=""</Custom>
       <Custom Action="Set_ElasticsearchUninstallDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchUninstallDirectoriesAction" After="RemoveEnvironmentStrings">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <Custom Action="Set_ElasticsearchPreserveInstallAction_Props" After="InstallInitialize" />

@@ -14,7 +14,7 @@ Get-PreviousVersions
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
-Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous version $($previousVersion.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install fail upgrade install $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
 	
@@ -47,7 +47,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName
 
@@ -62,7 +62,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrading to $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install fail upgrade fail to $($version.Description)" {
 
 	$v = $version.FullVersion
 	$pv = $previousVersion.FullVersion
@@ -148,7 +148,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
 	Context-ReadData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall fail upgrade - Uninstall $($previousVersion.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall fail upgrade uninstall $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
 

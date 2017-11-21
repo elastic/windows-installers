@@ -12,7 +12,7 @@ Get-PreviousVersions
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous version $($previousVersion.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade install $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
 
@@ -46,7 +46,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous vers
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName
 
@@ -62,7 +62,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous vers
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previousVersion.Description) to $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade from $($previousVersion.Description) to $($version.Description)" {
 
 	$v = $version.FullVersion
 
@@ -96,7 +96,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName
 
@@ -114,7 +114,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade - Uninstall new version $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade uninstall $($version.Description)" {
 
 	$v = $version.FullVersion
 

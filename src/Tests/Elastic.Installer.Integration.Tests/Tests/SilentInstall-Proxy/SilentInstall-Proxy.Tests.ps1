@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install x-pack through HTTPS proxy" {
+Describe "Silent Install x-pack through HTTPS proxy $(($Global:Version).Description)" {
 	$port = 8888
 	Start-Fiddler -Port $port
 
@@ -37,7 +37,7 @@ Describe "Silent Install x-pack through HTTPS proxy" {
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall x-pack through HTTPS proxy" {
+Describe "Silent Uninstall x-pack through HTTPS proxy $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 

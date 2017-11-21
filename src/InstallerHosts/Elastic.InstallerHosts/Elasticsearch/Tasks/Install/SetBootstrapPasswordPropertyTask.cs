@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
@@ -20,6 +21,13 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		protected override bool ExecuteTask()
 		{
+			var xPackModel = this.InstallationModel.XPackModel;
+			var pluginsModel = this.InstallationModel.PluginsModel;
+
+			if (!xPackModel.IsRelevant || 
+				!pluginsModel.Plugins.Any(plugin => plugin.Equals("x-pack", StringComparison.OrdinalIgnoreCase)))
+				return true;
+
 			var length = 20;
 			var password = new StringBuilder();
 			var property = nameof(XPackModel.BootstrapPassword).ToUpperInvariant();

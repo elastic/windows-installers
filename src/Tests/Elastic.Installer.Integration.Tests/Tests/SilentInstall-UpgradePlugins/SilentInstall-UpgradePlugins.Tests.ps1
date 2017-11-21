@@ -13,7 +13,7 @@ $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install previous version $($previousVersion.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins install $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
 	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
@@ -53,7 +53,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
@@ -69,7 +69,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 	Context-InsertData -Credentials $credentials
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade from $($previousVersion.Description) to $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins from $($previousVersion.Description) to $($version.Description)" {
 
 	$v = $version.FullVersion
 
@@ -110,17 +110,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-	if ((Compare-SemanticVersion $previousVersion $(ConvertTo-SemanticVersion "6.0.0") -le 0) `
-		-and $previousVersion.SourceType -ne "Compile") {
-		# TODO: event log may contain events similar to:
-		#
-		# System.ComponentModel.Win32Exception (0x80004005): The system cannot find the file specified
-		# when running Cleanup action in the old installer uninstall process, 
-		# because the old install plugin script no longer exists.
-	}
-	else {
-    Context-EmptyEventLog
-	}
+	Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
@@ -138,7 +128,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninstall $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins uninstall $($version.Description)" {
 
 	$v = $version.FullVersion
 

@@ -9,7 +9,6 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-$credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
@@ -18,25 +17,25 @@ $DataDir = "D:\Data"
 $ConfigDir = "D:\Config"
 $LogsDir = "D:\Logs"
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Install previous version $($previousVersion.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume install $($previousVersion.Description)" {
 
 	$v = $previousVersion.FullVersion
-	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled
+    Context-PingNode
 
-    Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v"
+    Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v\"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
 		Version = $previousVersion
 		Path = $ConfigDir
 	}
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
+    Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
@@ -46,9 +45,9 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
-	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
+	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $previousVersion
@@ -61,17 +60,17 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
 	}
 
 	# Insert some data
-	Context-InsertData -Credentials $credentials
+	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgrade from $($previousVersion.Description) to $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume from $($previousVersion.Description) to $($version.Description)" {
 
 	$v = $version.FullVersion
-	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=x-pack"
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
-    Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v"
+    Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v\"
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
 		Version = $version 
@@ -84,17 +83,17 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 		Status = $expectedStatus
 	}
 
-	Context-PingNode -XPackSecurityInstalled
+	Context-PingNode
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
+    Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
 
     Context-MsiRegistered
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
-	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
+	Context-ClusterNameAndNodeName
 
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $version
@@ -107,12 +106,12 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 	}
 
 	# Check inserted data still exists
-	Context-ReadData -Credentials $credentials
+	Context-ReadData
 
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume - Uninstall $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume uninstall $($version.Description)" {
 
 	$v = $version.FullVersion
 

@@ -9,12 +9,12 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-$InstallDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)"
+$InstallDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\"
 $DataDir = "C:\foo\data"
 $ConfigDir = "C:\bar\config"
 $LogsDir = "C:\baz\logs"
 
-Describe "Silent Install with different install locations" {
+Describe "Silent Install with different install locations $(($Global:Version).Description)" {
 
     $InstallLocations = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir"
 
@@ -50,7 +50,7 @@ Describe "Silent Install with different install locations" {
 	Copy-ElasticsearchLogToOut -Path "$LogsDir\elasticsearch.log"
 }
 
-Describe "Silent Uninstall with different install locations" {
+Describe "Silent Uninstall with different install locations $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 

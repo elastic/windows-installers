@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with default arguments $(($Global:Version).FullVersion)" {
+Describe "Silent Install with default arguments $(($Global:Version).Description)" {
 
     Invoke-SilentInstall
 
@@ -45,7 +45,7 @@ Describe "Silent Install with default arguments $(($Global:Version).FullVersion)
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with default arguments $(($Global:Version).FullVersion)" {
+Describe "Silent Uninstall with default arguments $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 

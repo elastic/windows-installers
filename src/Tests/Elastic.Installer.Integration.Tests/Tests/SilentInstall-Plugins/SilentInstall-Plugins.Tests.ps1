@@ -9,20 +9,20 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins" {
+Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
 
-    Context-PingNode -XPackSecurityInstalled
+    Context-PingNode
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
-    Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
+    Context-ClusterNameAndNodeName
 
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins" {
+Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 
