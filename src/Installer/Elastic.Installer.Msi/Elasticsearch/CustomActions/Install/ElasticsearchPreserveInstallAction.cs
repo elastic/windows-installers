@@ -11,7 +11,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 	public class ElasticsearchPreserveInstallAction : CustomAction<Elasticsearch>
 	{
 		public override string Name => nameof(ElasticsearchPreserveInstallAction);
-		public override int Order => (int)ElasticsearchCustomActionOrder.InstallStopServiceAction;
+		public override int Order => (int)ElasticsearchCustomActionOrder.InstallPreserveInstall;
 		public override Condition Condition => Condition.NOT_BeingRemoved;
 		public override Return Return => Return.check;
 		public override Sequence Sequence => Sequence.InstallExecuteSequence;

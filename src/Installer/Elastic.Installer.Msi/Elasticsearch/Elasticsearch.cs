@@ -39,6 +39,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 					Action = EnvVarAction.set,
 					System = true
 				},
+				// remove the old ES_CONFIG
 				new EnvironmentVariable(
 					ElasticsearchEnvironmentStateProvider.ConfDirOld, null)
 				{

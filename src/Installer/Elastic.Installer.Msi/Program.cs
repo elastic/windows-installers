@@ -152,13 +152,12 @@ namespace Elastic.Installer.Msi
 				.ResolveWildCards()
 				.FindFile(f => f.Name.EndsWith($"{_productName}.exe")).First();
 
-			service.ServiceInstaller = new ServiceInstaller("Elasticsearch")
+			service.ServiceInstaller = new ServiceInstaller(_productTitle)
 			{
 				StartOn = SvcEvent.Install_Wait,
 				StopOn = SvcEvent.InstallUninstall_Wait,
 				RemoveOn = SvcEvent.Uninstall_Wait,
 			};
-
 
 			// needed for WixFailWhenDeferred custom action
 			if (!_releaseMode)
@@ -175,7 +174,7 @@ namespace Elastic.Installer.Msi
 
 		private static Product GetProduct(string name)
 		{
-			switch (name.ToLower())
+			switch (name.ToLowerInvariant())
 			{
 				case "elasticsearch":
 					return new Elasticsearch.Elasticsearch();
@@ -260,23 +259,6 @@ namespace Elastic.Installer.Msi
 
 				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
 			}
-
-			//var exeName = $"{_productName}.exe";
-			//var exeComponent = document.Root.Descendants(ns + "Component")
-			//	.Where(c => c.Descendants(ns + "File").Any(f => f.Attribute("Id").Value == exeName))
-			//	.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() })
-			//	.SingleOrDefault();
-
-			//if (exeComponent == null)
-			//	throw new Exception($"No File element found with Id '{exeName}'");
-
-			//var fileId = exeComponent.File.Attribute("Id").Value;
-			//exeComponent.Component.Add(new XElement(ns + "ServiceControl",
-			//	new XAttribute("Id", fileId),
-			//	new XAttribute("Name", _productTitle), // MUST match the name of the service
-			//	new XAttribute("Stop", "both"),
-			//	new XAttribute("Wait", "yes")
-			//));
 
 			// include WixFailWhenDeferred Custom Action when not building a release
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
