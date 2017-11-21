@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
@@ -53,17 +54,17 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			.ToArray();
 
 		public ElasticsearchInstallationModel(
-			IWixStateProvider wixStateProvider,
-			JavaConfiguration javaConfiguration,
-			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration,
-			IServiceStateProvider serviceStateProvider,
-			IPluginStateProvider pluginStateProvider,
-			ElasticsearchYamlConfiguration yamlConfiguration,
-			LocalJvmOptionsConfiguration localJvmOptions,
-			TempDirectoryConfiguration tempDirectoryConfiguration,
-			ISession session,
-			string[] args
-		) : base(wixStateProvider, session, args)
+			IWixStateProvider wixStateProvider, 
+			JavaConfiguration javaConfiguration, 
+			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration, 
+			IServiceStateProvider serviceStateProvider, 
+			IPluginStateProvider pluginStateProvider, 
+			ElasticsearchYamlConfiguration yamlConfiguration, 
+			LocalJvmOptionsConfiguration localJvmOptions, 
+			TempDirectoryConfiguration tempDirectoryConfiguration, 
+			IFileSystem fileSystem, 
+			ISession session, 
+			string[] args) : base(wixStateProvider, session, args)
 		{
 			this.JavaConfiguration = javaConfiguration ?? throw new ArgumentNullException(nameof(javaConfiguration));
 			this.ElasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
@@ -78,7 +79,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.Upgrading = this.Session.IsUpgrading;
 			this.HigherVersionAlreadyInstalled = versionConfig.HigherVersionAlreadyInstalled;
 
-			this.LocationsModel = new LocationsModel(elasticsearchEnvironmentConfiguration, yamlConfiguration, versionConfig);
+			this.LocationsModel = new LocationsModel(elasticsearchEnvironmentConfiguration, yamlConfiguration, versionConfig, fileSystem);
 			this.NoticeModel = new NoticeModel(versionConfig, serviceStateProvider, this.LocationsModel);
 			this.ServiceModel = new ServiceModel(serviceStateProvider, versionConfig);
 			this.ConfigurationModel = new ConfigurationModel(yamlConfiguration, localJvmOptions);
@@ -192,9 +193,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
 			var jvmConfig = LocalJvmOptionsConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
-			var tempDirConfig = new TempDirectoryConfiguration(session, ElasticsearchEnvironmentStateProvider.Default, null);
+			var fileSystem = new FileSystem();
+			var tempDirConfig = new TempDirectoryConfiguration(session, ElasticsearchEnvironmentStateProvider.Default, fileSystem);
 			return new ElasticsearchInstallationModel(wixState, 
-				javaConfig, esEnvironmentConfig, serviceState, pluginState, esConfig, jvmConfig, tempDirConfig,
+				javaConfig, esEnvironmentConfig, serviceState, pluginState, esConfig, jvmConfig, tempDirConfig, fileSystem,
 				session, args);
 		}
 

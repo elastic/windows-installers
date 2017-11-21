@@ -15,7 +15,6 @@ using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Closing;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
-using Elastic.InstallerHosts.Elasticsearch.Tasks;
 using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 using FluentAssertions;
 using FluentValidation.Results;
@@ -34,6 +33,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		public MockJavaEnvironmentStateProvider JavaState { get; }
 		public MockFileSystem FileSystem { get; }
 
+		public static MockFileSystem CreateMockFileSystem()
+		{
+			var fileSystem = new MockFileSystem();
+			fileSystem.AddDirectory(@"C:\");
+			return fileSystem;
+		}
+
 		public InstallationModelTester() 
 			: this
 			(
@@ -42,7 +48,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 				new MockElasticsearchEnvironmentStateProvider(),
 				new NoopServiceStateProvider(),
 				new NoopPluginStateProvider(),
-				new MockFileSystem(),
+				CreateMockFileSystem(),
 				NoopSession.Elasticsearch,
 				null
 			) { }
@@ -69,7 +75,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			this.TempDirectoryConfiguration = new TempDirectoryConfiguration(session, esState, fileSystem);
 			this.InstallationModel = new ElasticsearchInstallationModel(
 				wixState, JavaConfig, elasticsearchConfiguration, serviceState, pluginState, 
-				EsConfig, JvmConfig, TempDirectoryConfiguration,
+				EsConfig, JvmConfig, TempDirectoryConfiguration, fileSystem,
 				session, args);
 			this.FileSystem = fileSystem;
 		}
@@ -212,12 +218,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		public static InstallationModelTester ValidPreflightChecks() => New(s => s
 			.Wix(alreadyInstalled: false)
-			.Java(j=>j.JavaHomeMachineVariable("C:\\Java"))
+			.Java(j=>j.JavaHomeMachineVariable(@"C:\Java"))
 		);
 
 		public static InstallationModelTester ValidPreflightChecks(Func<TestSetupStateProvider, TestSetupStateProvider> selector) => New(s => selector(s
 			.Wix(alreadyInstalled: false)
-			.Java(j => j.JavaHomeMachineVariable("C:\\Java"))
+			.Java(j => j.JavaHomeMachineVariable(@"C:\Java"))
 			)
 		);
 
