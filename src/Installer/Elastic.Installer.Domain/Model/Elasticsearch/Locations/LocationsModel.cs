@@ -43,7 +43,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		private bool _refreshing;
 		private readonly ElasticsearchEnvironmentConfiguration _elasticsearchEnvironmentConfiguration;
 		private readonly ElasticsearchYamlConfiguration _yamlConfiguration;
-		private readonly VersionConfiguration _versionConfig;
 
 		private string CurrentVersion { get; }
 		private string ExistingVersion { get; }
@@ -58,7 +57,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this.Header = "Locations";
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
-			this._versionConfig = versionConfig;
 			this.CurrentVersion = versionConfig.CurrentVersion.ToString();
 			this.ExistingVersion = versionConfig.ExistingVersion?.ToString();
 			this.FileSystem = fileSystem;
@@ -212,16 +210,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			get => previousInstallationDirectory;
 			set => this.RaiseAndSetIfChanged(ref previousInstallationDirectory, value);
 		}
-
-		//private string DeterminePreviousInstallationLocation(string installDir)
-		//{
-		//	if (string.IsNullOrEmpty(installDir)) return installDir;
-		//	if (!_versionConfig.ExistingVersionInstalled) return null;
-		//	if (_versionConfig.ExistingVersion.Major < 6) return installDir;
-		//	if (_versionConfig.CurrentVersion.Major < 6) return installDir;
-		//	var rooted = GetRootedPathIfNecessary(installDir);
-		//	return Path.Combine(rooted, ExistingVersion);
-		//}
 
 		private string GetRootedPathIfNecessary(string value)
 		{

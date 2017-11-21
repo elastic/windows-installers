@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 		private readonly string EsData = @"c:\es-data";
 		private readonly string EsLogs = @"c:\es-logs";
 		
-		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		[Fact]
 		void CreatesDefaultDirectories() => WithValidPreflightChecks()
 			.AssertTask(
 				(m, s, fs) =>
@@ -34,7 +34,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		[Fact]
 		void CreatesUserDirectories() => WithValidPreflightChecks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
@@ -60,7 +60,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		[Fact]
 		void ExisitingDirectoriesAreReused() => WithValidPreflightChecks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
@@ -86,7 +86,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact(Skip = "waiting for https://github.com/tathamoddie/System.IO.Abstractions/pull/259 to be merged")]
+		[Fact]
 		void DefaultConfigContentsCopied() => WithValidPreflightChecks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)

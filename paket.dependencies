@@ -30,11 +30,10 @@ nuget System.IO.Abstractions.TestingHelpers
 nuget semver
 nuget Newtonsoft.Json
 
-group tests
-    source https://www.nuget.org/api/v2
+source https://www.nuget.org/api/v2
 
-    nuget xunit
-    nuget FluentAssertions
+nuget xunit
+nuget FluentAssertions
 
 group build
     source https://www.nuget.org/api/v2
