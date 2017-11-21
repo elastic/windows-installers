@@ -34,8 +34,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 				.Must(this.InstallOnKnownDrive)
 				.WithMessage(DirectoryUsesUnknownDrive, x => ConfigurationText, x => new DirectoryInfo(x.ConfigDirectory).Root.Name)
 				.Must(this.NotBeChildOfProgramFiles).WithMessage(DirectorySetToNonWritableLocation, ConfigurationText);
+
 			RuleFor(vm => vm.ConfigDirectory)
-				.Must((vm, conf) => this.IsSubPathOf(vm.InstallDir, conf))
+				.Must((vm, conf) => this.IsSubPathOf(vm, vm.InstallDir, conf))
 				.When(vm => vm.PlaceWritableLocationsInSamePath)
 				.WithMessage(DirectoryMustBeChildOf, vm => ConfigurationText, vm => vm.InstallDir);
 
@@ -46,8 +47,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 				.Must(this.InstallOnKnownDrive)
 				.WithMessage(DirectoryUsesUnknownDrive, x => DataText, x => new DirectoryInfo(x.DataDirectory).Root.Name)
 				.Must(this.NotBeChildOfProgramFiles).WithMessage(DirectorySetToNonWritableLocation, DataText);
+
 			RuleFor(vm => vm.DataDirectory)
-				.Must((vm, data) => this.IsSubPathOf(vm.InstallDir, data))
+				.Must((vm, data) => this.IsSubPathOf(vm, vm.InstallDir, data))
 				.When(vm => vm.PlaceWritableLocationsInSamePath)
 				.WithMessage(DirectoryMustBeChildOf, vm => DataText, vm => vm.InstallDir);
 
@@ -58,38 +60,37 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 				.Must(this.InstallOnKnownDrive)
 				.WithMessage(DirectoryUsesUnknownDrive, x => LogsText, x => new DirectoryInfo(x.LogsDirectory).Root.Name)
 				.Must(this.NotBeChildOfProgramFiles).WithMessage(DirectorySetToNonWritableLocation, LogsText);
+
 			RuleFor(vm => vm.LogsDirectory)
-				.Must((vm, logs) => this.IsSubPathOf(vm.InstallDir, logs))
+				.Must((vm, logs) => this.IsSubPathOf(vm, vm.InstallDir, logs))
 				.When(vm => vm.PlaceWritableLocationsInSamePath)
 				.WithMessage(DirectoryMustBeChildOf, vm => LogsText, vm => vm.InstallDir);
 		}
 
-		public bool MustBeRooted(string path)
+		public bool MustBeRooted(LocationsModel model, string path)
 		{
-			var isRooted = Path.IsPathRooted(path);
+			var isRooted = model.FileSystem.Path.IsPathRooted(path);
 			return isRooted;
 		}
 
-		public bool InstallOnKnownDrive(string path)
+		public bool InstallOnKnownDrive(LocationsModel model, string path)
 		{
-			var pathInfo = new DirectoryInfo(path);
-			var drive = pathInfo.Root;
-			var drives = DriveInfo.GetDrives();
-			return drives.Any(d => string.Equals(d.Name, drive.Name, StringComparison.InvariantCultureIgnoreCase));
+			var fileSystem = model.FileSystem;
+			var pathInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+			var root = pathInfo.Root;
+			var drives = fileSystem.DriveInfo.GetDrives();
+			return drives.Any(d => string.Equals(d.Name, root.FullName, StringComparison.InvariantCultureIgnoreCase));
 		}
 
 		private static readonly string X86ProgramFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 		private static readonly string ProgramFiles = LocationsModel.DefaultProgramFiles;
 
-		public bool NotBeChildOfProgramFiles(string path) =>
-			!this.IsSubPathOf(X86ProgramFiles, path) && !this.IsSubPathOf(ProgramFiles, path);
+		public bool NotBeChildOfProgramFiles(LocationsModel model, string path) =>
+			!this.IsSubPathOf(model, X86ProgramFiles, path) && !this.IsSubPathOf(model, ProgramFiles, path);
 
-		public bool IsSubPathOf(string badParent, string path)
+		public bool IsSubPathOf(LocationsModel model, string badParent, string path)
 		{
-			if (!this.MustBeRooted(badParent) || !this.MustBeRooted(path)) return true;
-			string parent = Path.GetFullPath(badParent);
-			string child = Path.GetFullPath(path);
-
+			if (!this.MustBeRooted(model, badParent) || !this.MustBeRooted(model, path)) return true;
 			return path.StartsWith(badParent, StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
