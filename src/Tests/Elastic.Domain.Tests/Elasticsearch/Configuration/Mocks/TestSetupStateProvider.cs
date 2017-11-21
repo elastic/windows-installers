@@ -5,6 +5,7 @@ using System.Linq;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
+using Elastic.Installer.Domain.Tests.Elasticsearch.Models;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 {
@@ -74,7 +75,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this;
 		}
 
-		public MockFileSystem FileSystemState { get; private set; } = new MockFileSystem();
+		public MockFileSystem FileSystemState { get; private set; } = InstallationModelTester.CreateMockFileSystem();
 
 		public MockWixStateProvider WixState { get; private set; } = new MockWixStateProvider();
 

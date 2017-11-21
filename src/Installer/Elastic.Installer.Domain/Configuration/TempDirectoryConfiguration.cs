@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Configuration
 		public TempDirectoryConfiguration(ISession session, IElasticsearchEnvironmentStateProvider esState, IFileSystem fileSystem)
 		{
 			Session = session;
-			FileSystem = fileSystem ?? new FileSystem();;
+			FileSystem = fileSystem;
 			ProductName = this.Session.ProductName;
 			TempProductInstallationDirectory = this.FileSystem.Path.Combine(esState.TempDirectoryVariable, ProductName + DirectorySuffix);
 		}

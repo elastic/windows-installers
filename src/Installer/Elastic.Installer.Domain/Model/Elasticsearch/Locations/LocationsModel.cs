@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Text;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Configuration.FileBased.Yaml;
@@ -48,17 +49,19 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		private string ExistingVersion { get; }
 
 		public LocationsModel(
-			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration,
+			ElasticsearchEnvironmentConfiguration elasticsearchEnvironmentConfiguration, 
 			ElasticsearchYamlConfiguration yamlConfiguration, 
-			VersionConfiguration versionConfig)
+			VersionConfiguration versionConfig, 
+			IFileSystem fileSystem)
 		{
 			this.IsRelevant = !versionConfig.ExistingVersionInstalled;
 			this.Header = "Locations";
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
-			_versionConfig = versionConfig;
+			this._versionConfig = versionConfig;
 			this.CurrentVersion = versionConfig.CurrentVersion.ToString();
 			this.ExistingVersion = versionConfig.ExistingVersion?.ToString();
+			this.FileSystem = fileSystem;
 
 			this.Refresh();
 			this._refreshing = true;
@@ -76,8 +79,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 				vm => vm.LogsDirectory,
 				(c) => {
 					var v = c.GetValue();
-					return Path.IsPathRooted(v) 
-						? Path.Combine(v, "elasticsearch.log") 
+					return this.FileSystem.Path.IsPathRooted(v) 
+						? this.FileSystem.Path.Combine(v, "elasticsearch.log") 
 						: null;
 				})
 				.ToProperty(this, vm => vm.ElasticsearchLog, out elasticsearchLog);
@@ -141,21 +144,21 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		{
 			if (!string.IsNullOrEmpty(pathA) && !string.IsNullOrEmpty(pathB))
 			{
-				var fullPathA = Path.GetFullPath(pathA).TrimEnd('\\','/');
-				var fullPathB = Path.GetFullPath(pathB).TrimEnd('\\','/');
-				return 0 == string.Compare(fullPathA, fullPathB, true);
+				var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd('\\','/');
+				var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd('\\','/');
+				return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
 			}
-			else
-				return false;
+
+			return false;
 		}
 
 		public void SetWritableLocationsToInstallDirectory(bool sameFolder)
 		{
 			if (!sameFolder) return;
 			this._refreshing = true;
-			this.DataDirectory = Path.Combine(this.InstallDir, Data);
-			this.ConfigDirectory = Path.Combine(this.InstallDir, Config);
-			this.LogsDirectory = Path.Combine(this.InstallDir, Logs);
+			this.DataDirectory = this.FileSystem.Path.Combine(this.InstallDir, Data);
+			this.ConfigDirectory = this.FileSystem.Path.Combine(this.InstallDir, Config);
+			this.LogsDirectory = this.FileSystem.Path.Combine(this.InstallDir, Logs);
 			this._refreshing = false;
 		}
 
@@ -216,7 +219,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			if (_versionConfig.ExistingVersion.Major < 6) return installDir;
 			if (_versionConfig.CurrentVersion.Major < 6) return installDir;
 			var rooted = GetRootedPathIfNecessary(installDir);
-			return Path.Combine(rooted, ExistingVersion);
+			return this.FileSystem.Path.Combine(rooted, ExistingVersion);
 		}
 
 		private string GetRootedPathIfNecessary(string value)
@@ -224,7 +227,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			if (string.IsNullOrEmpty(value)) return value;
 			try
 			{
-				var directory = new DirectoryInfo(value);
+				var directory = this.FileSystem.DirectoryInfo.FromDirectoryName(value);
 				if (directory.Name.Equals(CurrentVersion, StringComparison.OrdinalIgnoreCase)
 				    || directory.Name.Equals(ExistingVersion, StringComparison.OrdinalIgnoreCase))
 					return directory.Parent?.FullName;
@@ -259,6 +262,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			get => logsDirectory;
 			set => this.RaiseAndSetIfChanged(ref logsDirectory, value);
 		}
+		public IFileSystem FileSystem { get; }
 
 		public override string ToString()
 		{
