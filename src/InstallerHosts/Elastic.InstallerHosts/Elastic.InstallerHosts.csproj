@@ -49,16 +49,13 @@
     <Compile Include="Elasticsearch\Tasks\Install\EditJvmOptionsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\ElasticsearchInstallationTaskBase.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\InstallPluginsTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Install\InstallServiceTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\PreserveInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetBootstrapPasswordPropertyTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetBootstrapPasswordTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetEnvironmentVariablesTask.cs" />
+    <Compile Include="Elasticsearch\Tasks\Install\SetServiceParametersTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetupXPackPasswordsTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Install\StartServiceTask.cs" />
     <Compile Include="Elasticsearch\Tasks\RemoveEnvironmentVariablesTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Rollback\RollbackServiceTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\UninstallServiceTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Uninstall\UninstallPluginsTask.cs" />
     <Compile Include="Kibana\Tasks\CreateDirectoriesTask.cs" />
     <Compile Include="Kibana\Tasks\DeleteDirectoriesTask.cs" />
@@ -117,7 +114,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)%(Filename)')" />
   </Target>
   <Import Project="..\..\..\.paket\paket.targets" />
   <Choose>

@@ -61,13 +61,30 @@
                 </Component>
 
                 <Component Id="Component.elasticsearch.exe" Guid="daaa2cba-a1ed-4f29-afbf-5478f1f18046" Win64="yes">
+                  <Condition>(NOT Installed) AND ((NOT INSTALLASSERVICE) OR INSTALLASSERVICE~="false")</Condition>
                   <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-6.0.0\bin\elasticsearch.exe" />
+                </Component>
 
-                  <ServiceInstall Id="Elasticsearch" Name="Elasticsearch" DisplayName="Elasticsearch" Description="Elasticsearch" Type="ownProcess" Start="auto" ErrorControl="normal" />
+                <Component Id="Component.elasticsearch.exe.auto" Guid="daaa2cba-a1ed-4f29-afbf-5478025d41a9" Win64="yes">
+                  <Condition>(NOT Installed) AND INSTALLASSERVICE~="true" AND STARTWHENWINDOWSSTARTS~="true"</Condition>
+                  <File Id="elasticsearch.exe.auto" Source="..\..\..\build\in\elasticsearch-6.0.0\bin\elasticsearch.exe" />
 
-                  <ServiceControl Id="StopElasticsearch" Name="Elasticsearch" Stop="both" Wait="yes" />
-                  <ServiceControl Id="StartElasticsearch" Name="Elasticsearch" Start="install" Wait="yes" />
-                  <ServiceControl Id="RemoveElasticsearch" Name="Elasticsearch" Remove="uninstall" Wait="yes" />
+                  <ServiceInstall Id="AutoStartElasticsearch" Name="Elasticsearch" DisplayName="Elasticsearch" Description="You know, for Search." Type="ownProcess" Start="auto" ErrorControl="normal" Account="[ServiceAccount]" Interactive="no" Password="[ServicePassword]" Vital="yes" />
+
+                  <ServiceControl Id="StopAutoStartElasticsearch" Name="Elasticsearch" Stop="both" Wait="yes" />
+                  <ServiceControl Id="StartAutoStartElasticsearch" Name="Elasticsearch" Start="install" Wait="yes" />
+                  <ServiceControl Id="RemoveAutoStartElasticsearch" Name="Elasticsearch" Remove="uninstall" Wait="yes" />
+                </Component>
+
+                <Component Id="Component.elasticsearch.exe.manual" Guid="daaa2cba-a1ed-4f29-afbf-5478f4fcdedc" Win64="yes">
+                  <Condition>(NOT Installed) AND INSTALLASSERVICE~="true" AND ((NOT STARTWHENWINDOWSSTARTS) OR STARTWHENWINDOWSSTARTS~="false")</Condition>
+                  <File Id="elasticsearch.exe.manual" Source="..\..\..\build\in\elasticsearch-6.0.0\bin\elasticsearch.exe" />
+
+                  <ServiceInstall Id="ManualStartElasticsearch" Name="Elasticsearch" DisplayName="Elasticsearch" Description="You know, for Search." Type="ownProcess" Start="demand" ErrorControl="normal" Account="[ServiceAccount]" Interactive="no" Password="[ServicePassword]" Vital="yes" />
+
+                  <ServiceControl Id="StopManualStartElasticsearch" Name="Elasticsearch" Stop="both" Wait="yes" />
+                  <ServiceControl Id="StartManualStartElasticsearch" Name="Elasticsearch" Start="install" Wait="yes" />
+                  <ServiceControl Id="RemoveManualStartElasticsearch" Name="Elasticsearch" Remove="uninstall" Wait="yes" />
                 </Component>
 
               </Directory>
@@ -594,6 +611,9 @@
 
       <ProgressText Action="InstallFiles" Template="Copying new files: [9][1]">Copying new files</ProgressText>
       <ProgressText Action="StopServices" Template="Stopping Elasticsearch service">Stopping Elasticsearch service</ProgressText>
+      <ProgressText Action="StartServices" Template="Starting Elasticsearch service">Starting Elasticsearch service</ProgressText>
+      <ProgressText Action="InstallServices" Template="Installing Elasticsearch service">Installing Elasticsearch service</ProgressText>
+      <ProgressText Action="DeleteServices" Template="Removing Elasticsearch service">Removing Elasticsearch service</ProgressText>
     </UI>
 
     <Upgrade Id="daaa2cba-a1ed-4f29-afbf-5478617b00f6">
@@ -622,6 +642,7 @@
     <CustomAction Id="ElasticsearchSetBootstrapPasswordAction" BinaryKey="ElasticsearchUninstallPluginsAction_File" DllEntry="ElasticsearchSetBootstrapPassword" Return="check" Impersonate="no" Execute="immediate" HideTarget="yes" />
     <CustomAction Id="Set_ElasticsearchDirectoriesAction_Props" Property="ElasticsearchDirectoriesAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];PreviousInstallationDirectory=[PreviousInstallationDirectory];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];HTTPPROXYHOST=[HTTPPROXYHOST];HTTPPROXYPORT=[HTTPPROXYPORT];HTTPSPROXYHOST=[HTTPSPROXYHOST];HTTPSPROXYPORT=[HTTPSPROXYPORT];PLUGINS=[PLUGINS];ELASTICUSERPASSWORD=[ELASTICUSERPASSWORD];KIBANAUSERPASSWORD=[KIBANAUSERPASSWORD];LOGSTASHSYSTEMUSERPASSWORD=[LOGSTASHSYSTEMUSERPASSWORD];XPACKSECURITYENABLED=[XPACKSECURITYENABLED];SKIPSETTINGPASSWORDS=[SKIPSETTINGPASSWORDS];XPACKLICENSE=[XPACKLICENSE];BOOTSTRAPPASSWORD=[BOOTSTRAPPASSWORD];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIR.bin=[INSTALLDIR.bin];VERSION=[VERSION];REMOVE=[REMOVE];ProductName=[ProductName];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchDirectoriesAction" BinaryKey="ElasticsearchUninstallPluginsAction_File" DllEntry="ElasticsearchDirectories" Return="check" Impersonate="no" Execute="deferred" HideTarget="yes" />
+    <CustomAction Id="ElasticsearchSetServiceParametersAction" BinaryKey="ElasticsearchUninstallPluginsAction_File" DllEntry="ElasticsearchSetServiceParameters" Return="check" Impersonate="no" Execute="immediate" HideTarget="yes" />
     <CustomAction Id="Set_ElasticsearchConfigurationAction_Props" Property="ElasticsearchConfigurationAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];PreviousInstallationDirectory=[PreviousInstallationDirectory];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];HTTPPROXYHOST=[HTTPPROXYHOST];HTTPPROXYPORT=[HTTPPROXYPORT];HTTPSPROXYHOST=[HTTPSPROXYHOST];HTTPSPROXYPORT=[HTTPSPROXYPORT];PLUGINS=[PLUGINS];ELASTICUSERPASSWORD=[ELASTICUSERPASSWORD];KIBANAUSERPASSWORD=[KIBANAUSERPASSWORD];LOGSTASHSYSTEMUSERPASSWORD=[LOGSTASHSYSTEMUSERPASSWORD];XPACKSECURITYENABLED=[XPACKSECURITYENABLED];SKIPSETTINGPASSWORDS=[SKIPSETTINGPASSWORDS];XPACKLICENSE=[XPACKLICENSE];BOOTSTRAPPASSWORD=[BOOTSTRAPPASSWORD];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIR.bin=[INSTALLDIR.bin];VERSION=[VERSION];REMOVE=[REMOVE];ProductName=[ProductName];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
     <CustomAction Id="ElasticsearchConfigurationAction" BinaryKey="ElasticsearchUninstallPluginsAction_File" DllEntry="ElasticsearchConfiguration" Return="check" Impersonate="no" Execute="deferred" HideTarget="yes" />
     <CustomAction Id="Set_ElasticsearchJvmOptionsAction_Props" Property="ElasticsearchJvmOptionsAction" Value="PLACEWRITABLELOCATIONSINSAMEPATH=[PLACEWRITABLELOCATIONSINSAMEPATH];INSTALLDIR=[INSTALLDIR];PreviousInstallationDirectory=[PreviousInstallationDirectory];DATADIRECTORY=[DATADIRECTORY];CONFIGDIRECTORY=[CONFIGDIRECTORY];LOGSDIRECTORY=[LOGSDIRECTORY];UNICASTNODES=[UNICASTNODES];CLUSTERNAME=[CLUSTERNAME];NODENAME=[NODENAME];MASTERNODE=[MASTERNODE];DATANODE=[DATANODE];INGESTNODE=[INGESTNODE];SELECTEDMEMORY=[SELECTEDMEMORY];LOCKMEMORY=[LOCKMEMORY];MINIMUMMASTERNODES=[MINIMUMMASTERNODES];NETWORKHOST=[NETWORKHOST];HTTPPORT=[HTTPPORT];TRANSPORTPORT=[TRANSPORTPORT];INSTALLASSERVICE=[INSTALLASSERVICE];STARTAFTERINSTALL=[STARTAFTERINSTALL];STARTWHENWINDOWSSTARTS=[STARTWHENWINDOWSSTARTS];USELOCALSYSTEM=[USELOCALSYSTEM];USEEXISTINGUSER=[USEEXISTINGUSER];USENETWORKSERVICE=[USENETWORKSERVICE];USER=[USER];PASSWORD=[PASSWORD];HTTPPROXYHOST=[HTTPPROXYHOST];HTTPPROXYPORT=[HTTPPROXYPORT];HTTPSPROXYHOST=[HTTPSPROXYHOST];HTTPSPROXYPORT=[HTTPSPROXYPORT];PLUGINS=[PLUGINS];ELASTICUSERPASSWORD=[ELASTICUSERPASSWORD];KIBANAUSERPASSWORD=[KIBANAUSERPASSWORD];LOGSTASHSYSTEMUSERPASSWORD=[LOGSTASHSYSTEMUSERPASSWORD];XPACKSECURITYENABLED=[XPACKSECURITYENABLED];SKIPSETTINGPASSWORDS=[SKIPSETTINGPASSWORDS];XPACKLICENSE=[XPACKLICENSE];BOOTSTRAPPASSWORD=[BOOTSTRAPPASSWORD];OPENDOCUMENTATIONAFTERINSTALLATION=[OPENDOCUMENTATIONAFTERINSTALLATION];UILevel=[UILevel];INSTALLDIR.bin=[INSTALLDIR.bin];VERSION=[VERSION];REMOVE=[REMOVE];ProductName=[ProductName];INSTALLDIR=[INSTALLDIR];UILevel=[UILevel];ProductCode=[ProductCode]" />
@@ -663,6 +684,7 @@
     <Property Id="KIBANAUSERPASSWORD" Hidden="yes" />
     <Property Id="LOGSTASHSYSTEMUSERPASSWORD" Hidden="yes" />
     <Property Id="BOOTSTRAPPASSWORD" Hidden="yes" />
+    <Property Id="ServicePassword" Hidden="yes" />
     <Property Id="ARPHELPLINK" Value="https://discuss.elastic.co/c/elasticsearch" />
     <Property Id="ARPPRODUCTICON" Value="app_icon.ico" />
     <Property Id="ARPURLINFOABOUT" Value="https://www.elastic.co/products/elasticsearch" />
@@ -676,6 +698,8 @@
       <ComponentRef Id="Component.elasticsearch_plugin.bat" />
       <ComponentRef Id="Component.elasticsearch_translog.bat" />
       <ComponentRef Id="Component.elasticsearch.exe" />
+      <ComponentRef Id="Component.elasticsearch.exe.auto" />
+      <ComponentRef Id="Component.elasticsearch.exe.manual" />
       <ComponentRef Id="Component.elasticsearch.yml" />
       <ComponentRef Id="Component.jvm.options" />
       <ComponentRef Id="Component.log4j2.properties" />
@@ -810,6 +834,7 @@
       <Custom Action="ElasticsearchSetBootstrapPasswordAction" After="ElasticsearchValidateArgumentsAction">(NOT Installed) AND BOOTSTRAPPASSWORD=""</Custom>
       <Custom Action="Set_ElasticsearchDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchDirectoriesAction" After="InstallFiles"> (NOT Installed) </Custom>
+      <Custom Action="ElasticsearchSetServiceParametersAction" After="ElasticsearchSetBootstrapPasswordAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchConfigurationAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchConfigurationAction" After="ElasticsearchDirectoriesAction"> (NOT Installed) </Custom>
       <Custom Action="Set_ElasticsearchJvmOptionsAction_Props" After="InstallInitialize" />
@@ -823,6 +848,10 @@
       <Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWPRODUCTFOUND</Custom>
 
       <RemoveExistingProducts After="InstallFinalize" />
+
+      <InstallServices Sequence="5800"><![CDATA[VersionNT AND (NOT Installed) AND INSTALLASSERVICE~="true"]]></InstallServices>
+
+      <StartServices Sequence="5900"><![CDATA[VersionNT AND (NOT Installed) AND INSTALLASSERVICE~="true" AND STARTAFTERINSTALL~="true"]]></StartServices>
     </InstallExecuteSequence>
 
     <InstallUISequence>

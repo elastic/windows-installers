@@ -211,7 +211,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		{
 			var javaConfig = JavaConfiguration.Default;
 			var esEnvironmentConfig = ElasticsearchEnvironmentConfiguration.Default;
-			var serviceState = ServiceStateProvider.FromSession(session, "Elasticsearch");
+			var serviceState = ServiceStateProvider.FromSession(session, ServiceModel.ElasticsearchServiceName);
 			var pluginState = PluginStateProviderBase.ElasticsearchDefault(session);
 
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
@@ -266,39 +266,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;
 			this.Using32BitJava = JavaConfiguration.Using32BitJava;
 			this.BadElasticsearchYamlFile = _yamlConfiguration.FoundButNotValid;
-
 			this.MsiLogFileLocation = this.Session.Get<string>("MsiLogFileLocation");
-		}
-
-		public ElasticsearchServiceConfiguration GetServiceConfiguration()
-		{
-			var service = this.ServiceModel;
-			var automaticStart = service.StartWhenWindowsStarts;
-			var configuration = new ElasticsearchServiceConfiguration
-			{
-				Name = "Elasticsearch",
-				DisplayName = "Elasticsearch",
-				Description = "You know, for Search.",
-				StartMode = automaticStart ? ServiceStartMode.Automatic : ServiceStartMode.Manual,
-				EventLogSource = "Elasticsearch",
-				HomeDirectory = this.LocationsModel.InstallDir,
-				ConfigDirectory = this.LocationsModel.ConfigDirectory,
-				ExeLocation = Path.Combine(this.LocationsModel.InstallDir, "bin", "elasticsearch.exe")
-			};
-			var username = service.User;
-
-			var password = service.Password;
-			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-			{
-				configuration.ServiceAccount = ServiceAccount.User;
-				configuration.UserName = username;
-				configuration.Password = password;
-			}
-			else if (service.UseNetworkService)
-				configuration.ServiceAccount = ServiceAccount.NetworkService;
-			else
-				configuration.ServiceAccount = ServiceAccount.LocalSystem;
-			return configuration;
 		}
 
 		public override string ToString()

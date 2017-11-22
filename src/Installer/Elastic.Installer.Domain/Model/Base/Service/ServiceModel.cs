@@ -9,6 +9,10 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 {
 	public class ServiceModel : StepBase<ServiceModel, ServiceModelValidator>
 	{
+		public const string ElasticsearchServiceName = "Elasticsearch";
+		public const string ServiceAccount = nameof(ServiceAccount);
+		public const string ServicePassword = nameof(ServicePassword);
+
 		public static readonly bool DefaultServiceStart = true;
 		public static readonly bool DefaultServiceRunAsNetworkService = false;
 		public static readonly bool DefaultServiceInstall = true;

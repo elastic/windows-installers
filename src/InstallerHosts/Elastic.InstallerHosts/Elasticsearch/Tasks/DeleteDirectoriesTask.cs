@@ -10,6 +10,11 @@ using Microsoft.Deployment.WindowsInstaller;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
+	/// <summary>
+	/// Ensures we remove the Elasticsearch installation directory completely.
+	/// We can't rely on the MSI RemoveFiles step to remove directories/files that were registered 
+	/// on a full uninstall because new files may have been introduced later on (e.g. plugins).
+	/// </summary>
 	public class DeleteDirectoriesTask : ElasticsearchInstallationTaskBase
 	{
 		private bool RollBack { get; }
@@ -21,11 +26,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 		public DeleteDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
 
-		/// <summary>
-		/// This action ensures we remove the Elasticsearch installation directory completely.
-		/// We can't rely on the MSI RemoveFiles step to remove directories/files that were registered 
-		/// on a full uninstall because new files may have been introduced later on (e.g. plugins).
-		/// </summary>
 		protected override bool ExecuteTask()
 		{
 			if (this.Session.IsRollback && this.InstallationModel.NoticeModel.ExistingVersionInstalled)

@@ -9,6 +9,9 @@ using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
+	/// <summary>
+	/// Sets the BOOTSTRAPPASSWORD property to a random 20 character string
+	/// </summary>
 	public class SetBootstrapPasswordPropertyTask : ElasticsearchInstallationTaskBase
 	{
 		private static readonly char[] BootstrapChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-_=+?".ToCharArray();

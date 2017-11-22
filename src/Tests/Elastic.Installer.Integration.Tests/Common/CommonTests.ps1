@@ -20,6 +20,8 @@ function Context-ElasticsearchService($Expected) {
             Name="Elasticsearch"
             DisplayName="Elasticsearch"
 			StartIfNotRunning = $true
+			CanStop = $true
+			CanShutdown = $true
 		} $Expected
 
     Context "Elasticsearch service" {
@@ -45,12 +47,12 @@ function Context-ElasticsearchService($Expected) {
 			}
         }
 
-        It "Service can be stopped" {
-            $Service.CanStop | Should Be $true
+        It "Service can be stopped $($Expected.CanStop)" {
+            $Service.CanStop | Should Be $($Expected.CanStop)
         }
 
-        It "Service can be shutdown" {
-            $Service.CanStop | Should Be $true
+        It "Service can be shutdown $($Expected.CanShutdown)" {
+            $Service.CanShutdown | Should Be $($Expected.CanShutdown)
         }
 
         It "Service cannot be paused and continued" {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using WixSharp;
 
 namespace Elastic.Installer.Msi
@@ -28,5 +29,9 @@ namespace Elastic.Installer.Msi
 				.Select(Path.GetFileName)
 				.Select(directoryName => new Dir(directoryName, new Files(path + $@"\{directoryName}\*.*")))
 				.ToList();
+
+		public virtual void PatchWixSource(XDocument document) { }
+
+		public virtual void PatchProject(Project project) { }
 	}
 }

@@ -5,6 +5,7 @@
 		// Immediate actions
 		LogAllTheThings = 1,
 		BootstrapPasswordProperty = 2,
+		ServiceParameters = 3,
 
 		// Deferred actions
 		SetPreconditions = 1,
