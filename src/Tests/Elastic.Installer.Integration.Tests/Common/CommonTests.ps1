@@ -31,8 +31,20 @@ function Context-ElasticsearchService($Expected) {
             $Service | Should Not Be $null
         }
 
+		if ($Service.Status -eq "StartPending" -and $Expected.Status -eq "Running") {
+			$timeSpan = New-TimeSpan -Seconds 10
+			Write-Output "Service is currently $($Service.Status). Wait $timeSpan for running"
+			try {
+				$Service.WaitForStatus("Running", $timeSpan)
+			}
+			catch {
+				# swallow exception as following assertion will test status.
+			}
+		}
+
+
         It "Service status is $($Expected.Status)" {
-            $Service.Status | Should Be $($Expected.Status)
+            $Service.Status | Should Be $Expected.Status
 
 			# BUG: Upgrading from Elasticsearch 5.5.0-2, to 5.5.3+, the service is not started after upgrading.
 			# Start the service if commanded to do so

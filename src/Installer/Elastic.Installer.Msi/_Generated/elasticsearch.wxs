@@ -61,12 +61,12 @@
                 </Component>
 
                 <Component Id="Component.elasticsearch.exe" Guid="daaa2cba-a1ed-4f29-afbf-5478f1f18046" Win64="yes">
-                  <Condition>(NOT Installed) AND ((NOT INSTALLASSERVICE) OR INSTALLASSERVICE~="false")</Condition>
+                  <Condition>(NOT Installed) AND (INSTALLASSERVICE=0 OR INSTALLASSERVICE~="false")</Condition>
                   <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-6.0.0\bin\elasticsearch.exe" />
                 </Component>
 
                 <Component Id="Component.elasticsearch.exe.auto" Guid="daaa2cba-a1ed-4f29-afbf-5478025d41a9" Win64="yes">
-                  <Condition>(NOT Installed) AND INSTALLASSERVICE~="true" AND STARTWHENWINDOWSSTARTS~="true"</Condition>
+                  <Condition>(NOT Installed) AND (INSTALLASSERVICE~="true" OR INSTALLASSERVICE=1) AND (STARTWHENWINDOWSSTARTS~="true" OR STARTWHENWINDOWSSTARTS=1)</Condition>
                   <File Id="elasticsearch.exe.auto" Source="..\..\..\build\in\elasticsearch-6.0.0\bin\elasticsearch.exe" />
 
                   <ServiceInstall Id="AutoStartElasticsearch" Name="Elasticsearch" DisplayName="Elasticsearch" Description="You know, for Search." Type="ownProcess" Start="auto" ErrorControl="normal" Account="[ServiceAccount]" Interactive="no" Password="[ServicePassword]" Vital="yes" />
@@ -77,7 +77,7 @@
                 </Component>
 
                 <Component Id="Component.elasticsearch.exe.manual" Guid="daaa2cba-a1ed-4f29-afbf-5478f4fcdedc" Win64="yes">
-                  <Condition>(NOT Installed) AND INSTALLASSERVICE~="true" AND ((NOT STARTWHENWINDOWSSTARTS) OR STARTWHENWINDOWSSTARTS~="false")</Condition>
+                  <Condition>(NOT Installed) AND (INSTALLASSERVICE~="true" OR INSTALLASSERVICE=1) AND (STARTWHENWINDOWSSTARTS~="false" OR STARTWHENWINDOWSSTARTS=0)</Condition>
                   <File Id="elasticsearch.exe.manual" Source="..\..\..\build\in\elasticsearch-6.0.0\bin\elasticsearch.exe" />
 
                   <ServiceInstall Id="ManualStartElasticsearch" Name="Elasticsearch" DisplayName="Elasticsearch" Description="You know, for Search." Type="ownProcess" Start="demand" ErrorControl="normal" Account="[ServiceAccount]" Interactive="no" Password="[ServicePassword]" Vital="yes" />
@@ -849,9 +849,11 @@
 
       <RemoveExistingProducts After="InstallFinalize" />
 
-      <InstallServices Sequence="5800"><![CDATA[VersionNT AND (NOT Installed) AND INSTALLASSERVICE~="true"]]></InstallServices>
+      <InstallServices Sequence="5800"><![CDATA[VersionNT AND (NOT Installed) AND (INSTALLASSERVICE~="true" OR INSTALLASSERVICE=1)]]></InstallServices>
 
-      <StartServices Sequence="5900"><![CDATA[VersionNT AND (NOT Installed) AND INSTALLASSERVICE~="true" AND STARTAFTERINSTALL~="true"]]></StartServices>
+      <StartServices Sequence="5900"><![CDATA[VersionNT AND (NOT Installed) AND (INSTALLASSERVICE~="true" OR INSTALLASSERVICE=1) AND (STARTAFTERINSTALL~="true" OR STARTAFTERINSTALL=1)]]></StartServices>
+
+      <StopServices Sequence="1900"><![CDATA[VersionNT AND (NOT UPGRADINGPRODUCTCODE) AND REMOVE~="ALL"]]></StopServices>
     </InstallExecuteSequence>
 
     <InstallUISequence>

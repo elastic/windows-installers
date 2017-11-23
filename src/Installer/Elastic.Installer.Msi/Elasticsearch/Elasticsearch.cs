@@ -78,7 +78,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 			// directory path is *only* relevant to finding the directory specified by WixSharp,
 			// in order to place the elasticsearch.exe Windows service components in the correct directory
 			var serviceDirectory = project
-				.FindDir($@"ProgramFiles64Folder\Elastic\Elasticsearch\{project.Version}\bin");
+				.FindDir($@"ProgramFiles64Folder\Elastic\Elasticsearch\{project.Properties.First(p => p.Name == "CurrentVersion").Value}\bin");
 
 			var autoStartServiceExeFile = new File(new Id(elasticsearchExeFile.Id + ".auto"), elasticsearchExeFile.Name)
 			{
@@ -240,6 +240,13 @@ namespace Elastic.Installer.Msi.Elasticsearch
 				new XCData($"VersionNT AND (NOT Installed) " +
 				           $"AND ({installAsServiceProperty}~=\"true\" OR {installAsServiceProperty}=1) " +
 				           $"AND ({startAfterInstallProperty}~=\"true\" OR {startAfterInstallProperty}=1)")
+			));
+
+			// Add condition to StopServices	
+			installExecuteSequence.Add(new XElement(ns + "StopServices",
+				// Sequence number pinned from inspecting MSI with Orca
+				new XAttribute("Sequence", "1900"),
+				new XCData($"VersionNT AND (NOT UPGRADINGPRODUCTCODE) AND REMOVE~=\"ALL\"")
 			));
 
 			// Update in-built progress templates 
