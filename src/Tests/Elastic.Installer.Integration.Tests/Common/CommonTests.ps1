@@ -413,16 +413,17 @@ function Context-InsertData($Domain = "localhost", $Port = 9200, $Credentials) {
 			)
 
 			$body = [string]::Join("`n", $requests) + "`n"
+			$url = "http://$($Domain):$Port/_bulk?refresh"
 
 			if ($Credentials) {
 				$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
 				$authHeaderValue = [Convert]::ToBase64String($bytes)
-				$response = Invoke-RestMethod "http://$($Domain):$Port/_bulk" -Method Post `
+				$response = Invoke-RestMethod $url -Method Post `
 								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
 								-Body $body
 			}
 			else {
-				$response = Invoke-RestMethod "http://$($Domain):$Port/_bulk" -Method Post -Body $body
+				$response = Invoke-RestMethod $url -Method Post -Body $body
 			}
 
 			It "Should have no errors" {

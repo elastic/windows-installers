@@ -16,8 +16,9 @@ $InstallDir = "D:\Elastic"
 $DataDir = "D:\Data"
 $ConfigDir = "D:\Config"
 $LogsDir = "D:\Logs"
+$tags = @('PreviousVersions') 
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume install $($previousVersion.Description)" {
+Describe -Name "Silent Install upgrade different volume install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
@@ -63,7 +64,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume instal
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume from $($previousVersion.Description) to $($version.Description)" {
+Describe -Name "Silent Install upgrade different volume from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
@@ -111,7 +112,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume from $
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume uninstall $($version.Description)" {
+Describe -Name "Silent Uninstall upgrade different volume uninstall $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 

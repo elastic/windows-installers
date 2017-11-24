@@ -12,8 +12,9 @@ Get-PreviousVersions
 $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
+$tags = @('PreviousVersions', 'XPack') 
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins install $($previousVersion.Description)" {
+Describe -Name "Silent Install upgrade with plugins install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
@@ -69,7 +70,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins install $(
 	Context-InsertData -Credentials $credentials
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins from $($previousVersion.Description) to $($version.Description)" {
+Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 

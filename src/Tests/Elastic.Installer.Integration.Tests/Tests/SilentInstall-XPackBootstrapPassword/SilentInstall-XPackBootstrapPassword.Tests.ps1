@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with setting up bootstrap password $(($Global:Version).Description)" {
+Describe -Name "Silent Install with setting up bootstrap password $(($Global:Version).Description)" -Tags @('XPack') {
 
 	$exeArgs = @(
 		"PLUGINS=x-pack", 
@@ -29,7 +29,7 @@ Describe "Silent Install with setting up bootstrap password $(($Global:Version).
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with setting up bootstrap password $(($Global:Version).Description)" {
+Describe -Name "Silent Uninstall with setting up bootstrap password $(($Global:Version).Description)" -Tags @('XPack') {
 
     Invoke-SilentUninstall
 

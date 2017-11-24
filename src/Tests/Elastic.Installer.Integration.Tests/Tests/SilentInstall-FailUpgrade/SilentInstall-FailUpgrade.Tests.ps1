@@ -13,8 +13,9 @@ Get-PreviousVersions
 
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
+$tags = @('PreviousVersions')
 
-Describe -Tag 'PreviousVersions' "Silent Install fail upgrade install $($previousVersion.Description)" {
+Describe -Name "Silent Install fail upgrade install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 	
@@ -62,7 +63,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade install $($previou
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install fail upgrade fail to $($version.Description)" {
+Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 	$pv = $previousVersion.FullVersion
@@ -148,7 +149,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade fail to $($version
 	Context-ReadData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall fail upgrade uninstall $($previousVersion.Description)" {
+Describe -Name "Silent Uninstall fail upgrade uninstall $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 

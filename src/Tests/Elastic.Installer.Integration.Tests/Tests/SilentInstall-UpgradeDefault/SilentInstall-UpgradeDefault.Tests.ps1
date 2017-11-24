@@ -11,8 +11,9 @@ Get-PreviousVersions
 
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
+$tags = @('PreviousVersions') 
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade install $($previousVersion.Description)" {
+Describe -Name "Silent Install upgrade install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 
@@ -62,7 +63,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade install $($previousVers
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade from $($previousVersion.Description) to $($version.Description)" {
+Describe -Name "Silent Install upgrade from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 
@@ -114,7 +115,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade from $($previousVersion
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade uninstall $($version.Description)" {
+Describe -Name "Silent Uninstall upgrade uninstall $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 

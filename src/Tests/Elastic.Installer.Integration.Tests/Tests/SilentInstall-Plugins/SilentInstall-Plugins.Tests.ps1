@@ -9,7 +9,9 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" {
+$tags = @('XPack')
+
+Describe -Name "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" -Tags $tags {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
 
@@ -22,7 +24,7 @@ Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" {
+Describe -Name "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" -Tags $tags {
 
     Invoke-SilentUninstall
 
