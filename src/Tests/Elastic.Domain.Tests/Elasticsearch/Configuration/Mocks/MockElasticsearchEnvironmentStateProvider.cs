@@ -96,7 +96,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		private string HomeDirectoryProcessVariable { get; set; }
 		string IElasticsearchEnvironmentStateProvider.HomeDirectoryProcessVariable => this.HomeDirectoryProcessVariable;
 
-		public string OldConfigDirectoryMachineVariableCopy { get; private set; }
 		public string OldConfigDirectoryMachineVariable { get; private set; }
 		public string NewConfigDirectoryMachineVariable { get; private set; }
 		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryMachineVariable => this.NewConfigDirectoryMachineVariable ?? this.OldConfigDirectoryMachineVariable;
@@ -106,41 +105,5 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		private string _esConfigProcess;
 		private string _esConfigProcessOld;
 		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryProcessVariable => this._esConfigProcess ?? this._esConfigProcessOld;
-
-		void IElasticsearchEnvironmentStateProvider.SetEsHomeEnvironmentVariable(string esHome)
-		{
-			this.LastSetEsHome = esHome;
-			this.HomeDirectoryMachineVariable = esHome;
-		}
-
-		void IElasticsearchEnvironmentStateProvider.SetEsConfigEnvironmentVariable(string esConfig)
-		{
-			this.LastSetEsConfig = esConfig;
-			this.NewConfigDirectoryMachineVariable = esConfig;
-		}
-		void IElasticsearchEnvironmentStateProvider.SetOldEsConfigEnvironmentVariable(string esConfig)
-		{
-			this.LastSetOldEsConfig = esConfig;
-			this.OldConfigDirectoryMachineVariable = esConfig;
-		}
-
-		public bool UnsetOldConfigVariableWasCalled { get; private set; }
-		void IElasticsearchEnvironmentStateProvider.UnsetOldConfigVariable()
-		{
-			this.UnsetOldConfigVariableWasCalled = true;
-			if (string.IsNullOrEmpty(this.OldConfigDirectoryMachineVariableCopy)) return;
-			this.OldConfigDirectoryMachineVariableCopy = this.OldConfigDirectoryMachineVariable;
-			this.OldConfigDirectoryMachineVariable = null;
-		}
-
-		public bool RestoreOldConfigVariableWasCalled { get; private set; }
-		bool IElasticsearchEnvironmentStateProvider.RestoreOldConfigVariable()
-		{
-			this.RestoreOldConfigVariableWasCalled = true;
-			if (string.IsNullOrEmpty(this.OldConfigDirectoryMachineVariableCopy)) return false;
-			this.OldConfigDirectoryMachineVariable = this.OldConfigDirectoryMachineVariableCopy;
-			this.OldConfigDirectoryMachineVariableCopy = null;
-			return true;
-		}
 	}
 }

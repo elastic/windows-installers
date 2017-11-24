@@ -54,7 +54,6 @@
     <Compile Include="Elasticsearch\Tasks\Install\SetBootstrapPasswordTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetServiceParametersTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetupXPackPasswordsTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\RemoveEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Uninstall\UninstallPluginsTask.cs" />
     <Compile Include="Kibana\Tasks\CreateDirectoriesTask.cs" />
     <Compile Include="Kibana\Tasks\DeleteDirectoriesTask.cs" />
