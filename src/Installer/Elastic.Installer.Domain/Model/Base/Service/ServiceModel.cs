@@ -14,7 +14,6 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 		public const string ServicePassword = nameof(ServicePassword);
 
 		public static readonly bool DefaultServiceStart = true;
-		public static readonly bool DefaultServiceRunAsNetworkService = false;
 		public static readonly bool DefaultServiceInstall = true;
 		public static readonly bool DefaultServiceAutomatic = true;
 		public static readonly bool DefaultUseLocalSystem = true;

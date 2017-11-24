@@ -2,7 +2,6 @@ using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Base.Service;
 using Elastic.Installer.Domain.Model.Elasticsearch;
-using Microsoft.Deployment.WindowsInstaller;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
@@ -38,12 +37,12 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			}
 			else if (serviceModel.UseNetworkService)
 			{
-				Session.Log($@"Setting ServiceAccount to Network Service account");
-				Session.Set(ServiceModel.ServiceAccount, @".\NetworkService");
+				Session.Log("Setting ServiceAccount to Network Service account");
+				Session.Set(ServiceModel.ServiceAccount, @"NT AUTHORITY\NETWORKSERVICE");
 			}
-			else if (serviceModel.UseLocalSystem)
+			else // always set some account
 			{
-				Session.Log($@"Setting ServiceAccount to Local System account");
+				Session.Log("Setting ServiceAccount to Local System account");
 				Session.Set(ServiceModel.ServiceAccount, @".\LocalSystem");
 			}
 
