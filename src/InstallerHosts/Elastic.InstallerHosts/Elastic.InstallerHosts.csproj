@@ -52,7 +52,6 @@
     <Compile Include="Elasticsearch\Tasks\Install\PreserveInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetBootstrapPasswordPropertyTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetBootstrapPasswordTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Install\SetEnvironmentVariablesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetServiceParametersTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetupXPackPasswordsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\RemoveEnvironmentVariablesTask.cs" />

@@ -106,7 +106,6 @@
     <Compile Include="Elasticsearch\Models\Tasks\Install\EditJvmOptionTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Install\InstallPluginsTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Install\PreserveInstallTaskTests.cs" />
-    <Compile Include="Elasticsearch\Models\Tasks\Install\SetEnvironmentVariablesTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Install\SetupXPackPasswordsTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Rollback\RollbackDeleteDirectoriesTaskTests.cs" />
     <Compile Include="Elasticsearch\Models\Tasks\Uninstall\UninstallDeleteDirectoriesTaskTests.cs" />

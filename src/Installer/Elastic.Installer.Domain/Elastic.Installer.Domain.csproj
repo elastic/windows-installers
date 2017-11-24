@@ -78,7 +78,6 @@
     <Compile Include="Configuration\Plugin\KibanaPluginStateProvider.cs" />
     <Compile Include="Configuration\Plugin\NoopPluginStateProvider.cs" />
     <Compile Include="Configuration\Plugin\PluginStateProviderBase.cs" />
-    <Compile Include="Configuration\Service\ElasticsearchServiceConfiguration.cs" />
     <Compile Include="Configuration\Service\KibanaServiceConfiguration.cs" />
     <Compile Include="Configuration\Service\ServiceConfiguration.cs" />
     <Compile Include="Configuration\Service\ServiceInstallationManager.cs">
@@ -189,7 +188,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)\%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)\%(Filename)')" />
   </Target>
   <UsingTask AssemblyFile="packages\WixSharp.bin.1.0.21.0\build\SetEnvVar.dll" TaskName="SetEnvVar" />
   <Choose>
