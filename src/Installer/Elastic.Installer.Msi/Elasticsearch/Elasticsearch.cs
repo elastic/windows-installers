@@ -12,13 +12,14 @@ using Elastic.Installer.Domain.Model.Base.Service;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using WixSharp;
-using WixSharp.CommonTasks;
 
 namespace Elastic.Installer.Msi.Elasticsearch
 {
 	public class Elasticsearch : Product
 	{
 		private readonly bool _releaseMode;
+		private static readonly string InstallAsServiceProperty = nameof(ServiceModel.InstallAsService).ToUpperInvariant();
+		private static readonly string StartAfterInstallProperty = nameof(ServiceModel.StartAfterInstall).ToUpperInvariant();
 
 		public Elasticsearch(bool releaseMode) => _releaseMode = releaseMode;
 
@@ -64,68 +65,29 @@ namespace Elastic.Installer.Msi.Elasticsearch
 
 		public override void PatchProject(Project project)
 		{
-			var installAsServiceProperty = nameof(ServiceModel.InstallAsService).ToUpperInvariant();
-			var startWhenWindowsStartsProperty = nameof(ServiceModel.StartWhenWindowsStarts).ToUpperInvariant();
-
 			var elasticsearchExeFile = project
 				.ResolveWildCards()
 				.FindFile(f => f.Name.EndsWith("elasticsearch.exe"))
 				.First();
 
-			elasticsearchExeFile.Condition = new Condition("(NOT Installed) " +
-				$"AND ({installAsServiceProperty}=0 OR {installAsServiceProperty}~=\"false\")");
-
-			// directory path is *only* relevant to finding the directory specified by WixSharp,
-			// in order to place the elasticsearch.exe Windows service components in the correct directory
-			var serviceDirectory = project
-				.FindDir($@"ProgramFiles64Folder\Elastic\Elasticsearch\{project.Properties.First(p => p.Name == "CurrentVersion").Value}\bin");
-
-			var autoStartServiceExeFile = new File(new Id(elasticsearchExeFile.Id + ".auto"), elasticsearchExeFile.Name)
+			// *actual* service installation and start/stop/remove are controlled through
+			// conditions on those actions in the InstallExecuteSequence table
+			elasticsearchExeFile.ServiceInstaller = new ServiceInstaller(ServiceModel.ElasticsearchServiceName)
 			{
-				Condition = new Condition($"(NOT Installed) " +
-					$"AND ({installAsServiceProperty}~=\"true\" OR {installAsServiceProperty}=1) " +
-				    $"AND ({startWhenWindowsStartsProperty}~=\"true\" OR {startWhenWindowsStartsProperty}=1)"),
-				ServiceInstaller = new ServiceInstaller(ServiceModel.ElasticsearchServiceName)
-				{
-					Id = "AutoStartElasticsearch",
-					Description = "You know, for Search.",
-					Interactive = false,
-					StartType = SvcStartType.auto,
-					Account = $"[{ServiceModel.ServiceAccount}]",
-					Password = $"[{ServiceModel.ServicePassword}]",
-					Type = SvcType.ownProcess,
-					Vital = true,
-					StartOn = SvcEvent.Install_Wait,
-					StopOn = SvcEvent.InstallUninstall_Wait,
-					RemoveOn = SvcEvent.Uninstall_Wait,
-				}
+				Id = "ElasticsearchService",
+				Description = "You know, for Search.",
+				Interactive = false,
+				StartType = SvcStartType.auto, // starttype is not parameterizable, changed in custom action
+				Account = $"[{ServiceModel.ServiceAccount}]",
+				Password = $"[{ServiceModel.ServicePassword}]",
+				Type = SvcType.ownProcess,
+				Vital = true,
+				StartOn = SvcEvent.Install_Wait,
+				StopOn = SvcEvent.InstallUninstall_Wait,
+				RemoveOn = SvcEvent.Uninstall_Wait,
 			};
 
-			serviceDirectory.AddFile(autoStartServiceExeFile);
-
-			var manualStartServiceExeFile = new File(new Id(elasticsearchExeFile.Id + ".manual"), elasticsearchExeFile.Name)
-			{
-				Condition = new Condition($"(NOT Installed) " +
-					$"AND ({installAsServiceProperty}~=\"true\" OR {installAsServiceProperty}=1) " +
-				    $"AND ({startWhenWindowsStartsProperty}~=\"false\" OR {startWhenWindowsStartsProperty}=0)"),
-				ServiceInstaller = new ServiceInstaller(ServiceModel.ElasticsearchServiceName)
-				{
-					Id = "ManualStartElasticsearch",
-					Description = "You know, for Search.",
-					Interactive = false,
-					StartType = SvcStartType.demand,
-					Account = $"[{ServiceModel.ServiceAccount}]",
-					Password = $"[{ServiceModel.ServicePassword}]",
-					Type = SvcType.ownProcess,
-					Vital = true,
-					StartOn = SvcEvent.Install_Wait,
-					StopOn = SvcEvent.InstallUninstall_Wait,
-					RemoveOn = SvcEvent.Uninstall_Wait,
-				}
-			};
-
-			serviceDirectory.AddFile(manualStartServiceExeFile);
-
+			// don't emit the ServicePassword property in logs
 			var servicePasswordProperty = new Property(ServiceModel.ServicePassword, string.Empty)
 			{
 				Attributes = new Dictionary<string, string> { { "Hidden", "yes" } }
@@ -223,14 +185,12 @@ namespace Elastic.Installer.Msi.Elasticsearch
 
 			// Add condition to InstallServices
 			var installExecuteSequence = documentRoot.Descendants(ns + "InstallExecuteSequence").Single();
-			var installAsServiceProperty = nameof(ServiceModel.InstallAsService).ToUpperInvariant();
-			var startAfterInstallProperty = nameof(ServiceModel.StartAfterInstall).ToUpperInvariant();
 
 			installExecuteSequence.Add(new XElement(ns + "InstallServices",
 				// Sequence number pinned from inspecting MSI with Orca
 				new XAttribute("Sequence", "5800"),
 				new XCData($"VersionNT AND (NOT Installed) " +
-				           $"AND ({installAsServiceProperty}~=\"true\" OR {installAsServiceProperty}=1)")
+				           $"AND ({InstallAsServiceProperty}~=\"true\" OR {InstallAsServiceProperty}=1)")
 			));
 
 			// Add condition to StartServices	
@@ -238,15 +198,18 @@ namespace Elastic.Installer.Msi.Elasticsearch
 				// Sequence number pinned from inspecting MSI with Orca
 				new XAttribute("Sequence", "5900"),
 				new XCData($"VersionNT AND (NOT Installed) " +
-				           $"AND ({installAsServiceProperty}~=\"true\" OR {installAsServiceProperty}=1) " +
-				           $"AND ({startAfterInstallProperty}~=\"true\" OR {startAfterInstallProperty}=1)")
+				           $"AND ({InstallAsServiceProperty}~=\"true\" OR {InstallAsServiceProperty}=1) " +
+				           $"AND ({StartAfterInstallProperty}~=\"true\" OR {StartAfterInstallProperty}=1)")
 			));
 
-			// Add condition to StopServices	
+			// Add condition to StopServices to run when 
+			// 1. installing
+			// 2. uninstalling everything and not part of an upgrade. In this scenario, we assume that the
+			//    installation of the new version will have stopped the service as part of the install.
 			installExecuteSequence.Add(new XElement(ns + "StopServices",
 				// Sequence number pinned from inspecting MSI with Orca
 				new XAttribute("Sequence", "1900"),
-				new XCData($"VersionNT AND (NOT UPGRADINGPRODUCTCODE) AND REMOVE~=\"ALL\"")
+				new XCData("VersionNT AND ((NOT Installed) OR ((NOT UPGRADINGPRODUCTCODE) AND REMOVE~=\"ALL\"))")
 			));
 
 			// Update in-built progress templates 

@@ -58,6 +58,7 @@
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchPluginsAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchPreserveInstallAction.cs" />
     <Compile Include="CustomActions\RollbackCustomAction.cs" />
+    <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchServiceStartTypeAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Install\ElasticsearchSetupXPackPasswordsAction.cs" />
     <Compile Include="Elasticsearch\CustomActions\Rollback\ElasticsearchRollbackDirectoriesAction.cs" />
     <Compile Include="CustomActions\UninstallCustomAction.cs" />

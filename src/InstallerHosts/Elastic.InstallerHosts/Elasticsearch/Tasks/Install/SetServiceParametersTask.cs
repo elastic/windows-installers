@@ -1,4 +1,7 @@
+using System;
 using System.IO.Abstractions;
+using System.Linq;
+using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Base.Service;
 using Elastic.Installer.Domain.Model.Elasticsearch;
