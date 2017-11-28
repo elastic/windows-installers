@@ -627,9 +627,8 @@ function Merge-Hashtables {
 function Get-ExpectedServiceStatus($Version, $PreviousVersion) {	
 	$expectedStatus = "Running"
 
-	if ($PreviousVersion.Major -eq 5 -and $PreviousVersion.Minor -eq 5 `
-		-and $PreviousVersion.Patch -le 2 -and $PreviousVersion.SourceType -eq "Released" `
-	    -and $Version.Major -eq 5 -and $Version.Minor -eq 5 -and $Version.Patch -ge 3) {
+	if ((Compare-SemanticVersion $PreviousVersion $(ConvertTo-SemanticVersion "5.5.2") -le 0) -and $PreviousVersion.SourceType -eq "Released" `
+	    -and (Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -le 0) -and $Version.SourceType -ne "Compile") {
 
 		Write-Output "Previous version is $($PreviousVersion.Description) and version is $($Version.Description). Expected status is Stopped."
 		$expectedStatus = "Stopped"
