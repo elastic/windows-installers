@@ -654,13 +654,11 @@ function Copy-ElasticsearchLogToOut($Path = "$(Join-Path -Path $($env:ALLUSERSPR
 	Copy-Item -Path $Path -Destination "$($PWD.Drive.Root)out" -Force -ErrorAction Ignore
 }
 
-function Get-ChildPath($Version) {
-	if (!$Version) {
-		$Version = $Global:Version
-	}
-
+function Get-ChildPath($Version = $Global:Version) {
 	# anything released before 6.0.0 won't include version in INSTALLDIR
-	if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -lt 0) -and $Version.SourceType -ne "Compile") {
+	$600Release = $(ConvertTo-SemanticVersion "6.0.0") 
+
+	if ((Compare-SemanticVersion $Version $600Release -lt 0) -and $Version.SourceType -ne "Compile") {
 		$ChildPath = "Elastic\Elasticsearch\"
 	}
 	else {

@@ -26,7 +26,8 @@ Describe -Name "Silent Install fail upgrade install $($previousVersion.Descripti
     Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath -Version $previousVersion
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 

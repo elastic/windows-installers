@@ -140,8 +140,9 @@ function Context-EsHomeEnvironmentVariable($Expected) {
             $EsHome | Should Not Be $null
         }
 
+		# trim trailing backslashes for comparison.
         It "ES_HOME Environment variable set to $Expected" {
-            $EsHome | Should Be $Expected
+            $EsHome.TrimEnd('\') | Should Be $Expected.TrimEnd('\')
         }
     }
 }
