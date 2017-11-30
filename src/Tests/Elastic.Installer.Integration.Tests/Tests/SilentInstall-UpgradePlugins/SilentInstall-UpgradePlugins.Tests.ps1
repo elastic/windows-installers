@@ -21,7 +21,11 @@ Describe -Name "Silent Install upgrade with plugins install $($previousVersion.D
 
 	# set bootstrap password and x-pack security
 	if ($version.Major -ge 6) {
-		$ExeArgs = $ExeArgs + @("BOOTSTRAPPASSWORD=changeme","XPACKSECURITYENABLED=true") 
+		$ExeArgs = $ExeArgs + @(
+					"BOOTSTRAPPASSWORD=changeme"
+					"XPACKSECURITYENABLED=true"
+					"XPACKLICENSE=Trial"
+					"SKIPSETTINGPASSWORDS=true")
 	}
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
@@ -78,7 +82,11 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 
 	# set bootstrap password and x-pack security
 	if ($version.Major -ge 6) {
-		$ExeArgs = $ExeArgs + @("BOOTSTRAPPASSWORD=changeme","XPACKSECURITYENABLED=true") 
+		$ExeArgs = $ExeArgs + @(
+			"BOOTSTRAPPASSWORD=changeme"
+			"XPACKSECURITYENABLED=true"
+			"XPACKLICENSE=Trial"
+			"SKIPSETTINGPASSWORDS=true")
 	}
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
