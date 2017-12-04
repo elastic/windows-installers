@@ -30,6 +30,9 @@ Param(
 $env:Version = $Version
 $env:PreviousVersions = $PreviousVersions -join ","
 
+# Update Security Protocol for HTTPS requests
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 cd $currentDir
 
