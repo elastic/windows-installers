@@ -23,7 +23,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Inst
 
 	$v = $previousVersion.FullVersion
 
-    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
 
     Context-ElasticsearchService
 
@@ -68,7 +68,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade different volume - Upgr
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs $ExeArgs -Version $v -Upgrade
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
     Context-EsHomeEnvironmentVariable -Expected $InstallDir
 
@@ -115,7 +115,7 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade different volume - Un
 
 	$v = $version.FullVersion
 
-    Invoke-SilentUninstall -Version $v
+    Invoke-SilentUninstall -Version $version
 
 	Context-NodeNotRunning
 
