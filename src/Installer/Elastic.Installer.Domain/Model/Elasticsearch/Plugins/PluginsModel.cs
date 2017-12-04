@@ -118,6 +118,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		public Func<Task<string>> HttpsProxyUITask { get; set; }
 		public ReactiveCommand<string> SetHttpsProxy { get; }
 
+		private string pluginsStaging;
+		[StaticArgument(nameof(PluginsStaging))]
+		public string PluginsStaging
+		{
+			get => this.pluginsStaging;
+			set => this.RaiseAndSetIfChanged(ref this.pluginsStaging, value);
+		}
+
 		protected override IEnumerable<Plugin> GetPlugins()
 		{
 			yield return new Plugin
