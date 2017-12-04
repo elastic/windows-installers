@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Text;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
@@ -11,6 +9,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
 	public class InstallPluginsTask : ElasticsearchInstallationTaskBase
 	{
+		private const string EsJavaOpts = "ES_JAVA_OPTS";
+
 		public InstallPluginsTask(string[] args, ISession session) 
 			: base(args, session) { }
 		public InstallPluginsTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem) 
@@ -33,7 +33,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			var environmentVariables = new Dictionary<string, string> { { ElasticsearchEnvironmentStateProvider.ConfDir, configDirectory } };			
 			var httpProxy = this.InstallationModel.PluginsModel.HttpProxyHost;
 			var httpsProxy = this.InstallationModel.PluginsModel.HttpsProxyHost;			
-			var esJavaOpts = new List<string>(4);
+			var esJavaOpts = new List<string>(5);
 			
 			if (!string.IsNullOrEmpty(httpProxy))
 			{
@@ -51,8 +51,12 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 					esJavaOpts.Add($"-Dhttps.proxyPort={httpsProxyPort}");
 			}
 
+			var pluginsStaging = this.InstallationModel.PluginsModel.PluginsStaging;
+			if (!string.IsNullOrEmpty(pluginsStaging))
+				esJavaOpts.Add($"-Des.plugins.staging={pluginsStaging}");
+
 			if (esJavaOpts.Any())
-				environmentVariables.Add("ES_JAVA_OPTS", string.Join(" ", esJavaOpts));
+				environmentVariables.Add(EsJavaOpts, string.Join(" ", esJavaOpts));
 					
 			this.Session.SendActionStart(totalTicks, ActionName, "Installing Elasticsearch plugins", "Elasticsearch plugin: [1]");
 			foreach (var plugin in plugins)
