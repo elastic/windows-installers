@@ -12,7 +12,7 @@ Get-PreviousVersions
 Describe "Silent Install with 1024mb heap size" {
     $HeapSize = 1024
 
-    Invoke-SilentInstall @(,"SELECTEDMEMORY=$HeapSize")
+    Invoke-SilentInstall -Exeargs @("SELECTEDMEMORY=$HeapSize")
 
     Context-PingNode -XPackSecurityInstalled $false
     Context-JvmOptions -Expected @{
