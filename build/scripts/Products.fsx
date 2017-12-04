@@ -26,7 +26,7 @@ module Paths =
     let ArtifactDownloadsUrl = "https://artifacts.elastic.co/downloads"
 
     let StagingDownloadsUrl product version hash = 
-        sprintf "https://staging.elastic.co/%s-%s/downloads/windows-installers/%s/%s-%s.msi" 
+        sprintf "https://staging.elastic.co/%s-%s/downloads/%s/%s-%s.msi" 
             version hash product product version
 
 module Products =
