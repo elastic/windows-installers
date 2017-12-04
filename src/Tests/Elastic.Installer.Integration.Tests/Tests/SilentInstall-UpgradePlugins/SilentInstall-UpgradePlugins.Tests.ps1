@@ -17,7 +17,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 
 	$v = $previousVersion.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v
+    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $previousVersion
 
     Context-ElasticsearchService
 
@@ -66,7 +66,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $v -Upgrade
+    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $version -Upgrade
 
     $ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -117,7 +117,7 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninst
 
 	$v = $version.FullVersion
 
-    Invoke-SilentUninstall -Version $v
+    Invoke-SilentUninstall -Version $version
 
 	Context-NodeNotRunning
 

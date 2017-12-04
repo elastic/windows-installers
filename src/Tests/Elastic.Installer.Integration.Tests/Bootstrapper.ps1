@@ -60,7 +60,7 @@ $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"
 
 $semanticVersion = ConvertTo-SemanticVersion $Version
 
-$installer = Get-Installer -location $buildOutDir -Version $semanticVersion.FullVersion
+$installer = Get-Installer -location $buildOutDir -Version $semanticVersion
 if ($installer -eq $null) {
     log "No $($semanticVersion.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
     Exit 1
@@ -68,7 +68,7 @@ if ($installer -eq $null) {
 
 foreach($previousVersion in $PreviousVersions) {
 	$semanticVersion = ConvertTo-SemanticVersion $previousVersion
-	$installer = Get-Installer -location $buildOutDir -Version $semanticVersion.FullVersion
+	$installer = Get-Installer -location $buildOutDir -Version $semanticVersion
 	if ($installer -eq $null) {
 		log "No $($semanticVersion.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
 		Exit 1

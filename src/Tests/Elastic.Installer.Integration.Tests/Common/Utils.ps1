@@ -400,20 +400,8 @@ function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Vers
 	}
 }
 
-function Get-Installer([string] $Location, $Product, $Version) {
-	if (!$Product) {
-		$Product = "elasticsearch"
-	}
-
-	if (!$Location) {
-		$Location = ".\..\out"
-	}
-
-	if (!$Version) {
-		$Version = ($Global:Version).FullVersion
-	}
-
-	$exePath = "$Location\$Product\$Product-$Version.msi"
+function Get-Installer([string] $Location = ".\..\out", $Product = "elasticsearch", $Version = $Global:Version) {
+	$exePath = "$Location\$Product\$Product-$($Version.FullVersion).msi"
 	log "get windows installer from $exePath" -l Debug   
 
     if (!(Test-Path $exePath)) {
@@ -484,8 +472,7 @@ function Invoke-SilentInstall {
         [Parameter(Position=0)]
         $Exeargs,
 
-		[string]
-		$Version,
+		$Version = $Global:Version,
 
 		[switch]
 		$Upgrade
@@ -517,8 +504,7 @@ function Invoke-SilentUninstall {
         [Parameter(Position=0)]
         $Exeargs,
 
-		[string]
-		$Version
+		$Version = $Global:Version
     )
 
     $QuotedArgs = Add-Quotes $Exeargs

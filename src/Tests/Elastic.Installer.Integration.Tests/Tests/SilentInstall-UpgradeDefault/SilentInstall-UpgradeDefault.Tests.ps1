@@ -16,7 +16,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous vers
 
 	$v = $previousVersion.FullVersion
 
-    Invoke-SilentInstall -Version $v
+    Invoke-SilentInstall -Version $previousVersion
 
     Context-ElasticsearchService
 
@@ -65,7 +65,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Version $v -Upgrade
+    Invoke-SilentInstall -Version $version -Upgrade
 
 	$ProgramFiles = Get-ProgramFilesFolder
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
@@ -116,7 +116,7 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade - Uninstall new versi
 
 	$v = $version.FullVersion
 
-    Invoke-SilentUninstall -Version $v
+    Invoke-SilentUninstall -Version $version
 
 	Context-NodeNotRunning
 

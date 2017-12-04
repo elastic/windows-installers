@@ -18,7 +18,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
 
 	$v = $previousVersion.FullVersion
 	
-    Invoke-SilentInstall -Version $v
+    Invoke-SilentInstall -Version $previousVersion
 
     Context-ElasticsearchService
 
@@ -69,7 +69,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
 	$startDate = Get-Date
 
 	Context "Failed installation" {
-		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1") -Version $v -Upgrade
+		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1") -Version $version -Upgrade
 
 		It "Exit code is 1603" {
 			$exitCode | Should Be 1603
@@ -151,7 +151,7 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall fail upgrade - Uninstall $($p
 
 	$v = $previousVersion.FullVersion
 
-    Invoke-SilentUninstall -Version $v
+    Invoke-SilentUninstall -Version $previousVersion
 
 	Context-NodeNotRunning
 
