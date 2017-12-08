@@ -656,9 +656,9 @@ function Copy-ElasticsearchLogToOut($Path = "$(Join-Path -Path $($env:ALLUSERSPR
 
 function Get-ChildPath($Version = $Global:Version) {
 	# anything released before 6.0.0 won't include version in INSTALLDIR
-	$600Release = $(ConvertTo-SemanticVersion "6.0.0") 
+	$600Release = ConvertTo-SemanticVersion "6.0.0"
 
-	if ((Compare-SemanticVersion $Version $600Release -lt 0) -and $Version.SourceType -ne "Compile") {
+	if ((Compare-SemanticVersion $600Release $Version -lt 0) -and $Version.SourceType -ne "Compile") {
 		$ChildPath = "Elastic\Elasticsearch\"
 	}
 	else {
