@@ -292,10 +292,11 @@ function Context-ClusterNameAndNodeName($Expected) {
         if ($Expected.Credentials) {
             $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Expected.Credentials)
             $AuthHeaderValue = [Convert]::ToBase64String($Bytes)
-            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)" -Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)}
+            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)" `
+						-Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)} -ContentType "application/json"
         }
         else {
-            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)"
+            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)" -ContentType "application/json"
         }
 
         It "cluster_name should be $($Expected.ClusterName)" {
@@ -421,10 +422,10 @@ function Context-InsertData($Domain = "localhost", $Port = 9200, $Credentials) {
 				$authHeaderValue = [Convert]::ToBase64String($bytes)
 				$response = Invoke-RestMethod $url -Method Post `
 								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
-								-Body $body
+								-Body $body -ContentType "application/json"
 			}
 			else {
-				$response = Invoke-RestMethod $url -Method Post -Body $body
+				$response = Invoke-RestMethod $url -Method Post -Body $body -ContentType "application/json"
 			}
 
 			It "Should have no errors" {
@@ -460,10 +461,11 @@ function Context-ReadData($Domain = "localhost", $Port = 9200, $Credentials) {
 				$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
 				$authHeaderValue = [Convert]::ToBase64String($bytes)
 				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" -Method Get `
-								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} -ContentType "application/json"
 			}
 			else {
-				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" -Method Get
+				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" `
+				                -Method Get -ContentType "application/json"
 			}
 
 			It "Have expected count" {
@@ -560,10 +562,10 @@ function Context-NodeNotRunning($Domain = "localhost", $Port = 9200, $Credential
 					$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
 					$authHeaderValue = [Convert]::ToBase64String($bytes)
 					$response = Invoke-RestMethod "http://$($Domain):$Port" `
-								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)}
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} -ContentType "application/json"
 				}
 				else {
-					$response = Invoke-RestMethod "http://$($Domain):$Port"
+					$response = Invoke-RestMethod "http://$($Domain):$Port" -ContentType "application/json"
 				}
 
                 $Response | Should Be $null
