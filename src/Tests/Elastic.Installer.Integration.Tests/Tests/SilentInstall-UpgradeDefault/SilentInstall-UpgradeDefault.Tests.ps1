@@ -24,7 +24,7 @@ Describe -Name "Silent Install upgrade install $($previousVersion.Description)" 
     Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath $previousVersion
+	$ChildPath = Get-ChildPath -Version $previousVersion
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
@@ -65,12 +65,10 @@ Describe -Name "Silent Install upgrade install $($previousVersion.Description)" 
 
 Describe -Name "Silent Install upgrade from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
-	$v = $version.FullVersion
-
     Invoke-SilentInstall -Version $version -Upgrade
 
 	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath $version
+	$ChildPath = Get-ChildPath -Version $version
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
@@ -116,8 +114,6 @@ Describe -Name "Silent Install upgrade from $($previousVersion.Description) to $
 }
 
 Describe -Name "Silent Uninstall upgrade uninstall $($version.Description)" -Tags $tags {
-
-	$v = $version.FullVersion
 
     Invoke-SilentUninstall -Version $version
 
