@@ -478,6 +478,15 @@ function Invoke-SilentInstall {
 		$Upgrade
     )
 
+	if ($Version.Source) {
+        if (!$Exeargs) {
+            $Exeargs = @("PLUGINSSTAGING=$($Version.Source)")
+        }
+        elseif (-not ($Exeargs -like "PLUGINSSTAGING=*")) {
+            $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)")
+        }
+    }
+
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
 	if ($Upgrade) {
