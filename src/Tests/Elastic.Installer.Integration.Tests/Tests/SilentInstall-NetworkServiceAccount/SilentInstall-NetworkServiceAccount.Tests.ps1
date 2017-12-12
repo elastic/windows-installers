@@ -12,7 +12,7 @@ Get-PreviousVersions
 Describe "Silent Install as service with network service account $(($Global:Version).Description)" {
     Invoke-SilentInstall @("USENETWORKSERVICE=true","USELOCALSYSTEM=false")
 
-    Context-ServiceRunningUnderAccount -Expected "NT AUTHORITY\NETWORKSERVICE"
+    Context-ServiceRunningUnderAccount -Expected "NT AUTHORITY\NetworkService"
 
 	Context-ElasticsearchService
 
