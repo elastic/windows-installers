@@ -9,16 +9,17 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with default arguments $(($Global:Version).FullVersion)" {
+Describe "Silent Install with default arguments $(($Global:Version).Description)" {
 
     Invoke-SilentInstall
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 
@@ -44,7 +45,7 @@ Describe "Silent Install with default arguments $(($Global:Version).FullVersion)
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with default arguments $(($Global:Version).FullVersion)" {
+Describe "Silent Uninstall with default arguments $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 
@@ -59,7 +60,8 @@ Describe "Silent Uninstall with default arguments $(($Global:Version).FullVersio
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

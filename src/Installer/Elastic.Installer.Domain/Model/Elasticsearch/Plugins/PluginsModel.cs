@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Model.Base.Plugins;
 using Elastic.Installer.Domain.Properties;
@@ -22,6 +23,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies)
 			: base(pluginStateProvider)
 		{
+			EnvironmentVariables = new Dictionary<string, string>
+			{
+				{ElasticsearchEnvironmentStateProvider.ConfDir, this.ConfigDirectory},
+				// might be listing plugins from a Elasticsearch 5.x installation
+				{ElasticsearchEnvironmentStateProvider.ConfDirOld, this.ConfigDirectory}
+			};
+
 			pluginDependencies.Subscribe(t =>
 			{
 				this.AlreadyInstalled = t.Item1;

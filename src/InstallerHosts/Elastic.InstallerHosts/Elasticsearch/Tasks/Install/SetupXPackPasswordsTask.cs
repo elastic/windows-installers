@@ -32,9 +32,10 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				? this.InstallationModel.ConfigurationModel.NetworkHost
 				: "localhost";
 			var port = this.InstallationModel.ConfigurationModel.HttpPort;
-			var baseAddess = $"http://{host}:{port}/";
+			// do not remove trailing slash. Base address *must* have it
+			var baseAddress = $"http://{host}:{port}/";
 
-			using (var client = new HttpClient { BaseAddress = new Uri(baseAddess) })
+			using (var client = new HttpClient { BaseAddress = new Uri(baseAddress) })
 			{
 				WaitForNodeToAcceptRequests(client, password);
 				var elasticUserPassword = this.InstallationModel.XPackModel.ElasticUserPassword;

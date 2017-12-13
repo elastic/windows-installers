@@ -49,7 +49,7 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 
 			try
 			{
-				if (!string.IsNullOrEmpty(domain))
+				if (!string.IsNullOrEmpty(domain) && domain != "." && domain != Environment.UserDomainName)
 				{
 					using (var context = new PrincipalContext(ContextType.Domain, domain))
 						return context.ValidateCredentials(user, password);

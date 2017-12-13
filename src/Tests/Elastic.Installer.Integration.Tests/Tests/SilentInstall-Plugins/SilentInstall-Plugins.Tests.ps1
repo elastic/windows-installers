@@ -9,20 +9,22 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins" {
+$tags = @('XPack')
+
+Describe -Name "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" -Tags $tags {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
-    Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:changeme" }
+    Context-ClusterNameAndNodeName
 
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins" {
+Describe -Name "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" -Tags $tags {
 
     Invoke-SilentUninstall
 
@@ -37,7 +39,8 @@ Describe "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugi
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

@@ -32,7 +32,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 		public ElasticsearchArgumentParser(IList<IValidatableReactiveObject> models, string[] args) : base(models, args)
 		{
-			if (models.Count != ExpectedTypes.Count())
+			if (models.Count != ExpectedTypes.Length)
 				throw new ArgumentException($"{nameof(models)} should provide an instance of all the expected types");
 		}
 	}

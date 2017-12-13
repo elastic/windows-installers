@@ -34,8 +34,7 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 
 		public WixStateProvider(Product product, string currentVersion) 
 		{
-			string existingVersion;
-			var installed = IsAlreadyInstalled(product, out existingVersion);
+			var installed = IsAlreadyInstalled(product, out var existingVersion);
 			this.CurrentVersion = currentVersion;
 			if (installed) this.ExistingVersion = existingVersion;
 		}

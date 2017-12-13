@@ -11,7 +11,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Uninstall
 	{
 		public override string Name => nameof(ElasticsearchUninstallDirectoriesAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.UninstallDirectories;
-		public override Step Step => new Step(nameof(ElasticsearchUninstallEnvironmentAction));
+		public override Step Step => Step.RemoveEnvironmentStrings;
 		public override When When => When.After;
 		public override Condition Condition => new Condition("(NOT UPGRADINGPRODUCTCODE) AND (REMOVE=\"ALL\")");
 		

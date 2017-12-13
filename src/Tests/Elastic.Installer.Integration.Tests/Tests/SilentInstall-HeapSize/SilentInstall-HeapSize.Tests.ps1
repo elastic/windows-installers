@@ -9,12 +9,12 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with 1024mb heap size" {
+Describe "Silent Install with 1024mb heap size $(($Global:Version).Description)" {
     $HeapSize = 1024
 
     Invoke-SilentInstall -Exeargs @("SELECTEDMEMORY=$HeapSize")
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
     Context-JvmOptions -Expected @{
 		Memory = $HeapSize
 	}
@@ -22,7 +22,7 @@ Describe "Silent Install with 1024mb heap size" {
     Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with 1024mb heap size" {
+Describe "Silent Uninstall with 1024mb heap size $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 
@@ -37,7 +37,8 @@ Describe "Silent Uninstall with 1024mb heap size" {
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath 
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

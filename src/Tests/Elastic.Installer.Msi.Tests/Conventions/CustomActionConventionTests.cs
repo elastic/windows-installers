@@ -1,11 +1,7 @@
 ﻿using Elastic.Installer.Msi.CustomActions;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Elastic.Installer.Msi.Tests.Conventions
@@ -23,11 +19,9 @@ namespace Elastic.Installer.Msi.Tests.Conventions
 			{
 				var staticMethods = customAction.GetMethods(BindingFlags.Public | BindingFlags.Static).ToList();
 				var customActionMethod = staticMethods
-					.Where(m => m
+					.SingleOrDefault(m => m
 						.GetCustomAttributes()
-						.Any(a => a.GetType().Name == "CustomActionAttribute")
-					)
-					.SingleOrDefault();
+						.Any(a => a.GetType().Name == "CustomActionAttribute"));
 
 				customAction.Name.Replace("Action", "").Should().Be(customActionMethod.Name);
 			}

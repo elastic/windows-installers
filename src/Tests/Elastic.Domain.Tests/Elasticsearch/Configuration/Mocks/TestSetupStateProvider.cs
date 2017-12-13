@@ -5,6 +5,7 @@ using System.Linq;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
+using Semver;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Models;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
@@ -26,28 +27,46 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 		public TestSetupStateProvider ServicePreviouslyInstalled()
 		{
-			this.ServiceState = new NoopServiceStateProvider() { SeesService = true };
+			this.ServiceState = new NoopServiceStateProvider { SeesService = true };
 			return this;
 		}
 
 		public TestSetupStateProvider PreviouslyInstalledPlugins(params string[] previouslyInstalled)
 		{
-			this.PluginState = new NoopPluginStateProvider(previouslyInstalled) { };
+			this.PluginState = new NoopPluginStateProvider(previouslyInstalled);
 			return this;
 		}
 
-		public TestSetupStateProvider Wix(string currentVersion, string existingVersion = null)
+		public TestSetupStateProvider Wix(string currentVersion, string existingVersion = null, string existingInstallDir = null)
 		{
-			this.WixState = new MockWixStateProvider() { CurrentVersion = currentVersion };
-			if (!string.IsNullOrWhiteSpace(existingVersion)) this.WixState.ExistingVersion = existingVersion;
+			this.WixState = new MockWixStateProvider { CurrentVersion = currentVersion };
+			if (!string.IsNullOrWhiteSpace(existingVersion))
+			{
+				this.WixState.ExistingVersion = existingVersion;
+
+				if (this.ElasticsearchState == null)
+					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
+
+				if (this.ElasticsearchState.LastSetEsHome == null)
+					this.ElasticsearchState.EsHomeMachineVariable(existingInstallDir ?? $@"C:\Elasticsearch\{existingVersion}");
+			}
 			return this;
 		}
 
 		public static readonly string DefaultTestVersion = "5.0.0";
-		public TestSetupStateProvider Wix(bool alreadyInstalled)
+		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null)
 		{
 			this.WixState = new MockWixStateProvider() { CurrentVersion = DefaultTestVersion };
-			if (alreadyInstalled) this.WixState.ExistingVersion = DefaultTestVersion;
+			if (alreadyInstalled)
+			{
+				this.WixState.ExistingVersion = DefaultTestVersion;
+
+				if (this.ElasticsearchState == null)
+					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
+
+				if (this.ElasticsearchState.LastSetEsHome == null)
+					this.ElasticsearchState.EsHomeMachineVariable(existingInstallDir ?? $@"C:\Elasticsearch\{DefaultTestVersion}");
+			}
 			return this;
 		}
 

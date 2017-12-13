@@ -18,27 +18,29 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		protected override bool ExecuteTask()
 		{
-			var plugins = this.InstallationModel.PluginsModel.Plugins.ToList();
+			var pluginsModel = this.InstallationModel.PluginsModel;
+			var plugins = pluginsModel.Plugins.ToList();
 			if (plugins.Count == 0)
 			{
 				this.Session.Log("No plugins selected to install");
 				return true;
 			}
 
-			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
-			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
-			var provider = this.InstallationModel.PluginsModel.PluginStateProvider;
+			var locationsModel = this.InstallationModel.LocationsModel;
+			var installDirectory = locationsModel.InstallDir;
+			var configDirectory = locationsModel.ConfigDirectory;
+			var provider = pluginsModel.PluginStateProvider;
 			var ticksPerPlugin = new[] { 20, 1930, 50 };
 			var totalTicks = plugins.Count * ticksPerPlugin.Sum();
 			var environmentVariables = new Dictionary<string, string> { { ElasticsearchEnvironmentStateProvider.ConfDir, configDirectory } };			
-			var httpProxy = this.InstallationModel.PluginsModel.HttpProxyHost;
-			var httpsProxy = this.InstallationModel.PluginsModel.HttpsProxyHost;			
+			var httpProxy = pluginsModel.HttpProxyHost;
+			var httpsProxy = pluginsModel.HttpsProxyHost;			
 			var esJavaOpts = new List<string>(5);
 			
 			if (!string.IsNullOrEmpty(httpProxy))
 			{
 				esJavaOpts.Add($"-Dhttp.proxyHost=\"{httpProxy}\"");
-				var httpProxyPort = this.InstallationModel.PluginsModel.HttpProxyPort;
+				var httpProxyPort = pluginsModel.HttpProxyPort;
 				if (httpProxyPort.HasValue)
 					esJavaOpts.Add($"-Dhttp.proxyPort={httpProxyPort}");
 			}
@@ -46,7 +48,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			if (!string.IsNullOrEmpty(httpsProxy))
 			{
 				esJavaOpts.Add($"-Dhttps.proxyHost=\"{httpsProxy}\"");
-				var httpsProxyPort = this.InstallationModel.PluginsModel.HttpsProxyPort;
+				var httpsProxyPort = pluginsModel.HttpsProxyPort;
 				if (httpsProxyPort.HasValue)
 					esJavaOpts.Add($"-Dhttps.proxyPort={httpsProxyPort}");
 			}
@@ -62,8 +64,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			foreach (var plugin in plugins)
 			{
 				this.Session.SendProgress(ticksPerPlugin[0], $"installing {plugin}");
-				provider.Install(ticksPerPlugin[1], installDirectory, configDirectory, plugin, 
-					additionalArguments: new [] {"--batch"}, environmentVariables: environmentVariables);
+				provider.Install(ticksPerPlugin[1], installDirectory, configDirectory, plugin, new [] {"--batch"}, environmentVariables);
 				this.Session.SendProgress(ticksPerPlugin[2], $"installed {plugin}");
 			}
 			return true;
