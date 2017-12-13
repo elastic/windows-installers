@@ -20,6 +20,8 @@ function Context-ElasticsearchService($Expected) {
             Name="Elasticsearch"
             DisplayName="Elasticsearch"
 			StartIfNotRunning = $true
+			CanStop = $true
+			CanShutdown = $true
 		} $Expected
 
     Context "Elasticsearch service" {
@@ -29,8 +31,20 @@ function Context-ElasticsearchService($Expected) {
             $Service | Should Not Be $null
         }
 
+		if ($Service.Status -eq "StartPending" -and $Expected.Status -eq "Running") {
+			$timeSpan = New-TimeSpan -Seconds 10
+			Write-Output "Service is currently $($Service.Status). Wait $timeSpan for running"
+			try {
+				$Service.WaitForStatus("Running", $timeSpan)
+			}
+			catch {
+				# swallow exception as following assertion will test status.
+			}
+		}
+
+
         It "Service status is $($Expected.Status)" {
-            $Service.Status | Should Be $($Expected.Status)
+            $Service.Status | Should Be $Expected.Status
 
 			# BUG: Upgrading from Elasticsearch 5.5.0-2, to 5.5.3+, the service is not started after upgrading.
 			# Start the service if commanded to do so
@@ -45,12 +59,12 @@ function Context-ElasticsearchService($Expected) {
 			}
         }
 
-        It "Service can be stopped" {
-            $Service.CanStop | Should Be $true
+        It "Service can be stopped $($Expected.CanStop)" {
+            $Service.CanStop | Should Be $($Expected.CanStop)
         }
 
-        It "Service can be shutdown" {
-            $Service.CanStop | Should Be $true
+        It "Service can be shutdown $($Expected.CanShutdown)" {
+            $Service.CanShutdown | Should Be $($Expected.CanShutdown)
         }
 
         It "Service cannot be paused and continued" {
@@ -71,7 +85,7 @@ function Context-ElasticsearchService($Expected) {
     }
 }
 
-function Context-PingNode($XPackSecurityInstalled) {
+function Context-PingNode([switch]$XPackSecurityInstalled) {
     Context "Ping node" {
         $Response = Ping-Node
 
@@ -126,8 +140,9 @@ function Context-EsHomeEnvironmentVariable($Expected) {
             $EsHome | Should Not Be $null
         }
 
+		# trim trailing backslashes for comparison.
         It "ES_HOME Environment variable set to $Expected" {
-            $EsHome | Should Be $Expected
+            $EsHome.TrimEnd('\') | Should Be $Expected.TrimEnd('\')
         }
     }
 }
@@ -214,13 +229,39 @@ function Context-ServiceRunningUnderAccount($Expected) {
     }
 }
 
-function Context-EmptyEventLog() {
-    Context "Event log" {
-        $ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic*
+function Context-EmptyEventLog($Version) {
 
-        It "Event log is empty" {
-            $ElasticsearchEventLogs | Should Be $null
-        }
+	if (!$Version) {
+		$Version = $Global:Version
+	}
+
+    Context "Event log" {
+
+		if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -le 0) `
+			-and $Version.SourceType -ne "Compile") {
+
+			$failedMessage = "ElasticsearchCleanupAction.cs"
+			# event log may contain events similar to:
+			#
+			# System.ComponentModel.Win32Exception (0x80004005): The system cannot find the file specified
+			# 
+			# when running Cleanup action in the old installer uninstall process, 
+			# because the old install plugin script no longer exists. Filter these out
+			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* `
+				| Where { $_.Message -NotMatch $failedMessage } | Format-List | Out-String
+
+			It "Event log doesn't contain unexpected messages" {
+				$ElasticsearchEventLogs | Should BeNullOrEmpty
+			}
+		}
+		else {
+			# convert to string so in the event of error we can see what the log entries actually are in the test output
+			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* | Format-List | Out-String
+
+			It "Event log is empty" {
+				$ElasticsearchEventLogs | Should BeNullOrEmpty
+			}
+		}
     }
 }
 
@@ -251,10 +292,11 @@ function Context-ClusterNameAndNodeName($Expected) {
         if ($Expected.Credentials) {
             $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Expected.Credentials)
             $AuthHeaderValue = [Convert]::ToBase64String($Bytes)
-            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)" -Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)}
+            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)" `
+						-Headers @{Authorization=("Basic {0}" -f $AuthHeaderValue)} -ContentType "application/json"
         }
         else {
-            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)"
+            $Response = Invoke-RestMethod "http://$($Expected.Host):$($Expected.Port)" -ContentType "application/json"
         }
 
         It "cluster_name should be $($Expected.ClusterName)" {
@@ -358,14 +400,7 @@ function Context-JvmOptions ($Expected) {
     }
 }
 
-function Context-InsertData($Domain, $Port, $Credentials) {
-	if (!$Domain) {
-		$Domain = "localhost"
-	}
-
-	if (!$Port) {
-		$Port = "9200"
-	}
+function Context-InsertData($Domain = "localhost", $Port = 9200, $Credentials) {
 
 	Context "Insert Data" {
 		try {
@@ -380,16 +415,17 @@ function Context-InsertData($Domain, $Port, $Credentials) {
 			)
 
 			$body = [string]::Join("`n", $requests) + "`n"
+			$url = "http://$($Domain):$Port/_bulk?refresh"
 
 			if ($Credentials) {
 				$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
 				$authHeaderValue = [Convert]::ToBase64String($bytes)
-				$response = Invoke-RestMethod "http://$($Domain):$Port/_bulk" -Method Post `
+				$response = Invoke-RestMethod $url -Method Post `
 								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
-								-Body $body
+								-Body $body -ContentType "application/json"
 			}
 			else {
-				$response = Invoke-RestMethod "http://$($Domain):$Port/_bulk" -Method Post -Body $body
+				$response = Invoke-RestMethod $url -Method Post -Body $body -ContentType "application/json"
 			}
 
 			It "Should have no errors" {
@@ -417,14 +453,7 @@ function Context-InsertData($Domain, $Port, $Credentials) {
 	}
 }
 
-function Context-ReadData($Domain, $Port, $Credentials) {
-	if (!$Domain) {
-		$Domain = "localhost"
-	}
-
-	if (!$Port) {
-		$Port = "9200"
-	}
+function Context-ReadData($Domain = "localhost", $Port = 9200, $Credentials) {
 
 	Context "Read Data" {
 		try {
@@ -432,10 +461,11 @@ function Context-ReadData($Domain, $Port, $Credentials) {
 				$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
 				$authHeaderValue = [Convert]::ToBase64String($bytes)
 				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" -Method Get `
-								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} -ContentType "application/json"
 			}
 			else {
-				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" -Method Get
+				$response = Invoke-RestMethod "http://$($Domain):$Port/test/type1/_search" `
+				                -Method Get -ContentType "application/json"
 			}
 
 			It "Have expected count" {
@@ -524,15 +554,7 @@ function Context-ElasticsearchServiceNotInstalled() {
     }
 }
 
-function Context-NodeNotRunning($Domain, $Port, $Credentials) {
-	if (!$Domain) {
-		$Domain = "localhost"
-	}
-
-	if (!$Port) {
-		$Port = "9200"
-	}
-
+function Context-NodeNotRunning($Domain = "localhost", $Port = 9200, $Credentials) {
 	Context "Ping node" {
         It "Elasticsearch node should not be running" {
             try {
@@ -540,10 +562,10 @@ function Context-NodeNotRunning($Domain, $Port, $Credentials) {
 					$bytes = [Text.Encoding]::UTF8.GetBytes(($Credentials))
 					$authHeaderValue = [Convert]::ToBase64String($bytes)
 					$response = Invoke-RestMethod "http://$($Domain):$Port" `
-								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} `
+								-Headers @{Authorization=("Basic {0}" -f $authHeaderValue)} -ContentType "application/json"
 				}
 				else {
-					$response = Invoke-RestMethod "http://$($Domain):$Port"
+					$response = Invoke-RestMethod "http://$($Domain):$Port" -ContentType "application/json"
 				}
 
                 $Response | Should Be $null

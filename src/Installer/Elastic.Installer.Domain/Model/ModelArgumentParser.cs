@@ -141,12 +141,13 @@ namespace Elastic.Installer.Domain.Model
 			var argumentsByType = new Dictionary<Type, IEnumerable<string>>();
 			foreach (var type in expectedTypes)
 			{
-				var seenNames = new HashSet<string>();
+				var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 				var viewModelProperties = GetProperties(type);
 				foreach (var p in viewModelProperties)
 				{
-					if (seenNames.Contains(p.Name, StringComparer.OrdinalIgnoreCase))
-						throw new ArgumentException($"{p.Name} can not be reused as argument option on {type.Name}");
+					var name = p.GetCustomAttribute<ArgumentAttribute>().Name;
+					if (seenNames.Contains(name))
+						throw new ArgumentException($"Argument {name} for property {p.Name} can not be reused as argument option on {type.Name}");
 					seenNames.Add(p.Name.ToUpperInvariant());
 				}
 				argumentsByType.Add(type, seenNames);
@@ -156,15 +157,16 @@ namespace Elastic.Installer.Domain.Model
 
 		protected static IEnumerable<string> GetAllArguments(Type[] expectedTypes)
 		{
-			var seenNames = new HashSet<string>();
+			var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			foreach (var type in expectedTypes)
 			{
 				var viewModelProperties = GetProperties(type);
 				foreach (var p in viewModelProperties)
 				{
-					if (!seenNames.Add(p.Name.ToUpperInvariant()))
+					var name = p.GetCustomAttribute<ArgumentAttribute>().Name;
+					if (!seenNames.Add(name))
 					{
-						throw new ArgumentException($"{p.Name} can not be reused as argument option on {type.Name}");
+						throw new ArgumentException($"Argument {name} for property {p.Name} can not be reused as argument option on {type.Name}");
 					}
 				}
 			}
@@ -187,25 +189,22 @@ namespace Elastic.Installer.Domain.Model
 				}
 				else if (p == typeof(int))
 				{
-					int i;
-					if (int.TryParse(a.Value.ToLowerInvariant(), out i))
+					if (int.TryParse(a.Value.ToLowerInvariant(), out var i))
 						((Action<int>)setter)(i);
 					else
 						this.ValidationFailures.Add(new ValidationFailure("VariableArguments", $"can not convert {a.Value} to an int to apply to {a.Key}"));
 				}
 				else if (p == typeof(int?))
 				{
-					int i;
 					if (string.IsNullOrWhiteSpace(a.Value)) ((Action<int?>)setter)(null);
-					else if (int.TryParse(a.Value.ToLowerInvariant(), out i))
+					else if (int.TryParse(a.Value.ToLowerInvariant(), out var i))
 						((Action<int?>)setter)(i);
 					else
 						this.ValidationFailures.Add(new ValidationFailure("VariableArguments", $"can not convert {a.Value} to a nullable int to apply to {a.Key}"));
 				}
 				else if (p == typeof(ulong))
 				{
-					ulong i;
-					if (ulong.TryParse(a.Value.ToLowerInvariant(), out i))
+					if (ulong.TryParse(a.Value.ToLowerInvariant(), out var i))
 						((Action<ulong>)setter)(i);
 					else
 						this.ValidationFailures.Add(new ValidationFailure("VariableArguments", $"can not convert {a.Value} to an ulong to apply to {a.Key}"));
@@ -228,8 +227,7 @@ namespace Elastic.Installer.Domain.Model
 				else if (p == typeof(bool))
 				{
 					var s = ((Action<bool>)setter);
-					bool b;
-					if (bool.TryParse(a.Value.ToLowerInvariant(), out b))
+					if (bool.TryParse(a.Value.ToLowerInvariant(), out var b))
 						s(b);
 					else if (a.Value == "1")
 						s(true);

@@ -13,8 +13,9 @@ Get-PreviousVersions
 
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
+$tags = @('PreviousVersions')
 
-Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous version $($previousVersion.Description)" {
+Describe -Name "Silent Install fail upgrade install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 	
@@ -22,10 +23,11 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath -Version $previousVersion
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 
@@ -47,7 +49,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName
 
@@ -62,7 +64,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Install previous
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrading to $($version.Description)" {
+Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 	$pv = $previousVersion.FullVersion
@@ -107,10 +109,11 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath $previousVersion
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 
@@ -147,7 +150,7 @@ Describe -Tag 'PreviousVersions' "Silent Install fail upgrade - Fail when upgrad
 	Context-ReadData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall fail upgrade - Uninstall $($previousVersion.Description)" {
+Describe -Name "Silent Uninstall fail upgrade uninstall $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 
@@ -164,7 +167,8 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall fail upgrade - Uninstall $($p
 	Context-ElasticsearchServiceNotInstalled
 
  	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath $previousVersion
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

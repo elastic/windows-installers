@@ -50,8 +50,8 @@ Vagrant.configure("2") do |config|
 	  azure.resource_group_name = "AZURE_RESOURCE_GROUP_NAME"
 	  azure.location = "WestEurope"
 
-	  # use winrm in PowerShell to copy files across and back on Azure. Disable automatic syncing
-	  # of vagrant synced folder
+	  # use winrm in PowerShell to copy files across and back on Azure as synced folders do not work.
+	  # Disable automatic syncing of the vagrant synced folder
 	  override.vm.synced_folder ".", "/vagrant", disabled: true
       override.winrm.transport = :ssl
       override.winrm.port = 5986

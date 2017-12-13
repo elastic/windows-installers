@@ -4,6 +4,5 @@ System.IO.Abstractions
 System.IO.Abstractions.TestingHelpers
 Semver
 
-group tests
-	FluentAssertions
-	xunit
+FluentAssertions
+xunit

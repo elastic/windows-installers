@@ -6,15 +6,15 @@ Set-Location $currentDir
 . $currentDir\..\common\CommonTests.ps1
 . $currentDir\..\common\SemVer.ps1
 
-$InstallDir = "C:\temp dir\Elasticsearch\"
+Get-Version
+Get-PreviousVersions
+
+$InstallDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\"
 $DataDir = "C:\foo\data"
 $ConfigDir = "C:\bar\config"
 $LogsDir = "C:\baz\logs"
 
-Get-Version
-Get-PreviousVersions
-
-Describe "Silent Install with different install locations" {
+Describe "Silent Install with different install locations $(($Global:Version).Description)" {
 
     $InstallLocations = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir"
 
@@ -22,7 +22,7 @@ Describe "Silent Install with different install locations" {
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     Context-EsHomeEnvironmentVariable -Expected $InstallDir
 
@@ -50,7 +50,7 @@ Describe "Silent Install with different install locations" {
 	Copy-ElasticsearchLogToOut -Path "$LogsDir\elasticsearch.log"
 }
 
-Describe "Silent Uninstall with different install locations" {
+Describe "Silent Uninstall with different install locations $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 

@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Failed Install with default arguments" {
+Describe "Silent Failed Install with default arguments $(($Global:Version).Description)" {
 
 	$startDate = Get-Date
 	$version = $Global:Version.FullVersion

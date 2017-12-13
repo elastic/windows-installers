@@ -12,19 +12,31 @@ Get-PreviousVersions
 $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
+$tags = @('PreviousVersions', 'XPack') 
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install previous version $($previousVersion.Description)" {
+Describe -Name "Silent Install upgrade with plugins install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
+	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $previousVersion
+	# set bootstrap password and x-pack security
+	if ($version.Major -ge 6) {
+		$ExeArgs = $ExeArgs + @(
+					"BOOTSTRAPPASSWORD=changeme"
+					"XPACKSECURITYENABLED=true"
+					"XPACKLICENSE=Trial"
+					"SKIPSETTINGPASSWORDS=true")
+	}
+
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled
 
     $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath $previousVersion
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 
@@ -46,7 +58,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
@@ -62,14 +74,26 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Install 
 	Context-InsertData -Credentials $credentials
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade from $($previousVersion.Description) to $($version.Description)" {
+Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment") -Version $version -Upgrade
+	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
+
+	# set bootstrap password and x-pack security
+	if ($version.Major -ge 6) {
+		$ExeArgs = $ExeArgs + @(
+			"BOOTSTRAPPASSWORD=changeme"
+			"XPACKSECURITYENABLED=true"
+			"XPACKLICENSE=Trial"
+			"SKIPSETTINGPASSWORDS=true")
+	}
+
+    Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
     $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath $version
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 
@@ -87,7 +111,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 		Status = $expectedStatus
 	}
 
-	Context-PingNode -XPackSecurityInstalled $true
+	Context-PingNode -XPackSecurityInstalled
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
 
@@ -95,7 +119,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+	Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName -Expected @{ Credentials = $credentials }
 
@@ -113,7 +137,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade with plugins - Upgrade 
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninstall $($version.Description)" {
+Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins uninstall $($version.Description)" {
 
 	$v = $version.FullVersion
 
@@ -130,7 +154,8 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins - Uninst
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath $version
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }
