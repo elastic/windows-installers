@@ -96,12 +96,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				.Select(t => t.Item1 && t.Item2);
 			this.XPackModel = new XPackModel(versionConfig, observeXPackEnabled, canAutomaticallySetup);
 
-//			this.WhenAnyValue(vm => vm.XPackModel.XPackLicense)
-//				.Subscribe(l =>
-//				{
-//					this.PluginsModel.ChangeXPackSelection(l.HasValue);
-//				});
-
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,
 				(h, p) => $"http://{(string.IsNullOrWhiteSpace(h) ? "localhost" : h)}:{p}");
@@ -160,15 +154,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 					vm => vm.ClosingModel.IsValid,
 					(welcome, locations, configuration, plugins, xpack, service, install) =>
 					{
-                        var count = this.Steps.Count;
-						var steps = this.Steps.Select(s => s.GetType().Name).ToList();
 						var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
 						return firstInvalidScreen?.i ?? (this.Steps.Count - 1);
 					})
 				.Subscribe(selected =>
 				{
-					var count = this.Steps.Count;
-					var steps = this.Steps.Select(s => s.GetType().Name).ToList();
 					this.TabSelectionMax = selected;
 					//if one of the steps prior to the current selection is invalid jump back
 					if (this.TabSelectedIndex > this.TabSelectionMax)
@@ -179,9 +169,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			this.Steps.Changed.Subscribe(e =>
 			{
-				var count = this.Steps.Count;
-				var steps = this.Steps.Select(s => s.GetType().Name).ToList();
-				
 				var firstInvalidScreen = this.Steps.Select((s, i) => new {s, i}).FirstOrDefault(s => !s.s.IsValid);
 				var selectedTabIndex = firstInvalidScreen?.i ?? (this.Steps.Count - 1);
 				this.TabSelectionMax = selectedTabIndex;
@@ -224,7 +211,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		{
 			var javaConfig = JavaConfiguration.Default;
 			var esEnvironmentConfig = ElasticsearchEnvironmentConfiguration.Default;
-			var serviceState = ServiceStateProvider.FromSession(session, "Elasticsearch");
+			var serviceState = ServiceStateProvider.FromSession(session, ServiceModel.ElasticsearchServiceName);
 			var pluginState = PluginStateProviderBase.ElasticsearchDefault(session);
 
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
@@ -279,39 +266,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;
 			this.Using32BitJava = JavaConfiguration.Using32BitJava;
 			this.BadElasticsearchYamlFile = _yamlConfiguration.FoundButNotValid;
-
 			this.MsiLogFileLocation = this.Session.Get<string>("MsiLogFileLocation");
-		}
-
-		public ElasticsearchServiceConfiguration GetServiceConfiguration()
-		{
-			var service = this.ServiceModel;
-			var automaticStart = service.StartWhenWindowsStarts;
-			var configuration = new ElasticsearchServiceConfiguration
-			{
-				Name = "Elasticsearch",
-				DisplayName = "Elasticsearch",
-				Description = "You know, for Search.",
-				StartMode = automaticStart ? ServiceStartMode.Automatic : ServiceStartMode.Manual,
-				EventLogSource = "Elasticsearch",
-				HomeDirectory = this.LocationsModel.InstallDir,
-				ConfigDirectory = this.LocationsModel.ConfigDirectory,
-				ExeLocation = Path.Combine(this.LocationsModel.InstallDir, "bin", "elasticsearch.exe")
-			};
-			var username = service.User;
-
-			var password = service.Password;
-			if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-			{
-				configuration.ServiceAccount = ServiceAccount.User;
-				configuration.UserName = username;
-				configuration.Password = password;
-			}
-			else if (service.UseNetworkService)
-				configuration.ServiceAccount = ServiceAccount.NetworkService;
-			else
-				configuration.ServiceAccount = ServiceAccount.LocalSystem;
-			return configuration;
 		}
 
 		public override string ToString()
@@ -340,9 +295,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				sb.AppendLine($"  • '{v.PropertyName}': {v.ErrorMessage}"), sb => sb.ToString());
 
 		public override string[] HiddenProperties =>
-			ModelArgumentParser.GetProperties(this.GetType())			
-				.Where(p => p.GetCustomAttribute<ArgumentAttribute>().IsHidden)
-				.Select(p => p.Name.ToUpperInvariant())
+			ModelArgumentParser.GetProperties(this.GetType())		
+				.Select(p => p.GetCustomAttribute<ArgumentAttribute>())
+				.Where(a => a.IsHidden)
+				.Select(a => a.Name)
 				.Concat(this.Steps.SelectMany(s => s.HiddenProperties))				
 				.ToArray();
 	}

@@ -11,7 +11,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 	{
 		public override string Name => nameof(ElasticsearchBootstrapPasswordAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.BootstrapPassword;
-		public override Condition Condition => new Condition("(NOT Installed) AND XPACKSECURITYENABLED~=\"true\" AND XPACKLICENSE~=\"Trial\"");
+		public override Condition Condition => Condition.NOT_Installed;
 		public override Return Return => Return.check;
 		public override Sequence Sequence => Sequence.InstallExecuteSequence;
 		public override When When => When.After;

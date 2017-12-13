@@ -403,7 +403,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
     <value>Do not install as a service (start manually when needed)</value>
   </data>
   <data name="ServiceView_NetworkServiceRadioButton" xml:space="preserve">
-    <value>Use NT AUTHORITY\NETWORK SERVICE</value>
+    <value>Use Network Service account</value>
   </data>
   <data name="ServiceView_PasswordLabel" xml:space="preserve">
     <value>password</value>

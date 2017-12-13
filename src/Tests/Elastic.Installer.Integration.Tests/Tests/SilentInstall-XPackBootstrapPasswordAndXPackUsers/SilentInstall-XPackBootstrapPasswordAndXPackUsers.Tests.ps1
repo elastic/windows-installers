@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with setting up bootstrap password and x-pack users" {
+Describe -Name "Silent Install with setting up bootstrap password and x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
 
 	$exeArgs = @(
 		"PLUGINS=x-pack", 
@@ -23,7 +23,7 @@ Describe "Silent Install with setting up bootstrap password and x-pack users" {
 
     Invoke-SilentInstall -Exeargs $exeArgs
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 
@@ -32,7 +32,7 @@ Describe "Silent Install with setting up bootstrap password and x-pack users" {
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with setting up bootstrap password and x-pack users" {
+Describe -Name "Silent Uninstall with setting up bootstrap password and x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
 
     Invoke-SilentUninstall
 
@@ -47,7 +47,8 @@ Describe "Silent Uninstall with setting up bootstrap password and x-pack users" 
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

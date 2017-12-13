@@ -19,7 +19,7 @@ namespace Elastic.InstallerHosts.Kibana.Tasks
 			var installDirectory = this.InstallationModel.KibanaEnvironmentState.HomeDirectory;
 			var configDirectory = this.InstallationModel.KibanaEnvironmentState.ConfigDirectory;
 			var provider = this.InstallationModel.PluginsModel.PluginStateProvider;
-			var plugins = provider.InstalledPlugins(installDirectory, configDirectory);
+			var plugins = provider.InstalledPlugins(installDirectory);
 
 			if (plugins.Count == 0)
 			{

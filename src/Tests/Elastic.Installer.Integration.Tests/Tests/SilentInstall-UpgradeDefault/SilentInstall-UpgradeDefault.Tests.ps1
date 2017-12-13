@@ -11,8 +11,9 @@ Get-PreviousVersions
 
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
+$tags = @('PreviousVersions') 
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous version $($previousVersion.Description)" {
+Describe -Name "Silent Install upgrade install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 
@@ -20,10 +21,11 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous vers
 
     Context-ElasticsearchService
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath -Version $previousVersion
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 
@@ -45,7 +47,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous vers
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName
 
@@ -61,14 +63,13 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Install previous vers
 	Context-InsertData
 }
 
-Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previousVersion.Description) to $($version.Description)" {
-
-	$v = $version.FullVersion
+Describe -Name "Silent Install upgrade from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
     Invoke-SilentInstall -Version $version -Upgrade
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath -Version $version
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
     Context-EsHomeEnvironmentVariable -Expected $ExpectedHomeFolder
 
@@ -86,7 +87,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 		Status = $expectedStatus
 	}
 
-    Context-PingNode -XPackSecurityInstalled $false
+    Context-PingNode
 
     Context-PluginsInstalled
 
@@ -94,7 +95,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-EmptyEventLog
+    Context-EmptyEventLog -Version $previousVersion
 
 	Context-ClusterNameAndNodeName
 
@@ -112,9 +113,7 @@ Describe -Tag 'PreviousVersions' "Silent Install upgrade - Upgrade from $($previ
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade - Uninstall new version $($version.Description)" {
-
-	$v = $version.FullVersion
+Describe -Name "Silent Uninstall upgrade uninstall $($version.Description)" -Tags $tags {
 
     Invoke-SilentUninstall -Version $version
 
@@ -129,7 +128,8 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade - Uninstall new versi
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath $version
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

@@ -21,12 +21,11 @@ namespace Elastic.Installer.Msi
 		{
 			_productName = args[0].ToLowerInvariant();
 			_productTitle = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(_productName);
+			_releaseMode = args.Length > 3 && !string.IsNullOrEmpty(args[3]);
 
 			var version = args[1];
-			var product = GetProduct(_productName);
+			var product = GetProduct(_productName, _releaseMode);
 			var distributionRoot = Path.Combine(args[2], $"{_productName}-{version}");
-
-			_releaseMode = args.Length > 3 && !string.IsNullOrEmpty(args[3]);
 
 			// set properties with default values in the MSI so that they 
 			// don't have to be set on the command line.
@@ -59,6 +58,7 @@ namespace Elastic.Installer.Msi
 
 			var project = new Project
 			{
+				EnvironmentVariables = product.EnvironmentVariables,
 				ProductId = product.ProductCode[version],
 				UpgradeCode = product.UpgradeCode,
 				GUID = product.UpgradeCode,
@@ -144,8 +144,10 @@ namespace Elastic.Installer.Msi
 				project.UI = WUI.WixUI_ProgressOnly;
 
 			project.MajorUpgradeStrategy = MajorUpgradeStrategy.Default;
-			project.WixSourceGenerated += PatchWixSource;
+			project.WixSourceGenerated += product.PatchWixSource;
 			project.IncludeWixExtension(WixExtension.NetFx);
+
+			product.PatchProject(project);
 
 			// needed for WixFailWhenDeferred custom action
 			if (!_releaseMode)
@@ -160,172 +162,17 @@ namespace Elastic.Installer.Msi
 			Compiler.BuildMsi(project);
 		}
 
-		private static Product GetProduct(string name)
+		private static Product GetProduct(string name, bool releaseMode)
 		{
-			switch (name.ToLower())
+			switch (name.ToLowerInvariant())
 			{
 				case "elasticsearch":
-					return new Elasticsearch.Elasticsearch();
+					return new Elasticsearch.Elasticsearch(releaseMode);
 				case "kibana":
 					return new Kibana.Kibana();
 				default:
 					throw new ArgumentException($"Unknown product: {name}");
 			}
-		}
-
-		private static void PatchWixSource(XDocument document)
-		{
-			var ns = document.Root.Name.Namespace;
-
-			var directories = document.Root.Descendants(ns + "Directory")
-				.Where(c =>
-				{
-					var childComponents = c.Elements(ns + "Component");
-					return childComponents.Any() && childComponents.Any(cc => cc.Descendants(ns + "File").Any());
-				});
-
-			var feature = document.Root.Descendants(ns + "Feature").Single();
-			var re = new Regex(@"\.\d+$");
-			foreach (var directory in directories)
-			{
-				var directoryId = directory.Attribute("Id").Value;
-				var componentId = "Component." + directoryId;
-				var directoryName = directory.Attribute("Name").Value;
-
-				// WixSharp appends a .{DIGIT} to duplicate file names in different directories in installer e.g. plugin_descriptor.properties
-				// for Elasticsearch plugins. Problem is duplicated file names may not represent the same file path across versions so
-				// fix this by including the directory name in the file name.
-				var duplicateNamedComponents = directory.Elements(ns + "Component")
-					.Where(c => re.IsMatch(c.Attribute("Id").Value));
-
-				foreach (var component in duplicateNamedComponents)
-				{
-					PatchDuplicateComponentId(ns, component, directoryName);
-				}
-				
-				directory.AddFirst(new XElement(ns + "Component",
-					new XAttribute("Id", componentId),
-					new XAttribute("Guid", WixGuid.NewGuid()),
-					new XAttribute("Win64", "yes"),
-					new XElement(ns + "RemoveFile",
-						new XAttribute("Id", directoryId),
-						new XAttribute("Name", "*"), // remove all files in dir
-						new XAttribute("On", "both")
-					),
-					new XElement(ns + "RemoveFolder",
-						new XAttribute("Id", directoryId + ".dir"), // remove (now empty) dir
-						new XAttribute("On", "both")
-					)
-				));
-
-				// Add a Directory entry to remove all files in bin/x-pack, if present
-				if (directoryId == "INSTALLDIR.bin")
-				{
-					var installdirBinXpack = "INSTALLDIR.bin.xpack";
-					var componentInstalldirBinXpack = $"Component.{installdirBinXpack}";
-					directory.AddFirst(new XElement(ns + "Directory",
-						new XAttribute("Id", installdirBinXpack),
-						new XAttribute("Name", "x-pack"),
-						new XElement(ns + "Component",
-							new XAttribute("Id", componentInstalldirBinXpack),
-							new XAttribute("Guid", WixGuid.NewGuid()),
-							new XAttribute("Win64", "yes"),
-							new XElement(ns + "RemoveFile",
-								new XAttribute("Id", installdirBinXpack),
-								new XAttribute("Name", "*"), // remove all files in x-pack dir
-								new XAttribute("On", "both")
-							),							
-							new XElement(ns + "RemoveFolder", 
-								new XAttribute("Id", installdirBinXpack + ".dir"), // remove (now empty) x-pack dir
-								new XAttribute("On", "both")
-							)
-						)
-					));
-
-					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentInstalldirBinXpack)));
-				}
-
-				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
-			}
-
-			var exeName = $"{_productName}.exe";
-			var exeComponent = document.Root.Descendants(ns + "Component")
-				.Where(c => c.Descendants(ns + "File").Any(f => f.Attribute("Id").Value == exeName))
-				.Select(c => new { Component = c, File = c.Descendants(ns + "File").First() })
-				.SingleOrDefault();
-
-			if (exeComponent == null)
-				throw new Exception($"No File element found with Id '{exeName}'");
-
-			var fileId = exeComponent.File.Attribute("Id").Value;
-			exeComponent.Component.Add(new XElement(ns + "ServiceControl",
-				new XAttribute("Id", fileId),
-				new XAttribute("Name", _productTitle), // MUST match the name of the service
-				new XAttribute("Stop", "both"),
-				new XAttribute("Wait", "yes")
-			));
-
-			// include WixFailWhenDeferred Custom Action when not building a release
-			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
-			if (!_releaseMode)
-			{
-				var product = document.Root.Descendants(ns + "Product").First();
-				product.Add(new XElement(ns + "CustomActionRef",
-						new XAttribute("Id", "WixFailWhenDeferred")
-					)
-				);
-			}
-
-			// Update in-built progress templates 
-			// See http://web.mit.edu/ops/services/afs/openafs-1.4.1/src/src/WINNT/install/wix/lang/en_US/ActionText.wxi
-			var ui = document.Root.Descendants(ns + "UI").Single();
-			ui.Add(new XElement(ns + "ProgressText",
-				new XAttribute("Action", "InstallFiles"),
-				new XAttribute("Template", "Copying new files: [9][1]"),
-				new XText("Copying new files")
-			), new XElement(ns + "ProgressText",
-				new XAttribute("Action", "StopServices"),
-				new XAttribute("Template", $"Stopping {_productTitle} service"),
-				new XText($"Stopping {_productTitle} service") // TODO: default template doesn't receive service name. Might be because it's not installed with ServiceInstall table?
-			));
-		}
-		
-		private static void PatchComponentRef(XNamespace ns, XElement component, string oldId, string newId)
-		{
-			var root = component.Document.Root;
-			var componentRef = root.Descendants(ns + "ComponentRef").First(d => d.HasAttribute("Id", oldId));
-			componentRef.Attribute("Id").Remove();
-			componentRef.Add(new XAttribute("Id", newId));
-		}
-
-		private static void PatchDuplicateComponentFileId(XNamespace ns, XElement component, string newId)
-		{
-			var componentFile = component.Element(ns + "File");
-			var fileAttribute = componentFile?.Attribute("Id");
-			if (fileAttribute == null) return;
-			
-			fileAttribute.Remove();
-			componentFile.Add(new XAttribute("Id", newId));
-		}
-
-		private static void PatchDuplicateComponentId(XNamespace ns, XElement component, string directoryName)
-		{
-			var idAttribute = component.Attribute("Id");
-			if (idAttribute == null) return;
-			
-			var id = idAttribute.Value;
-			idAttribute.Remove();
-
-			// include directory name in Component Id
-			var newId = Regex.Replace(id, @"Component\.(.+)\.\d+", $"{directoryName}.$1").Replace("-","_");
-			var newComponentId = $"Component.{newId}";
-			component.Add(new XAttribute("Id", newComponentId));
-
-			// generate a new guid based on the new Component Id
-			component.Attribute("Guid").Value = WixGuid.NewGuid(newComponentId).ToString().ToLowerInvariant();
-			
-			PatchDuplicateComponentFileId(ns, component, newId);
-			PatchComponentRef(ns, component, id, newComponentId);
 		}
 	}
 }

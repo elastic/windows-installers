@@ -9,24 +9,17 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with no plugins $(($Global:Version).Description)" {
+Describe "Silent Install do not install as service $(($Global:Version).Description)" {
+    Invoke-SilentInstall @(,"INSTALLASSERVICE=false")
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=")
+    Context-ElasticsearchServiceNotInstalled
 
-    Context-PingNode
-
-    Context-PluginsInstalled -Expected @{ Plugins=@() }
-
-    Context-ClusterNameAndNodeName
-
-	Copy-ElasticsearchLogToOut
+    Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with no plugins $(($Global:Version).Description)" {
+Describe "Silent Uninstall do not install as service $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
-
-	Context-NodeNotRunning
 
 	Context-EsConfigEnvironmentVariableNull
 
@@ -37,7 +30,7 @@ Describe "Silent Uninstall with no plugins $(($Global:Version).Description)" {
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath
+	$ChildPath = Get-ChildPath 
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder

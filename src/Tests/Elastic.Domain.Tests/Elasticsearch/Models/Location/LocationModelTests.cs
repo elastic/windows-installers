@@ -67,31 +67,30 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 				step.PreviousInstallationDirectory.Should().BeNullOrEmpty();
 			});
 		
-		[Fact] void ValidLocationUsingPreviousVersion6X() => WithValidPreflightChecks(s=>s.Wix(currentVersion:"6.1.0", existingVersion: "6.0.0"))
-				.IsValidOnFirstStep()
-                .OnStep(m => m.LocationsModel, step =>
-                {
-	                step.InstallDir = CustomInstallationFolder;
-                })
-                .CanClickNext()
-                .OnStep(m=>m.LocationsModel, step =>
-                {
-                    step.InstallDir.Should().Be(Path.Combine(CustomInstallationFolder, "6.1.0"));
-                    step.PreviousInstallationDirectory.Should().Be(Path.Combine(CustomInstallationFolder, "6.0.0"));
-                });
+		[Fact] void ValidLocationUsingPreviousVersion6X() => WithValidPreflightChecks(s=>s.Wix("6.1.0", "6.0.0"))
+			.IsValidOnFirstStep()
+            .OnStep(m => m.LocationsModel, step =>
+            {
+	            step.InstallDir = CustomInstallationFolder;
+            })
+            .CanClickNext()
+            .OnStep(m=>m.LocationsModel, step =>
+            {
+                step.InstallDir.Should().Be(Path.Combine(CustomInstallationFolder, "6.1.0"));
+                step.PreviousInstallationDirectory.Should().Be(Path.Combine(CustomInstallationFolder, "6.0.0"));
+            });
 		
-		[Fact] void ValidLocationUsingPreviousVersion5X() => WithValidPreflightChecks(s=>s.Wix(currentVersion:"6.0.0", existingVersion: "5.0.0"))
-				.IsValidOnFirstStep()
-                .OnStep(m => m.LocationsModel, step =>
-                {
-	                step.InstallDir = CustomInstallationFolder;
-                })
-                .CanClickNext()
-                .OnStep(m=>m.LocationsModel, step =>
-                {
-                    step.InstallDir.Should().Be(Path.Combine(CustomInstallationFolder, "6.0.0"));
-                    step.PreviousInstallationDirectory.Should().Be(Path.Combine(CustomInstallationFolder));
-                });
-			
+		[Fact] void ValidLocationUsingPreviousVersion5X() => WithValidPreflightChecks(s=>s.Wix("6.0.0", "5.0.0", CustomInstallationFolder))
+			.IsValidOnFirstStep()
+            .OnStep(m => m.LocationsModel, step =>
+            {
+	            step.InstallDir = CustomInstallationFolder;
+            })
+            .CanClickNext()
+            .OnStep(m=>m.LocationsModel, step =>
+            {
+                step.InstallDir.Should().Be(Path.Combine(CustomInstallationFolder, "6.0.0"));
+                step.PreviousInstallationDirectory.Should().Be(Path.Combine(CustomInstallationFolder));
+            });		
 	}
 }

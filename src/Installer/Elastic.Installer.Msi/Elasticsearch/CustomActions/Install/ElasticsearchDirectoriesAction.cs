@@ -16,7 +16,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 		public override Return Return => Return.check;
 		public override Sequence Sequence => Sequence.InstallExecuteSequence;
 		public override When When => When.After;
-		public override Step Step => new Step(nameof(ElasticsearchEnvironmentAction));
+		public override Step Step => Step.InstallFiles;
 		public override Execute Execute => Execute.deferred;
 
 		[CustomAction]

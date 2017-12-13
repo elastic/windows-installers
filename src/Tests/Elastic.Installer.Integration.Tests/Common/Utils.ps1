@@ -223,7 +223,7 @@ function Add-Cygpath() {
     }
 }
 
-function Invoke-IntegrationTestsOnLocal($Location, $Version, $PreviousVersion, $VagrantProvider) {
+function Invoke-IntegrationTestsOnLocal($Location, $Version, $PreviousVersions, $VagrantProvider) {
     cd $Location  
     $testDirName = Split-Path $Location -Leaf
     vagrant destroy local -f
@@ -281,7 +281,7 @@ function Copy-SyncedFoldersFromRemote([System.Management.Automation.Runspaces.PS
 	}
 }
 
-function Invoke-IntegrationTestsOnAzure($Location, $Version, $PreviousVersion) {
+function Invoke-IntegrationTestsOnAzure($Location, $Version, $PreviousVersions) {
     cd $Location
     $dnsName = Get-RandomName
     $testDirName = Split-Path $Location -Leaf
@@ -478,6 +478,15 @@ function Invoke-SilentInstall {
 		$Upgrade
     )
 
+	if ($Version.Source) {
+        if (!$Exeargs) {
+            $Exeargs = @("PLUGINSSTAGING=$($Version.Source)")
+        }
+        elseif (-not ($Exeargs -like "PLUGINSSTAGING=*")) {
+            $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)")
+        }
+    }
+
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
 	if ($Upgrade) {
@@ -557,7 +566,7 @@ function Ping-Node([System.Timespan]$Timeout, $Domain, $Port) {
     $StopWatch = [Diagnostics.Stopwatch]::StartNew()
     do {
         try {
-            $Response = Invoke-RestMethod "http://$($Domain):$Port"
+            $Response = Invoke-RestMethod "http://$($Domain):$Port" -ContentType "application/json"
             log "Elasticsearch version $($Response.version.number) running"
             $Result.Success = $true
             return $Result
@@ -626,10 +635,11 @@ function Merge-Hashtables {
 
 function Get-ExpectedServiceStatus($Version, $PreviousVersion) {	
 	$expectedStatus = "Running"
+	$552Release = ConvertTo-SemanticVersion "5.5.2"
+	$600Release = ConvertTo-SemanticVersion "6.0.0"
 
-	if ($PreviousVersion.Major -eq 5 -and $PreviousVersion.Minor -eq 5 `
-		-and $PreviousVersion.Patch -le 2 -and $PreviousVersion.SourceType -eq "Released" `
-	    -and $Version.Major -eq 5 -and $Version.Minor -eq 5 -and $Version.Patch -ge 3) {
+	if ((Compare-SemanticVersion $PreviousVersion $552Release) -le 0 -and $PreviousVersion.SourceType -eq "Released" `
+	    -and (Compare-SemanticVersion $Version $600Release) -le 0 -and $Version.SourceType -ne "Compile") {
 
 		Write-Output "Previous version is $($PreviousVersion.Description) and version is $($Version.Description). Expected status is Stopped."
 		$expectedStatus = "Stopped"
@@ -652,5 +662,25 @@ function Get-PreviousVersions() {
 }
 
 function Copy-ElasticsearchLogToOut($Path = "$(Join-Path -Path $($env:ALLUSERSPROFILE) -ChildPath "Elastic\Elasticsearch\logs\elasticsearch.log")") {
-	Copy-Item -Path $Path -Destination "$($PWD.Drive.Root)\out" -Force -ErrorAction Ignore
+	Copy-Item -Path $Path -Destination "$($PWD.Drive.Root)out" -Force -ErrorAction Ignore
+}
+
+function Get-ChildPath {
+	[CmdletBinding()]
+	Param(
+		[Parameter(Position=0,ValueFromPipeline=$true)]
+		$Version = $Global:Version
+	)
+
+	# any release or build candidate before 6.0.0 won't include version in INSTALLDIR
+	$600Release = ConvertTo-SemanticVersion "6.0.0"
+
+	if ((Compare-SemanticVersion $Version $600Release) -ge 0 -or $Version.SourceType -eq "Compile") {
+		$ChildPath = "Elastic\Elasticsearch\$($Version.FullVersion)\"		
+	}
+	else {
+		$ChildPath = "Elastic\Elasticsearch\"
+	}
+
+	return $ChildPath
 }

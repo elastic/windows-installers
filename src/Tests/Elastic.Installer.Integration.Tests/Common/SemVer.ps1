@@ -78,21 +78,28 @@ function ConvertTo-SemanticVersion($version){
 function Compare-SemanticVersion($a, $b){
     $result = 0
     $result =  $a.Major.CompareTo($b.Major)
-    if($result -ne 0){return $result}
+    if($result -ne 0) {
+		return $result
+	}
 
     $result = $a.Minor.CompareTo($b.Minor)
-    if($result -ne 0){return $result}
+    if($result -ne 0) {
+		return $result
+	}
 
     $result = $a.Patch.CompareTo($b.Patch)
-    if($result -ne 0){return $result}
-    $ap = $a.Pre
-    $bp = $b.Pre
+    if($result -ne 0) {
+		return $result
+	}
+
+    $ap = $a.Prerelease
+    $bp = $b.Prerelease
     if($ap.Length  -eq 0 -and $bp.Length -eq 0) {return 0}
     if($ap.Length  -eq 0){return 1}
     if($bp.Length  -eq 0){return -1}
     
     $minLength = [Math]::Min($ap.Length, $bp.Length)
-    for($i = 0; $i -lt $minLength; $i++){
+    for($i = 0; $i -lt $minLength; $i++) {
         $ac = $ap[$i]
         $bc = $bp[$i]
 
@@ -104,23 +111,24 @@ function Compare-SemanticVersion($a, $b){
         if($aIsNum -and $bIsNum) { 
             # Write-Host "2" $a.FullVersion $b.FullVersion $anum $bnum $anum.CompareTo($bnum)
             $result = $anum.CompareTo($bnum) 
-            if($result -ne 0)
-            {
+            if($result -ne 0) {
                 return $result
             }
         }
+
         if($aIsNum) {
             # Write-Host "3" $a.FullVersion $b.FullVersion
             return -1
         }
+
         if($bIsNum) {
            # Write-Host "4" $a.FullVersion $b.FullVersion $bIsNum $aIsNum $ac $bc $ap.Length $bp.Length $i
-        return 1}
+			return 1
+		}
         
         $result = [string]::CompareOrdinal($ac, $bc)
-        if($result -ne 0) {
-        
-        return $result
+        if($result -ne 0) {      
+			return $result
         }
     }
     # Write-Host "comparing lengths" $ap.Length $bp.Length $ap.Length.CompareTo($bp.Length) $a.FullVersion $b.FullVersion

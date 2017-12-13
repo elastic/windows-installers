@@ -50,7 +50,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				foreach (var key in xPackKeys)
 					settings.Remove(key);
 			}
-			else
+			else if (!this.InstallationModel.PluginsModel.InstalledPlugins.Contains("x-pack"))
 			{
 				settings.XPackLicenseSelfGeneratedType = Enum.GetName(typeof(XPackLicenseMode), xPack.XPackLicense)?.ToLowerInvariant();
 				settings.XPackSecurityEnabled = !xPack.XPackSecurityEnabled ? false : (bool?) null;

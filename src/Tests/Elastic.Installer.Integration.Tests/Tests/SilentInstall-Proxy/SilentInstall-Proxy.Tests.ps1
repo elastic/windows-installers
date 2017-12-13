@@ -9,7 +9,9 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install x-pack through HTTPS proxy" {
+$tags = @('PreviousVersions', 'XPack') 
+
+Describe -Name "Silent Install x-pack through HTTPS proxy $(($Global:Version).Description)" -Tags $tags {
 	$port = 8888
 	Start-Fiddler -Port $port
 
@@ -24,7 +26,7 @@ Describe "Silent Install x-pack through HTTPS proxy" {
 
     Invoke-SilentInstall -Exeargs $exeArgs
 
-    Context-PingNode -XPackSecurityInstalled $true
+    Context-PingNode -XPackSecurityInstalled
 
     Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
 
@@ -37,7 +39,7 @@ Describe "Silent Install x-pack through HTTPS proxy" {
 	Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall x-pack through HTTPS proxy" {
+Describe -Name "Silent Uninstall x-pack through HTTPS proxy $(($Global:Version).Description)" -Tags $tags {
 
     Invoke-SilentUninstall
 
@@ -52,7 +54,8 @@ Describe "Silent Uninstall x-pack through HTTPS proxy" {
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath "Elastic\Elasticsearch\"
+	$ChildPath = Get-ChildPath
+    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
 }

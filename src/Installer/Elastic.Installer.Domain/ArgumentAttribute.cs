@@ -12,8 +12,8 @@ namespace Elastic.Installer.Domain
 
 	public class SetPropertyActionArgumentAttribute : ArgumentAttribute
 	{
-		public SetPropertyActionArgumentAttribute(string name, string dynamicValue)
-			: base(name)
+		public SetPropertyActionArgumentAttribute(string name, string dynamicValue, bool uppercase = true)
+			: base(name, uppercase)
 		{
 			IsDynamic = true;
 			DynamicValue = dynamicValue;
@@ -53,9 +53,7 @@ namespace Elastic.Installer.Domain
 		/// </summary>
 		public bool IsSecure { get; set; }
 
-		public ArgumentAttribute(string name)
-		{
-			this.Name = name.ToUpperInvariant();
-		}
+		public ArgumentAttribute(string name, bool uppercase = true) => 
+			this.Name = uppercase ? name.ToUpperInvariant() : name;
 	}
 }

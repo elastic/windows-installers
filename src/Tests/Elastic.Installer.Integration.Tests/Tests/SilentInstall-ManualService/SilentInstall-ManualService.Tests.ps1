@@ -9,24 +9,29 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Install with no plugins $(($Global:Version).Description)" {
+Describe "Silent Install as a manual service not started $(($Global:Version).Description)" {
+    Invoke-SilentInstall @(,"INSTALLASSERVICE=true","STARTAFTERINSTALL=false","STARTWHENWINDOWSSTARTS=false")
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=")
+    Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-    Context-PingNode
+	Context-ElasticsearchService -Expected @{
+		Status="Stopped"
+		StartType="Manual"
+		StartIfNotRunning=$false
+		CanStop=$false
+		CanShutdown=$false
+	}
 
-    Context-PluginsInstalled -Expected @{ Plugins=@() }
+	Get-ElasticsearchService | Start-Service
 
-    Context-ClusterNameAndNodeName
+	Context-PingNode
 
-	Copy-ElasticsearchLogToOut
+    Copy-ElasticsearchLogToOut
 }
 
-Describe "Silent Uninstall with no plugins $(($Global:Version).Description)" {
+Describe "Silent Uninstall as a manual service not started $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
-
-	Context-NodeNotRunning
 
 	Context-EsConfigEnvironmentVariableNull
 
@@ -37,7 +42,7 @@ Describe "Silent Uninstall with no plugins $(($Global:Version).Description)" {
 	Context-ElasticsearchServiceNotInstalled
 
 	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath
+	$ChildPath = Get-ChildPath 
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
 	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder

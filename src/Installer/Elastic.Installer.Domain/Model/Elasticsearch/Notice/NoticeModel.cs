@@ -77,7 +77,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 		public sealed override void Refresh() { }
 
 		public LocationsModel LocationsModel { get; }
-
 		public SemVersion CurrentVersion { get; }
 		public SemVersion ExistingVersion { get; }
 		public string UpgradeTextHeader { get; }

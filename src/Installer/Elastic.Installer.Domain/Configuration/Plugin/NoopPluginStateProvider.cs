@@ -10,15 +10,12 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 		public string[] InstalledBefore { get; }
 
 		public NoopPluginStateProvider() { }
-		public NoopPluginStateProvider(params string [] installedBefore)
-		{
-			this.InstalledBefore = installedBefore;
-		}
+		public NoopPluginStateProvider(params string [] installedBefore) => this.InstalledBefore = installedBefore;
 
 		public void Install(int pluginTicks, string installDirectory, string configDirectory, string plugin, string[] additionalArguments = null, IDictionary<string, string> environmentVariables = null) =>
 			this.InstalledAfter.Add(plugin);
 
-		public IList<string> InstalledPlugins(string installDirectory, string configDirectory, IDictionary<string, string> environmentVariables = null) => 
+		public IList<string> InstalledPlugins(string installDirectory, IDictionary<string, string> environmentVariables = null) => 
 			this.InstalledBefore?.ToList() ?? new List<string>();
 
 		public void Remove(int pluginTicks, string installDirectory, string configDirectory, string plugin, string[] additionalArguments = null, IDictionary<string, string> environmentVariables = null)

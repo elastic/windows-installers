@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
@@ -8,6 +9,9 @@ using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
+	/// <summary>
+	/// Sets the BOOTSTRAPPASSWORD property to a random 20 character string
+	/// </summary>
 	public class SetBootstrapPasswordPropertyTask : ElasticsearchInstallationTaskBase
 	{
 		private static readonly char[] BootstrapChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*-_=+?".ToCharArray();
@@ -20,6 +24,13 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		protected override bool ExecuteTask()
 		{
+			var xPackModel = this.InstallationModel.XPackModel;
+			var pluginsModel = this.InstallationModel.PluginsModel;
+
+			if (!xPackModel.IsRelevant || 
+				!pluginsModel.Plugins.Any(plugin => plugin.Equals("x-pack", StringComparison.OrdinalIgnoreCase)))
+				return true;
+
 			var length = 20;
 			var password = new StringBuilder();
 			var property = nameof(XPackModel.BootstrapPassword).ToUpperInvariant();
