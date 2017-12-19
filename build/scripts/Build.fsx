@@ -115,7 +115,7 @@ module Builder =
                let exitCode = ExecProcess (fun info ->
                                 info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir
                                 info.WorkingDirectory <- MsiDir
-                                info.Arguments <- [product.Name; version.FullVersion; Path.GetFullPath(InDir); getBuildParam "release"] |> String.concat " "
+                                info.Arguments <- [product.Name; version.FullVersion; Path.GetFullPath(InDir)] |> String.concat " "
                                ) <| TimeSpan.FromMinutes 20.
     
                if exitCode <> 0 then failwithf "Error building MSI for %s" product.Name
