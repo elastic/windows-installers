@@ -13,7 +13,6 @@ namespace Elastic.Installer.Msi
 {
 	public class Program
 	{
-		private static bool _releaseMode;
 		private static string _productName;
 		private static string _productTitle;
 
@@ -21,10 +20,9 @@ namespace Elastic.Installer.Msi
 		{
 			_productName = args[0].ToLowerInvariant();
 			_productTitle = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(_productName);
-			_releaseMode = args.Length > 3 && !string.IsNullOrEmpty(args[3]);
 
 			var version = args[1];
-			var product = GetProduct(_productName, _releaseMode);
+			var product = GetProduct(_productName);
 			var distributionRoot = Path.Combine(args[2], $"{_productName}-{version}");
 
 			// set properties with default values in the MSI so that they 
@@ -146,12 +144,8 @@ namespace Elastic.Installer.Msi
 			project.MajorUpgradeStrategy = MajorUpgradeStrategy.Default;
 			project.WixSourceGenerated += product.PatchWixSource;
 			project.IncludeWixExtension(WixExtension.NetFx);
-
+			project.IncludeWixExtension(WixExtension.Util);
 			product.PatchProject(project);
-
-			// needed for WixFailWhenDeferred custom action
-			if (!_releaseMode)
-				project.IncludeWixExtension(WixExtension.Util);
 
 			const string wixLocation = @"..\..\..\packages\WixSharp.wix.bin\tools\bin";
 			if (!Directory.Exists(wixLocation))
@@ -162,12 +156,12 @@ namespace Elastic.Installer.Msi
 			Compiler.BuildMsi(project);
 		}
 
-		private static Product GetProduct(string name, bool releaseMode)
+		private static Product GetProduct(string name)
 		{
 			switch (name.ToLowerInvariant())
 			{
 				case "elasticsearch":
-					return new Elasticsearch.Elasticsearch(releaseMode);
+					return new Elasticsearch.Elasticsearch();
 				case "kibana":
 					return new Kibana.Kibana();
 				default:
