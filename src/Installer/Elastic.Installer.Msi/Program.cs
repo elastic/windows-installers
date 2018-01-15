@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using WixSharp;
 using static System.Reflection.Assembly;
@@ -13,7 +12,6 @@ namespace Elastic.Installer.Msi
 {
 	public class Program
 	{
-		private static bool _releaseMode;
 		private static string _productName;
 		private static string _productTitle;
 
@@ -22,11 +20,9 @@ namespace Elastic.Installer.Msi
 			_productName = args[0].ToLowerInvariant();
 			_productTitle = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(_productName);
 
-			var product = GetProduct(_productName);
 			var version = args[1];
+			var product = GetProduct(_productName);
 			var distributionRoot = Path.Combine(args[2], $"{_productName}-{version}");
-
-			_releaseMode = args.Length > 3 && !string.IsNullOrEmpty(args[3]);
 
 			// set properties with default values in the MSI so that they 
 			// don't have to be set on the command line.
@@ -140,11 +136,7 @@ namespace Elastic.Installer.Msi
 			project.MajorUpgradeStrategy = MajorUpgradeStrategy.Default;
 			project.WixSourceGenerated += PatchWixSource;
 			project.IncludeWixExtension(WixExtension.NetFx);
-
-			// needed for WixFailWhenDeferred custom action
-			if (!_releaseMode)
-				project.IncludeWixExtension(WixExtension.Util);
-
+			project.IncludeWixExtension(WixExtension.Util);
 			const string wixLocation = @"..\..\..\packages\WixSharp.wix.bin\tools\bin";
 			if (!Directory.Exists(wixLocation))
 				throw new Exception($"The directory '{wixLocation}' could not be found");
@@ -244,16 +236,13 @@ namespace Elastic.Installer.Msi
 				new XAttribute("Wait", "yes")
 			));
 
-			// include WixFailWhenDeferred Custom Action when not building a release
+			// include WixFailWhenDeferred Custom Action
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
-			if (!_releaseMode)
-			{
-				var product = document.Root.Descendants(ns + "Product").First();
-				product.Add(new XElement(ns + "CustomActionRef",
-						new XAttribute("Id", "WixFailWhenDeferred")
-					)
-				);
-			}
+			var product = document.Root.Descendants(ns + "Product").First();
+			product.Add(new XElement(ns + "CustomActionRef",
+					new XAttribute("Id", "WixFailWhenDeferred")
+				)
+			);
 
 			// Update in-built progress templates 
 			// See http://web.mit.edu/ops/services/afs/openafs-1.4.1/src/src/WINNT/install/wix/lang/en_US/ActionText.wxi
