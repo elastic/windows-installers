@@ -17,16 +17,8 @@ namespace Elastic.Installer.Msi.Elasticsearch
 {
 	public class Elasticsearch : Product
 	{
-		private readonly bool _releaseMode;
 		private static readonly string InstallAsServiceProperty = nameof(ServiceModel.InstallAsService).ToUpperInvariant();
 		private static readonly string StartAfterInstallProperty = nameof(ServiceModel.StartAfterInstall).ToUpperInvariant();
-
-		public Elasticsearch(bool releaseMode) => _releaseMode = releaseMode;
-
-		/// <summary>
-		/// Needed for generic custom actions.
-		/// </summary>
-		public Elasticsearch() { }
 
 		public override IEnumerable<string> AllArguments => ElasticsearchArgumentParser.AllArguments;
 
@@ -172,17 +164,14 @@ namespace Elastic.Installer.Msi.Elasticsearch
 				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));
 			}
 
-			// include WixFailWhenDeferred Custom Action when not building a release
+			// include WixFailWhenDeferred Custom Action
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
-			if (!_releaseMode)
-			{
-				var product = documentRoot.Descendants(ns + "Product").First();
-				product.Add(new XElement(ns + "CustomActionRef",
-						new XAttribute("Id", "WixFailWhenDeferred")
-					)
-				);
-			}
-
+			var product = documentRoot.Descendants(ns + "Product").First();
+			product.Add(new XElement(ns + "CustomActionRef",
+					new XAttribute("Id", "WixFailWhenDeferred")
+				)
+			);
+			
 			// Add condition to InstallServices
 			var installExecuteSequence = documentRoot.Descendants(ns + "InstallExecuteSequence").Single();
 
