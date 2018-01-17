@@ -11,7 +11,9 @@ using Elastic.Installer.Domain.Model;
 using Elastic.Installer.Domain.Model.Base.Service;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Microsoft.Win32;
 using WixSharp;
+using WixSharp.CommonTasks;
 
 namespace Elastic.Installer.Msi.Elasticsearch
 {
@@ -19,11 +21,12 @@ namespace Elastic.Installer.Msi.Elasticsearch
 	{
 		private static readonly string InstallAsServiceProperty = nameof(ServiceModel.InstallAsService).ToUpperInvariant();
 		private static readonly string StartAfterInstallProperty = nameof(ServiceModel.StartAfterInstall).ToUpperInvariant();
+		private IEnumerable<ModelArgument> _msiParams;
 
 		public override IEnumerable<string> AllArguments => ElasticsearchArgumentParser.AllArguments;
 
-		public override IEnumerable<ModelArgument> MsiParams =>
-			ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), NoopSession.Elasticsearch).ToMsiParams();
+		public override IEnumerable<ModelArgument> MsiParams => _msiParams ?? (_msiParams = 
+			ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), NoopSession.Elasticsearch).ToMsiParams());
 
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.ElasticsearchProductCodes;
 
@@ -33,6 +36,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 			new[]
 			{
 				new EnvironmentVariable(
+					new Id($"EnvVar.{ElasticsearchEnvironmentStateProvider.EsHome}"),
 					ElasticsearchEnvironmentStateProvider.EsHome,
 					$"[{nameof(LocationsModel.InstallDir).ToUpperInvariant()}]")
 				{
@@ -40,6 +44,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 					System = true
 				},
 				new EnvironmentVariable(
+					new Id($"EnvVar.{ElasticsearchEnvironmentStateProvider.ConfDir}"),
 					ElasticsearchEnvironmentStateProvider.ConfDir,
 					$"[{nameof(LocationsModel.ConfigDirectory).ToUpperInvariant()}]")
 				{
@@ -48,6 +53,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 				},
 				// remove the old ES_CONFIG
 				new EnvironmentVariable(
+					new Id($"EnvVar.{ElasticsearchEnvironmentStateProvider.ConfDirOld}"),
 					ElasticsearchEnvironmentStateProvider.ConfDirOld, null)
 				{
 					Action = EnvVarAction.remove,
@@ -82,10 +88,27 @@ namespace Elastic.Installer.Msi.Elasticsearch
 			// don't emit the ServicePassword property in logs
 			var servicePasswordProperty = new Property(ServiceModel.ServicePassword, string.Empty)
 			{
-				Attributes = new Dictionary<string, string> { { "Hidden", "yes" } }
+				AttributesDefinition = "Hidden=yes"
 			};
 
 			project.Properties = project.Properties.Concat(new[] { servicePasswordProperty }).ToArray();
+
+			// persist properties in registry for use on upgrade/uninstall
+			var regValues = MsiParams
+				.Where(msiParam => msiParam.Attribute.PersistInRegistry)
+				.Select(msiParam => 
+					new RegValue(
+						new Id($"Registry.{msiParam.Attribute.Name}"),
+						RegistryHive.LocalMachine, 
+						@"Software\Elastic\Elasticsearch", 
+						msiParam.Attribute.Name, 
+						$"[{msiParam.Attribute.Name}]")
+					{
+						AttributesDefinition = "Type=string",
+						Condition = $"(NOT {msiParam.Attribute.Name}=\"\")"
+					});
+
+			project.RegValues = project.RegValues.Concat(regValues).ToArray();
 		}
 
 		public override void PatchWixSource(XDocument document)

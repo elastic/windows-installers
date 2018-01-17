@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Elastic.Installer.Domain.Model;
+using Microsoft.Win32;
 using WixSharp;
 using static System.Reflection.Assembly;
 
@@ -27,12 +29,27 @@ namespace Elastic.Installer.Msi
 
 			// set properties with default values in the MSI so that they 
 			// don't have to be set on the command line.
-			var setupParams = product.MsiParams;
-			var staticProperties = setupParams
-				.Where(v => (v.Attribute.IsStatic && !string.IsNullOrEmpty(v.Value)) || v.Attribute.IsHidden || v.Attribute.IsSecure)
+			var staticProperties = product.MsiParams
+				.Where(v => 
+					v.Attribute.IsStatic && !string.IsNullOrEmpty(v.Value) || 
+					v.Attribute.IsHidden || 
+					v.Attribute.IsSecure || 
+					v.Attribute.PersistInRegistry)
 				.Select(a =>
 				{
-					var property = new Property(a.Key, a.Value) { Attributes = new Attributes() };
+					var property = a.Attribute.PersistInRegistry 
+						? new RegValueProperty(
+							a.Key, 
+							RegistryHive.LocalMachine, 
+							$@"SOFTWARE\Elastic\{_productTitle}", 
+							a.Key, 
+							a.Attribute.IsDynamic || a.Key == "INSTALLDIR" ? null : a.Value)
+						{
+							Attributes = new Attributes(),
+							Win64 = true						
+						} 
+						: new Property(a.Key, a.Value) { Attributes = new Attributes() };
+
 					if (a.Attribute.IsHidden)
 						property.Attributes.Add("Hidden", "yes");
 					if (a.Attribute.IsSecure)
@@ -42,9 +59,10 @@ namespace Elastic.Installer.Msi
 
 			// Only set dynamic property if MSI is not installed and value is empty.
 			// Dynamic properties calculate the default value at MSI install time
-			var dynamicProperties = setupParams
+			var dynamicProperties = product.MsiParams
 				.Where(v => v.Attribute.IsDynamic)
 				.Select(a => new SetPropertyAction(
+					new Id($"Set_{a.Key}_Value"),
 					a.Key,
 					a.Attribute.DynamicValue,
 					Return.check,
@@ -53,6 +71,35 @@ namespace Elastic.Installer.Msi
 					new Condition($"(NOT Installed) AND ({a.Key}=\"\")")
 				)
 			);
+
+			// http://robmensching.com/blog/posts/2010/5/2/the-wix-toolsets-remember-property-pattern/
+			// Save property values passed from command line, allow values to be set from
+			// Registry, and set property values from command line after.
+			var propertiesFromCommandline = product.MsiParams
+				.Where(v => v.Attribute.PersistInRegistry)
+				.SelectMany(v => new[]
+				{
+					new SetPropertyAction(
+						new Id($"Save_{v.Key}_CmdValue"),
+						$"Cmd_{v.Key}",
+						$"[{v.Key}]"					
+					)
+					{
+						Execute = Execute.firstSequence,
+						Step = Step.AppSearch,
+						When = When.Before
+					},
+					new SetPropertyAction(
+						new Id($"Set_{v.Key}_CmdValue"),
+						v.Key,
+						$"[Cmd_{v.Key}]"
+					)
+					{
+						Execute = Execute.firstSequence,
+						Step = Step.AppSearch,
+						When = When.After
+					},
+				});
 
 			var project = new Project
 			{
@@ -73,6 +120,7 @@ namespace Elastic.Installer.Msi
 				OutFileName = _productName,
 				Version = new Version(version.Split('-')[0]),
 				Actions = dynamicProperties
+					.Concat(propertiesFromCommandline)
 					.Concat(GetExecutingAssembly().GetTypes()
 					.Where(t => t != typeof(CustomAction) && typeof(CustomAction).IsAssignableFrom(t) && !t.IsAbstract)
 					.Select(t => (CustomAction)Activator.CreateInstance(t))
