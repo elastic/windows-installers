@@ -611,7 +611,7 @@ function Context-DataDirectories($Version=$Global:Version, [string[]]$Path, [swi
 {
 	$620Release = ConvertTo-SemanticVersion "6.2.0"
 
-	# anything released 6.1.0 and previous deletes directories on uninstall
+    # Expect the directories to exist for any official release from 6.2.0+, or compiled from source
 	if ((Compare-SemanticVersion $Version $620Release) -lt 0 -and $Version.SourceType -ne "Compile") {
 		foreach($p in $Path) {
 			Context-DirectoryNotExist -Path $p -DeleteAfter:$DeleteAfter

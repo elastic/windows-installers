@@ -23,8 +23,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		private const string DefaultConfigDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Config;
 		public const string CompanyFolderName = "Elastic";
 		public const string ProductFolderName = "Elasticsearch";
-		private const string DefaultInstallDir = @"[ProgramFiles64Folder]\" + CompanyFolderName + @"\" + ProductFolderName + @"\[CurrentVersion]";
-
 		public static string DefaultProgramFiles => 
 			Environment.GetEnvironmentVariable("ProgramW6432") ?? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
@@ -192,7 +190,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 
 
 		string installDirectory;
-		[SetPropertyActionArgument(nameof(InstallDir), DefaultInstallDir, PersistInRegistry = true)]
+		[Argument(nameof(InstallDir), PersistInRegistry = true)]
 		public string InstallDir
 		{
 			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : Path.Combine(installDirectory, CurrentVersion);
