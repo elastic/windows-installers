@@ -22,13 +22,12 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate
 			this.Session.Log("ViewModelState:\r\n" + this.InstallationModel);
 			if (!this.InstallationModel.IsValid || this.InstallationModel.Steps.Any(s => !s.IsValid))
 			{
-				var errorPrefix = $"Cannot continue installation because of the following errors";
 				var failures = this.InstallationModel.ValidationFailures
 					.Concat(this.InstallationModel.Steps.SelectMany(s => s.ValidationFailures))
 					.ToList();
 
 				var validationFailures = ValidationFailures(failures);
-				throw new Exception(errorPrefix + Environment.NewLine + validationFailures);
+				throw new Exception("Cannot continue installation because of the following errors" + Environment.NewLine + validationFailures);
 			}
 			return true;
 		}
