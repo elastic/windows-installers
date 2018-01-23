@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Extensions;
 using Elastic.Installer.Domain.Model.Base;
@@ -57,7 +56,7 @@ namespace Elastic.InstallerHosts.Tasks
 		protected bool SamePathAs(string pathA, string pathB) => 
 			!string.IsNullOrEmpty(pathA) && 
 			!string.IsNullOrEmpty(pathB) && 
-			0 == string.Compare(Path.GetFullPath(pathA), Path.GetFullPath(pathB), true);
+			0 == string.Compare(Path.GetFullPath(pathA), Path.GetFullPath(pathB), StringComparison.OrdinalIgnoreCase);
 
 		protected void CopyDirectory(string sourceDirectory, string destinationDirectory)
 		{

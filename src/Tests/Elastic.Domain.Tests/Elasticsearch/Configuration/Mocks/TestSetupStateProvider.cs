@@ -83,9 +83,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this;
 		}
 
-		public TestSetupStateProvider Session(bool uninstalling = true, bool rollback = false)
+		public TestSetupStateProvider Session(bool uninstalling = true, bool rollback = false, Dictionary<string, string> sessionVariables = null)
 		{
-			this.SessionState = new NoopSession(nameof(NoopSession.Elasticsearch))
+			this.SessionState = new NoopSession(nameof(NoopSession.Elasticsearch), sessionVariables)
 			{
 				IsUninstalling = uninstalling, 
 				IsRollback = rollback,
