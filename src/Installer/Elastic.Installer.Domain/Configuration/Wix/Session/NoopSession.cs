@@ -13,14 +13,20 @@ namespace Elastic.Installer.Domain.Configuration.Wix.Session
 		
 		public List<string> LoggedMessages { get; } = new List<string>();
 		
-		public NoopSession(string productName)
+		public NoopSession(string productName, Dictionary<string, string> sessionValues = null)
 		{
 			this.ProductName = productName ?? throw new ArgumentNullException(nameof(productName));
+			this.SessionValues = sessionValues ?? new Dictionary<string, string>();
 		}
-		
-		public T Get<T>(string property) => default(T);
 
-		public void Set(string property, string value) { }
+		public T Get<T>(string property) => this.SessionValues.TryGetValue(property, out var value) 
+			? (T)Convert.ChangeType(value, typeof(T)) 
+			: default(T);
+
+		public void Set(string property, string value)
+		{
+			this.SessionValues[property] = value;
+		}
 
 		public void Log(string message)
 		{
@@ -42,6 +48,8 @@ namespace Elastic.Installer.Domain.Configuration.Wix.Session
 		public bool IsRollback { get; set; }
 		
 		public string ProductName { get; }
+		
+		public Dictionary<string, string> SessionValues  { get; }
 		
 		public override string ToString()
 		{

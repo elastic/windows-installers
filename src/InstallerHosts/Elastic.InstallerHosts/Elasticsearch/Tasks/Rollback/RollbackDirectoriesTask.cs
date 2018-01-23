@@ -71,7 +71,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback
 
 			// always delete bin\paxk if installed
 			this.Session.Log("Deleting bin\\x-pack directory");
-			this.FileSystem.Directory.Delete(binXPackDirectory, true);
+			if (this.FileSystem.Directory.Exists(binXPackDirectory))
+				this.FileSystem.Directory.Delete(binXPackDirectory, true);
 
 			if (!fs.Directory.Exists(tempBinXPackDirectory)) return;
 
@@ -90,11 +91,14 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback
 			// always delete any plugins that might have been installed
 			this.Session.Log("Deleting plugins directory");
 
-			var installDir = fs.DirectoryInfo.FromDirectoryName(pluginsDirectory);
-			foreach (var file in installDir.GetFiles())
-				fs.File.Delete(file.FullName);
-			foreach (var dir in installDir.GetDirectories())
-				fs.Directory.Delete(dir.FullName, true);
+			if (fs.Directory.Exists(pluginsDirectory))
+			{
+				var installDir = fs.DirectoryInfo.FromDirectoryName(pluginsDirectory);
+				foreach (var file in installDir.GetFiles())
+					fs.File.Delete(file.FullName);
+				foreach (var dir in installDir.GetDirectories())
+					fs.Directory.Delete(dir.FullName, true);
+			}
 
 			if (!fs.Directory.Exists(pluginsTempDirectory)) return;		
 			this.Session.Log("Restoring existing plugins directory");
