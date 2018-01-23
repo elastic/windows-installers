@@ -48,7 +48,7 @@ namespace Elastic.Installer.Msi.CustomActions
 				Sequence = this.Sequence,
 				Execute = this.Execute,
 				Impersonate = !this.NeedsElevatedPrivileges,
-				UsesProperties = string.Join(",", this.AllArguments.Concat(new [] { "UILevel", "INSTALLDIR.bin", "VERSION", "REMOVE", "ProductName" })),
+				UsesProperties = string.Join(",", this.AllArguments.Concat(new [] { "UILevel", "INSTALLDIR.bin", "VERSION", "REMOVE", "ProductName", "ConfigDirectoryExists", "LogsDirectoryExists", "DataDirectoryExists" })),
 				Attributes = new Attributes {{ "HideTarget", "yes" }}
 			};
 		}
