@@ -3,6 +3,7 @@ using Elastic.Installer.Msi.CustomActions;
 using Elastic.Installer.Msi.Elasticsearch.CustomActions.Install;
 using Elastic.InstallerHosts;
 using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback;
 using Microsoft.Deployment.WindowsInstaller;
 using WixSharp;
 
@@ -17,7 +18,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Rollback
 
 		[CustomAction]
 		public static ActionResult ElasticsearchRollbackDirectories(Session session) =>
-			session.Handle(() => new DeleteDirectoriesTask(
-				session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession(), rollBack: true).Execute());
+			session.Handle(() => new RollbackDirectoriesTask(
+				session.ToSetupArguments(ElasticsearchArgumentParser.AllArguments), session.ToISession()).Execute());
 	}
 }
