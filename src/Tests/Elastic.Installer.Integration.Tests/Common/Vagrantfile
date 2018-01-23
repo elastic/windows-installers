@@ -19,7 +19,8 @@ Vagrant.configure("2") do |config|
     local.vm.synced_folder "./../../../../../build/out/", "/out"
     
     local.vm.provision "powershellget", type: "shell", inline: configure_powershellget()
-    local.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
+    # TODO: use another proxy available on chocolatey
+	#local.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
 	local.vm.provision "partition", 	type: "shell", inline: create_partition() 
   end
 
@@ -61,7 +62,8 @@ Vagrant.configure("2") do |config|
     azure.vm.provision "chocolatey", 	type: "shell", inline: configure_chocolatey() 
     azure.vm.provision "powershellget", type: "shell", inline: configure_powershellget()   
     azure.vm.provision "java", 			type: "shell", inline: configure_java()  
-    azure.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
+    # TODO: use another proxy available on chocolatey
+	#azure.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
   end
 
 end

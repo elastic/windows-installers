@@ -55,8 +55,8 @@ if(-not(Get-Module -Name $pester)) {
 }
 
 if ($PreviousVersions) {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -PassThru | Out-Null
+	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag "Proxy" -PassThru | Out-Null
 }
 else {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag "PreviousVersions" -PassThru | Out-Null
+	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag @("PreviousVersions","Proxy") -PassThru | Out-Null
 }
