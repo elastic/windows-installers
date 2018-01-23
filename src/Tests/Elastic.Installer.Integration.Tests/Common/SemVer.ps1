@@ -55,7 +55,8 @@ function ConvertTo-SemanticVersion($version){
 	elseif ($source -eq "r") {
 		$sourceType = [Source]::Released
 		$description = "$fullVersion (official release)"
-
+		# remove source value
+		$source = $null
 	}
 	else {
 		$sourceType = [Source]::BuildCandidate
