@@ -30,13 +30,17 @@ Param(
 $env:Version = $Version
 $env:PreviousVersions = $PreviousVersions -join ","
 
+# Update Security Protocol for HTTPS requests
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3 -bor [Net.SecurityProtocolType]::Tls -bor `
+										      [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
+
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 cd $currentDir
 
 $drive = $PWD.Drive.Root
 $pester = "Pester"
 $date = Get-Date -format "yyyy-MM-ddT-HHmmssfff"
-$path = "$($drive)out\results-$TestDirName-$Version-$date.xml"
+$path = "$($drive)out\results-$TestDirName-$date.xml"
 
 if(-not(Get-Module -Name $pester)) { 
 	# Load the Pester module into the current session. Install if not available
@@ -51,8 +55,8 @@ if(-not(Get-Module -Name $pester)) {
 }
 
 if ($PreviousVersions) {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile $path -OutputFormat "NUnitXml" -PassThru | Out-Null
+	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag "Proxy" -PassThru | Out-Null
 }
 else {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile $path -OutputFormat "NUnitXml" -ExcludeTag "PreviousVersions" -PassThru | Out-Null
+	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag @("PreviousVersions","Proxy") -PassThru | Out-Null
 }
