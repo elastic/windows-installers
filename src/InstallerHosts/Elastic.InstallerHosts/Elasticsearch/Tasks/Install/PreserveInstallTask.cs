@@ -21,21 +21,43 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			// copy the directory, to restore in case of rollback
 			CopyCurrentConfigDirectory();
 
+			// copy x-pack plugins, to restore in case of rollback
+			CopyXPackPlugins();
+
 			return true;
 		}
 
 		private void CopyCurrentConfigDirectory()
 		{
+			var fs = this.FileSystem;
+			var path = fs.Path;
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
-			var tempConfigDirectory = this.FileSystem.Path.Combine(this.TempProductInstallationDirectory, "config");
+			var tempConfigDirectory = path.Combine(this.TempProductInstallationDirectory, "config");
 			//make sure if for some reason the tempConfigDirectory is there its empty before copying over the current state
-			if (this.FileSystem.Directory.Exists(tempConfigDirectory))
-				this.FileSystem.Directory.Delete(tempConfigDirectory, true);
+			if (fs.Directory.Exists(tempConfigDirectory))
+				fs.Directory.Delete(tempConfigDirectory, true);
 			
-			if (!this.FileSystem.Directory.Exists(configDirectory)) return;
+			if (!fs.Directory.Exists(configDirectory)) return;
 			
 			this.Session.Log($"Copying existing config directory from {configDirectory} to {tempConfigDirectory}");
 			this.CopyDirectory(configDirectory, tempConfigDirectory);
+		}
+
+		private void CopyXPackPlugins()
+		{
+			var fs = this.FileSystem;
+			var path = fs.Path;
+
+			var binXPackDirectory = path.Combine(this.InstallationModel.LocationsModel.InstallDir, "bin", "x-pack");		
+			var tempbinXPackDirectory = path.Combine(this.TempProductInstallationDirectory, "bin", "x-pack");
+			//make sure if for some reason the tempbinXPackDirectory is there its empty before copying over the current state
+			if (fs.Directory.Exists(tempbinXPackDirectory))
+				fs.Directory.Delete(tempbinXPackDirectory, true);
+
+			if (!fs.Directory.Exists(binXPackDirectory)) return;
+
+			this.Session.Log($"Copying existing bin\\x-pack directory from {binXPackDirectory} to {tempbinXPackDirectory}");
+			this.CopyDirectory(binXPackDirectory, tempbinXPackDirectory);
 		}
 
 		private void MoveCurrentPlugins()

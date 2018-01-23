@@ -12,7 +12,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		public CreateDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
 
-		private const int TotalTicks = 5000;
+		private const int TotalTicks = 4000;
 
 		protected override bool ExecuteTask()
 		{
@@ -26,29 +26,10 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				AccessControlType.Allow);
 
 			CreateDataDirectory(rule);
-
 			CreateLogsDirectory(rule);
-
 			CreateConfigDirectory(rule);
 
-			CreatePluginsDirectory();
-
 			return true;
-		}
-
-		private void CreatePluginsDirectory()
-		{
-			var pluginsDirectoryName = "plugins";
-			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;			
-			var pluginsDirectory = this.FileSystem.Path.Combine(installDirectory, pluginsDirectoryName);
-
-			if (!this.FileSystem.Directory.Exists(pluginsDirectory))
-			{
-				this.Session.SendProgress(1000, $"creating plugins directory {pluginsDirectory}");
-				this.FileSystem.Directory.CreateDirectory(pluginsDirectory);
-			}
-			else
-				this.Session.SendProgress(1000, $"using existing plugins directory {pluginsDirectory}");
 		}
 
 		private void CreateLogsDirectory(FileSystemAccessRule rule)
@@ -56,11 +37,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			var logsDirectory = this.InstallationModel.LocationsModel.LogsDirectory;
 			if (!this.FileSystem.Directory.Exists(logsDirectory))
 			{
-				this.Session.SendProgress(1000, "creating logs directory " + logsDirectory);
+				this.Session.SendProgress(1000, $"creating logs directory {logsDirectory}");
 				this.FileSystem.Directory.CreateDirectory(logsDirectory);
 			}
 			else
-				this.Session.SendProgress(1000, "using existing logs directory " + logsDirectory);
+				this.Session.SendProgress(1000, $"using existing logs directory {logsDirectory}");
 
 			SetAccessControl(logsDirectory, rule);
 		}
@@ -70,7 +51,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			var dataDirectory = this.InstallationModel.LocationsModel.DataDirectory;
 			if (!this.FileSystem.Directory.Exists(dataDirectory))
 			{
-				this.Session.SendProgress(1000, "creating data directory " + dataDirectory);
+				this.Session.SendProgress(1000, $"creating data directory {dataDirectory}");
 				this.FileSystem.Directory.CreateDirectory(dataDirectory);
 			}
 			else

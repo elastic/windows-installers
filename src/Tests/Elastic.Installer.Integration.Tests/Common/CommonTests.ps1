@@ -217,7 +217,7 @@ function Context-ServiceRunningUnderAccount($Expected) {
         }
 
         It "Service configured to run under account $Expected" {
-            $Service.StartName | Should BeExactly $Expected
+            $Service.StartName | Should Be $Expected
         }
 
         $EsHome = Get-MachineEnvironmentVariable "ES_HOME"
