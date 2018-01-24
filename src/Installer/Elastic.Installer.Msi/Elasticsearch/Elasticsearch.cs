@@ -200,50 +200,6 @@ namespace Elastic.Installer.Msi.Elasticsearch
 							new XAttribute("Win64", "yes"),
 							new XElement(ns + "RemoveFile",
 								new XAttribute("Id", installdirPlugins),
-								new XAttribute("Name", "*"), // remove all top level files in plugins dir
-								new XAttribute("On", "both")
-							),
-							new XElement(ns + "RemoveFolder",
-								new XAttribute("Id", installdirPlugins + ".dir"), // remove (now empty) plugins dir
-								new XAttribute("On", "both")
-							)
-						)
-					));
-
-					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentInstalldirPlugins)));
-
-					var componentEmptyInstalldirPlugins = $"Component.{installdirPlugins}.empty";
-
-					// Add element to create empty plugins folder
-					product.Add(new XElement(ns + "DirectoryRef",
-						new XAttribute("Id", installdirPlugins),
-						new XElement(ns + "Component",
-							new XAttribute("Id", componentEmptyInstalldirPlugins),
-							new XAttribute("Guid", WixGuid.NewGuid(componentEmptyInstalldirPlugins)),
-							new XAttribute("Win64", "yes"),
-							new XAttribute("KeyPath", "yes"),
-							new XElement(ns + "CreateFolder")
-						)
-					));
-
-					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentEmptyInstalldirPlugins)));
-				}
-				// Add an empty plugins directory
-				else if (directoryId == "INSTALLDIR")
-				{
-					var installdirPlugins = "INSTALLDIR.plugins";
-					var componentInstalldirPlugins = $"Component.{installdirPlugins}";
-
-					// Add elements to remove the plugins folder
-					directory.AddFirst(new XElement(ns + "Directory",
-						new XAttribute("Id", installdirPlugins),
-						new XAttribute("Name", "plugins"),
-						new XElement(ns + "Component",
-							new XAttribute("Id", componentInstalldirPlugins),
-							new XAttribute("Guid", WixGuid.NewGuid(componentInstalldirPlugins)),
-							new XAttribute("Win64", "yes"),
-							new XElement(ns + "RemoveFile",
-								new XAttribute("Id", installdirPlugins),
 								new XAttribute("Name", "*"), // remove all files in x-pack dir
 								new XAttribute("On", "both")
 							),
