@@ -205,11 +205,11 @@ namespace Elastic.Installer.Msi.Elasticsearch
 							new XAttribute("Win64", "yes"),
 							new XElement(ns + "RemoveFile",
 								new XAttribute("Id", installdirPlugins),
-								new XAttribute("Name", "*"), // remove all files in x-pack dir
+								new XAttribute("Name", "*"), // remove all top level files in plugins dir
 								new XAttribute("On", "both")
 							),
 							new XElement(ns + "RemoveFolder",
-								new XAttribute("Id", installdirPlugins + ".dir"), // remove (now empty) x-pack dir
+								new XAttribute("Id", installdirPlugins + ".dir"), // remove (now empty) plugins dir
 								new XAttribute("On", "both")
 							)
 						)

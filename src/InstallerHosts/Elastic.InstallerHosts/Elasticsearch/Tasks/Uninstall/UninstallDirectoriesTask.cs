@@ -12,17 +12,17 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Uninstall
 	/// We can't rely on the MSI RemoveFiles step to remove directories/files that were registered 
 	/// on a full uninstall because new files may have been introduced later on (e.g. plugins).
 	/// </summary>
-	public class DeleteDirectoriesTask : ElasticsearchInstallationTaskBase
+	public class UninstallDirectoriesTask : ElasticsearchInstallationTaskBase
 	{
-		public DeleteDirectoriesTask(string[] args, ISession session) 
+		public UninstallDirectoriesTask(string[] args, ISession session) 
 			: base(args, session) { }
 
-		public DeleteDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
+		public UninstallDirectoriesTask(ElasticsearchInstallationModel model, ISession session, IFileSystem fileSystem)
 			: base(model, session, fileSystem) { }
 
 		protected override bool ExecuteTask()
 		{
-			this.Session.Log($"Executing {nameof(DeleteDirectoriesTask)}");
+			this.Session.Log($"Executing {nameof(UninstallDirectoriesTask)}");
 
 			var installDirectory = this.InstallationModel.LocationsModel.InstallDir;
 			var directories = new List<string>();

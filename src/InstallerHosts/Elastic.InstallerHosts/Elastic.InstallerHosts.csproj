@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Elasticsearch\Tasks\Commit\CleanupInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\ExistingDirectoriesTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Uninstall\DeleteDirectoriesTask.cs" />
+    <Compile Include="Elasticsearch\Tasks\Uninstall\UninstallDirectoriesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetServiceStartTypeTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Immediate\ValidateArgumentsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\CreateDirectoriesTask.cs" />

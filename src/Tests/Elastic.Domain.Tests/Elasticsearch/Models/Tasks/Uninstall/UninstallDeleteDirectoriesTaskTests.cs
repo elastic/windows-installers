@@ -19,7 +19,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 				fs.Directory.CreateDirectory(m.LocationsModel.ConfigDirectory);
 				fs.Directory.CreateDirectory(m.LocationsModel.LogsDirectory);
 				fs.Directory.CreateDirectory(m.LocationsModel.InstallDir);
-				return new DeleteDirectoriesTask(m, s, fs);
+				return new UninstallDirectoriesTask(m, s, fs);
 			},
 			(m, t) =>
 			{
@@ -41,7 +41,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 				fs.Directory.CreateDirectory(m.LocationsModel.ConfigDirectory);
 				fs.Directory.CreateDirectory(m.LocationsModel.InstallDir);
 				fs.Directory.CreateDirectory(LocationsModel.DefaultProductInstallationDirectory);
-				return new DeleteDirectoriesTask(m, s, fs);
+				return new UninstallDirectoriesTask(m, s, fs);
 			},
 			(m, t) =>
 			{
@@ -63,7 +63,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 				fs.Directory.CreateDirectory(m.LocationsModel.InstallDir);
 				fs.Directory.CreateDirectory(LocationsModel.DefaultProductInstallationDirectory);
 				fs.Directory.CreateDirectory(fs.Path.Combine(LocationsModel.DefaultCompanyInstallationDirectory, "product2"));
-				return new DeleteDirectoriesTask(m, s, fs);
+				return new UninstallDirectoriesTask(m, s, fs);
 			},
 			(m, t) =>
 			{
@@ -85,7 +85,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 				fs.Directory.CreateDirectory(m.LocationsModel.InstallDir);
 				fs.Directory.CreateDirectory(LocationsModel.DefaultProductDataDirectory);
 				fs.Directory.CreateDirectory(fs.Path.Combine(LocationsModel.DefaultCompanyDataDirectory, "product2"));
-				return new DeleteDirectoriesTask(m, s, fs);
+				return new UninstallDirectoriesTask(m, s, fs);
 			},
 			(m, t) =>
 			{

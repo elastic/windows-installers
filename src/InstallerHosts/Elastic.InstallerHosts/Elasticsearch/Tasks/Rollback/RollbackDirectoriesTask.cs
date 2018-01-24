@@ -70,7 +70,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback
 			var tempBinXPackDirectory = path.Combine(this.TempProductInstallationDirectory, "bin", "x-pack");
 			var binXPackDirectory = path.Combine(this.InstallationModel.LocationsModel.InstallDir, "bin", "x-pack");
 
-			// always delete bin\pack if installed
+			// always delete bin\x-pack if installed
 			this.Session.Log("Deleting bin\\x-pack directory");
 			if (this.FileSystem.Directory.Exists(binXPackDirectory))
 				this.FileSystem.Directory.Delete(binXPackDirectory, true);
