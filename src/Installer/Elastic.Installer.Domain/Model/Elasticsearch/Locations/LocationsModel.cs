@@ -16,13 +16,17 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		private const string Logs = "logs";
 		private const string Data = "data";
 		private const string Config = "config";
-		private const string DefaultWritableDirectoryArgument = 
-			@"[%" + ProgramDataEnvironmentVariable + @"]\" + CompanyFolderName + @"\" + ProductFolderName;
+		private const string DefaultWritableDirectoryArgument = @"[%" + ProgramDataEnvironmentVariable + @"]\" + CompanyFolderName + @"\" + ProductFolderName;
 		private const string DefaultLogsDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Logs;
 		private const string DefaultDataDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Data;
 		private const string DefaultConfigDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Config;
+
 		public const string CompanyFolderName = "Elastic";
 		public const string ProductFolderName = "Elasticsearch";
+		public const string ConfigDirectoryExists = nameof(ConfigDirectoryExists);
+		public const string LogsDirectoryExists = nameof(LogsDirectoryExists);
+		public const string DataDirectoryExists = nameof(DataDirectoryExists);
+
 		public static string DefaultProgramFiles => 
 			Environment.GetEnvironmentVariable("ProgramW6432") ?? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
