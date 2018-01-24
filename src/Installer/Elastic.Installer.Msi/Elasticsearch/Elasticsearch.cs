@@ -20,12 +20,17 @@ namespace Elastic.Installer.Msi.Elasticsearch
 	{
 		private static readonly string InstallAsServiceProperty = nameof(ServiceModel.InstallAsService).ToUpperInvariant();
 		private static readonly string StartAfterInstallProperty = nameof(ServiceModel.StartAfterInstall).ToUpperInvariant();
-		private IEnumerable<ModelArgument> _msiParams;
+		private static readonly string InstallDirProperty = nameof(LocationsModel.InstallDir).ToUpperInvariant();
+		private static readonly string ConfigDirectoryProperty = nameof(LocationsModel.ConfigDirectory).ToUpperInvariant();
 
+		private IEnumerable<ModelArgument> _msiParams;
+		
 		public override IEnumerable<string> AllArguments => ElasticsearchArgumentParser.AllArguments;
 
 		public override IEnumerable<ModelArgument> MsiParams => _msiParams ?? (_msiParams = 
 			ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), NoopSession.Elasticsearch).ToMsiParams());
+
+		public override string RegistryKey => @"SOFTWARE\Elastic\Elasticsearch";
 
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.ElasticsearchProductCodes;
 
@@ -37,7 +42,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 				new EnvironmentVariable(
 					new Id($"EnvVar.{ElasticsearchEnvironmentStateProvider.EsHome}"),
 					ElasticsearchEnvironmentStateProvider.EsHome,
-					$"[{nameof(LocationsModel.InstallDir).ToUpperInvariant()}]")
+					$"[{InstallDirProperty}]")
 				{
 					Action = EnvVarAction.set,
 					System = true
@@ -45,7 +50,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 				new EnvironmentVariable(
 					new Id($"EnvVar.{ElasticsearchEnvironmentStateProvider.ConfDir}"),
 					ElasticsearchEnvironmentStateProvider.ConfDir,
-					$"[{nameof(LocationsModel.ConfigDirectory).ToUpperInvariant()}]")
+					$"[{ConfigDirectoryProperty}]")
 				{
 					Action = EnvVarAction.set,
 					System = true
@@ -99,7 +104,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 					new RegValue(
 						new Id($"Registry.{msiParam.Attribute.Name}"),
 						RegistryHive.LocalMachine, 
-						@"Software\Elastic\Elasticsearch", 
+						RegistryKey, 
 						msiParam.Attribute.Name, 
 						$"[{msiParam.Attribute.Name}]")
 					{
@@ -234,14 +239,12 @@ namespace Elastic.Installer.Msi.Elasticsearch
 
 			// include WixFailWhenDeferred Custom Action
 			// see http://wixtoolset.org/documentation/manual/v3/customactions/wixfailwhendeferred.html
-			product.Add(new XElement(ns + "CustomActionRef",
-					new XAttribute("Id", "WixFailWhenDeferred")
-				)
-			);
+			product.Add(new XElement(ns + "CustomActionRef", new XAttribute("Id", "WixFailWhenDeferred")));
 			
-			// Add condition to InstallServices
+			
 			var installExecuteSequence = documentRoot.Descendants(ns + "InstallExecuteSequence").Single();
 
+			// Add condition to InstallServices
 			installExecuteSequence.Add(new XElement(ns + "InstallServices",
 				// Sequence number pinned from inspecting MSI with Orca
 				new XAttribute("Sequence", "5800"),

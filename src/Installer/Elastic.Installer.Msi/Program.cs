@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using Elastic.Installer.Domain.Model;
 using Microsoft.Win32;
 using WixSharp;
 using static System.Reflection.Assembly;
@@ -41,7 +38,7 @@ namespace Elastic.Installer.Msi
 						? new RegValueProperty(
 							a.Key, 
 							RegistryHive.LocalMachine, 
-							$@"SOFTWARE\Elastic\{_productTitle}", 
+							product.RegistryKey, 
 							a.Key, 
 							a.Attribute.IsDynamic || a.Key == "INSTALLDIR" ? null : a.Value)
 						{

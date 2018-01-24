@@ -600,7 +600,7 @@
               <Component Id="Registry1" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce7e" Win64="yes" KeyPath="yes">
                 <Condition>(NOT INSTALLDIR="")</Condition>
 
-                <RegistryKey Root="HKLM" Key="Software\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
                   <RegistryValue Id="Registry.INSTALLDIR" Type="string" KeyPath="no" Value="[INSTALLDIR]" Name="INSTALLDIR" />
                 </RegistryKey>
                 <RemoveFolder Id="INSTALLDIR" On="uninstall" />
@@ -609,7 +609,7 @@
               <Component Id="Registry2" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce81" Win64="yes">
                 <Condition>(NOT DATADIRECTORY="")</Condition>
 
-                <RegistryKey Root="HKLM" Key="Software\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
                   <RegistryValue Id="Registry.DATADIRECTORY" Type="string" KeyPath="yes" Value="[DATADIRECTORY]" Name="DATADIRECTORY" />
                 </RegistryKey>
               </Component>
@@ -617,7 +617,7 @@
               <Component Id="Registry3" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce80" Win64="yes">
                 <Condition>(NOT CONFIGDIRECTORY="")</Condition>
 
-                <RegistryKey Root="HKLM" Key="Software\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
                   <RegistryValue Id="Registry.CONFIGDIRECTORY" Type="string" KeyPath="yes" Value="[CONFIGDIRECTORY]" Name="CONFIGDIRECTORY" />
                 </RegistryKey>
               </Component>
@@ -625,7 +625,7 @@
               <Component Id="Registry4" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce7b" Win64="yes">
                 <Condition>(NOT LOGSDIRECTORY="")</Condition>
 
-                <RegistryKey Root="HKLM" Key="Software\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
                   <RegistryValue Id="Registry.LOGSDIRECTORY" Type="string" KeyPath="yes" Value="[LOGSDIRECTORY]" Name="LOGSDIRECTORY" />
                 </RegistryKey>
               </Component>

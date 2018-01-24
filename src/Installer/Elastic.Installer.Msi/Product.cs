@@ -15,6 +15,8 @@ namespace Elastic.Installer.Msi
 
 		public abstract Guid UpgradeCode { get; }
 
+		public abstract string RegistryKey { get; }
+
 		public abstract Dictionary<string, Guid> ProductCode { get; }
 
 		public abstract IEnumerable<string> AllArguments { get; }
