@@ -131,7 +131,7 @@ namespace Elastic.Installer.Msi
 				Properties = new[]
 				{
 					// used by the embedded UI to create the correct installation model
-					new Property("ElasticProduct", _productName),
+					new Property("ElasticProduct", _productTitle),
 					// make it easy to reference current version within MSI process
 					new Property("CurrentVersion", version),
 					new Property("MsiLogging", "voicewarmup"),

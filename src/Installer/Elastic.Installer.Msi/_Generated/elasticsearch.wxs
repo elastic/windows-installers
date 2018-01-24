@@ -710,7 +710,7 @@
 
     <Binary Id="ElasticsearchUninstallDirectoriesAction_File" SourceFile="%this%.CA.dll" />
 
-    <Property Id="ElasticProduct" Value="elasticsearch" />
+    <Property Id="ElasticProduct" Value="Elasticsearch" />
     <Property Id="CurrentVersion" Value="6.1.2" />
     <Property Id="MsiLogging" Value="voicewarmup" />
     <Property Id="ARPNOREPAIR" Value="yes" />
