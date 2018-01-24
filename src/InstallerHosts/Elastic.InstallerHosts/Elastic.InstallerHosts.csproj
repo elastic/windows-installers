@@ -57,7 +57,6 @@
     <Compile Include="Elasticsearch\Tasks\Install\SetServiceParametersTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetupXPackPasswordsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Rollback\RollbackDirectoriesTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Uninstall\UninstallPluginsTask.cs" />
     <Compile Include="Kibana\Tasks\CreateDirectoriesTask.cs" />
     <Compile Include="Kibana\Tasks\DeleteDirectoriesTask.cs" />
     <Compile Include="Kibana\Tasks\EditKibanaYamlTask.cs" />
