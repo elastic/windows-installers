@@ -35,6 +35,8 @@ Describe "Silent Install with default arguments $(($Global:Version).Description)
 
     Context-JvmOptions
 
+	Context-RegistryForVersion
+
 	Copy-ElasticsearchLogToOut
 }
 
@@ -55,6 +57,8 @@ Describe "Silent Uninstall with default arguments $(($Global:Version).Descriptio
 	Context-MsiNotRegistered
 
 	Context-ElasticsearchServiceNotInstalled
+
+	Context-RegistryEmpty
 
 	Context-EmptyInstallDirectory
 

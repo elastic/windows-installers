@@ -563,7 +563,7 @@ function Ping-Node([System.Timespan]$Timeout = (New-Timespan -Seconds 3), $Domai
             $Code = $_.Exception.Response.StatusCode.value__
             $Description = $_.Exception.Response.StatusDescription
 
-            if ($_) {
+            try {
                 $Response = $_ | ConvertFrom-Json
                 if ($Response -and $Response.status -and ($Response.status -eq 401)) {
                     # X-Pack Security has been set up on the node and we received an authenticated response back
@@ -573,7 +573,7 @@ function Ping-Node([System.Timespan]$Timeout = (New-Timespan -Seconds 3), $Domai
                     return $Result
                 }
             }
-            else {
+            catch {
                 log "code: $Code, description: $Description" -l Warn
             }
         }

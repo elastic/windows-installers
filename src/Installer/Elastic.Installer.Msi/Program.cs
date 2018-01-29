@@ -12,6 +12,7 @@ namespace Elastic.Installer.Msi
 {
 	public class Program
 	{
+		private const string InstallDir = "INSTALLDIR";
 		private static string _productName;
 		private static string _productTitle;
 
@@ -40,7 +41,7 @@ namespace Elastic.Installer.Msi
 							RegistryHive.LocalMachine, 
 							product.RegistryKey, 
 							a.Key, 
-							a.Attribute.IsDynamic || a.Key == "INSTALLDIR" ? null : a.Value)
+							a.Attribute.IsDynamic || a.Key == InstallDir ? null : a.Value)
 						{
 							Attributes = new Attributes(),
 							Win64 = true						
@@ -164,7 +165,7 @@ namespace Elastic.Installer.Msi
 									{
 										Dirs = new[]
 										{
-											new Dir(new Id("INSTALLDIR"), version)
+											new Dir(new Id(InstallDir), version)
 											{
 												DirFileCollections = new[]
 												{

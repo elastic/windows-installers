@@ -15,8 +15,14 @@ namespace Elastic.Installer.Msi
 
 		public abstract Guid UpgradeCode { get; }
 
-		public abstract string RegistryKey { get; }
+		/// <summary>
+		/// The registry key used to persist values in the registry needed for uninstall
+		/// </summary>
+		public string RegistryKey => @"SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]";
 
+		/// <summary>
+		/// The version to product codes
+		/// </summary>
 		public abstract Dictionary<string, Guid> ProductCode { get; }
 
 		public abstract IEnumerable<string> AllArguments { get; }

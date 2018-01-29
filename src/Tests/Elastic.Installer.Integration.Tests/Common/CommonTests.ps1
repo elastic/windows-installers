@@ -624,3 +624,19 @@ function Context-DataDirectories($Version=$Global:Version, [string[]]$Path, [swi
 	}
 }
 
+function Context-RegistryEmpty() {
+	Context "Registry keys" {
+		It "Registry keys do not exist under HKLM:\SOFTWARE\Elastic\Elasticsearch" {
+			Test-Path 'HKLM:\SOFTWARE\Elastic\Elasticsearch' | Should Be $false
+		}
+	}
+}
+
+function Context-RegistryForVersion($Version=$Global:Version) {
+	Context "Registry keys" {
+		It "Registry keys exist under HKLM:\SOFTWARE\Elastic\Elasticsearch\$($Version.FullVersion)" {
+			Test-Path "HKLM:\SOFTWARE\Elastic\Elasticsearch\$($Version.FullVersion)" | Should Be $true
+		}
+	}
+}
+

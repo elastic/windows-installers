@@ -598,34 +598,26 @@
               </Directory>
 
               <Component Id="Registry1" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce7e" Win64="yes" KeyPath="yes">
-                <Condition>(NOT INSTALLDIR="")</Condition>
-
-                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]">
                   <RegistryValue Id="Registry.INSTALLDIR" Type="string" KeyPath="no" Value="[INSTALLDIR]" Name="INSTALLDIR" />
                 </RegistryKey>
                 <RemoveFolder Id="INSTALLDIR" On="uninstall" />
               </Component>
 
               <Component Id="Registry2" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce81" Win64="yes">
-                <Condition>(NOT DATADIRECTORY="")</Condition>
-
-                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]">
                   <RegistryValue Id="Registry.DATADIRECTORY" Type="string" KeyPath="yes" Value="[DATADIRECTORY]" Name="DATADIRECTORY" />
                 </RegistryKey>
               </Component>
 
               <Component Id="Registry3" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce80" Win64="yes">
-                <Condition>(NOT CONFIGDIRECTORY="")</Condition>
-
-                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]">
                   <RegistryValue Id="Registry.CONFIGDIRECTORY" Type="string" KeyPath="yes" Value="[CONFIGDIRECTORY]" Name="CONFIGDIRECTORY" />
                 </RegistryKey>
               </Component>
 
               <Component Id="Registry4" Guid="daaa2cba-a1ed-4f29-afbf-54785e87ce7b" Win64="yes">
-                <Condition>(NOT LOGSDIRECTORY="")</Condition>
-
-                <RegistryKey Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]">
                   <RegistryValue Id="Registry.LOGSDIRECTORY" Type="string" KeyPath="yes" Value="[LOGSDIRECTORY]" Name="LOGSDIRECTORY" />
                 </RegistryKey>
               </Component>
@@ -716,19 +708,19 @@
     <Property Id="ARPNOREPAIR" Value="yes" />
     <Property Id="ARPNOMODIFY" Value="yes" />
     <Property Id="INSTALLDIR">
-      <RegistrySearch Id="INSTALLDIR_RegSearch" Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch" Type="raw" Name="INSTALLDIR" Win64="yes" />
+      <RegistrySearch Id="INSTALLDIR_RegSearch" Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]" Type="raw" Name="INSTALLDIR" Win64="yes" />
     </Property>
 
     <Property Id="DATADIRECTORY">
-      <RegistrySearch Id="DATADIRECTORY_RegSearch" Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch" Type="raw" Name="DATADIRECTORY" Win64="yes" />
+      <RegistrySearch Id="DATADIRECTORY_RegSearch" Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]" Type="raw" Name="DATADIRECTORY" Win64="yes" />
     </Property>
 
     <Property Id="CONFIGDIRECTORY">
-      <RegistrySearch Id="CONFIGDIRECTORY_RegSearch" Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch" Type="raw" Name="CONFIGDIRECTORY" Win64="yes" />
+      <RegistrySearch Id="CONFIGDIRECTORY_RegSearch" Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]" Type="raw" Name="CONFIGDIRECTORY" Win64="yes" />
     </Property>
 
     <Property Id="LOGSDIRECTORY">
-      <RegistrySearch Id="LOGSDIRECTORY_RegSearch" Root="HKLM" Key="SOFTWARE\Elastic\Elasticsearch" Type="raw" Name="LOGSDIRECTORY" Win64="yes" />
+      <RegistrySearch Id="LOGSDIRECTORY_RegSearch" Root="HKLM" Key="SOFTWARE\[Manufacturer]\[ElasticProduct]\[CurrentVersion]" Type="raw" Name="LOGSDIRECTORY" Win64="yes" />
     </Property>
 
     <Property Id="INSTALLASSERVICE" Value="true" />

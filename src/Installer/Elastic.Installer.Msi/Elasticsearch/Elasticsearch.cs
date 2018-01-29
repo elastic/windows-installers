@@ -30,8 +30,6 @@ namespace Elastic.Installer.Msi.Elasticsearch
 		public override IEnumerable<ModelArgument> MsiParams => _msiParams ?? (_msiParams = 
 			ElasticsearchInstallationModel.Create(new NoopWixStateProvider(), NoopSession.Elasticsearch).ToMsiParams());
 
-		public override string RegistryKey => @"SOFTWARE\Elastic\Elasticsearch";
-
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.ElasticsearchProductCodes;
 
 		public override Guid UpgradeCode => ProductGuids.ElasticsearchUpgradeCode;
@@ -108,8 +106,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 						msiParam.Attribute.Name, 
 						$"[{msiParam.Attribute.Name}]")
 					{
-						AttributesDefinition = "Type=string",
-						Condition = $"(NOT {msiParam.Attribute.Name}=\"\")"
+						AttributesDefinition = "Type=string"
 					});
 
 			project.RegValues = project.RegValues.Concat(regValues).ToArray();
@@ -190,7 +187,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentInstalldirBinXpack)));
 				}
 				// Add an empty plugins directory
-				else if (directoryId == "INSTALLDIR")
+				else if (directoryId == InstallDirProperty)
 				{
 					var installdirPlugins = "INSTALLDIR.plugins";
 					var componentInstalldirPlugins = $"Component.{installdirPlugins}";

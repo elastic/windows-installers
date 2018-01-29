@@ -18,7 +18,5 @@ namespace Elastic.Installer.Msi.Kibana
 		public override Dictionary<string, Guid> ProductCode => ProductGuids.KibanaProductCodes;
 
 		public override Guid UpgradeCode => ProductGuids.KibanaUpgradeCode;
-
-		public override string RegistryKey => @"SOFTWARE\Elastic\Kibana";
 	}
 }

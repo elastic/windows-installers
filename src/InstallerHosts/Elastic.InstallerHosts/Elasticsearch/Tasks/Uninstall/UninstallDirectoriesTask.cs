@@ -33,9 +33,9 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Uninstall
 				// if config, logs or data directories are rooted in the install directory,
 				// exclude them from deletion.
 				var installSubDirectories = fs.Directory.GetDirectories(installDirectory)
-					.Where(d => d != this.InstallationModel.LocationsModel.ConfigDirectory &&
-					            d != this.InstallationModel.LocationsModel.LogsDirectory &&
-					            d != this.InstallationModel.LocationsModel.DataDirectory);
+					.Where(d => !SamePathAs(d, this.InstallationModel.LocationsModel.ConfigDirectory) &&
+					            !SamePathAs(d, this.InstallationModel.LocationsModel.LogsDirectory) &&
+					            !SamePathAs(d, this.InstallationModel.LocationsModel.DataDirectory));
 
 				directories.AddRange(installSubDirectories);
 			}
