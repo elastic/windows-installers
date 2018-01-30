@@ -31,6 +31,10 @@ Describe "Silent Install as a manual service not started $(($Global:Version).Des
 
 Describe "Silent Uninstall as a manual service not started $(($Global:Version).Description)" {
 
+	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
     Invoke-SilentUninstall
 
 	Context-EsConfigEnvironmentVariableNull
@@ -41,9 +45,7 @@ Describe "Silent Uninstall as a manual service not started $(($Global:Version).D
 
 	Context-ElasticsearchServiceNotInstalled
 
-	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath 
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
+	Context-EmptyInstallDirectory
 
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-DataDirectories -Path @($configDirectory, $dataDirectory, $logsDirectory) -DeleteAfter
 }

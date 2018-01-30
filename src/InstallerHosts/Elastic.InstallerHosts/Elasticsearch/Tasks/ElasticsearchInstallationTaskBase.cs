@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO.Abstractions;
-using System.Linq;
 using Elastic.Installer.Domain;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.InstallerHosts.Tasks;
 
-namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
+namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 {
 	public abstract class ElasticsearchInstallationTaskBase : InstallationTaskBase
 	{

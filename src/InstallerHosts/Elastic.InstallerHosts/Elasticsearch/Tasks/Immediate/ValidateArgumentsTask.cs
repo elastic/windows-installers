@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
-using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate
 {

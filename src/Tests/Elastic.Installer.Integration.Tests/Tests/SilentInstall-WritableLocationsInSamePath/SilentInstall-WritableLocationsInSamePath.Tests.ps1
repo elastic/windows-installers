@@ -10,15 +10,20 @@ Get-Version
 Get-PreviousVersions
 
 $InstallDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\"
-$DataDir = "C:\foo\data"
-$ConfigDir = "C:\bar\config"
-$LogsDir = "C:\baz\logs"
+$DataDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\data_data"
+$ConfigDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\config_config"
+$LogsDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\logs_logs"
 
-Describe "Silent Install with different install locations $(($Global:Version).Description)" {
+Describe "Silent Install with same install locations $(($Global:Version).Description)" {
 
-    $InstallLocations = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir"
+    $ExeArgs = @(
+		"INSTALLDIR=$InstallDir"
+		"DATADIRECTORY=$DataDir"
+		"CONFIGDIRECTORY=$ConfigDir"
+		"LOGSDIRECTORY=$LogsDir"
+		"PLACEWRITABLELOCATIONSINSAMEPATH=true")
 
-    Invoke-SilentInstall -ExeArgs $InstallLocations
+    Invoke-SilentInstall -ExeArgs $ExeArgs
 
     Context-ElasticsearchService
 
@@ -50,7 +55,7 @@ Describe "Silent Install with different install locations $(($Global:Version).De
 	Copy-ElasticsearchLogToOut -Path "$LogsDir\elasticsearch.log"
 }
 
-Describe "Silent Uninstall with different install locations $(($Global:Version).Description)" {
+Describe "Silent Uninstall with same install locations $(($Global:Version).Description)" {
 
     Invoke-SilentUninstall
 
@@ -64,7 +69,8 @@ Describe "Silent Uninstall with different install locations $(($Global:Version).
 
 	Context-ElasticsearchServiceNotInstalled
 
-	Context-EmptyInstallDirectory -Path $InstallDir
+	# install dir still exists because data, logs and config dirs exist within
+	Context-DirectoryExists -Path $InstallDir
 
 	Context-DataDirectories -Path @($ConfigDir, $DataDir, $LogsDir) -DeleteAfter
 }

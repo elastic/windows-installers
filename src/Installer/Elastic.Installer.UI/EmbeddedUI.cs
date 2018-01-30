@@ -86,12 +86,10 @@ namespace Elastic.Installer.UI
 			this._app = new Application();
 			RxApp.MainThreadScheduler = new DispatcherScheduler(_app.Dispatcher);
 
-			string version;
-			if (!this._session.TryGetValue("CurrentVersion", out version))
+			if (!this._session.TryGetValue("CurrentVersion", out var version))
 				throw new Exception("CurrentVersion not found in session state.");
 
-			string product;
-			if (!this._session.TryGetValue("ElasticProduct", out product))
+			if (!this._session.TryGetValue("ElasticProduct", out var product))
 				throw new Exception("ElasticProduct not found in session state.");
 
 			this._mainWindow = GetMainWindow(product, new WixStateProvider(GetProduct(product), version), new SessionWrapper(_session));
@@ -105,13 +103,13 @@ namespace Elastic.Installer.UI
 		{
 			switch (product)
 			{
-				case "elasticsearch":
+				case "Elasticsearch":
 					{
 						var model = ElasticsearchInstallationModel.Create(wixState, session);
 						var window = new Elasticsearch.MainWindow(model, this._installStartEvent);
 						return window;
 					}
-				case "kibana":
+				case "Kibana":
 					{
 						var model = KibanaInstallationModel.Create(wixState, session);
 						var window = new Kibana.MainWindow(model, this._installStartEvent);
@@ -126,8 +124,8 @@ namespace Elastic.Installer.UI
 		{
 			switch(product)
 			{
-				case "elasticsearch": return Product.Elasticsearch;
-				case "kibana": return Product.Kibana;
+				case "Elasticsearch": return Product.Elasticsearch;
+				case "Kibana": return Product.Kibana;
 				default: throw new ArgumentException($"Unknown product name {product}");
 			}
 		}

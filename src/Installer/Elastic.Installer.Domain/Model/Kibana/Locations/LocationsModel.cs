@@ -110,9 +110,9 @@ namespace Elastic.Installer.Domain.Model.Kibana.Locations
 		{
 			if (!string.IsNullOrEmpty(pathA) && !string.IsNullOrEmpty(pathB))
 			{
-				var fullPathA = Path.GetFullPath(pathA).TrimEnd('\\','/');
-				var fullPathB = Path.GetFullPath(pathB).TrimEnd('\\','/');
-				return 0 == string.Compare(fullPathA, fullPathB, true);
+				var fullPathA = Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+				var fullPathB = Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+				return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
 			}
 
 			return false;

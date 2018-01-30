@@ -132,7 +132,7 @@ function Context-PluginsInstalled($Expected) {
     }
 }
 
-function Context-EsHomeEnvironmentVariable($Expected) {
+function Context-EsHomeEnvironmentVariable($Expected = (Join-Path -Path $(Get-ProgramFilesFolder) -ChildPath $(Get-ChildPath))) {
     Context "ES_HOME Environment Variable" {
         $EsHome = Get-MachineEnvironmentVariable "ES_HOME"
 
@@ -208,7 +208,7 @@ function Context-MsiRegistered($Expected) {
     }
 }
 
-function Context-ServiceRunningUnderAccount($Expected) {
+function Context-ServiceRunningUnderAccount($Expected = "LocalSystem") {
     Context "Service installed to run with account" {
         $Service = Get-ElasticsearchWin32Service
 
@@ -229,13 +229,10 @@ function Context-ServiceRunningUnderAccount($Expected) {
     }
 }
 
-function Context-EmptyEventLog($Version) {
-
-	if (!$Version) {
-		$Version = $Global:Version
-	}
+function Context-EmptyEventLog($Version = $Global:Version) {
 
     Context "Event log" {
+        $ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic*
 
 		if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -le 0) `
 			-and $Version.SourceType -ne "Compile") {
@@ -248,7 +245,7 @@ function Context-EmptyEventLog($Version) {
 			# when running Cleanup action in the old installer uninstall process, 
 			# because the old install plugin script no longer exists. Filter these out
 			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* `
-				| Where { $_.Message -NotMatch $failedMessage } | Format-List | Out-String
+				| Where { $_.Message -notmatch $failedMessage } | Format-List | Out-String
 
 			It "Event log doesn't contain unexpected messages" {
 				$ElasticsearchEventLogs | Should BeNullOrEmpty
@@ -259,10 +256,10 @@ function Context-EmptyEventLog($Version) {
 			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* | Format-List | Out-String
 
 			It "Event log is empty" {
-				$ElasticsearchEventLogs | Should BeNullOrEmpty
+					$ElasticsearchEventLogs | Should BeNullOrEmpty
 			}
 		}
-    }
+	}
 }
 
 function Context-EventContainsFailedInstallMessage($StartDate, $Version) {
@@ -497,7 +494,7 @@ function Context-ReadData($Domain = "localhost", $Port = 9200, $Credentials) {
 	}
 }
 
-function Context-EmptyInstallDirectory($Path) {    
+function Context-EmptyInstallDirectory($Path = (Join-Path -Path $(Get-ProgramFilesFolder) -ChildPath $(Get-ChildPath))) {    
 	Context "Installation directory" {
         It "Installation directory should not exist or is empty" {
 			if (Test-Path $Path) {
@@ -511,11 +508,7 @@ function Context-EmptyInstallDirectory($Path) {
     }
 }
 
-function Context-EsConfigEnvironmentVariableNull($Version) {
-	if (!($Version)) {
-		$Version = $Global:Version
-	}
-
+function Context-EsConfigEnvironmentVariableNull($Version = $Global:Version) {
 	$Name = Get-ConfigEnvironmentVariableForVersion -Version $Version
 
 	Context "$Name Environment Variable" {
@@ -586,6 +579,63 @@ function Context-FiddlerSessionContainsEntry() {
 
 		It "Contains $artifactsUrl" {
 			$session | Should Match ([regex]::Escape($artifactsUrl))
+		}
+	}
+}
+
+function Context-DirectoryExists([string]$Path, [switch]$DeleteAfter) {
+	Context "Directory $Path" {
+		It "Directory exists" {
+			Test-Path $Path | Should Be $true
+		}
+	}
+
+	if ((Test-Path $Path) -and $DeleteAfter) {
+		Remove-Item $Path -Force -Recurse
+	}
+}
+
+function Context-DirectoryNotExist([string]$Path, [switch]$DeleteAfter) {
+	Context "Directory $Path" {
+		It "Directory does not exist" {
+			Test-Path $Path | Should Be $false
+		}
+	}
+
+	if ((Test-Path $Path) -and $DeleteAfter) {
+		Remove-Item $Path -Force -Recurse
+	}
+}
+
+function Context-DataDirectories($Version=$Global:Version, [string[]]$Path, [switch]$DeleteAfter)
+{
+	$620Release = ConvertTo-SemanticVersion "6.2.0"
+
+    # Expect the directories to exist for any official release from 6.2.0+, or compiled from source
+	if ((Compare-SemanticVersion $Version $620Release) -lt 0 -and $Version.SourceType -ne "Compile") {
+		foreach($p in $Path) {
+			Context-DirectoryNotExist -Path $p -DeleteAfter:$DeleteAfter
+		}
+	}
+	else {
+		foreach($p in $Path) {
+			Context-DirectoryExists -Path $p -DeleteAfter:$DeleteAfter
+		}
+	}
+}
+
+function Context-RegistryEmpty() {
+	Context "Registry keys" {
+		It "Registry keys do not exist under HKLM:\SOFTWARE\Elastic\Elasticsearch" {
+			Test-Path 'HKLM:\SOFTWARE\Elastic\Elasticsearch' | Should Be $false
+		}
+	}
+}
+
+function Context-RegistryForVersion($Version=$Global:Version) {
+	Context "Registry keys" {
+		It "Registry keys exist under HKLM:\SOFTWARE\Elastic\Elasticsearch\$($Version.FullVersion)" {
+			Test-Path "HKLM:\SOFTWARE\Elastic\Elasticsearch\$($Version.FullVersion)" | Should Be $true
 		}
 	}
 }

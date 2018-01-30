@@ -139,6 +139,10 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 
 Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins uninstall $($version.Description)" {
 
+	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
 	$v = $version.FullVersion
 
     Invoke-SilentUninstall -Version $version
@@ -157,5 +161,5 @@ Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins uninstal
 	$ChildPath = Get-ChildPath $version
     $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
 
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-DataDirectories -Path @($configDirectory, $dataDirectory, $logsDirectory) -DeleteAfter
 }

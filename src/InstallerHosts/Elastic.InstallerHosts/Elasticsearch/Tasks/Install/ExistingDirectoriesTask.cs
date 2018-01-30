@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
@@ -21,11 +22,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		protected override bool ExecuteTask()
 		{
-			Session.Set("ConfigDirectoryExists",
+			Session.Set(LocationsModel.ConfigDirectoryExists,
 				this.FileSystem.Directory.Exists(this.InstallationModel.LocationsModel.ConfigDirectory).ToString());
-			Session.Set("LogsDirectoryExists",
+			Session.Set(LocationsModel.LogsDirectoryExists,
 				this.FileSystem.Directory.Exists(this.InstallationModel.LocationsModel.LogsDirectory).ToString());
-			Session.Set("DataDirectoryExists",
+			Session.Set(LocationsModel.DataDirectoryExists,
 				this.FileSystem.Directory.Exists(this.InstallationModel.LocationsModel.DataDirectory).ToString());
 			return true;
 		}

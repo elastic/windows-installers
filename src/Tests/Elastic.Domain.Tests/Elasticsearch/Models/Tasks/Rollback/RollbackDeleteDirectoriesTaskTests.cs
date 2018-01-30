@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Text;
-using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
-using Elastic.InstallerHosts.Elasticsearch.Tasks;
 using Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback;
 using FluentAssertions;
 using Xunit;
