@@ -12,13 +12,20 @@ Get-PreviousVersions
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 
+# install data, config and logs as sub directories
 $InstallDir = "D:\Elastic"
-$DataDir = "D:\Data"
-$ConfigDir = "D:\Config"
-$LogsDir = "D:\Logs"
+$DataDir = "D:\Elastic\$($previousVersion.FullVersion)\Data"
+$ConfigDir = "D:\Elastic\$($previousVersion.FullVersion)\Config"
+$LogsDir = "D:\Elastic\$($previousVersion.FullVersion)\Logs"
+
+# install into different locations from the previous version
+$UpgradedDataDir = "C:\Data"
+$UpgradedConfigDir = "C:\Config"
+$UpgradedLogsDir = "C:\Logs"
+
 $tags = @('PreviousVersions') 
 
-Describe -Name "Silent Install upgrade different volume install $($previousVersion.Description)" -Tags $tags {
+Describe -Name "Silent Install upgrade different sub directory locations install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
@@ -59,15 +66,12 @@ Describe -Name "Silent Install upgrade different volume install $($previousVersi
     Context-JvmOptions -Expected @{
 		Version = $previousVersion
 	}
-
-	# Insert some data
-	Context-InsertData
 }
 
-Describe -Name "Silent Install upgrade different volume from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
+Describe -Name "Silent Install upgrade different sub directory locations from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
-	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$UpgradedDataDir","CONFIGDIRECTORY=$UpgradedConfigDir","LOGSDIRECTORY=$UpgradedLogsDir","PLUGINS=ingest-geoip"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
@@ -75,7 +79,7 @@ Describe -Name "Silent Install upgrade different volume from $($previousVersion.
 
     Context-EsConfigEnvironmentVariable -Expected @{ 
 		Version = $version 
-		Path = $ConfigDir
+		Path = $UpgradedConfigDir
 	}
 
 	$expectedStatus = Get-ExpectedServiceStatus -Version $version -PreviousVersion $previousVersion
@@ -98,21 +102,18 @@ Describe -Name "Silent Install upgrade different volume from $($previousVersion.
 
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $version
-		Data = $DataDir
-		Logs = $LogsDir
+		Data = $UpgradedDataDir
+		Logs = $UpgradedLogsDir
 	}
 
     Context-JvmOptions -Expected @{
 		Version = $version
 	}
 
-	# Check inserted data still exists
-	Context-ReadData
-
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Name "Silent Uninstall upgrade different volume uninstall $($version.Description)" -Tags $tags {
+Describe -Name "Silent Uninstall upgrade different sub directory locations uninstall $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
 
@@ -130,5 +131,9 @@ Describe -Name "Silent Uninstall upgrade different volume uninstall $($version.D
 
 	Context-EmptyInstallDirectory -Path "$InstallDir\$($version.FullVersion)"
 
-	Context-DataDirectories -Path @($ConfigDir, $DataDir, $LogsDir) -DeleteAfter
+	Context-DirectoryExists -Path $ConfigDir -DeleteAfter
+	Context-DirectoryExists -Path $DataDir -DeleteAfter
+	Context-DirectoryExists -Path $LogsDir -DeleteAfter
+
+	Context-DataDirectories -Path @($UpgradedConfigDir, $UpgradedDataDir, $UpgradedLogsDir) -DeleteAfter
 }

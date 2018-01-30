@@ -41,6 +41,10 @@ Describe -Name "Silent Install x-pack through HTTPS proxy $(($Global:Version).De
 
 Describe -Name "Silent Uninstall x-pack through HTTPS proxy $(($Global:Version).Description)" -Tags $tags {
 
+	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
     Invoke-SilentUninstall
 
 	Context-NodeNotRunning
@@ -53,9 +57,7 @@ Describe -Name "Silent Uninstall x-pack through HTTPS proxy $(($Global:Version).
 
 	Context-ElasticsearchServiceNotInstalled
 
-	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
+	Context-EmptyInstallDirectory
 
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-DataDirectories -Path @($configDirectory, $dataDirectory, $logsDirectory) -DeleteAfter
 }

@@ -93,6 +93,9 @@ else {
 	Add-VagrantAzureBox
 }
 
+# remove any files from previous run
+Remove-Item "$currentDir\Tests\*" -Recurse -Force -Exclude *.ps1
+
 ###########
 # Run Tests
 ###########

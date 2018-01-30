@@ -16,13 +16,16 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		private const string Logs = "logs";
 		private const string Data = "data";
 		private const string Config = "config";
-		private const string DefaultWritableDirectoryArgument = 
-			@"[%" + ProgramDataEnvironmentVariable + @"]\" + CompanyFolderName + @"\" + ProductFolderName;
+		private const string DefaultWritableDirectoryArgument = @"[%" + ProgramDataEnvironmentVariable + @"]\" + CompanyFolderName + @"\" + ProductFolderName;
 		private const string DefaultLogsDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Logs;
 		private const string DefaultDataDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Data;
 		private const string DefaultConfigDirectoryArgument = DefaultWritableDirectoryArgument + @"\" + Config;
+
 		public const string CompanyFolderName = "Elastic";
 		public const string ProductFolderName = "Elasticsearch";
+		public const string ConfigDirectoryExists = nameof(ConfigDirectoryExists);
+		public const string LogsDirectoryExists = nameof(LogsDirectoryExists);
+		public const string DataDirectoryExists = nameof(DataDirectoryExists);
 
 		public static string DefaultProgramFiles => 
 			Environment.GetEnvironmentVariable("ProgramW6432") ?? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
@@ -139,12 +142,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this._refreshing = false;
 		}
 
-		protected bool SamePathAs(string pathA, string pathB)
+		public bool SamePathAs(string pathA, string pathB)
 		{
 			if (!string.IsNullOrEmpty(pathA) && !string.IsNullOrEmpty(pathB))
 			{
-				var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd('\\','/');
-				var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd('\\','/');
+				var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+				var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 				return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
 			}
 
@@ -191,7 +194,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 
 
 		string installDirectory;
-		[Argument(nameof(InstallDir))]
+		[Argument(nameof(InstallDir), PersistInRegistry = true)]
 		public string InstallDir
 		{
 			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : Path.Combine(installDirectory, CurrentVersion);
@@ -229,7 +232,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		}
 
 		string dataDirectory;
-		[SetPropertyActionArgument(nameof(DataDirectory), DefaultDataDirectoryArgument)]
+		[SetPropertyActionArgument(nameof(DataDirectory), DefaultDataDirectoryArgument, PersistInRegistry = true)]
 		public string DataDirectory
 		{
 			get => dataDirectory;
@@ -237,7 +240,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		}
 
 		string configDirectory;
-		[SetPropertyActionArgument(nameof(ConfigDirectory), DefaultConfigDirectoryArgument)]
+		[SetPropertyActionArgument(nameof(ConfigDirectory), DefaultConfigDirectoryArgument, PersistInRegistry = true)]
 		public string ConfigDirectory
 		{
 			get => configDirectory;
@@ -245,12 +248,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		}
 
 		string logsDirectory;
-		[SetPropertyActionArgument(nameof(LogsDirectory), DefaultLogsDirectoryArgument)]
+		[SetPropertyActionArgument(nameof(LogsDirectory), DefaultLogsDirectoryArgument, PersistInRegistry = true)]
 		public string LogsDirectory
 		{
 			get => logsDirectory;
 			set => this.RaiseAndSetIfChanged(ref logsDirectory, value);
 		}
+
 		public IFileSystem FileSystem { get; }
 
 		public override string ToString()
