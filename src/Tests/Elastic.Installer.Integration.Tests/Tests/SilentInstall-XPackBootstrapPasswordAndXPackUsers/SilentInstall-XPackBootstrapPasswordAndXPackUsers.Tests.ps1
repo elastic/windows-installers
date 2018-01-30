@@ -34,6 +34,10 @@ Describe -Name "Silent Install with setting up bootstrap password and x-pack use
 
 Describe -Name "Silent Uninstall with setting up bootstrap password and x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
 
+	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
     Invoke-SilentUninstall
 
 	Context-NodeNotRunning
@@ -46,9 +50,7 @@ Describe -Name "Silent Uninstall with setting up bootstrap password and x-pack u
 
 	Context-ElasticsearchServiceNotInstalled
 
-	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
+	Context-EmptyInstallDirectory
 
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-DataDirectories -Path @($configDirectory, $dataDirectory, $logsDirectory) -DeleteAfter
 }

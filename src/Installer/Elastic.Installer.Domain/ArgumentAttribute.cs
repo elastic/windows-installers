@@ -53,6 +53,12 @@ namespace Elastic.Installer.Domain
 		/// </summary>
 		public bool IsSecure { get; set; }
 
+		/// <summary>
+		/// Whether the value should be persisted in the registry to use when
+		/// performing upgrades or uninstalls
+		/// </summary>
+		public bool PersistInRegistry { get; set; }
+
 		public ArgumentAttribute(string name, bool uppercase = true) => 
 			this.Name = uppercase ? name.ToUpperInvariant() : name;
 	}
