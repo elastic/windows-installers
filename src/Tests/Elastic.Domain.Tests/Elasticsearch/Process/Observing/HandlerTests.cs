@@ -14,6 +14,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 			.Start(s =>
 			{
 				s.OutHandler.Handled.Count.Should().Be(StartedSession.Count);
+				s.Process.RunningState.Should().Be(RunningState.ConfirmedStarted);
 			});
 
 		[Fact] public void HandlerDoesNotSeeMessagesAfterStarted() => AllDefaults(new ConsoleSession(StartedSession)
@@ -22,6 +23,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 			.Start(s =>
 			{
 				s.OutHandler.Handled.Count.Should().Be(StartedSession.Count);
+				s.Process.RunningState.Should().Be(RunningState.ConfirmedStarted);
 			});
 
 		[Fact] public void StartedMessageFromWrongSectionIsIgnored() => AllDefaults(new ConsoleSession(BeforeStartedSession)
@@ -31,7 +33,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 			.Start(s =>
 			{
 				s.OutHandler.Handled.Count.Should().Be(BeforeStartedSession.Count + 1);
-				s.Process.Started.Should().BeFalse();
+				s.Process.Started.Should().BeTrue();
+				s.Process.RunningState.Should().Be(RunningState.AssumedStarted);
 			});
 
 		[Fact] public void UncaughtExceptionThrowBeforeStartedThrows() => AllDefaults(new ConsoleSession(BeforeStartedSession)
@@ -43,6 +46,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 				s.OutHandler.Handled.Count.Should().Be(BeforeStartedSession.Count);
 				e.Should().BeOfType<Exception>();
 				e.Message.Should().Contain("funky");
+				s.Process.RunningState.Should().Be(RunningState.Stopped);
 			});
 
 		[Fact] public void UncaughtExceptionThrowAfterStartedThrows() => AllDefaults(new ConsoleSession(StartedSession)
@@ -54,6 +58,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 				s.OutHandler.Handled.Count.Should().Be(StartedSession.Count);
 				e.Should().BeOfType<Exception>();
 				e.Message.Should().Contain("funky");
+				s.Process.RunningState.Should().Be(RunningState.Stopped);
 			});
 
 		[Fact] public void StartupExceptionThrowBeforeStartedThrows() => AllDefaults(new ConsoleSession(BeforeStartedSession)
@@ -64,6 +69,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 			{
 				s.OutHandler.Handled.Count.Should().Be(BeforeStartedSession.Count);
 				e.Should().BeOfType<StartupException>();
+				s.Process.RunningState.Should().Be(RunningState.Stopped);
 			});
 
 		[Fact] public void StartupExceptionThrowAfterStartedThrows() => AllDefaults(new ConsoleSession(StartedSession)
@@ -74,6 +80,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 			{
 				s.OutHandler.Handled.Count.Should().Be(StartedSession.Count);
 				e.Should().BeOfType<StartupException>();
+				s.Process.RunningState.Should().Be(RunningState.Stopped);
 			});
 	}
 }

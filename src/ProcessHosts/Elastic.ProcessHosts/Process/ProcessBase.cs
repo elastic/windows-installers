@@ -10,21 +10,25 @@ namespace Elastic.ProcessHosts.Process
 {
 	public enum RunningState
 	{
-		Stopped, Stopping, Starting, AssumedStarted, ConfirmedStarted
+		Stopped,
+		Stopping,
+		Starting,
+		AssumedStarted,
+		ConfirmedStarted
 	}
-	
+
 	public abstract class ProcessBase : IDisposable
 	{
 		protected IFileSystem FileSystem { get; }
 		private readonly IConsoleOutHandler _handler;
 		private readonly IObservableProcess _process;
-		
+
 		public int? LastExitCode => this._process?.LastExitCode;
 
 		protected string ProcessExe { get; set; }
 		protected IEnumerable<string> Arguments { private get; set; }
 		public bool Started => this.RunningState == RunningState.AssumedStarted || this.RunningState == RunningState.ConfirmedStarted;
-		public RunningState RunningState  { get; protected set; }
+		public RunningState RunningState { get; protected set; }
 		protected string HomeDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 
@@ -67,28 +71,36 @@ namespace Elastic.ProcessHosts.Process
 			var bin = this.ProcessExe;
 			var args = this.Arguments;
 
-			var observable = this._process.Start(bin, args).Publish();
-			if (this._process.UserInteractive)
+			try
 			{
-				//subscribe to all messages and write them to console
-				this.Disposables.Add(observable.Subscribe(this._handler.Write, delegate { }, delegate { }));
+				var observable = this._process.Start(bin, args).Publish();
+				if (this._process.UserInteractive)
+				{
+					//subscribe to all messages and write them to console
+					this.Disposables.Add(observable.Subscribe(this._handler.Write, delegate { }, delegate { }));
+				}
+
+				//subscribe as long we are not in started state and attempt to read console
+				//out for this confirmation
+				this.Disposables.Add(observable
+					.TakeWhile(c => !this.Started)
+					.Subscribe(this.Handle, delegate { }, delegate { })
+				);
+				this.Disposables.Add(observable.Subscribe(delegate { }, HandleException, HandleCompleted));
+				this.Disposables.Add(observable.Connect());
+
+				var timeout = this._process.WaitForStarted;
+				//we wait for 1 minute to attempt a clean start (meaning when the service is started elasticsearch is started)
+				//this is a best effort, elasticsearch could take longer to start if it needs to relocate shards for instance
+				this.StartedHandle.WaitOne(timeout, true);
+
+				if (this.RunningState != RunningState.ConfirmedStarted) this.RunningState = RunningState.AssumedStarted;
 			}
-
-			//subscribe as long we are not in started state and attempt to read console
-			//out for this confirmation
-			this.Disposables.Add(observable
-				.TakeWhile(c => !this.Started)
-				.Subscribe(this.Handle, delegate { }, delegate { })
-			);
-			this.Disposables.Add(observable.Subscribe(delegate { }, HandleException, HandleCompleted));
-			this.Disposables.Add(observable.Connect());
-
-			var timeout = this._process.WaitForStarted;
-			//we wait for 1 minute to attempt a clean start (meaning when the service is started elasticsearch is started)
-			//this is a best effort, elasticsearch could take longer to start if it needs to relocate shards for instance
-			this.StartedHandle.WaitOne(timeout, true);
-			
-			if (this.RunningState != RunningState.ConfirmedStarted) this.RunningState = RunningState.AssumedStarted;
+			catch
+			{
+				this.Stop();
+				throw;
+			}
 		}
 
 		public void Stop()
@@ -107,6 +119,7 @@ namespace Elastic.ProcessHosts.Process
 			this.StartedHandle?.Set();
 			throw e;
 		}
+
 		private void HandleCompleted()
 		{
 			this.StartedHandle?.Set();
@@ -118,7 +131,10 @@ namespace Elastic.ProcessHosts.Process
 			this._handler.Handle(message);
 			this.HandleMessage(message);
 		}
-		protected virtual void HandleMessage(ConsoleOut message) { }
+
+		protected virtual void HandleMessage(ConsoleOut message)
+		{
+		}
 
 		public void Dispose() => this.Stop();
 	}
