@@ -78,10 +78,9 @@ namespace Elastic.ProcessHosts.Process
 			this.Disposables.Add(observable.Connect());
 
 			var timeout = this._process.WaitForStarted;
-			if (this.StartedHandle.WaitOne(timeout, true)) return;
-
-			this.Stop();
-			throw new StartupException($"Could not start process within ({timeout}): {bin} {string.Join(" ", args)}");
+			//we wait for 1 minute to attempt a clean start (meaning when the service is started elasticsearch is started)
+			//this is a best effort, elasticsearch could take longer to start if it needs to relocate shards for instance
+			this.StartedHandle.WaitOne(timeout, true);
 		}
 
 		public void Stop()
