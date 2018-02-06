@@ -8,25 +8,29 @@ using System.Threading;
 
 namespace Elastic.ProcessHosts.Process
 {
+	public enum RunningState
+	{
+		Stopped, Stopping, Starting, AssumedStarted, ConfirmedStarted
+	}
+	
 	public abstract class ProcessBase : IDisposable
 	{
 		protected IFileSystem FileSystem { get; }
 		private readonly IConsoleOutHandler _handler;
 		private readonly IObservableProcess _process;
-
+		
 		public int? LastExitCode => this._process?.LastExitCode;
 
 		protected string ProcessExe { get; set; }
 		protected IEnumerable<string> Arguments { private get; set; }
-		public bool Started { get; protected set; }
+		public bool Started => this.RunningState == RunningState.AssumedStarted || this.RunningState == RunningState.ConfirmedStarted;
+		public RunningState RunningState  { get; protected set; }
 		protected string HomeDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 
 		protected ManualResetEvent StartedHandle { get; private set; }
 		public ManualResetEvent CompletedHandle { get; private set; }
 
-		//TODO not needed?
-		protected readonly Subject<ManualResetEvent> BlockingSubject = new Subject<ManualResetEvent>();
 		protected CompositeDisposable Disposables { get; private set; } = new CompositeDisposable();
 
 		protected ProcessBase(
@@ -39,6 +43,7 @@ namespace Elastic.ProcessHosts.Process
 			this._process = process ?? new ObservableProcess();
 			this._handler = handler ?? new ConsoleOutHandler();
 			this.CompletedHandle = completedHandle;
+			this.RunningState = RunningState.Stopped;
 		}
 
 		/// <summary>
@@ -56,6 +61,7 @@ namespace Elastic.ProcessHosts.Process
 		public virtual void Start()
 		{
 			this.Stop();
+			this.RunningState = RunningState.Starting;
 			this.StartedHandle = new ManualResetEvent(false);
 
 			var bin = this.ProcessExe;
@@ -81,14 +87,18 @@ namespace Elastic.ProcessHosts.Process
 			//we wait for 1 minute to attempt a clean start (meaning when the service is started elasticsearch is started)
 			//this is a best effort, elasticsearch could take longer to start if it needs to relocate shards for instance
 			this.StartedHandle.WaitOne(timeout, true);
+			
+			if (this.RunningState != RunningState.ConfirmedStarted) this.RunningState = RunningState.AssumedStarted;
 		}
 
 		public void Stop()
 		{
+			this.RunningState = RunningState.Stopping;
 			this.CompletedHandle?.Reset();
 			this._process?.Dispose();
 			this.Disposables?.Dispose();
 			this.Disposables = new CompositeDisposable();
+			this.RunningState = RunningState.Stopped;
 		}
 
 		private void HandleException(Exception e)

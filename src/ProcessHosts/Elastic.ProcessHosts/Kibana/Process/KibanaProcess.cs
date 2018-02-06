@@ -113,8 +113,7 @@ namespace Elastic.ProcessHosts.Kibana.Process
 			if (!message.TryGetStartedConfirmation(out string host, out int? port)) return;
 			this.Host = host;
 			this.Port = port;
-			this.BlockingSubject.OnNext(this.StartedHandle);
-			this.Started = true;
+			this.RunningState = RunningState.ConfirmedStarted;
 			this.StartedHandle.Set();
 		}
 	}
