@@ -3,6 +3,7 @@ using System.Text;
 using Elastic.Installer.Domain.Configuration.Service;
 using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Model.Base;
+using Elastic.Installer.Domain.Model.Base.Service;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Properties;
 using ReactiveUI;
@@ -15,11 +16,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 		public NoticeModel(
 			VersionConfiguration versionConfig, 
 			IServiceStateProvider serviceStateProvider, 
-			LocationsModel locationsModel
+			LocationsModel locationsModel,
+			ServiceModel serviceModel
 			)
 		{
 			this.IsRelevant = versionConfig.ExistingVersionInstalled;
 			this.LocationsModel = locationsModel;
+			this.ServiceModel = serviceModel;
 			this.Header = "Notice";
 			this.ExistingVersion = versionConfig.ExistingVersion;
 			this.CurrentVersion = versionConfig.CurrentVersion;
@@ -76,6 +79,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 
 		public sealed override void Refresh() { }
 
+		public ServiceModel ServiceModel { get; }
 		public LocationsModel LocationsModel { get; }
 		public SemVersion CurrentVersion { get; }
 		public SemVersion ExistingVersion { get; }
