@@ -18,7 +18,7 @@ namespace Elastic.ProcessHosts.Process
 
 		protected string ProcessExe { get; set; }
 		protected IEnumerable<string> Arguments { private get; set; }
-		protected bool Started { get; set; }
+		public bool Started { get; protected set; }
 		protected string HomeDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 

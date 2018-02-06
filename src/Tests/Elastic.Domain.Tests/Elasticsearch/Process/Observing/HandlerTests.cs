@@ -28,11 +28,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Observing
 			{
 				{"[x][INFO ][o.e.n.NodeXX] [N] started"}
 			})
-			.StartThrows((e, s) =>
+			.Start(s =>
 			{
 				s.OutHandler.Handled.Count.Should().Be(BeforeStartedSession.Count + 1);
-				e.Should().BeOfType<StartupException>();
-				e.Message.Should().Contain("Could not start process within");
+				s.Process.Started.Should().BeFalse();
 			});
 
 		[Fact] public void UncaughtExceptionThrowBeforeStartedThrows() => AllDefaults(new ConsoleSession(BeforeStartedSession)
