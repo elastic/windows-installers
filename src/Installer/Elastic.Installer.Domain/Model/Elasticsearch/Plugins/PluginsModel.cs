@@ -271,22 +271,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 
 			yield return new Plugin
 			{
-				PluginType = PluginType.Scripting,
-				Url = "lang-javascript",
-				DisplayName = "JavaScript Language",
-				Description = TextResources.PluginsModel_JavaScriptLanguagePlugin
-			};
-
-			yield return new Plugin
-			{
-				PluginType = PluginType.Scripting,
-				Url = "lang-python",
-				DisplayName = "Python Language",
-				Description = TextResources.PluginsModel_PythonLanguagePlugin
-			};
-
-			yield return new Plugin
-			{
 				PluginType = PluginType.Snapshot,
 				Url = "repository-hdfs",
 				DisplayName = "Hadoop HDFS Repository",

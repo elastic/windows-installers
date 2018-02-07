@@ -221,9 +221,6 @@ Java won't used compressed pointers.</value>
   <data name="PluginType_Discovery" xml:space="preserve">
     <value>Discovery</value>
   </data>
-  <data name="PluginType_Scripting" xml:space="preserve">
-    <value>Scripting</value>
-  </data>
   <data name="PluginType_Snapshot" xml:space="preserve">
     <value>Snapshot</value>
   </data>
@@ -335,9 +332,6 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
   </data>
   <data name="PluginsModel_XPack" xml:space="preserve">
     <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, graph and machine learning capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
-  </data>
-  <data name="PluginType_ApiExtensions" xml:space="preserve">
-    <value>API Extensions</value>
   </data>
   <data name="PluginType_Ingest" xml:space="preserve">
     <value>Ingest</value>
