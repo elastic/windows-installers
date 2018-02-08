@@ -482,8 +482,8 @@ function Invoke-SilentInstall {
         if (!$Exeargs) {
             $Exeargs = @("PLUGINSSTAGING=$($Version.Source)")
         }
-        elseif (-not ($Exeargs -like "PLUGINSSTAGING=*")) {
-            $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)")
+        elseif (-not ($Exeargs | ?{$_ -like "PLUGINSSTAGING=*" })) {
+            $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)") | Out-Null
         }
     }
 
