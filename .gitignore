@@ -199,6 +199,7 @@ paket.exe
 build/*
 !build/scripts
 !build/scripts/*
+build/scripts/obj
 build/tools/vagrant/.vagrant
 !build/tools
 !build/tools/*

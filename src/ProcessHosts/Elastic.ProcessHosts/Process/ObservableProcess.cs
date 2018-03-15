@@ -17,7 +17,14 @@ namespace Elastic.ProcessHosts.Process
 		private bool Started { get; set; }
 		public int LastExitCode { get; private set; }
 		public bool UserInteractive => Environment.UserInteractive;
-		public TimeSpan WaitForStarted => TimeSpan.FromMinutes(2);
+		/*
+		 * From: https://msdn.microsoft.com/en-us/library/windows/desktop/ms686321(v=vs.85).aspx
+		 * As with ControlService, StartService will block for 30 seconds if any service is busy handling a control code.
+		 * If the busy service still has not returned from its handler function when the timeout expires,
+		 * StartService fails with ERROR_SERVICE_REQUEST_TIMEOUT. This is because the SCM processes only one service control notification at a time.
+		 * 
+		 */
+		public TimeSpan WaitForStarted => TimeSpan.FromSeconds(25);
 
 		private IObservable<ConsoleOut> OutStream { get; set; }
 

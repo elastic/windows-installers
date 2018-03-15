@@ -103,8 +103,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			if (this.Started || string.IsNullOrWhiteSpace(message)) return;
 
 			if (!started) return;
-			this.BlockingSubject.OnNext(this.StartedHandle);
-			this.Started = true;
+			this.RunningState = RunningState.ConfirmedStarted;
 			this.StartedHandle.Set();
 		}
 

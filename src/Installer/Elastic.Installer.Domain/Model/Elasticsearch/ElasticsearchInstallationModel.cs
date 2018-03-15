@@ -81,8 +81,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.HigherVersionAlreadyInstalled = versionConfig.HigherVersionAlreadyInstalled;
 
 			this.LocationsModel = new LocationsModel(elasticsearchEnvironmentConfiguration, yamlConfiguration, versionConfig, fileSystem);
-			this.NoticeModel = new NoticeModel(versionConfig, serviceStateProvider, this.LocationsModel);
 			this.ServiceModel = new ServiceModel(serviceStateProvider, versionConfig);
+			this.NoticeModel = new NoticeModel(versionConfig, serviceStateProvider, this.LocationsModel, this.ServiceModel);
 			this.ConfigurationModel = new ConfigurationModel(yamlConfiguration, localJvmOptions);
 
 			var pluginDependencies = this.WhenAnyValue(
