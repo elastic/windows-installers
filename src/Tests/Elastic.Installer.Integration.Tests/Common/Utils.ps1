@@ -482,8 +482,8 @@ function Invoke-SilentInstall {
         if (!$Exeargs) {
             $Exeargs = @("PLUGINSSTAGING=$($Version.Source)")
         }
-        elseif (-not ($Exeargs -like "PLUGINSSTAGING=*")) {
-            $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)")
+        elseif (-not ($Exeargs | ?{$_ -like "PLUGINSSTAGING=*" })) {
+            $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)") | Out-Null
         }
     }
 
@@ -545,19 +545,7 @@ function Get-ConfigEnvironmentVariableForVersion($Version) {
 	}
 }
 
-function Ping-Node([System.Timespan]$Timeout, $Domain, $Port) {
-    if (!$Timeout) {
-        $Timeout = New-Timespan -Seconds 3
-    }
-
-	if (!$Domain) {
-		$Domain = "localhost"
-	}
-
-	if (!$Port) {
-		$Port = "9200"
-	}
-
+function Ping-Node([System.Timespan]$Timeout = (New-Timespan -Seconds 3), $Domain = "localhost", $Port = 9200) {
     $Result = @{
         Success = $false
         XPackSecurityInstalled = $false
@@ -575,7 +563,7 @@ function Ping-Node([System.Timespan]$Timeout, $Domain, $Port) {
             $Code = $_.Exception.Response.StatusCode.value__
             $Description = $_.Exception.Response.StatusDescription
 
-            if ($_) {
+            try {
                 $Response = $_ | ConvertFrom-Json
                 if ($Response -and $Response.status -and ($Response.status -eq 401)) {
                     # X-Pack Security has been set up on the node and we received an authenticated response back
@@ -585,7 +573,7 @@ function Ping-Node([System.Timespan]$Timeout, $Domain, $Port) {
                     return $Result
                 }
             }
-            else {
+            catch {
                 log "code: $Code, description: $Description" -l Warn
             }
         }
@@ -606,7 +594,14 @@ function Get-ElasticsearchWin32Product() {
     return Get-WmiObject Win32_Product | Where-Object { $_.Vendor -match 'Elastic' }
 }
 
-function Get-MachineEnvironmentVariable($Name) {
+function Get-MachineEnvironmentVariable {
+	[CmdletBinding()]
+	Param (
+		[Parameter(ValueFromPipeline)]
+		[ValidateNotNullOrEmpty()]
+		[string]$Name
+	)
+
     return [Environment]::GetEnvironmentVariable($Name,"Machine")
 }
 
@@ -664,11 +659,10 @@ function Get-PreviousVersions() {
 function Copy-ElasticsearchLogToOut($Path = "$(Join-Path -Path $($env:ALLUSERSPROFILE) -ChildPath "Elastic\Elasticsearch\logs\elasticsearch.log")") {
 	Copy-Item -Path $Path -Destination "$($PWD.Drive.Root)out" -Force -ErrorAction Ignore
 }
-
 function Get-ChildPath {
 	[CmdletBinding()]
-	Param(
-		[Parameter(Position=0,ValueFromPipeline=$true)]
+	param(
+		[Parameter(Position=0,ValueFromPipeline=$TRUE)]
 		$Version = $Global:Version
 	)
 

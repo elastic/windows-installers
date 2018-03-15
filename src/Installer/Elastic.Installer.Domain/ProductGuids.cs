@@ -43,6 +43,8 @@ namespace Elastic.Installer.Domain
 			{ "5.6.4", new Guid("1a2e2c53-1753-4b63-98f8-013c3e67e223") },
 			{ "5.6.5", new Guid("a8a40576-e918-4431-b4ee-a690882a35aa") },
 			{ "5.6.6", new Guid("30dc148d-655e-4a0b-91a3-3f4d7b134a53") },
+			{ "5.6.7", new Guid("05abedf2-1809-447f-9247-7736e8687fe9") },
+			{ "5.6.8", new Guid("e2bb9379-a5bd-4710-a4fd-cbf28b94944a") },
 			{ "6.0.0-beta1", new Guid("f234f31d-f25c-4e64-8d3e-868f7b7ece97") },
 			{ "6.0.0-beta2", new Guid("50f217e3-97b7-47ba-95f7-685f7db0c8aa") },
 			{ "6.0.0-rc1", new Guid("23c31d4d-6990-4c2e-92c5-4dd3348d3e07") },
@@ -53,10 +55,19 @@ namespace Elastic.Installer.Domain
 			{ "6.1.0", new Guid("7280a702-8532-4341-ac9e-38b221d14c1c") },
 			{ "6.1.1", new Guid("0b5c8e9d-a23a-428e-a1bc-26924fced6b9") },
 			{ "6.1.2", new Guid("e861bc6e-5eee-46e1-9bb5-73d70e3c1be8") },
+			{ "6.1.3", new Guid("c850d041-38e2-4066-88bf-9386775802da") },
 			{ "6.2.0", new Guid("bc4c5bb2-89a4-4958-a652-e0ff25b2df69") },
 			{ "6.2.1", new Guid("bbb6bd0e-b892-4493-aab2-cac9c1ac73ae") },
 			{ "6.2.2", new Guid("cb8b1af5-e480-4e68-8222-375a997fb64e") },
 			{ "6.3.0", new Guid("183c1455-1bdf-4e9c-a07b-bfba13447735") },
+			{ "6.3.1", new Guid("1c17c35c-b09f-4c5d-a271-0ba0f03d591f") },
+			{ "6.3.2", new Guid("d0fc7098-4a42-479a-82de-e7f3966d11da") },
+			{ "6.4.0", new Guid("3c08c055-faa4-4ab3-8adf-cef89a95fd5d") },
+			{ "6.4.1", new Guid("57c3993a-ecd0-4f3f-bd52-51541591c78e") },
+			{ "6.4.2", new Guid("8def2aae-cbe7-4db6-87d9-f95d5334dbf1") },
+			{ "6.5.0", new Guid("bb1e8abb-36ba-4c27-9c7d-813a1d79bfd3") },
+			{ "6.5.1", new Guid("2a3b25d6-d38b-4b34-b861-e5983f9a4f1b") },
+			{ "6.5.2", new Guid("ab616add-f96b-4be9-af81-22ddb889e556") },
 			{ "7.0.0-alpha1", new Guid("303b8268-6caa-4b82-aa3a-2b3e7197a0a3") }
 		};
 

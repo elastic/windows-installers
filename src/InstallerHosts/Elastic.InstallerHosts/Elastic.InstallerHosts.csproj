@@ -43,13 +43,13 @@
   <ItemGroup>
     <Compile Include="Elasticsearch\Tasks\Commit\CleanupInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\ExistingDirectoriesTask.cs" />
+    <Compile Include="Elasticsearch\Tasks\Uninstall\UninstallDirectoriesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetServiceStartTypeTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\DeleteDirectoriesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Immediate\ValidateArgumentsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\CreateDirectoriesTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\EditElasticsearchYamlTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\EditJvmOptionsTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Install\ElasticsearchInstallationTaskBase.cs" />
+    <Compile Include="Elasticsearch\Tasks\ElasticsearchInstallationTaskBase.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\InstallPluginsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\PreserveInstallTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetBootstrapPasswordPropertyTask.cs" />
@@ -57,7 +57,6 @@
     <Compile Include="Elasticsearch\Tasks\Install\SetServiceParametersTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Install\SetupXPackPasswordsTask.cs" />
     <Compile Include="Elasticsearch\Tasks\Rollback\RollbackDirectoriesTask.cs" />
-    <Compile Include="Elasticsearch\Tasks\Uninstall\UninstallPluginsTask.cs" />
     <Compile Include="Kibana\Tasks\CreateDirectoriesTask.cs" />
     <Compile Include="Kibana\Tasks\DeleteDirectoriesTask.cs" />
     <Compile Include="Kibana\Tasks\EditKibanaYamlTask.cs" />

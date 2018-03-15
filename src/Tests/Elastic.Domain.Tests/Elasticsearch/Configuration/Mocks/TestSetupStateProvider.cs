@@ -90,6 +90,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 				IsUninstalling = uninstalling, 
 				IsRollback = rollback,
 				IsInstalled = uninstalling, 
+				IsInstalling = !uninstalling
 			};
 			return this;
 		}

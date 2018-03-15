@@ -56,7 +56,9 @@ namespace Elastic.InstallerHosts.Tasks
 		protected bool SamePathAs(string pathA, string pathB) => 
 			!string.IsNullOrEmpty(pathA) && 
 			!string.IsNullOrEmpty(pathB) && 
-			0 == string.Compare(Path.GetFullPath(pathA), Path.GetFullPath(pathB), StringComparison.OrdinalIgnoreCase);
+			0 == string.Compare(
+				Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), 
+				Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), StringComparison.OrdinalIgnoreCase);
 
 		protected void CopyDirectory(string sourceDirectory, string destinationDirectory)
 		{

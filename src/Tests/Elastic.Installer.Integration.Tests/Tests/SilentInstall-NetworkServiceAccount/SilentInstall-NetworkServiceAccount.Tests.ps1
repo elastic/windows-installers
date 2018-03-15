@@ -23,6 +23,10 @@ Describe "Silent Install as service with network service account $(($Global:Vers
 
 Describe "Silent Uninstall as service with network service account $(($Global:Version).Description)" {
 
+	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
+	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
+	$logsDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "logs"
+
     Invoke-SilentUninstall
 
 	Context-EsConfigEnvironmentVariableNull
@@ -33,9 +37,7 @@ Describe "Silent Uninstall as service with network service account $(($Global:Ve
 
 	Context-ElasticsearchServiceNotInstalled
 
-	$ProgramFiles = Get-ProgramFilesFolder
-	$ChildPath = Get-ChildPath 
-    $ExpectedHomeFolder = Join-Path -Path $ProgramFiles -ChildPath $ChildPath
+	Context-EmptyInstallDirectory
 
-	Context-EmptyInstallDirectory -Path $ExpectedHomeFolder
+	Context-DataDirectories -Path @($configDirectory, $dataDirectory, $logsDirectory) -DeleteAfter
 }

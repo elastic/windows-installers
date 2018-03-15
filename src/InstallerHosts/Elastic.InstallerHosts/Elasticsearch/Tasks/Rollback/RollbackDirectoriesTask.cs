@@ -4,6 +4,7 @@ using System.Linq;
 using Elastic.Configuration.FileBased.Yaml;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.InstallerHosts.Elasticsearch.Tasks.Install;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback
@@ -25,9 +26,9 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback
 			RestorePluginsDirectory();
 
 			// only delete config, logs and data if they were created by this installer operation
-			var configDirectoryExisted = this.Session.Get<bool>("ConfigDirectoryExists");
-			var logsDirectoryExisted = this.Session.Get<bool>("LogsDirectoryExists");
-			var dataDirectoryExisted = this.Session.Get<bool>("DataDirectoryExists");
+			var configDirectoryExisted = this.Session.Get<bool>(LocationsModel.ConfigDirectoryExists);
+			var logsDirectoryExisted = this.Session.Get<bool>(LocationsModel.LogsDirectoryExists);
+			var dataDirectoryExisted = this.Session.Get<bool>(LocationsModel.DataDirectoryExists);
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
 			if (!this.FileSystem.Directory.Exists(configDirectory))
 			{
@@ -69,7 +70,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Rollback
 			var tempBinXPackDirectory = path.Combine(this.TempProductInstallationDirectory, "bin", "x-pack");
 			var binXPackDirectory = path.Combine(this.InstallationModel.LocationsModel.InstallDir, "bin", "x-pack");
 
-			// always delete bin\paxk if installed
+			// always delete bin\x-pack if installed
 			this.Session.Log("Deleting bin\\x-pack directory");
 			if (this.FileSystem.Directory.Exists(binXPackDirectory))
 				this.FileSystem.Directory.Delete(binXPackDirectory, true);

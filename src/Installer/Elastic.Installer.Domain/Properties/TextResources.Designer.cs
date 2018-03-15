@@ -514,7 +514,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An elasticsearch plugin written in Clojure that provides clojure as a scripting language for elasticsearch queries..
+        ///   Looks up a localized string similar to An Elasticsearch plugin written in Clojure that provides clojure as a scripting language for Elasticsearch queries..
         /// </summary>
         public static string PluginsModel_ClojureLanguagePlugin {
             get {
@@ -759,15 +759,6 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to API Extensions.
-        /// </summary>
-        public static string PluginType_ApiExtensions {
-            get {
-                return ResourceManager.GetString("PluginType_ApiExtensions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Discovery.
         /// </summary>
         public static string PluginType_Discovery {
@@ -791,15 +782,6 @@ namespace Elastic.Installer.Domain.Properties {
         public static string PluginType_Mapper {
             get {
                 return ResourceManager.GetString("PluginType_Mapper", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Scripting.
-        /// </summary>
-        public static string PluginType_Scripting {
-            get {
-                return ResourceManager.GetString("PluginType_Scripting", resourceCulture);
             }
         }
         
