@@ -8,6 +8,15 @@ using System.Threading;
 
 namespace Elastic.ProcessHosts.Process
 {
+	public enum RunningState
+	{
+		Stopped,
+		Stopping,
+		Starting,
+		AssumedStarted,
+		ConfirmedStarted
+	}
+
 	public abstract class ProcessBase : IDisposable
 	{
 		protected IFileSystem FileSystem { get; }
@@ -18,15 +27,14 @@ namespace Elastic.ProcessHosts.Process
 
 		protected string ProcessExe { get; set; }
 		protected IEnumerable<string> Arguments { private get; set; }
-		protected bool Started { get; set; }
+		public bool Started => this.RunningState == RunningState.AssumedStarted || this.RunningState == RunningState.ConfirmedStarted;
+		public RunningState RunningState { get; protected set; }
 		protected string HomeDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 
 		protected ManualResetEvent StartedHandle { get; private set; }
 		public ManualResetEvent CompletedHandle { get; private set; }
 
-		//TODO not needed?
-		protected readonly Subject<ManualResetEvent> BlockingSubject = new Subject<ManualResetEvent>();
 		protected CompositeDisposable Disposables { get; private set; } = new CompositeDisposable();
 
 		protected ProcessBase(
@@ -39,6 +47,7 @@ namespace Elastic.ProcessHosts.Process
 			this._process = process ?? new ObservableProcess();
 			this._handler = handler ?? new ConsoleOutHandler();
 			this.CompletedHandle = completedHandle;
+			this.RunningState = RunningState.Stopped;
 		}
 
 		/// <summary>
@@ -56,40 +65,52 @@ namespace Elastic.ProcessHosts.Process
 		public virtual void Start()
 		{
 			this.Stop();
+			this.RunningState = RunningState.Starting;
 			this.StartedHandle = new ManualResetEvent(false);
 
 			var bin = this.ProcessExe;
 			var args = this.Arguments;
 
-			var observable = this._process.Start(bin, args).Publish();
-			if (this._process.UserInteractive)
+			try
 			{
-				//subscribe to all messages and write them to console
-				this.Disposables.Add(observable.Subscribe(this._handler.Write, delegate { }, delegate { }));
+				var observable = this._process.Start(bin, args).Publish();
+				if (this._process.UserInteractive)
+				{
+					//subscribe to all messages and write them to console
+					this.Disposables.Add(observable.Subscribe(this._handler.Write, delegate { }, delegate { }));
+				}
+
+				//subscribe as long we are not in started state and attempt to read console
+				//out for this confirmation
+				this.Disposables.Add(observable
+					.TakeWhile(c => !this.Started)
+					.Subscribe(this.Handle, delegate { }, delegate { })
+				);
+				this.Disposables.Add(observable.Subscribe(delegate { }, HandleException, HandleCompleted));
+				this.Disposables.Add(observable.Connect());
+
+				var timeout = this._process.WaitForStarted;
+				//we wait for 1 minute to attempt a clean start (meaning when the service is started elasticsearch is started)
+				//this is a best effort, elasticsearch could take longer to start if it needs to relocate shards for instance
+				this.StartedHandle.WaitOne(timeout, true);
+
+				if (this.RunningState != RunningState.ConfirmedStarted) this.RunningState = RunningState.AssumedStarted;
 			}
-
-			//subscribe as long we are not in started state and attempt to read console
-			//out for this confirmation
-			this.Disposables.Add(observable
-				.TakeWhile(c => !this.Started)
-				.Subscribe(this.Handle, delegate { }, delegate { })
-			);
-			this.Disposables.Add(observable.Subscribe(delegate { }, HandleException, HandleCompleted));
-			this.Disposables.Add(observable.Connect());
-
-			var timeout = this._process.WaitForStarted;
-			if (this.StartedHandle.WaitOne(timeout, true)) return;
-
-			this.Stop();
-			throw new StartupException($"Could not start process within ({timeout}): {bin} {string.Join(" ", args)}");
+			catch
+			{
+				this.Stop();
+				throw;
+			}
 		}
 
 		public void Stop()
 		{
+			this.RunningState = RunningState.Stopping;
 			this.CompletedHandle?.Reset();
 			this._process?.Dispose();
 			this.Disposables?.Dispose();
 			this.Disposables = new CompositeDisposable();
+			this.RunningState = RunningState.Stopped;
 		}
 
 		private void HandleException(Exception e)
@@ -98,6 +119,7 @@ namespace Elastic.ProcessHosts.Process
 			this.StartedHandle?.Set();
 			throw e;
 		}
+
 		private void HandleCompleted()
 		{
 			this.StartedHandle?.Set();
@@ -109,7 +131,10 @@ namespace Elastic.ProcessHosts.Process
 			this._handler.Handle(message);
 			this.HandleMessage(message);
 		}
-		protected virtual void HandleMessage(ConsoleOut message) { }
+
+		protected virtual void HandleMessage(ConsoleOut message)
+		{
+		}
 
 		public void Dispose() => this.Stop();
 	}
