@@ -55,7 +55,17 @@
              HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
     </Grid>
-    <Grid Grid.Row="1" Grid.Column="0" x:Name="ReadOnlyPropertiesGrid">
+    <Grid Grid.Row="1" Grid.Column="0" x:Name="ControlGrid">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="25" />
+      </Grid.RowDefinitions>
+      <CheckBox Grid.Row="0" Grid.Column="0" x:Name="StartServiceAfterInstallCheckBox" Margin="7, 0, 0,0" 
+                Content="{x:Static resx:ViewResources.ServiceView_StartAfterInstallCheckBox}" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+    </Grid>
+    <Grid Grid.Row="2" Grid.Column="0" x:Name="ReadOnlyPropertiesGrid">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto"/>
         <ColumnDefinition Width="*"/>
@@ -108,15 +118,9 @@
       <Label Grid.Row="4" Grid.Column="1" x:Name="LogsDirectoryLabel" 
              Margin="0, -10, 0,0"
                HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-      <Label Grid.Row="5" Grid.Column="0" x:Name="RunAsServiceHeaderLabel" 
-             FontWeight="Bold"
-             Margin="0, -10, 0,0"
-             Content="{x:Static resx:ViewResources.NoticeView_RunAsServiceHeaderLabel}" 
+      <Label Grid.Row="5" Grid.Column="0" x:Name="RunAsServiceHeaderLabel" FontWeight="Bold" Margin="0, -10, 0,0" Content="{x:Static resx:ViewResources.NoticeView_RunAsServiceHeaderLabel}" 
              HorizontalAlignment="Left" VerticalAlignment="Top" />
-      <Label Grid.Row="5" Grid.Column="1" x:Name="RunAsServiceLabel" 
-             Margin="0, -10, 0,0" Content="Yes"
-               HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-
+      <Label Grid.Row="5" Grid.Column="1" x:Name="RunAsServiceLabel" Margin="0, -10, 0,0" Content="Yes" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
     </Grid>
   </Grid>
 </controls:StepControl>

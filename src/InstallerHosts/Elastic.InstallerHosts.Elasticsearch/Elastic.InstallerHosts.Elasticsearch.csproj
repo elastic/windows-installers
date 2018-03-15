@@ -25,7 +25,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -114,10 +113,6 @@
       <Project>{faeee7b2-9bad-40c3-81fe-ff81f7b1291f}</Project>
       <Name>Elastic.Configuration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\InstallerHosts\Elastic.InstallerHosts\Elastic.InstallerHosts.csproj">
-      <Project>{0d75a3ab-8569-4739-9f18-f5972dd276b2}</Project>
-      <Name>Elastic.Domain.Installer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Installer\Elastic.Installer.Domain\Elastic.Installer.Domain.csproj">
       <Project>{d49c6dc3-0df0-4455-bd19-88aee8de51c1}</Project>
       <Name>Elastic.Installer.Domain</Name>
@@ -125,6 +120,10 @@
     <ProjectReference Include="..\..\Installer\Elastic.Installer.UI\Elastic.Installer.UI.csproj">
       <Project>{d22b47af-05f4-4e52-9211-05672a12ee0d}</Project>
       <Name>Elastic.Installer.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tests\Elastic.Domain.Tests\Elastic.Domain.Tests.csproj">
+      <Project>{7453d0b7-4972-476e-9529-a6f0573948cd}</Project>
+      <Name>Elastic.Domain.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

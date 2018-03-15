@@ -10,6 +10,7 @@ using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Base.Closing;
 using Elastic.Installer.Domain.Model.Elasticsearch;
+using Elastic.Installer.Domain.Tests.Elasticsearch.Models;
 using Elastic.Installer.UI.Elasticsearch;
 using ReactiveUI;
 
@@ -22,8 +23,10 @@ namespace Elastic.InstallerHosts.Elasticsearch
 	{
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
-			var wix = new WixStateProvider(Product.Elasticsearch, "6.0.0");
-			var model = ElasticsearchInstallationModel.Create(wix, NoopSession.Elasticsearch);
+			var state = InstallationModelTester.ValidPreflightChecks(s => s
+				.Wix(currentVersion:"6.1.0", existingVersion:"6.0.0")
+			);
+			var model = state.InstallationModel;
 
 			var window = new MainWindow(model, new ManualResetEvent(false));
 			model.InstallUITask = async () =>
@@ -35,7 +38,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 			window.Show();
 
 			RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
-			Application.Current.Resources["InstallerTitle"] = wix.CurrentVersion.ToString();
+			Application.Current.Resources["InstallerTitle"] = model.ClosingModel.CurrentVersion.ToString();
 		}
 	}
 }

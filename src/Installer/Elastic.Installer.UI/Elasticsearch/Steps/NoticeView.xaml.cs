@@ -44,11 +44,21 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					this.ExistingVersionTextBox.Visibility = v ? Visible : Collapsed;
 				});
 
+			//Using a separate observable in the case we add more parameters to the control grid on the notice model
+			this.WhenAny(view => view.ViewModel.InstalledAsService, v => v.GetValue())
+				.Subscribe(v =>
+				{
+					this.ControlGrid.Visibility = v ? Visible : Collapsed;
+				});
+
 			this.WhenAny(view => view.ViewModel.InstalledAsService, v=>v.GetValue())
 				.Subscribe(v => {
 					this.RunAsServiceHeaderLabel.Visibility = v ? Visible : Collapsed;
 					this.RunAsServiceLabel.Visibility = v ? Visible : Collapsed;
+					this.StartServiceAfterInstallCheckBox.Visibility = v ? Visible : Collapsed;
 				});
+			
+			this.Bind(ViewModel, vm => vm.ServiceModel.StartAfterInstall, v => v.StartServiceAfterInstallCheckBox.IsChecked);
 		}
 	}
 }
