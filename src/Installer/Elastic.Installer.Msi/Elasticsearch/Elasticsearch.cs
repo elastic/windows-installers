@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -127,7 +128,7 @@ namespace Elastic.Installer.Msi.Elasticsearch
 			var product = documentRoot.Descendants(ns + "Product").Single();
 			var feature = documentRoot.Descendants(ns + "Feature").First(f => f.Attribute("Id").Value == "Complete");
 
-			var re = new Regex(@"\.\d+$");
+			var duplicateOrAbbreviatedRegex = new Regex(@"\.\d+$|\._\.\.\.(.+)$");
 			foreach (var directory in directories)
 			{
 				var directoryId = directory.Attribute("Id").Value;
@@ -137,13 +138,11 @@ namespace Elastic.Installer.Msi.Elasticsearch
 				// WixSharp appends a .{DIGIT} to duplicate file names in different directories in installer e.g. plugin_descriptor.properties
 				// for Elasticsearch plugins. Problem is duplicated file names may not represent the same file path across versions so
 				// fix this by including the directory name in the file name.
-				var duplicateNamedComponents = directory.Elements(ns + "Component")
-					.Where(c => re.IsMatch(c.Attribute("Id").Value));
+				var renameComponents = directory.Elements(ns + "Component")
+					.Where(c => duplicateOrAbbreviatedRegex.IsMatch(c.Attribute("Id").Value));
 
-				foreach (var component in duplicateNamedComponents)
-				{
-					PatchDuplicateComponentId(ns, component, directoryName);
-				}
+				foreach (var component in renameComponents)
+					PatchDuplicateComponentId(ns, component, directoryId);
 
 				directory.AddFirst(new XElement(ns + "Component",
 					new XAttribute("Id", componentId),
@@ -312,16 +311,31 @@ namespace Elastic.Installer.Msi.Elasticsearch
 			componentFile.Add(new XAttribute("Id", newId));
 		}
 
+		private static Regex WixDuplicateRegex = new Regex(@"Component\.(.+)\.\d+");
+		private static Regex WixAbbreviationRegex = new Regex(@"\._\.\.\.(.+)$");
+		
 		private static void PatchDuplicateComponentId(XNamespace ns, XElement component, string directoryName)
 		{
 			var idAttribute = component.Attribute("Id");
 			if (idAttribute == null) return;
 
+			var dir = directoryName.Replace(".", "_");
 			var id = idAttribute.Value;
 			idAttribute.Remove();
+			var newId = id;
+			if (WixAbbreviationRegex.IsMatch(id))
+			{
+				var componentFile = component.Element(ns + "File")?.Attribute("Source")?.Value ?? throw new Exception($"Component {id} missing file source!");
+				var file = Path.GetFileName(componentFile);
+				newId = $"{dir}.{file}";
+			}
+			else if (WixDuplicateRegex.IsMatch(id))
+			{
+				newId = Regex.Replace(id, @"Component\.(.+)\.\d+", $"{dir}.$1");
+			}
+			newId = newId.Replace("-", "_");
 
 			// include directory name in Component Id
-			var newId = Regex.Replace(id, @"Component\.(.+)\.\d+", $"{directoryName}.$1").Replace("-", "_");
 			var newComponentId = $"Component.{newId}";
 			component.Add(new XAttribute("Id", newComponentId));
 
