@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="e861bc6e-5eee-46e1-9bb5-73d70e3c1be8" Name="Elasticsearch 6.1.2" Language="1033" Codepage="Windows-1252" Version="6.1.2" UpgradeCode="daaa2cba-a1ed-4f29-afbf-5478617b00f6" Manufacturer="Elastic">
+  <Product Id="183c1455-1bdf-4e9c-a07b-bfba13447735" Name="Elasticsearch 6.3.0" Language="1033" Codepage="Windows-1252" Version="6.3.0" UpgradeCode="daaa2cba-a1ed-4f29-afbf-5478617b00f6" Manufacturer="Elastic">
     <Package InstallerVersion="200" Compressed="yes" Platform="x64" SummaryCodepage="Windows-1252" Languages="1033" InstallScope="perMachine" />
-    <Media Id="1" Cabinet="Elasticsearch_6.1.2_.cab" EmbedCab="yes" />
+    <Media Id="1" Cabinet="Elasticsearch_6.3.0_.cab" EmbedCab="yes" />
 
     <Condition Message="This installer requires at least .NET Framework 4.5 in order to run custom install actions. Please install .NET Framework 4.5 then run this installer again.">Installed OR NETFRAMEWORK45</Condition>
 
@@ -10,7 +10,7 @@
       <Directory Id="ProgramFiles64Folder" Name="ProgramFiles64Folder">
         <Directory Id="Elastic" Name="Elastic">
           <Directory Id="Product" Name="Elasticsearch">
-            <Directory Id="INSTALLDIR" Name="6.1.2">
+            <Directory Id="INSTALLDIR" Name="6.3.0">
               <Directory Id="INSTALLDIR.plugins" Name="plugins">
 
                 <Component Id="Component.INSTALLDIR.plugins" Guid="daaa2cba-a1ed-4f29-afbf-5478fc1afb65" Win64="yes">
@@ -26,15 +26,15 @@
               </Component>
 
               <Component Id="Component.LICENSE.txt" Guid="daaa2cba-a1ed-4f29-afbf-5478ddff8dfd" Win64="yes">
-                <File Id="LICENSE.txt" Source="..\..\..\build\in\elasticsearch-6.1.2\LICENSE.txt" />
+                <File Id="LICENSE.txt" Source="..\..\..\build\in\elasticsearch-6.3.0\LICENSE.txt" />
               </Component>
 
               <Component Id="Component.NOTICE.txt" Guid="daaa2cba-a1ed-4f29-afbf-5478beafcf50" Win64="yes">
-                <File Id="NOTICE.txt" Source="..\..\..\build\in\elasticsearch-6.1.2\NOTICE.txt" />
+                <File Id="NOTICE.txt" Source="..\..\..\build\in\elasticsearch-6.3.0\NOTICE.txt" />
               </Component>
 
               <Component Id="Component.README.textile" Guid="daaa2cba-a1ed-4f29-afbf-54787569b372" Win64="yes">
-                <File Id="README.textile" Source="..\..\..\build\in\elasticsearch-6.1.2\README.textile" />
+                <File Id="README.textile" Source="..\..\..\build\in\elasticsearch-6.3.0\README.textile" />
               </Component>
 
               <Directory Id="INSTALLDIR.bin" Name="bin">
@@ -53,23 +53,23 @@
                 </Component>
 
                 <Component Id="Component.elasticsearch_env.bat" Guid="daaa2cba-a1ed-4f29-afbf-5478f708a154" Win64="yes">
-                  <File Id="elasticsearch_env.bat" Source="..\..\..\build\in\elasticsearch-6.1.2\bin\elasticsearch-env.bat" />
+                  <File Id="elasticsearch_env.bat" Source="..\..\..\build\in\elasticsearch-6.3.0\bin\elasticsearch-env.bat" />
                 </Component>
 
                 <Component Id="Component.elasticsearch_keystore.bat" Guid="daaa2cba-a1ed-4f29-afbf-547886c8d35a" Win64="yes">
-                  <File Id="elasticsearch_keystore.bat" Source="..\..\..\build\in\elasticsearch-6.1.2\bin\elasticsearch-keystore.bat" />
+                  <File Id="elasticsearch_keystore.bat" Source="..\..\..\build\in\elasticsearch-6.3.0\bin\elasticsearch-keystore.bat" />
                 </Component>
 
                 <Component Id="Component.elasticsearch_plugin.bat" Guid="daaa2cba-a1ed-4f29-afbf-54780b44f88c" Win64="yes">
-                  <File Id="elasticsearch_plugin.bat" Source="..\..\..\build\in\elasticsearch-6.1.2\bin\elasticsearch-plugin.bat" />
+                  <File Id="elasticsearch_plugin.bat" Source="..\..\..\build\in\elasticsearch-6.3.0\bin\elasticsearch-plugin.bat" />
                 </Component>
 
                 <Component Id="Component.elasticsearch_translog.bat" Guid="daaa2cba-a1ed-4f29-afbf-547861a30033" Win64="yes">
-                  <File Id="elasticsearch_translog.bat" Source="..\..\..\build\in\elasticsearch-6.1.2\bin\elasticsearch-translog.bat" />
+                  <File Id="elasticsearch_translog.bat" Source="..\..\..\build\in\elasticsearch-6.3.0\bin\elasticsearch-translog.bat" />
                 </Component>
 
                 <Component Id="Component.elasticsearch.exe" Guid="daaa2cba-a1ed-4f29-afbf-5478f1f18046" Win64="yes">
-                  <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-6.1.2\bin\elasticsearch.exe" />
+                  <File Id="elasticsearch.exe" Source="..\..\..\build\in\elasticsearch-6.3.0\bin\elasticsearch.exe" />
 
                   <ServiceInstall Id="ElasticsearchService" Name="Elasticsearch" DisplayName="Elasticsearch" Description="You know, for Search." Type="ownProcess" Start="auto" ErrorControl="normal" Account="[ServiceAccount]" Interactive="no" Password="[ServicePassword]" Vital="yes" />
 
@@ -88,15 +88,31 @@
                 </Component>
 
                 <Component Id="Component.elasticsearch.yml" Guid="daaa2cba-a1ed-4f29-afbf-547839fb66cf" Win64="yes">
-                  <File Id="elasticsearch.yml" Source="..\..\..\build\in\elasticsearch-6.1.2\config\elasticsearch.yml" />
+                  <File Id="elasticsearch.yml" Source="..\..\..\build\in\elasticsearch-6.3.0\config\elasticsearch.yml" />
                 </Component>
 
                 <Component Id="Component.jvm.options" Guid="daaa2cba-a1ed-4f29-afbf-547881624924" Win64="yes">
-                  <File Id="jvm.options" Source="..\..\..\build\in\elasticsearch-6.1.2\config\jvm.options" />
+                  <File Id="jvm.options" Source="..\..\..\build\in\elasticsearch-6.3.0\config\jvm.options" />
                 </Component>
 
                 <Component Id="Component.log4j2.properties" Guid="daaa2cba-a1ed-4f29-afbf-5478d3b0653b" Win64="yes">
-                  <File Id="log4j2.properties" Source="..\..\..\build\in\elasticsearch-6.1.2\config\log4j2.properties" />
+                  <File Id="log4j2.properties" Source="..\..\..\build\in\elasticsearch-6.3.0\config\log4j2.properties" />
+                </Component>
+
+                <Component Id="Component.roles.yml" Guid="daaa2cba-a1ed-4f29-afbf-54782aa20c3a" Win64="yes">
+                  <File Id="roles.yml" Source="..\..\..\build\in\elasticsearch-6.3.0\config\roles.yml" />
+                </Component>
+
+                <Component Id="Component.role_mapping.yml" Guid="daaa2cba-a1ed-4f29-afbf-5478f460c6c6" Win64="yes">
+                  <File Id="role_mapping.yml" Source="..\..\..\build\in\elasticsearch-6.3.0\config\role_mapping.yml" />
+                </Component>
+
+                <Component Id="Component.users" Guid="daaa2cba-a1ed-4f29-afbf-54785c4bb70a" Win64="yes">
+                  <File Id="users" Source="..\..\..\build\in\elasticsearch-6.3.0\config\users" />
+                </Component>
+
+                <Component Id="Component.users_roles" Guid="daaa2cba-a1ed-4f29-afbf-547817163ccc" Win64="yes">
+                  <File Id="users_roles" Source="..\..\..\build\in\elasticsearch-6.3.0\config\users_roles" />
                 </Component>
 
               </Directory>
@@ -108,148 +124,156 @@
                   <RemoveFolder Id="INSTALLDIR.lib.dir" On="both" />
                 </Component>
 
-                <Component Id="Component.elasticsearch_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54781c1a56e9" Win64="yes">
-                  <File Id="elasticsearch_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\elasticsearch-6.1.2.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-5478ac9f57e5" Win64="yes" Id="Component.INSTALLDIR_lib.elasticsearch_7.0.0_alpha1_SNAPSHOT.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\elasticsearch-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_lib.elasticsearch_7.0.0_alpha1_SNAPSHOT.jar" />
                 </Component>
 
-                <Component Id="Component.elasticsearch_cli_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478773897cd" Win64="yes">
-                  <File Id="elasticsearch_cli_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\elasticsearch-cli-6.1.2.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-54784b42f187" Win64="yes" Id="Component.INSTALLDIR_lib.elasticsearch_cli_7.0.0_alpha1_SNAPSHOT.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\elasticsearch-cli-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_lib.elasticsearch_cli_7.0.0_alpha1_SNAPSHOT.jar" />
+                </Component>
+
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-54780db36cc6" Win64="yes" Id="Component.INSTALLDIR_lib.elasticsearch_core_7.0.0_alpha1_SNAPSHOT.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\elasticsearch-core-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_lib.elasticsearch_core_7.0.0_alpha1_SNAPSHOT.jar" />
+                </Component>
+
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-54789c7c95e3" Win64="yes" Id="Component.INSTALLDIR_lib.elasticsearch_launchers_7.0.0_alpha1_SNAPSHOT.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\elasticsearch-launchers-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_lib.elasticsearch_launchers_7.0.0_alpha1_SNAPSHOT.jar" />
+                </Component>
+
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-5478f94df986" Win64="yes" Id="Component.INSTALLDIR_lib.elasticsearch_secure_sm_7.0.0_alpha1_SNAPSHOT.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\elasticsearch-secure-sm-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_lib.elasticsearch_secure_sm_7.0.0_alpha1_SNAPSHOT.jar" />
                 </Component>
 
                 <Component Id="Component.HdrHistogram_2.1.9.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780dd2332f" Win64="yes">
-                  <File Id="HdrHistogram_2.1.9.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\HdrHistogram-2.1.9.jar" />
+                  <File Id="HdrHistogram_2.1.9.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\HdrHistogram-2.1.9.jar" />
                 </Component>
 
                 <Component Id="Component.hppc_0.7.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fa74fa4a" Win64="yes">
-                  <File Id="hppc_0.7.1.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\hppc-0.7.1.jar" />
+                  <File Id="hppc_0.7.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\hppc-0.7.1.jar" />
                 </Component>
 
                 <Component Id="Component.jackson_core_2.8.10.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783ce13793" Win64="yes">
-                  <File Id="jackson_core_2.8.10.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\jackson-core-2.8.10.jar" />
+                  <File Id="jackson_core_2.8.10.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\jackson-core-2.8.10.jar" />
                 </Component>
 
-                <Component Id="Component._...son_dataformat_cbor_2.8.10.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478a5bce0cd" Win64="yes">
-                  <File Id="_...son_dataformat_cbor_2.8.10.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\jackson-dataformat-cbor-2.8.10.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-547831242213" Win64="yes" Id="Component.INSTALLDIR_lib.jackson_dataformat_cbor_2.8.10.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\jackson-dataformat-cbor-2.8.10.jar" Id="INSTALLDIR_lib.jackson_dataformat_cbor_2.8.10.jar" />
                 </Component>
 
-                <Component Id="Component._...on_dataformat_smile_2.8.10.jar" Guid="daaa2cba-a1ed-4f29-afbf-54787e6eb50f" Win64="yes">
-                  <File Id="_...on_dataformat_smile_2.8.10.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\jackson-dataformat-smile-2.8.10.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-5478787bcd26" Win64="yes" Id="Component.INSTALLDIR_lib.jackson_dataformat_smile_2.8.10.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\jackson-dataformat-smile-2.8.10.jar" Id="INSTALLDIR_lib.jackson_dataformat_smile_2.8.10.jar" />
                 </Component>
 
-                <Component Id="Component._...son_dataformat_yaml_2.8.10.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789b013ebe" Win64="yes">
-                  <File Id="_...son_dataformat_yaml_2.8.10.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\jackson-dataformat-yaml-2.8.10.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-547826cb24bd" Win64="yes" Id="Component.INSTALLDIR_lib.jackson_dataformat_yaml_2.8.10.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\jackson-dataformat-yaml-2.8.10.jar" Id="INSTALLDIR_lib.jackson_dataformat_yaml_2.8.10.jar" />
                 </Component>
 
-                <Component Id="Component.java_version_checker_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786443c2cd" Win64="yes">
-                  <File Id="java_version_checker_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\java-version-checker-6.1.2.jar" />
+                <Component Id="Component.jna_4.5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547822baa1ca" Win64="yes">
+                  <File Id="jna_4.5.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\jna-4.5.1.jar" />
                 </Component>
 
-                <Component Id="Component.jna_4.4.0_1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547838772020" Win64="yes">
-                  <File Id="jna_4.4.0_1.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\jna-4.4.0-1.jar" />
-                </Component>
-
-                <Component Id="Component.joda_time_2.9.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d10c3044" Win64="yes">
-                  <File Id="joda_time_2.9.5.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\joda-time-2.9.5.jar" />
+                <Component Id="Component.joda_time_2.9.9.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d10c31b0" Win64="yes">
+                  <File Id="joda_time_2.9.9.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\joda-time-2.9.9.jar" />
                 </Component>
 
                 <Component Id="Component.jopt_simple_5.0.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780c1170ff" Win64="yes">
-                  <File Id="jopt_simple_5.0.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\jopt-simple-5.0.2.jar" />
+                  <File Id="jopt_simple_5.0.2.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\jopt-simple-5.0.2.jar" />
                 </Component>
 
                 <Component Id="Component.jts_1.13.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bde079f3" Win64="yes">
-                  <File Id="jts_1.13.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\jts-1.13.jar" />
+                  <File Id="jts_1.13.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\jts-1.13.jar" />
                 </Component>
 
                 <Component Id="Component.log4j_1.2_api_2.9.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547890a47e2d" Win64="yes">
-                  <File Id="log4j_1.2_api_2.9.1.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\log4j-1.2-api-2.9.1.jar" />
+                  <File Id="log4j_1.2_api_2.9.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\log4j-1.2-api-2.9.1.jar" />
                 </Component>
 
                 <Component Id="Component.log4j_api_2.9.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54787d6f021e" Win64="yes">
-                  <File Id="log4j_api_2.9.1.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\log4j-api-2.9.1.jar" />
+                  <File Id="log4j_api_2.9.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\log4j-api-2.9.1.jar" />
                 </Component>
 
                 <Component Id="Component.log4j_core_2.9.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478e7d0b698" Win64="yes">
-                  <File Id="log4j_core_2.9.1.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\log4j-core-2.9.1.jar" />
+                  <File Id="log4j_core_2.9.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\log4j-core-2.9.1.jar" />
                 </Component>
 
-                <Component Id="Component._...ene_analyzers_common_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780e592dca" Win64="yes">
-                  <File Id="_...ene_analyzers_common_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-analyzers-common-7.1.0.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-5478b5f46964" Win64="yes" Id="Component.INSTALLDIR_lib.lucene_analyzers_common_7.2.1.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-analyzers-common-7.2.1.jar" Id="INSTALLDIR_lib.lucene_analyzers_common_7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component._...cene_backward_codecs_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784f357ac6" Win64="yes">
-                  <File Id="_...cene_backward_codecs_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-backward-codecs-7.1.0.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-547884eacb07" Win64="yes" Id="Component.INSTALLDIR_lib.lucene_backward_codecs_7.2.1.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-backward-codecs-7.2.1.jar" Id="INSTALLDIR_lib.lucene_backward_codecs_7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_core_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478643f642d" Win64="yes">
-                  <File Id="lucene_core_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-core-7.1.0.jar" />
+                <Component Id="Component.lucene_core_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478a12455d5" Win64="yes">
+                  <File Id="lucene_core_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-core-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_grouping_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547825dd2a76" Win64="yes">
-                  <File Id="lucene_grouping_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-grouping-7.1.0.jar" />
+                <Component Id="Component.lucene_grouping_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54788f6cd4ec" Win64="yes">
+                  <File Id="lucene_grouping_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-grouping-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_highlighter_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783f220fdb" Win64="yes">
-                  <File Id="lucene_highlighter_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-highlighter-7.1.0.jar" />
+                <Component Id="Component.lucene_highlighter_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478ab440fdb" Win64="yes">
+                  <File Id="lucene_highlighter_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-highlighter-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_join_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478cfebd5fe" Win64="yes">
-                  <File Id="lucene_join_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-join-7.1.0.jar" />
+                <Component Id="Component.lucene_join_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784c83b494" Win64="yes">
+                  <File Id="lucene_join_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-join-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_memory_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547838827a17" Win64="yes">
-                  <File Id="lucene_memory_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-memory-7.1.0.jar" />
+                <Component Id="Component.lucene_memory_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784254fdb9" Win64="yes">
+                  <File Id="lucene_memory_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-memory-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_misc_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547823a5cf15" Win64="yes">
-                  <File Id="lucene_misc_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-misc-7.1.0.jar" />
+                <Component Id="Component.lucene_misc_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d5eceef9" Win64="yes">
+                  <File Id="lucene_misc_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-misc-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_queries_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478de60136d" Win64="yes">
-                  <File Id="lucene_queries_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-queries-7.1.0.jar" />
+                <Component Id="Component.lucene_queries_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478cf76136d" Win64="yes">
+                  <File Id="lucene_queries_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-queries-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_queryparser_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478a13be130" Win64="yes">
-                  <File Id="lucene_queryparser_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-queryparser-7.1.0.jar" />
+                <Component Id="Component.lucene_queryparser_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478c01fe130" Win64="yes">
+                  <File Id="lucene_queryparser_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-queryparser-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_sandbox_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478ce90a387" Win64="yes">
-                  <File Id="lucene_sandbox_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-sandbox-7.1.0.jar" />
+                <Component Id="Component.lucene_sandbox_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785174a387" Win64="yes">
+                  <File Id="lucene_sandbox_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-sandbox-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_spatial_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fce5eaf2" Win64="yes">
-                  <File Id="lucene_spatial_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-spatial-7.1.0.jar" />
+                <Component Id="Component.lucene_spatial_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bd15eaf2" Win64="yes">
+                  <File Id="lucene_spatial_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-spatial-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component._...ucene_spatial_extras_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547817b11172" Win64="yes">
-                  <File Id="_...ucene_spatial_extras_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-spatial-extras-7.1.0.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-5478334ccaca" Win64="yes" Id="Component.INSTALLDIR_lib.lucene_spatial_extras_7.2.1.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-spatial-extras-7.2.1.jar" Id="INSTALLDIR_lib.lucene_spatial_extras_7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_spatial3d_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547834671cc7" Win64="yes">
-                  <File Id="lucene_spatial3d_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-spatial3d-7.1.0.jar" />
+                <Component Id="Component.lucene_spatial3d_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547826371cc7" Win64="yes">
+                  <File Id="lucene_spatial3d_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-spatial3d-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.lucene_suggest_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547821d4c821" Win64="yes">
-                  <File Id="lucene_suggest_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\lucene-suggest-7.1.0.jar" />
+                <Component Id="Component.lucene_suggest_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547830bec821" Win64="yes">
+                  <File Id="lucene_suggest_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\lucene-suggest-7.2.1.jar" />
                 </Component>
 
-                <Component Id="Component.plugin_cli_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d92b650f" Win64="yes">
-                  <File Id="plugin_cli_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\plugin-cli-6.1.2.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-54780a2e0d15" Win64="yes" Id="Component.INSTALLDIR_lib.plugin_classloader_7.0.0_alpha1_SNAPSHOT.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\plugin-classloader-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_lib.plugin_classloader_7.0.0_alpha1_SNAPSHOT.jar" />
                 </Component>
 
-                <Component Id="Component.securesm_1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478663c59f8" Win64="yes">
-                  <File Id="securesm_1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\securesm-1.2.jar" />
+                <Component Guid="daaa2cba-a1ed-4f29-afbf-5478584770a1" Win64="yes" Id="Component.INSTALLDIR_lib.plugin_cli_7.0.0_alpha1_SNAPSHOT.jar">
+                  <File Source="..\..\..\build\in\elasticsearch-6.3.0\lib\plugin-cli-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_lib.plugin_cli_7.0.0_alpha1_SNAPSHOT.jar" />
                 </Component>
 
                 <Component Id="Component.snakeyaml_1.17.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780d9bea35" Win64="yes">
-                  <File Id="snakeyaml_1.17.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\snakeyaml-1.17.jar" />
+                  <File Id="snakeyaml_1.17.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\snakeyaml-1.17.jar" />
                 </Component>
 
                 <Component Id="Component.spatial4j_0.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780eb71a08" Win64="yes">
-                  <File Id="spatial4j_0.6.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\spatial4j-0.6.jar" />
+                  <File Id="spatial4j_0.6.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\spatial4j-0.6.jar" />
                 </Component>
 
-                <Component Id="Component.t_digest_3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547811092469" Win64="yes">
-                  <File Id="t_digest_3.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\lib\t-digest-3.0.jar" />
+                <Component Id="Component.t_digest_3.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547812cf2469" Win64="yes">
+                  <File Id="t_digest_3.2.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\lib\t-digest-3.2.jar" />
                 </Component>
 
               </Directory>
@@ -262,12 +286,12 @@
                     <RemoveFolder Id="INSTALLDIR.modules.aggs_matrix_stats.dir" On="both" />
                   </Component>
 
-                  <Component Id="Component.aggs_matrix_stats_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547872335714" Win64="yes">
-                    <File Id="aggs_matrix_stats_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\aggs-matrix-stats\aggs-matrix-stats-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547869143f2e" Win64="yes" Id="Component.INSTALLDIR_modules_aggs_matrix_stats.aggs_matrix_stats_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\aggs-matrix-stats\aggs-matrix-stats-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_aggs_matrix_stats.aggs_matrix_stats_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
                   <Component Id="Component.plugin_descriptor.properties" Guid="daaa2cba-a1ed-4f29-afbf-547893a03ecb" Win64="yes">
-                    <File Id="plugin_descriptor.properties" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\aggs-matrix-stats\plugin-descriptor.properties" />
+                    <File Id="plugin_descriptor.properties" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\aggs-matrix-stats\plugin-descriptor.properties" />
                   </Component>
 
                 </Directory>
@@ -279,12 +303,12 @@
                     <RemoveFolder Id="INSTALLDIR.modules.analysis_common.dir" On="both" />
                   </Component>
 
-                  <Component Id="Component.analysis_common_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547824f96a53" Win64="yes">
-                    <File Id="analysis_common_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\analysis-common\analysis-common-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547840eb73f5" Win64="yes" Id="Component.INSTALLDIR_modules_analysis_common.analysis_common_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\analysis-common\analysis-common-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_analysis_common.analysis_common_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478d8242033" Win64="yes" Id="Component.analysis_common.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\analysis-common\plugin-descriptor.properties" Id="analysis_common.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54786898f1bb" Win64="yes" Id="Component.INSTALLDIR_modules_analysis_common.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\analysis-common\plugin-descriptor.properties" Id="INSTALLDIR_modules_analysis_common.plugin_descriptor.properties" />
                   </Component>
 
                 </Directory>
@@ -296,20 +320,24 @@
                     <RemoveFolder Id="INSTALLDIR.modules.ingest_common.dir" On="both" />
                   </Component>
 
-                  <Component Id="Component.ingest_common_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478268ce8b9" Win64="yes">
-                    <File Id="ingest_common_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\ingest-common\ingest-common-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54788edf795a" Win64="yes" Id="Component.INSTALLDIR_modules_ingest_common.elasticsearch_grok_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\ingest-common\elasticsearch-grok-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_ingest_common.elasticsearch_grok_7.0.0_alpha1_SNAPSHOT.jar" />
+                  </Component>
+
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547824c71372" Win64="yes" Id="Component.INSTALLDIR_modules_ingest_common.ingest_common_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\ingest-common\ingest-common-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_ingest_common.ingest_common_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
                   <Component Id="Component.jcodings_1.0.12.jar" Guid="daaa2cba-a1ed-4f29-afbf-54787d9200c1" Win64="yes">
-                    <File Id="jcodings_1.0.12.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\ingest-common\jcodings-1.0.12.jar" />
+                    <File Id="jcodings_1.0.12.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\ingest-common\jcodings-1.0.12.jar" />
                   </Component>
 
                   <Component Id="Component.joni_2.1.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478796f85a6" Win64="yes">
-                    <File Id="joni_2.1.6.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\ingest-common\joni-2.1.6.jar" />
+                    <File Id="joni_2.1.6.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\ingest-common\joni-2.1.6.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54787f80fa71" Win64="yes" Id="Component.ingest_common.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\ingest-common\plugin-descriptor.properties" Id="ingest_common.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478cdceb27e" Win64="yes" Id="Component.INSTALLDIR_modules_ingest_common.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\ingest-common\plugin-descriptor.properties" Id="INSTALLDIR_modules_ingest_common.plugin_descriptor.properties" />
                   </Component>
 
                 </Directory>
@@ -322,35 +350,35 @@
                   </Component>
 
                   <Component Id="Component.antlr4_runtime_4.5.1_1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789ca4f8e5" Win64="yes">
-                    <File Id="antlr4_runtime_4.5.1_1.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\antlr4-runtime-4.5.1-1.jar" />
+                    <File Id="antlr4_runtime_4.5.1_1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\antlr4-runtime-4.5.1-1.jar" />
                   </Component>
 
                   <Component Id="Component.asm_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478540b35bc" Win64="yes">
-                    <File Id="asm_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\asm-5.0.4.jar" />
+                    <File Id="asm_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\asm-5.0.4.jar" />
                   </Component>
 
                   <Component Id="Component.asm_commons_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-54786365adc3" Win64="yes">
-                    <File Id="asm_commons_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\asm-commons-5.0.4.jar" />
+                    <File Id="asm_commons_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\asm-commons-5.0.4.jar" />
                   </Component>
 
                   <Component Id="Component.asm_tree_5.0.4.jar" Guid="daaa2cba-a1ed-4f29-afbf-547838441039" Win64="yes">
-                    <File Id="asm_tree_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\asm-tree-5.0.4.jar" />
+                    <File Id="asm_tree_5.0.4.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\asm-tree-5.0.4.jar" />
                   </Component>
 
-                  <Component Id="Component.lang_expression_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478dadd6997" Win64="yes">
-                    <File Id="lang_expression_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\lang-expression-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478868e2971" Win64="yes" Id="Component.INSTALLDIR_modules_lang_expression.lang_expression_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\lang-expression-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_lang_expression.lang_expression_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Id="Component.lucene_expressions_7.1.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784fbd26c8" Win64="yes">
-                    <File Id="lucene_expressions_7.1.0.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\lucene-expressions-7.1.0.jar" />
+                  <Component Id="Component.lucene_expressions_7.2.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478e29726c8" Win64="yes">
+                    <File Id="lucene_expressions_7.2.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\lucene-expressions-7.2.1.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54787452d429" Win64="yes" Id="Component.lang_expression.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\plugin-descriptor.properties" Id="lang_expression.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54786e88142e" Win64="yes" Id="Component.INSTALLDIR_modules_lang_expression.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\plugin-descriptor.properties" Id="INSTALLDIR_modules_lang_expression.plugin_descriptor.properties" />
                   </Component>
 
                   <Component Id="Component.plugin_security.policy" Guid="daaa2cba-a1ed-4f29-afbf-547883f186ed" Win64="yes">
-                    <File Id="plugin_security.policy" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-expression\plugin-security.policy" />
+                    <File Id="plugin_security.policy" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-expression\plugin-security.policy" />
                   </Component>
 
                 </Directory>
@@ -363,19 +391,19 @@
                   </Component>
 
                   <Component Id="Component.compiler_0.9.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-547820e67731" Win64="yes">
-                    <File Id="compiler_0.9.3.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-mustache\compiler-0.9.3.jar" />
+                    <File Id="compiler_0.9.3.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-mustache\compiler-0.9.3.jar" />
                   </Component>
 
-                  <Component Id="Component.lang_mustache_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478a30bed0a" Win64="yes">
-                    <File Id="lang_mustache_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-mustache\lang-mustache-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478bdcaaae8" Win64="yes" Id="Component.INSTALLDIR_modules_lang_mustache.lang_mustache_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-mustache\lang-mustache-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_lang_mustache.lang_mustache_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54781d17feb8" Win64="yes" Id="Component.lang_mustache.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-mustache\plugin-descriptor.properties" Id="lang_mustache.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54783505f1ef" Win64="yes" Id="Component.INSTALLDIR_modules_lang_mustache.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-mustache\plugin-descriptor.properties" Id="INSTALLDIR_modules_lang_mustache.plugin_descriptor.properties" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54789821efe2" Win64="yes" Id="Component.lang_mustache.plugin_security.policy">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-mustache\plugin-security.policy" Id="lang_mustache.plugin_security.policy" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478793dab31" Win64="yes" Id="Component.INSTALLDIR_modules_lang_mustache.plugin_security.policy">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-mustache\plugin-security.policy" Id="INSTALLDIR_modules_lang_mustache.plugin_security.policy" />
                   </Component>
 
                 </Directory>
@@ -388,23 +416,27 @@
                   </Component>
 
                   <Component Id="Component.antlr4_runtime_4.5.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478082a7b0f" Win64="yes">
-                    <File Id="antlr4_runtime_4.5.3.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-painless\antlr4-runtime-4.5.3.jar" />
+                    <File Id="antlr4_runtime_4.5.3.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-painless\antlr4-runtime-4.5.3.jar" />
                   </Component>
 
                   <Component Id="Component.asm_debug_all_5.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547850638076" Win64="yes">
-                    <File Id="asm_debug_all_5.1.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-painless\asm-debug-all-5.1.jar" />
+                    <File Id="asm_debug_all_5.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-painless\asm-debug-all-5.1.jar" />
                   </Component>
 
-                  <Component Id="Component.lang_painless_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478e1d76386" Win64="yes">
-                    <File Id="lang_painless_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-painless\lang-painless-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54787d7497a9" Win64="yes" Id="Component.INSTALLDIR_modules_lang_painless.elasticsearch_scripting_painless_spi_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-painless\elasticsearch-scripting-painless-spi-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_lang_painless.elasticsearch_scripting_painless_spi_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54783080798c" Win64="yes" Id="Component.lang_painless.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-painless\plugin-descriptor.properties" Id="lang_painless.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478f417336e" Win64="yes" Id="Component.INSTALLDIR_modules_lang_painless.lang_painless_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-painless\lang-painless-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_lang_painless.lang_painless_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54782978c919" Win64="yes" Id="Component.lang_painless.plugin_security.policy">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\lang-painless\plugin-security.policy" Id="lang_painless.plugin_security.policy" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547827a70713" Win64="yes" Id="Component.INSTALLDIR_modules_lang_painless.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-painless\plugin-descriptor.properties" Id="INSTALLDIR_modules_lang_painless.plugin_descriptor.properties" />
+                  </Component>
+
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478270aa1e6" Win64="yes" Id="Component.INSTALLDIR_modules_lang_painless.plugin_security.policy">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\lang-painless\plugin-security.policy" Id="INSTALLDIR_modules_lang_painless.plugin_security.policy" />
                   </Component>
 
                 </Directory>
@@ -416,12 +448,12 @@
                     <RemoveFolder Id="INSTALLDIR.modules.mapper_extras.dir" On="both" />
                   </Component>
 
-                  <Component Id="Component.mapper_extras_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478830fc1e5" Win64="yes">
-                    <File Id="mapper_extras_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\mapper-extras\mapper-extras-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478ce7a5829" Win64="yes" Id="Component.INSTALLDIR_modules_mapper_extras.mapper_extras_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\mapper-extras\mapper-extras-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_mapper_extras.mapper_extras_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478c3408a02" Win64="yes" Id="Component.mapper_extras.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\mapper-extras\plugin-descriptor.properties" Id="mapper_extras.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547881266ec4" Win64="yes" Id="Component.INSTALLDIR_modules_mapper_extras.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\mapper-extras\plugin-descriptor.properties" Id="INSTALLDIR_modules_mapper_extras.plugin_descriptor.properties" />
                   </Component>
 
                 </Directory>
@@ -433,12 +465,12 @@
                     <RemoveFolder Id="INSTALLDIR.modules.parent_join.dir" On="both" />
                   </Component>
 
-                  <Component Id="Component.parent_join_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547815763ce9" Win64="yes">
-                    <File Id="parent_join_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\parent-join\parent-join-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478837cb44e" Win64="yes" Id="Component.INSTALLDIR_modules_parent_join.parent_join_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\parent-join\parent-join-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_parent_join.parent_join_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547800c6720f" Win64="yes" Id="Component.parent_join.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\parent-join\plugin-descriptor.properties" Id="parent_join.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478cc9a0e01" Win64="yes" Id="Component.INSTALLDIR_modules_parent_join.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\parent-join\plugin-descriptor.properties" Id="INSTALLDIR_modules_parent_join.plugin_descriptor.properties" />
                   </Component>
 
                 </Directory>
@@ -450,12 +482,29 @@
                     <RemoveFolder Id="INSTALLDIR.modules.percolator.dir" On="both" />
                   </Component>
 
-                  <Component Id="Component.percolator_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54784510ddf2" Win64="yes">
-                    <File Id="percolator_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\percolator\percolator-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54788d85b2b3" Win64="yes" Id="Component.INSTALLDIR_modules_percolator.percolator_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\percolator\percolator-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_percolator.percolator_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54780f787589" Win64="yes" Id="Component.percolator.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\percolator\plugin-descriptor.properties" Id="percolator.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54783c020d67" Win64="yes" Id="Component.INSTALLDIR_modules_percolator.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\percolator\plugin-descriptor.properties" Id="INSTALLDIR_modules_percolator.plugin_descriptor.properties" />
+                  </Component>
+
+                </Directory>
+
+                <Directory Id="INSTALLDIR.modules.rank_eval" Name="rank-eval">
+
+                  <Component Id="Component.INSTALLDIR.modules.rank_eval" Guid="daaa2cba-a1ed-4f29-afbf-54786656145d" Win64="yes">
+                    <RemoveFile Id="INSTALLDIR.modules.rank_eval.all" Name="*" On="both" />
+                    <RemoveFolder Id="INSTALLDIR.modules.rank_eval.dir" On="both" />
+                  </Component>
+
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478bdac0056" Win64="yes" Id="Component.INSTALLDIR_modules_rank_eval.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\rank-eval\plugin-descriptor.properties" Id="INSTALLDIR_modules_rank_eval.plugin_descriptor.properties" />
+                  </Component>
+
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547887eea2cc" Win64="yes" Id="Component.INSTALLDIR_modules_rank_eval.rank_eval_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\rank-eval\rank-eval-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_rank_eval.rank_eval_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
                 </Directory>
@@ -468,43 +517,43 @@
                   </Component>
 
                   <Component Id="Component.commons_codec_1.10.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478796f5d50" Win64="yes">
-                    <File Id="commons_codec_1.10.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\commons-codec-1.10.jar" />
+                    <File Id="commons_codec_1.10.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\commons-codec-1.10.jar" />
                   </Component>
 
                   <Component Id="Component.commons_logging_1.1.3.jar" Guid="daaa2cba-a1ed-4f29-afbf-547868ab35a8" Win64="yes">
-                    <File Id="commons_logging_1.1.3.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\commons-logging-1.1.3.jar" />
+                    <File Id="commons_logging_1.1.3.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\commons-logging-1.1.3.jar" />
                   </Component>
 
-                  <Component Id="Component._...icsearch_rest_client_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478ad43608f" Win64="yes">
-                    <File Id="_...icsearch_rest_client_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\elasticsearch-rest-client-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547825878782" Win64="yes" Id="Component.INSTALLDIR_modules_reindex.elasticsearch_rest_client_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\elasticsearch-rest-client-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_reindex.elasticsearch_rest_client_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
                   <Component Id="Component.httpasyncclient_4.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547826e95944" Win64="yes">
-                    <File Id="httpasyncclient_4.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\httpasyncclient-4.1.2.jar" />
+                    <File Id="httpasyncclient_4.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\httpasyncclient-4.1.2.jar" />
                   </Component>
 
                   <Component Id="Component.httpclient_4.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54783b3be93b" Win64="yes">
-                    <File Id="httpclient_4.5.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\httpclient-4.5.2.jar" />
+                    <File Id="httpclient_4.5.2.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\httpclient-4.5.2.jar" />
                   </Component>
 
                   <Component Id="Component.httpcore_4.4.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-547841525bd1" Win64="yes">
-                    <File Id="httpcore_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\httpcore-4.4.5.jar" />
+                    <File Id="httpcore_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\httpcore-4.4.5.jar" />
                   </Component>
 
                   <Component Id="Component.httpcore_nio_4.4.5.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fc877082" Win64="yes">
-                    <File Id="httpcore_nio_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\httpcore-nio-4.4.5.jar" />
+                    <File Id="httpcore_nio_4.4.5.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\httpcore-nio-4.4.5.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54781e892253" Win64="yes" Id="Component.reindex.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\plugin-descriptor.properties" Id="reindex.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54783811755c" Win64="yes" Id="Component.INSTALLDIR_modules_reindex.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\plugin-descriptor.properties" Id="INSTALLDIR_modules_reindex.plugin_descriptor.properties" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478cf2f45a9" Win64="yes" Id="Component.reindex.plugin_security.policy">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\plugin-security.policy" Id="reindex.plugin_security.policy" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478e1e4083f" Win64="yes" Id="Component.INSTALLDIR_modules_reindex.plugin_security.policy">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\plugin-security.policy" Id="INSTALLDIR_modules_reindex.plugin_security.policy" />
                   </Component>
 
-                  <Component Id="Component.reindex_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780299e768" Win64="yes">
-                    <File Id="reindex_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\reindex\reindex-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54784cd92e5e" Win64="yes" Id="Component.INSTALLDIR_modules_reindex.reindex_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\reindex\reindex-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_reindex.reindex_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
                 </Directory>
@@ -516,16 +565,16 @@
                     <RemoveFolder Id="INSTALLDIR.modules.repository_url.dir" On="both" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478fa248f9a" Win64="yes" Id="Component.repository_url.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\repository-url\plugin-descriptor.properties" Id="repository_url.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478d7ea2190" Win64="yes" Id="Component.INSTALLDIR_modules_repository_url.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\repository-url\plugin-descriptor.properties" Id="INSTALLDIR_modules_repository_url.plugin_descriptor.properties" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-547898a6f299" Win64="yes" Id="Component.repository_url.plugin_security.policy">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\repository-url\plugin-security.policy" Id="repository_url.plugin_security.policy" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478c5d6e5ed" Win64="yes" Id="Component.INSTALLDIR_modules_repository_url.plugin_security.policy">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\repository-url\plugin-security.policy" Id="INSTALLDIR_modules_repository_url.plugin_security.policy" />
                   </Component>
 
-                  <Component Id="Component.repository_url_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478276659b5" Win64="yes">
-                    <File Id="repository_url_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\repository-url\repository-url-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478afdc8259" Win64="yes" Id="Component.INSTALLDIR_modules_repository_url.repository_url_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\repository-url\repository-url-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_repository_url.repository_url_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
                 </Directory>
@@ -537,63 +586,838 @@
                     <RemoveFolder Id="INSTALLDIR.modules.transport_netty4.dir" On="both" />
                   </Component>
 
-                  <Component Id="Component.netty_buffer_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-547881350591" Win64="yes">
-                    <File Id="netty_buffer_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\netty-buffer-4.1.13.Final.jar" />
+                  <Component Id="Component.netty_buffer_4.1.16.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54788135113a" Win64="yes">
+                    <File Id="netty_buffer_4.1.16.Final.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\netty-buffer-4.1.16.Final.jar" />
                   </Component>
 
-                  <Component Id="Component.netty_codec_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478677b2eca" Win64="yes">
-                    <File Id="netty_codec_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\netty-codec-4.1.13.Final.jar" />
+                  <Component Id="Component.netty_codec_4.1.16.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478841c2eca" Win64="yes">
+                    <File Id="netty_codec_4.1.16.Final.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\netty-codec-4.1.16.Final.jar" />
                   </Component>
 
-                  <Component Id="Component._...ty_codec_http_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bebaa9fe" Win64="yes">
-                    <File Id="_...ty_codec_http_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\netty-codec-http-4.1.13.Final.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478fc4c8cfb" Win64="yes" Id="Component.INSTALLDIR_modules_transport_netty4.netty_codec_http_4.1.16.Final.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\netty-codec-http-4.1.16.Final.jar" Id="INSTALLDIR_modules_transport_netty4.netty_codec_http_4.1.16.Final.jar" />
                   </Component>
 
-                  <Component Id="Component.netty_common_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bc7df66c" Win64="yes">
-                    <File Id="netty_common_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\netty-common-4.1.13.Final.jar" />
+                  <Component Id="Component.netty_common_4.1.16.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bc7fc943" Win64="yes">
+                    <File Id="netty_common_4.1.16.Final.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\netty-common-4.1.16.Final.jar" />
                   </Component>
 
-                  <Component Id="Component.netty_handler_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fda2ab4a" Win64="yes">
-                    <File Id="netty_handler_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\netty-handler-4.1.13.Final.jar" />
+                  <Component Id="Component.netty_handler_4.1.16.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478ed87ab4a" Win64="yes">
+                    <File Id="netty_handler_4.1.16.Final.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\netty-handler-4.1.16.Final.jar" />
                   </Component>
 
-                  <Component Id="Component._...etty_resolver_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785164d95f" Win64="yes">
-                    <File Id="_...etty_resolver_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\netty-resolver-4.1.13.Final.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54788a86d7eb" Win64="yes" Id="Component.INSTALLDIR_modules_transport_netty4.netty_resolver_4.1.16.Final.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\netty-resolver-4.1.16.Final.jar" Id="INSTALLDIR_modules_transport_netty4.netty_resolver_4.1.16.Final.jar" />
                   </Component>
 
-                  <Component Id="Component._...tty_transport_4.1.13.Final.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bbded01b" Win64="yes">
-                    <File Id="_...tty_transport_4.1.13.Final.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\netty-transport-4.1.13.Final.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54787c7488b7" Win64="yes" Id="Component.INSTALLDIR_modules_transport_netty4.netty_transport_4.1.16.Final.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\netty-transport-4.1.16.Final.jar" Id="INSTALLDIR_modules_transport_netty4.netty_transport_4.1.16.Final.jar" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54789fb1b618" Win64="yes" Id="Component.transport_netty4.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\plugin-descriptor.properties" Id="transport_netty4.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54781f779de5" Win64="yes" Id="Component.INSTALLDIR_modules_transport_netty4.plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\plugin-descriptor.properties" Id="INSTALLDIR_modules_transport_netty4.plugin_descriptor.properties" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478345f9901" Win64="yes" Id="Component.transport_netty4.plugin_security.policy">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\plugin-security.policy" Id="transport_netty4.plugin_security.policy" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-54781012e0c9" Win64="yes" Id="Component.INSTALLDIR_modules_transport_netty4.plugin_security.policy">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\plugin-security.policy" Id="INSTALLDIR_modules_transport_netty4.plugin_security.policy" />
                   </Component>
 
-                  <Component Id="Component.transport_netty4_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478dbaf1d4e" Win64="yes">
-                    <File Id="transport_netty4_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\transport-netty4\transport-netty4-6.1.2.jar" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478303ec56a" Win64="yes" Id="Component.INSTALLDIR_modules_transport_netty4.transport_netty4_7.0.0_alpha1_SNAPSHOT.jar">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\transport-netty4\transport-netty4-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_transport_netty4.transport_netty4_7.0.0_alpha1_SNAPSHOT.jar" />
                   </Component>
 
                 </Directory>
 
-                <Directory Id="INSTALLDIR.modules.tribe" Name="tribe">
+                <Directory Id="INSTALLDIR.modules.x_pack" Name="x-pack">
 
-                  <Component Id="Component.INSTALLDIR.modules.tribe" Guid="daaa2cba-a1ed-4f29-afbf-547852e655ed" Win64="yes">
-                    <RemoveFile Id="INSTALLDIR.modules.tribe.all" Name="*" On="both" />
-                    <RemoveFolder Id="INSTALLDIR.modules.tribe.dir" On="both" />
+                  <Component Id="Component.INSTALLDIR.modules.x_pack" Guid="daaa2cba-a1ed-4f29-afbf-54789e4eb9ad" Win64="yes">
+                    <RemoveFile Id="INSTALLDIR.modules.x_pack.all" Name="*" On="both" />
+                    <RemoveFolder Id="INSTALLDIR.modules.x_pack.dir" On="both" />
                   </Component>
 
-                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478ada2480d" Win64="yes" Id="Component.tribe.plugin_descriptor.properties">
-                    <File Source="..\..\..\build\in\elasticsearch-6.1.2\modules\tribe\plugin-descriptor.properties" Id="tribe.plugin_descriptor.properties" />
+                  <Component Guid="daaa2cba-a1ed-4f29-afbf-5478eae9ed3f" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack.meta_plugin_descriptor.properties">
+                    <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\meta-plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack.meta_plugin_descriptor.properties" />
                   </Component>
 
-                  <Component Id="Component.tribe_6.1.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547875cf81c0" Win64="yes">
-                    <File Id="tribe_6.1.2.jar" Source="..\..\..\build\in\elasticsearch-6.1.2\modules\tribe\tribe-6.1.2.jar" />
-                  </Component>
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_core" Name="x-pack-core">
 
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_core" Guid="daaa2cba-a1ed-4f29-afbf-54780b63318e" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_core.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_core.dir" On="both" />
+                    </Component>
+
+                    <Component Id="Component.bcpkix_jdk15on_1.58.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789a09f690" Win64="yes">
+                      <File Id="bcpkix_jdk15on_1.58.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\bcpkix-jdk15on-1.58.jar" />
+                    </Component>
+
+                    <Component Id="Component.bcprov_jdk15on_1.58.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789cbc634e" Win64="yes">
+                      <File Id="bcprov_jdk15on_1.58.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\bcprov-jdk15on-1.58.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478e9cb61da" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.commons_codec_1.10.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\commons-codec-1.10.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.commons_codec_1.10.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54780156a0d6" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.commons_logging_1.1.3.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\commons-logging-1.1.3.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.commons_logging_1.1.3.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54786e87cfcd" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpasyncclient_4.1.2.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\httpasyncclient-4.1.2.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.httpasyncclient_4.1.2.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547857116a27" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpclient_4.5.2.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\httpclient-4.5.2.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.httpclient_4.5.2.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478015b86ff" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpcore_4.4.5.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\httpcore-4.4.5.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.httpcore_4.4.5.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478bde3e084" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpcore_nio_4.4.5.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\httpcore-nio-4.4.5.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.httpcore_nio_4.4.5.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478439f286c" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_buffer_4.1.16.Final.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\netty-buffer-4.1.16.Final.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.netty_buffer_4.1.16.Final.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478ef853545" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_codec_4.1.16.Final.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\netty-codec-4.1.16.Final.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.netty_codec_4.1.16.Final.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54782166b092" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_codec_http_4.1.16.Final.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\netty-codec-http-4.1.16.Final.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.netty_codec_http_4.1.16.Final.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547887680348" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_common_4.1.16.Final.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\netty-common-4.1.16.Final.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.netty_common_4.1.16.Final.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54781b13d43a" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_handler_4.1.16.Final.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\netty-handler-4.1.16.Final.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.netty_handler_4.1.16.Final.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54788dd8814f" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_resolver_4.1.16.Final.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\netty-resolver-4.1.16.Final.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.netty_resolver_4.1.16.Final.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478a6db1348" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_transport_4.1.16.Final.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\netty-transport-4.1.16.Final.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.netty_transport_4.1.16.Final.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54785d7263e3" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_core.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547889e8d155" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_core.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478c93ae666" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.transport_netty4_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\transport-netty4-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.transport_netty4_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                    <Component Id="Component.unboundid_ldapsdk_3.2.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bd2f074d" Win64="yes">
+                      <File Id="unboundid_ldapsdk_3.2.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\unboundid-ldapsdk-3.2.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54782d2cbdfd" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.x_pack_core_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-core\x-pack-core-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_core.x_pack_core_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_deprecation" Name="x-pack-deprecation">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_deprecation" Guid="daaa2cba-a1ed-4f29-afbf-5478bdd42050" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_deprecation.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_deprecation.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54781a7fc708" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_deprecation.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-deprecation\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_deprecation.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478f7c02fde" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_deprecation.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-deprecation\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_deprecation.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547889429e46" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_deprecation.x_pack_deprecation_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-deprecation\x-pack-deprecation-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_deprecation.x_pack_deprecation_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_graph" Name="x-pack-graph">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_graph" Guid="daaa2cba-a1ed-4f29-afbf-54780fc71d58" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_graph.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_graph.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54784dd5b4a9" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_graph.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-graph\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_graph.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478e9fb9915" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_graph.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-graph\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_graph.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54787f2fdc69" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_graph.x_pack_graph_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-graph\x-pack-graph-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_graph.x_pack_graph_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_logstash" Name="x-pack-logstash">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_logstash" Guid="daaa2cba-a1ed-4f29-afbf-5478ff4641b1" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_logstash.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_logstash.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478f73b0776" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_logstash.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-logstash\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_logstash.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478ec824a63" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_logstash.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-logstash\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_logstash.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547869c31d71" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_logstash.x_pack_logstash_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-logstash\x-pack-logstash-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_logstash.x_pack_logstash_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml" Name="x-pack-ml">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml" Guid="daaa2cba-a1ed-4f29-afbf-54784b10c63c" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_ml.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_ml.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478d5ecff0c" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_ml.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478b7935ce4" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_ml.plugin_security.policy" />
+                    </Component>
+
+                    <Component Id="Component.super_csv_2.4.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547815b5c367" Win64="yes">
+                      <File Id="super_csv_2.4.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\super-csv-2.4.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54783cec1c75" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml.x_pack_ml_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\x-pack-ml-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_ml.x_pack_ml_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                    <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform" Name="platform">
+                      <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64" Name="darwin-x86_64">
+                        <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.bin" Name="bin">
+
+                          <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.bin" Guid="daaa2cba-a1ed-4f29-afbf-5478da4fa432" Win64="yes">
+                            <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.bin.all" Name="*" On="both" />
+                            <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.bin.dir" On="both" />
+                          </Component>
+
+                          <Component Id="Component.autoconfig" Guid="daaa2cba-a1ed-4f29-afbf-547826fe753a" Win64="yes">
+                            <File Id="autoconfig" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\bin\autoconfig" />
+                          </Component>
+
+                          <Component Id="Component.autodetect" Guid="daaa2cba-a1ed-4f29-afbf-5478feba7df5" Win64="yes">
+                            <File Id="autodetect" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\bin\autodetect" />
+                          </Component>
+
+                          <Component Id="Component.categorize" Guid="daaa2cba-a1ed-4f29-afbf-5478e7a42ada" Win64="yes">
+                            <File Id="categorize" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\bin\categorize" />
+                          </Component>
+
+                          <Component Id="Component.controller" Guid="daaa2cba-a1ed-4f29-afbf-54784703b026" Win64="yes">
+                            <File Id="controller" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\bin\controller" />
+                          </Component>
+
+                          <Component Id="Component.normalize" Guid="daaa2cba-a1ed-4f29-afbf-5478bcf41229" Win64="yes">
+                            <File Id="normalize" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\bin\normalize" />
+                          </Component>
+
+                        </Directory>
+
+                        <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.lib" Name="lib">
+
+                          <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.lib" Guid="daaa2cba-a1ed-4f29-afbf-54786311a432" Win64="yes">
+                            <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.lib.all" Name="*" On="both" />
+                            <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.lib.dir" On="both" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547887c8dcfe" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_date_time_clang_darwin42_mt_1_65_1.dylib">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libboost_date_time-clang-darwin42-mt-1_65_1.dylib" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_date_time_clang_darwin42_mt_1_65_1.dylib" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478c351e5d8" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_filesystem_clang_darwin42_mt_1_65_1.dylib">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libboost_filesystem-clang-darwin42-mt-1_65_1.dylib" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_filesystem_clang_darwin42_mt_1_65_1.dylib" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547863e349f7" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_iostreams_clang_darwin42_mt_1_65_1.dylib">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libboost_iostreams-clang-darwin42-mt-1_65_1.dylib" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_iostreams_clang_darwin42_mt_1_65_1.dylib" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478bbc98da8" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_program_options_clang_darwin42_mt_1_65_1.dylib">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libboost_program_options-clang-darwin42-mt-1_65_1.dylib" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_program_options_clang_darwin42_mt_1_65_1.dylib" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478bfe6f1ea" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_regex_clang_darwin42_mt_1_65_1.dylib">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libboost_regex-clang-darwin42-mt-1_65_1.dylib" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_regex_clang_darwin42_mt_1_65_1.dylib" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54785aa79f1b" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_system_clang_darwin42_mt_1_65_1.dylib">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libboost_system-clang-darwin42-mt-1_65_1.dylib" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_system_clang_darwin42_mt_1_65_1.dylib" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547804c31d78" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_thread_clang_darwin42_mt_1_65_1.dylib">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libboost_thread-clang-darwin42-mt-1_65_1.dylib" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_thread_clang_darwin42_mt_1_65_1.dylib" />
+                          </Component>
+
+                          <Component Id="Component.liblog4cxx.10.dylib" Guid="daaa2cba-a1ed-4f29-afbf-547864d86e7c" Win64="yes">
+                            <File Id="liblog4cxx.10.dylib" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\liblog4cxx.10.dylib" />
+                          </Component>
+
+                          <Component Id="Component.libMlApi.dylib" Guid="daaa2cba-a1ed-4f29-afbf-5478299a0253" Win64="yes">
+                            <File Id="libMlApi.dylib" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libMlApi.dylib" />
+                          </Component>
+
+                          <Component Id="Component.libMlConfig.dylib" Guid="daaa2cba-a1ed-4f29-afbf-5478b457e860" Win64="yes">
+                            <File Id="libMlConfig.dylib" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libMlConfig.dylib" />
+                          </Component>
+
+                          <Component Id="Component.libMlCore.dylib" Guid="daaa2cba-a1ed-4f29-afbf-5478a1f88982" Win64="yes">
+                            <File Id="libMlCore.dylib" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libMlCore.dylib" />
+                          </Component>
+
+                          <Component Id="Component.libMlMaths.dylib" Guid="daaa2cba-a1ed-4f29-afbf-5478f8b39bb7" Win64="yes">
+                            <File Id="libMlMaths.dylib" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libMlMaths.dylib" />
+                          </Component>
+
+                          <Component Id="Component.libMlModel.dylib" Guid="daaa2cba-a1ed-4f29-afbf-5478a86495ac" Win64="yes">
+                            <File Id="libMlModel.dylib" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\darwin-x86_64\lib\libMlModel.dylib" />
+                          </Component>
+
+                        </Directory>
+                      </Directory>
+
+                      <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64" Name="linux-x86_64">
+                        <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.bin" Name="bin">
+
+                          <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.bin" Guid="daaa2cba-a1ed-4f29-afbf-547865574ab5" Win64="yes">
+                            <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.bin.all" Name="*" On="both" />
+                            <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.bin.dir" On="both" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547847528da0" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.autoconfig">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\bin\autoconfig" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.autoconfig" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54784d00b713" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.autodetect">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\bin\autodetect" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.autodetect" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478785c8a69" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.categorize">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\bin\categorize" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.categorize" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54781242bbef" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.controller">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\bin\controller" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.controller" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478db7ee2f4" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.normalize">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\bin\normalize" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.normalize" />
+                          </Component>
+
+                        </Directory>
+
+                        <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.lib" Name="lib">
+
+                          <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.lib" Guid="daaa2cba-a1ed-4f29-afbf-54780530c2ff" Win64="yes">
+                            <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.lib.all" Name="*" On="both" />
+                            <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.lib.dir" On="both" />
+                          </Component>
+
+                          <Component Id="Component.libapr_1.so.0_" Guid="daaa2cba-a1ed-4f29-afbf-547862405283" Win64="yes">
+                            <File Id="libapr_1.so.0_" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libapr-1.so.0" />
+                          </Component>
+
+                          <Component Id="Component.libaprutil_1.so.0_" Guid="daaa2cba-a1ed-4f29-afbf-5478f006383b" Win64="yes">
+                            <File Id="libaprutil_1.so.0_" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libaprutil-1.so.0" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478e82c8f73" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_date_time_gcc73_mt_1_65_1.so.1.65.1">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libboost_date_time-gcc73-mt-1_65_1.so.1.65.1" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_date_time_gcc73_mt_1_65_1.so.1.65.1" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478306252ff" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_filesystem_gcc73_mt_1_65_1.so.1.65.1">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libboost_filesystem-gcc73-mt-1_65_1.so.1.65.1" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_filesystem_gcc73_mt_1_65_1.so.1.65.1" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547831b47e9a" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_iostreams_gcc73_mt_1_65_1.so.1.65.1">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libboost_iostreams-gcc73-mt-1_65_1.so.1.65.1" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_iostreams_gcc73_mt_1_65_1.so.1.65.1" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54784d2fe4a4" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_program_options_gcc73_mt_1_65_1.so.1.65.1">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libboost_program_options-gcc73-mt-1_65_1.so.1.65.1" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_program_options_gcc73_mt_1_65_1.so.1.65.1" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54787e863b6d" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_regex_gcc73_mt_1_65_1.so.1.65.1">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libboost_regex-gcc73-mt-1_65_1.so.1.65.1" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_regex_gcc73_mt_1_65_1.so.1.65.1" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54786b720cb2" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_system_gcc73_mt_1_65_1.so.1.65.1">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libboost_system-gcc73-mt-1_65_1.so.1.65.1" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_system_gcc73_mt_1_65_1.so.1.65.1" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54784605b70a" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_thread_gcc73_mt_1_65_1.so.1.65.1">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libboost_thread-gcc73-mt-1_65_1.so.1.65.1" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_thread_gcc73_mt_1_65_1.so.1.65.1" />
+                          </Component>
+
+                          <Component Id="Component.libexpat.so.0_" Guid="daaa2cba-a1ed-4f29-afbf-5478309733b9" Win64="yes">
+                            <File Id="libexpat.so.0_" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libexpat.so.0" />
+                          </Component>
+
+                          <Component Id="Component.libgcc_s.so.1_" Guid="daaa2cba-a1ed-4f29-afbf-5478ea3348f6" Win64="yes">
+                            <File Id="libgcc_s.so.1_" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libgcc_s.so.1" />
+                          </Component>
+
+                          <Component Id="Component.liblog4cxx.so.10_" Guid="daaa2cba-a1ed-4f29-afbf-547821d893e0" Win64="yes">
+                            <File Id="liblog4cxx.so.10_" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\liblog4cxx.so.10" />
+                          </Component>
+
+                          <Component Id="Component.libMlApi.so" Guid="daaa2cba-a1ed-4f29-afbf-5478a29936fb" Win64="yes">
+                            <File Id="libMlApi.so" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libMlApi.so" />
+                          </Component>
+
+                          <Component Id="Component.libMlConfig.so" Guid="daaa2cba-a1ed-4f29-afbf-5478401243e4" Win64="yes">
+                            <File Id="libMlConfig.so" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libMlConfig.so" />
+                          </Component>
+
+                          <Component Id="Component.libMlCore.so" Guid="daaa2cba-a1ed-4f29-afbf-547899dc5837" Win64="yes">
+                            <File Id="libMlCore.so" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libMlCore.so" />
+                          </Component>
+
+                          <Component Id="Component.libMlMaths.so" Guid="daaa2cba-a1ed-4f29-afbf-547891376441" Win64="yes">
+                            <File Id="libMlMaths.so" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libMlMaths.so" />
+                          </Component>
+
+                          <Component Id="Component.libMlModel.so" Guid="daaa2cba-a1ed-4f29-afbf-5478793349da" Win64="yes">
+                            <File Id="libMlModel.so" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libMlModel.so" />
+                          </Component>
+
+                          <Component Id="Component.libstdc__.so.6_" Guid="daaa2cba-a1ed-4f29-afbf-5478966bd1b5" Win64="yes">
+                            <File Id="libstdc__.so.6_" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libstdc++.so.6" />
+                          </Component>
+
+                          <Component Id="Component.libxml2.so.2_" Guid="daaa2cba-a1ed-4f29-afbf-5478d448d0f9" Win64="yes">
+                            <File Id="libxml2.so.2_" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\linux-x86_64\lib\libxml2.so.2" />
+                          </Component>
+
+                        </Directory>
+                      </Directory>
+
+                      <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.windows_x86_64" Name="windows-x86_64">
+                        <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.windows_x86_64.bin" Name="bin">
+
+                          <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.windows_x86_64.bin" Guid="daaa2cba-a1ed-4f29-afbf-547876ee0d55" Win64="yes">
+                            <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.windows_x86_64.bin.all" Name="*" On="both" />
+                            <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_ml.platform.windows_x86_64.bin.dir" On="both" />
+                          </Component>
+
+                          <Component Id="Component.autoconfig.exe" Guid="daaa2cba-a1ed-4f29-afbf-54786173363d" Win64="yes">
+                            <File Id="autoconfig.exe" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\autoconfig.exe" />
+                          </Component>
+
+                          <Component Id="Component.autodetect.exe" Guid="daaa2cba-a1ed-4f29-afbf-547808510c94" Win64="yes">
+                            <File Id="autodetect.exe" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\autodetect.exe" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478fa02a0ad" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_chrono_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_chrono-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_chrono_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547894711708" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_date_time_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_date_time-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_date_time_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54788fb16eb6" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_filesystem_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_filesystem-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_filesystem_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478ae075459" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_iostreams_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_iostreams-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_iostreams_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547820d51449" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_program_options_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_program_options-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_program_options_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-54783f28460d" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_regex_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_regex-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_regex_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-547815652893" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_system_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_system-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_system_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Guid="daaa2cba-a1ed-4f29-afbf-5478e7aecf76" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_thread_vc141_mt_1_65_1.dll">
+                            <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\boost_thread-vc141-mt-1_65_1.dll" Id="INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_thread_vc141_mt_1_65_1.dll" />
+                          </Component>
+
+                          <Component Id="Component.categorize.exe" Guid="daaa2cba-a1ed-4f29-afbf-547849559d1c" Win64="yes">
+                            <File Id="categorize.exe" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\categorize.exe" />
+                          </Component>
+
+                          <Component Id="Component.concrt140.dll" Guid="daaa2cba-a1ed-4f29-afbf-547809f999c6" Win64="yes">
+                            <File Id="concrt140.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\concrt140.dll" />
+                          </Component>
+
+                          <Component Id="Component.controller.exe" Guid="daaa2cba-a1ed-4f29-afbf-5478cda8370e" Win64="yes">
+                            <File Id="controller.exe" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\controller.exe" />
+                          </Component>
+
+                          <Component Id="Component.libapr_1.dll" Guid="daaa2cba-a1ed-4f29-afbf-547813c1dc6e" Win64="yes">
+                            <File Id="libapr_1.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libapr-1.dll" />
+                          </Component>
+
+                          <Component Id="Component.libapriconv_1.dll" Guid="daaa2cba-a1ed-4f29-afbf-54785beaac1a" Win64="yes">
+                            <File Id="libapriconv_1.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libapriconv-1.dll" />
+                          </Component>
+
+                          <Component Id="Component.libaprutil_1.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478aad792f7" Win64="yes">
+                            <File Id="libaprutil_1.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libaprutil-1.dll" />
+                          </Component>
+
+                          <Component Id="Component.libMlApi.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478fa2c36fc" Win64="yes">
+                            <File Id="libMlApi.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libMlApi.dll" />
+                          </Component>
+
+                          <Component Id="Component.libMlConfig.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478d8097e6e" Win64="yes">
+                            <File Id="libMlConfig.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libMlConfig.dll" />
+                          </Component>
+
+                          <Component Id="Component.libMlCore.dll" Guid="daaa2cba-a1ed-4f29-afbf-54784ea8d4f5" Win64="yes">
+                            <File Id="libMlCore.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libMlCore.dll" />
+                          </Component>
+
+                          <Component Id="Component.libMlMaths.dll" Guid="daaa2cba-a1ed-4f29-afbf-54783f95d8dc" Win64="yes">
+                            <File Id="libMlMaths.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libMlMaths.dll" />
+                          </Component>
+
+                          <Component Id="Component.libMlModel.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478ba62d53f" Win64="yes">
+                            <File Id="libMlModel.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libMlModel.dll" />
+                          </Component>
+
+                          <Component Id="Component.libxml2.dll" Guid="daaa2cba-a1ed-4f29-afbf-547850aa3f1a" Win64="yes">
+                            <File Id="libxml2.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\libxml2.dll" />
+                          </Component>
+
+                          <Component Id="Component.log4cxx.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478cfed95c6" Win64="yes">
+                            <File Id="log4cxx.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\log4cxx.dll" />
+                          </Component>
+
+                          <Component Id="Component.msvcp140.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478ecef1327" Win64="yes">
+                            <File Id="msvcp140.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\msvcp140.dll" />
+                          </Component>
+
+                          <Component Id="Component.normalize.exe" Guid="daaa2cba-a1ed-4f29-afbf-547871210e87" Win64="yes">
+                            <File Id="normalize.exe" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\normalize.exe" />
+                          </Component>
+
+                          <Component Id="Component.vccorlib140.dll" Guid="daaa2cba-a1ed-4f29-afbf-547812d5b204" Win64="yes">
+                            <File Id="vccorlib140.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\vccorlib140.dll" />
+                          </Component>
+
+                          <Component Id="Component.vcruntime140.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478f07768f7" Win64="yes">
+                            <File Id="vcruntime140.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\vcruntime140.dll" />
+                          </Component>
+
+                          <Component Id="Component.zlib1.dll" Guid="daaa2cba-a1ed-4f29-afbf-5478ef1288d0" Win64="yes">
+                            <File Id="zlib1.dll" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\platform\windows-x86_64\bin\zlib1.dll" />
+                          </Component>
+
+                        </Directory>
+                      </Directory>
+                    </Directory>
+
+                    <Directory Id="INSTALLDIR.modules.x_pack.x_pack_ml.resources" Name="resources">
+
+                      <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.resources" Guid="daaa2cba-a1ed-4f29-afbf-5478649985c3" Win64="yes">
+                        <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_ml.resources.all" Name="*" On="both" />
+                        <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_ml.resources.dir" On="both" />
+                      </Component>
+
+                      <Component Id="Component.date_time_zonespec.csv" Guid="daaa2cba-a1ed-4f29-afbf-5478199abff4" Win64="yes">
+                        <File Id="date_time_zonespec.csv" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\resources\date_time_zonespec.csv" />
+                      </Component>
+
+                      <Component Id="Component.ml_en.dict" Guid="daaa2cba-a1ed-4f29-afbf-5478982d5c0f" Win64="yes">
+                        <File Id="ml_en.dict" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-ml\resources\ml-en.dict" />
+                      </Component>
+
+                    </Directory>
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_monitoring" Name="x-pack-monitoring">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_monitoring" Guid="daaa2cba-a1ed-4f29-afbf-547826ac412a" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_monitoring.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_monitoring.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54784c857f74" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.elasticsearch_rest_client_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-monitoring\elasticsearch-rest-client-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_monitoring.elasticsearch_rest_client_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478eaf48ab9" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.elasticsearch_rest_client_sniffer_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-monitoring\elasticsearch-rest-client-sniffer-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_monitoring.elasticsearch_rest_client_sniffer_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54782ce57c85" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-monitoring\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_monitoring.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54789eb605b6" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-monitoring\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_monitoring.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478d4cd2843" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.x_pack_monitoring_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-monitoring\x-pack-monitoring-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_monitoring.x_pack_monitoring_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_rollup" Name="x-pack-rollup">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_rollup" Guid="daaa2cba-a1ed-4f29-afbf-54789eaadede" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_rollup.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_rollup.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478be2b5e25" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_rollup.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-rollup\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_rollup.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478321dd184" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_rollup.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-rollup\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_rollup.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547899ca79c1" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_rollup.x_pack_rollup_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-rollup\x-pack-rollup-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_rollup.x_pack_rollup_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_security" Name="x-pack-security">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_security" Guid="daaa2cba-a1ed-4f29-afbf-54785236b586" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_security.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_security.dir" On="both" />
+                    </Component>
+
+                    <Component Id="Component.cryptacular_1.2.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547829eb899d" Win64="yes">
+                      <File Id="cryptacular_1.2.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\cryptacular-1.2.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.guava_19.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478fa95e3c5" Win64="yes">
+                      <File Id="guava_19.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\guava-19.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.httpclient_cache_4.5.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-547849cc6660" Win64="yes">
+                      <File Id="httpclient_cache_4.5.2.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\httpclient-cache-4.5.2.jar" />
+                    </Component>
+
+                    <Component Id="Component.java_support_7.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547891b51edc" Win64="yes">
+                      <File Id="java_support_7.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\java-support-7.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.log4j_slf4j_impl_2.9.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54782dc2f4dc" Win64="yes">
+                      <File Id="log4j_slf4j_impl_2.9.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\log4j-slf4j-impl-2.9.1.jar" />
+                    </Component>
+
+                    <Component Id="Component.metrics_core_3.2.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54780db95ad8" Win64="yes">
+                      <File Id="metrics_core_3.2.2.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\metrics-core-3.2.2.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_core_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54785e85a946" Win64="yes">
+                      <File Id="opensaml_core_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-core-3.3.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54781f7f8a73" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_messaging_api_3.3.0.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-messaging-api-3.3.0.jar" Id="INSTALLDIR_modules_x_pack_x_pack_security.opensaml_messaging_api_3.3.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547887869b6a" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_messaging_impl_3.3.0.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-messaging-impl-3.3.0.jar" Id="INSTALLDIR_modules_x_pack_x_pack_security.opensaml_messaging_impl_3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_profile_api_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478722f8806" Win64="yes">
+                      <File Id="opensaml_profile_api_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-profile-api-3.3.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478573a2439" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_profile_impl_3.3.0.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-profile-impl-3.3.0.jar" Id="INSTALLDIR_modules_x_pack_x_pack_security.opensaml_profile_impl_3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_saml_api_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478f2666730" Win64="yes">
+                      <File Id="opensaml_saml_api_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-saml-api-3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_saml_impl_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478bb3a2cd2" Win64="yes">
+                      <File Id="opensaml_saml_impl_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-saml-impl-3.3.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547855705871" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_security_api_3.3.0.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-security-api-3.3.0.jar" Id="INSTALLDIR_modules_x_pack_x_pack_security.opensaml_security_api_3.3.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478cb9fd177" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_security_impl_3.3.0.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-security-impl-3.3.0.jar" Id="INSTALLDIR_modules_x_pack_x_pack_security.opensaml_security_impl_3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_soap_api_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478d606456b" Win64="yes">
+                      <File Id="opensaml_soap_api_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-soap-api-3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_soap_impl_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b84c3e12" Win64="yes">
+                      <File Id="opensaml_soap_impl_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-soap-impl-3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_storage_api_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478b9af870a" Win64="yes">
+                      <File Id="opensaml_storage_api_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-storage-api-3.3.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478258f8207" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_storage_impl_3.3.0.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-storage-impl-3.3.0.jar" Id="INSTALLDIR_modules_x_pack_x_pack_security.opensaml_storage_impl_3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_xmlsec_api_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-54787e9d61d3" Win64="yes">
+                      <File Id="opensaml_xmlsec_api_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-xmlsec-api-3.3.0.jar" />
+                    </Component>
+
+                    <Component Id="Component.opensaml_xmlsec_impl_3.3.0.jar" Guid="daaa2cba-a1ed-4f29-afbf-547806e26f57" Win64="yes">
+                      <File Id="opensaml_xmlsec_impl_3.3.0.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\opensaml-xmlsec-impl-3.3.0.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54781ff870c1" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_security.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547834ac79c8" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_security.plugin_security.policy" />
+                    </Component>
+
+                    <Component Id="Component.slf4j_api_1.6.2.jar" Guid="daaa2cba-a1ed-4f29-afbf-54789449d25b" Win64="yes">
+                      <File Id="slf4j_api_1.6.2.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\slf4j-api-1.6.2.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547814327d48" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.x_pack_security_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\x-pack-security-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_security.x_pack_security_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                    <Component Id="Component.xmlsec_2.0.8.jar" Guid="daaa2cba-a1ed-4f29-afbf-54781447d85b" Win64="yes">
+                      <File Id="xmlsec_2.0.8.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-security\xmlsec-2.0.8.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_sql" Name="x-pack-sql">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_sql" Guid="daaa2cba-a1ed-4f29-afbf-547835b2c629" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_sql.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_sql.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-547861385ce0" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.aggs_matrix_stats_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-sql\aggs-matrix-stats-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_sql.aggs_matrix_stats_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478a1676a0a" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.antlr4_runtime_4.5.3.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-sql\antlr4-runtime-4.5.3.jar" Id="INSTALLDIR_modules_x_pack_x_pack_sql.antlr4_runtime_4.5.3.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478cd309282" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-sql\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_sql.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54781f8897e7" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-sql\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_sql.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54788aae63bb" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.sql_proto_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-sql\sql-proto-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_sql.sql_proto_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478016f3af5" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.x_pack_sql_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-sql\x-pack-sql-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_sql.x_pack_sql_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_upgrade" Name="x-pack-upgrade">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_upgrade" Guid="daaa2cba-a1ed-4f29-afbf-547874b4c511" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_upgrade.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_upgrade.dir" On="both" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54781ee5e012" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_upgrade.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-upgrade\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_upgrade.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54784a91c0ea" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_upgrade.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-upgrade\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_upgrade.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478b0a740b0" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_upgrade.x_pack_upgrade_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-upgrade\x-pack-upgrade-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_upgrade.x_pack_upgrade_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
+
+                  <Directory Id="INSTALLDIR.modules.x_pack.x_pack_watcher" Name="x-pack-watcher">
+
+                    <Component Id="Component.INSTALLDIR.modules.x_pack.x_pack_watcher" Guid="daaa2cba-a1ed-4f29-afbf-54781b210878" Win64="yes">
+                      <RemoveFile Id="INSTALLDIR.modules.x_pack.x_pack_watcher.all" Name="*" On="both" />
+                      <RemoveFolder Id="INSTALLDIR.modules.x_pack.x_pack_watcher.dir" On="both" />
+                    </Component>
+
+                    <Component Id="Component.activation_1.1.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-547869f63d42" Win64="yes">
+                      <File Id="activation_1.1.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-watcher\activation-1.1.1.jar" />
+                    </Component>
+
+                    <Component Id="Component.guava_16.0.1.jar" Guid="daaa2cba-a1ed-4f29-afbf-54788a231011" Win64="yes">
+                      <File Id="guava_16.0.1.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-watcher\guava-16.0.1.jar" />
+                    </Component>
+
+                    <Component Id="Component.javax.mail_1.5.6.jar" Guid="daaa2cba-a1ed-4f29-afbf-5478604d2e08" Win64="yes">
+                      <File Id="javax.mail_1.5.6.jar" Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-watcher\javax.mail-1.5.6.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478b1efb6ed" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.owasp_java_html_sanitizer_r239.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-watcher\owasp-java-html-sanitizer-r239.jar" Id="INSTALLDIR_modules_x_pack_x_pack_watcher.owasp_java_html_sanitizer_r239.jar" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54785b38fa0e" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.plugin_descriptor.properties">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-watcher\plugin-descriptor.properties" Id="INSTALLDIR_modules_x_pack_x_pack_watcher.plugin_descriptor.properties" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-5478de0d210a" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.plugin_security.policy">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-watcher\plugin-security.policy" Id="INSTALLDIR_modules_x_pack_x_pack_watcher.plugin_security.policy" />
+                    </Component>
+
+                    <Component Guid="daaa2cba-a1ed-4f29-afbf-54787fa5fef2" Win64="yes" Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.x_pack_watcher_7.0.0_alpha1_SNAPSHOT.jar">
+                      <File Source="..\..\..\build\in\elasticsearch-6.3.0\modules\x-pack\x-pack-watcher\x-pack-watcher-7.0.0-alpha1-SNAPSHOT.jar" Id="INSTALLDIR_modules_x_pack_x_pack_watcher.x_pack_watcher_7.0.0_alpha1_SNAPSHOT.jar" />
+                    </Component>
+
+                  </Directory>
                 </Directory>
               </Directory>
 
@@ -653,8 +1477,8 @@
     </UI>
 
     <Upgrade Id="daaa2cba-a1ed-4f29-afbf-5478617b00f6">
-      <UpgradeVersion Minimum="0.0.0.0" Maximum="6.1.2" IncludeMinimum="yes" IncludeMaximum="no" Property="UPGRADEFOUND" />
-      <UpgradeVersion Minimum="6.1.2" IncludeMinimum="no" Property="NEWPRODUCTFOUND" />
+      <UpgradeVersion Minimum="0.0.0.0" Maximum="6.3.0" IncludeMinimum="yes" IncludeMaximum="no" Property="UPGRADEFOUND" />
+      <UpgradeVersion Minimum="6.3.0" IncludeMinimum="no" Property="NEWPRODUCTFOUND" />
     </Upgrade>
 
     <Icon Id="app_icon.ico" SourceFile="Resources\elasticsearch.ico" />
@@ -703,7 +1527,7 @@
     <Binary Id="ElasticsearchUninstallDirectoriesAction_File" SourceFile="%this%.CA.dll" />
 
     <Property Id="ElasticProduct" Value="Elasticsearch" />
-    <Property Id="CurrentVersion" Value="6.1.2" />
+    <Property Id="CurrentVersion" Value="6.3.0" />
     <Property Id="MsiLogging" Value="voicewarmup" />
     <Property Id="ARPNOREPAIR" Value="yes" />
     <Property Id="ARPNOMODIFY" Value="yes" />
@@ -757,98 +1581,262 @@
       <ComponentRef Id="Component.elasticsearch.yml" />
       <ComponentRef Id="Component.jvm.options" />
       <ComponentRef Id="Component.log4j2.properties" />
-      <ComponentRef Id="Component.elasticsearch_6.1.2.jar" />
-      <ComponentRef Id="Component.elasticsearch_cli_6.1.2.jar" />
+      <ComponentRef Id="Component.roles.yml" />
+      <ComponentRef Id="Component.role_mapping.yml" />
+      <ComponentRef Id="Component.users" />
+      <ComponentRef Id="Component.users_roles" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.elasticsearch_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.elasticsearch_cli_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.elasticsearch_core_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.elasticsearch_launchers_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.elasticsearch_secure_sm_7.0.0_alpha1_SNAPSHOT.jar" />
       <ComponentRef Id="Component.HdrHistogram_2.1.9.jar" />
       <ComponentRef Id="Component.hppc_0.7.1.jar" />
       <ComponentRef Id="Component.jackson_core_2.8.10.jar" />
-      <ComponentRef Id="Component._...son_dataformat_cbor_2.8.10.jar" />
-      <ComponentRef Id="Component._...on_dataformat_smile_2.8.10.jar" />
-      <ComponentRef Id="Component._...son_dataformat_yaml_2.8.10.jar" />
-      <ComponentRef Id="Component.java_version_checker_6.1.2.jar" />
-      <ComponentRef Id="Component.jna_4.4.0_1.jar" />
-      <ComponentRef Id="Component.joda_time_2.9.5.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.jackson_dataformat_cbor_2.8.10.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.jackson_dataformat_smile_2.8.10.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.jackson_dataformat_yaml_2.8.10.jar" />
+      <ComponentRef Id="Component.jna_4.5.1.jar" />
+      <ComponentRef Id="Component.joda_time_2.9.9.jar" />
       <ComponentRef Id="Component.jopt_simple_5.0.2.jar" />
       <ComponentRef Id="Component.jts_1.13.jar" />
       <ComponentRef Id="Component.log4j_1.2_api_2.9.1.jar" />
       <ComponentRef Id="Component.log4j_api_2.9.1.jar" />
       <ComponentRef Id="Component.log4j_core_2.9.1.jar" />
-      <ComponentRef Id="Component._...ene_analyzers_common_7.1.0.jar" />
-      <ComponentRef Id="Component._...cene_backward_codecs_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_core_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_grouping_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_highlighter_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_join_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_memory_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_misc_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_queries_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_queryparser_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_sandbox_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_spatial_7.1.0.jar" />
-      <ComponentRef Id="Component._...ucene_spatial_extras_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_spatial3d_7.1.0.jar" />
-      <ComponentRef Id="Component.lucene_suggest_7.1.0.jar" />
-      <ComponentRef Id="Component.plugin_cli_6.1.2.jar" />
-      <ComponentRef Id="Component.securesm_1.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.lucene_analyzers_common_7.2.1.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.lucene_backward_codecs_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_core_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_grouping_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_highlighter_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_join_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_memory_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_misc_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_queries_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_queryparser_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_sandbox_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_spatial_7.2.1.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.lucene_spatial_extras_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_spatial3d_7.2.1.jar" />
+      <ComponentRef Id="Component.lucene_suggest_7.2.1.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.plugin_classloader_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_lib.plugin_cli_7.0.0_alpha1_SNAPSHOT.jar" />
       <ComponentRef Id="Component.snakeyaml_1.17.jar" />
       <ComponentRef Id="Component.spatial4j_0.6.jar" />
-      <ComponentRef Id="Component.t_digest_3.0.jar" />
-      <ComponentRef Id="Component.aggs_matrix_stats_6.1.2.jar" />
+      <ComponentRef Id="Component.t_digest_3.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_aggs_matrix_stats.aggs_matrix_stats_7.0.0_alpha1_SNAPSHOT.jar" />
       <ComponentRef Id="Component.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.analysis_common_6.1.2.jar" />
-      <ComponentRef Id="Component.analysis_common.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.ingest_common_6.1.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_analysis_common.analysis_common_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_analysis_common.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_ingest_common.elasticsearch_grok_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_ingest_common.ingest_common_7.0.0_alpha1_SNAPSHOT.jar" />
       <ComponentRef Id="Component.jcodings_1.0.12.jar" />
       <ComponentRef Id="Component.joni_2.1.6.jar" />
-      <ComponentRef Id="Component.ingest_common.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_ingest_common.plugin_descriptor.properties" />
       <ComponentRef Id="Component.antlr4_runtime_4.5.1_1.jar" />
       <ComponentRef Id="Component.asm_5.0.4.jar" />
       <ComponentRef Id="Component.asm_commons_5.0.4.jar" />
       <ComponentRef Id="Component.asm_tree_5.0.4.jar" />
-      <ComponentRef Id="Component.lang_expression_6.1.2.jar" />
-      <ComponentRef Id="Component.lucene_expressions_7.1.0.jar" />
-      <ComponentRef Id="Component.lang_expression.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_expression.lang_expression_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.lucene_expressions_7.2.1.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_expression.plugin_descriptor.properties" />
       <ComponentRef Id="Component.plugin_security.policy" />
       <ComponentRef Id="Component.compiler_0.9.3.jar" />
-      <ComponentRef Id="Component.lang_mustache_6.1.2.jar" />
-      <ComponentRef Id="Component.lang_mustache.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.lang_mustache.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_mustache.lang_mustache_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_mustache.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_mustache.plugin_security.policy" />
       <ComponentRef Id="Component.antlr4_runtime_4.5.3.jar" />
       <ComponentRef Id="Component.asm_debug_all_5.1.jar" />
-      <ComponentRef Id="Component.lang_painless_6.1.2.jar" />
-      <ComponentRef Id="Component.lang_painless.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.lang_painless.plugin_security.policy" />
-      <ComponentRef Id="Component.mapper_extras_6.1.2.jar" />
-      <ComponentRef Id="Component.mapper_extras.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.parent_join_6.1.2.jar" />
-      <ComponentRef Id="Component.parent_join.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.percolator_6.1.2.jar" />
-      <ComponentRef Id="Component.percolator.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_painless.elasticsearch_scripting_painless_spi_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_painless.lang_painless_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_painless.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_lang_painless.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_mapper_extras.mapper_extras_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_mapper_extras.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_parent_join.parent_join_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_parent_join.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_percolator.percolator_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_percolator.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_rank_eval.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_rank_eval.rank_eval_7.0.0_alpha1_SNAPSHOT.jar" />
       <ComponentRef Id="Component.commons_codec_1.10.jar" />
       <ComponentRef Id="Component.commons_logging_1.1.3.jar" />
-      <ComponentRef Id="Component._...icsearch_rest_client_6.1.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_reindex.elasticsearch_rest_client_7.0.0_alpha1_SNAPSHOT.jar" />
       <ComponentRef Id="Component.httpasyncclient_4.1.2.jar" />
       <ComponentRef Id="Component.httpclient_4.5.2.jar" />
       <ComponentRef Id="Component.httpcore_4.4.5.jar" />
       <ComponentRef Id="Component.httpcore_nio_4.4.5.jar" />
-      <ComponentRef Id="Component.reindex.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.reindex.plugin_security.policy" />
-      <ComponentRef Id="Component.reindex_6.1.2.jar" />
-      <ComponentRef Id="Component.repository_url.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.repository_url.plugin_security.policy" />
-      <ComponentRef Id="Component.repository_url_6.1.2.jar" />
-      <ComponentRef Id="Component.netty_buffer_4.1.13.Final.jar" />
-      <ComponentRef Id="Component.netty_codec_4.1.13.Final.jar" />
-      <ComponentRef Id="Component._...ty_codec_http_4.1.13.Final.jar" />
-      <ComponentRef Id="Component.netty_common_4.1.13.Final.jar" />
-      <ComponentRef Id="Component.netty_handler_4.1.13.Final.jar" />
-      <ComponentRef Id="Component._...etty_resolver_4.1.13.Final.jar" />
-      <ComponentRef Id="Component._...tty_transport_4.1.13.Final.jar" />
-      <ComponentRef Id="Component.transport_netty4.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.transport_netty4.plugin_security.policy" />
-      <ComponentRef Id="Component.transport_netty4_6.1.2.jar" />
-      <ComponentRef Id="Component.tribe.plugin_descriptor.properties" />
-      <ComponentRef Id="Component.tribe_6.1.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_reindex.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_reindex.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_reindex.reindex_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_repository_url.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_repository_url.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_repository_url.repository_url_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.netty_buffer_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.netty_codec_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_transport_netty4.netty_codec_http_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.netty_common_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.netty_handler_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_transport_netty4.netty_resolver_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_transport_netty4.netty_transport_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_transport_netty4.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_transport_netty4.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_transport_netty4.transport_netty4_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack.meta_plugin_descriptor.properties" />
+      <ComponentRef Id="Component.bcpkix_jdk15on_1.58.jar" />
+      <ComponentRef Id="Component.bcprov_jdk15on_1.58.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.commons_codec_1.10.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.commons_logging_1.1.3.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpasyncclient_4.1.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpclient_4.5.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpcore_4.4.5.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.httpcore_nio_4.4.5.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_buffer_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_codec_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_codec_http_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_common_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_handler_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_resolver_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.netty_transport_4.1.16.Final.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.transport_netty4_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.unboundid_ldapsdk_3.2.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_core.x_pack_core_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_deprecation.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_deprecation.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_deprecation.x_pack_deprecation_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_graph.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_graph.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_graph.x_pack_graph_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_logstash.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_logstash.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_logstash.x_pack_logstash_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml.plugin_security.policy" />
+      <ComponentRef Id="Component.super_csv_2.4.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml.x_pack_ml_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.autoconfig" />
+      <ComponentRef Id="Component.autodetect" />
+      <ComponentRef Id="Component.categorize" />
+      <ComponentRef Id="Component.controller" />
+      <ComponentRef Id="Component.normalize" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_date_time_clang_darwin42_mt_1_65_1.dylib" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_filesystem_clang_darwin42_mt_1_65_1.dylib" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_iostreams_clang_darwin42_mt_1_65_1.dylib" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_program_options_clang_darwin42_mt_1_65_1.dylib" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_regex_clang_darwin42_mt_1_65_1.dylib" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_system_clang_darwin42_mt_1_65_1.dylib" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_darwin_x86_64_lib.libboost_thread_clang_darwin42_mt_1_65_1.dylib" />
+      <ComponentRef Id="Component.liblog4cxx.10.dylib" />
+      <ComponentRef Id="Component.libMlApi.dylib" />
+      <ComponentRef Id="Component.libMlConfig.dylib" />
+      <ComponentRef Id="Component.libMlCore.dylib" />
+      <ComponentRef Id="Component.libMlMaths.dylib" />
+      <ComponentRef Id="Component.libMlModel.dylib" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.autoconfig" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.autodetect" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.categorize" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.controller" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_bin.normalize" />
+      <ComponentRef Id="Component.libapr_1.so.0_" />
+      <ComponentRef Id="Component.libaprutil_1.so.0_" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_date_time_gcc73_mt_1_65_1.so.1.65.1" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_filesystem_gcc73_mt_1_65_1.so.1.65.1" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_iostreams_gcc73_mt_1_65_1.so.1.65.1" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_program_options_gcc73_mt_1_65_1.so.1.65.1" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_regex_gcc73_mt_1_65_1.so.1.65.1" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_system_gcc73_mt_1_65_1.so.1.65.1" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_linux_x86_64_lib.libboost_thread_gcc73_mt_1_65_1.so.1.65.1" />
+      <ComponentRef Id="Component.libexpat.so.0_" />
+      <ComponentRef Id="Component.libgcc_s.so.1_" />
+      <ComponentRef Id="Component.liblog4cxx.so.10_" />
+      <ComponentRef Id="Component.libMlApi.so" />
+      <ComponentRef Id="Component.libMlConfig.so" />
+      <ComponentRef Id="Component.libMlCore.so" />
+      <ComponentRef Id="Component.libMlMaths.so" />
+      <ComponentRef Id="Component.libMlModel.so" />
+      <ComponentRef Id="Component.libstdc__.so.6_" />
+      <ComponentRef Id="Component.libxml2.so.2_" />
+      <ComponentRef Id="Component.autoconfig.exe" />
+      <ComponentRef Id="Component.autodetect.exe" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_chrono_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_date_time_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_filesystem_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_iostreams_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_program_options_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_regex_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_system_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_ml_platform_windows_x86_64_bin.boost_thread_vc141_mt_1_65_1.dll" />
+      <ComponentRef Id="Component.categorize.exe" />
+      <ComponentRef Id="Component.concrt140.dll" />
+      <ComponentRef Id="Component.controller.exe" />
+      <ComponentRef Id="Component.libapr_1.dll" />
+      <ComponentRef Id="Component.libapriconv_1.dll" />
+      <ComponentRef Id="Component.libaprutil_1.dll" />
+      <ComponentRef Id="Component.libMlApi.dll" />
+      <ComponentRef Id="Component.libMlConfig.dll" />
+      <ComponentRef Id="Component.libMlCore.dll" />
+      <ComponentRef Id="Component.libMlMaths.dll" />
+      <ComponentRef Id="Component.libMlModel.dll" />
+      <ComponentRef Id="Component.libxml2.dll" />
+      <ComponentRef Id="Component.log4cxx.dll" />
+      <ComponentRef Id="Component.msvcp140.dll" />
+      <ComponentRef Id="Component.normalize.exe" />
+      <ComponentRef Id="Component.vccorlib140.dll" />
+      <ComponentRef Id="Component.vcruntime140.dll" />
+      <ComponentRef Id="Component.zlib1.dll" />
+      <ComponentRef Id="Component.date_time_zonespec.csv" />
+      <ComponentRef Id="Component.ml_en.dict" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.elasticsearch_rest_client_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.elasticsearch_rest_client_sniffer_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_monitoring.x_pack_monitoring_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_rollup.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_rollup.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_rollup.x_pack_rollup_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.cryptacular_1.2.0.jar" />
+      <ComponentRef Id="Component.guava_19.0.jar" />
+      <ComponentRef Id="Component.httpclient_cache_4.5.2.jar" />
+      <ComponentRef Id="Component.java_support_7.3.0.jar" />
+      <ComponentRef Id="Component.log4j_slf4j_impl_2.9.1.jar" />
+      <ComponentRef Id="Component.metrics_core_3.2.2.jar" />
+      <ComponentRef Id="Component.opensaml_core_3.3.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_messaging_api_3.3.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_messaging_impl_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_profile_api_3.3.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_profile_impl_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_saml_api_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_saml_impl_3.3.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_security_api_3.3.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_security_impl_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_soap_api_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_soap_impl_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_storage_api_3.3.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.opensaml_storage_impl_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_xmlsec_api_3.3.0.jar" />
+      <ComponentRef Id="Component.opensaml_xmlsec_impl_3.3.0.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.plugin_security.policy" />
+      <ComponentRef Id="Component.slf4j_api_1.6.2.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_security.x_pack_security_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.xmlsec_2.0.8.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.aggs_matrix_stats_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.antlr4_runtime_4.5.3.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.sql_proto_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_sql.x_pack_sql_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_upgrade.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_upgrade.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_upgrade.x_pack_upgrade_7.0.0_alpha1_SNAPSHOT.jar" />
+      <ComponentRef Id="Component.activation_1.1.1.jar" />
+      <ComponentRef Id="Component.guava_16.0.1.jar" />
+      <ComponentRef Id="Component.javax.mail_1.5.6.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.owasp_java_html_sanitizer_r239.jar" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.plugin_descriptor.properties" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.plugin_security.policy" />
+      <ComponentRef Id="Component.INSTALLDIR_modules_x_pack_x_pack_watcher.x_pack_watcher_7.0.0_alpha1_SNAPSHOT.jar" />
       <ComponentRef Id="Registry1" />
       <ComponentRef Id="Registry2" />
       <ComponentRef Id="Registry3" />
@@ -872,10 +1860,28 @@
       <ComponentRef Id="Component.INSTALLDIR.modules.mapper_extras" />
       <ComponentRef Id="Component.INSTALLDIR.modules.parent_join" />
       <ComponentRef Id="Component.INSTALLDIR.modules.percolator" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.rank_eval" />
       <ComponentRef Id="Component.INSTALLDIR.modules.reindex" />
       <ComponentRef Id="Component.INSTALLDIR.modules.repository_url" />
       <ComponentRef Id="Component.INSTALLDIR.modules.transport_netty4" />
-      <ComponentRef Id="Component.INSTALLDIR.modules.tribe" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_core" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_deprecation" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_graph" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_logstash" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.bin" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.darwin_x86_64.lib" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.bin" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.linux_x86_64.lib" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.platform.windows_x86_64.bin" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_ml.resources" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_monitoring" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_rollup" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_security" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_sql" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_upgrade" />
+      <ComponentRef Id="Component.INSTALLDIR.modules.x_pack.x_pack_watcher" />
     </Feature>
 
     <InstallExecuteSequence>
