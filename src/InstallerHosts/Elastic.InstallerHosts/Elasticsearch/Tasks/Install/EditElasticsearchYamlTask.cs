@@ -41,8 +41,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			this.Session.SendProgress(1000, "updating elasticsearch.yml with values from x-pack model if needed");
 			var xPack = this.InstallationModel.XPackModel;
-			//if xPack step is not relevant assume xpack was already installed and do nothing
-			if (xPack.IsRelevant) return;
 			
 			//only set these if they have no value already
 			if (settings.XPackLicenseSelfGeneratedType.IsNullOrEmpty())

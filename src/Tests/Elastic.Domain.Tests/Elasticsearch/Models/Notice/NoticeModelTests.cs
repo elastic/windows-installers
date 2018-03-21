@@ -43,13 +43,15 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Notice
 			.CanClickNext();
 
 		[Fact] public void PatchUpgradeDoesNotShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.1.1", previousVersion: "5.1.0"))
-			.IsValidOnStep(m => m.ServiceModel)
+			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void PatchUpgradeDoesNotShowsNoticeWithVersionInstalled() => WithValidPreflightChecks(f=>f
+		[Fact] public void PatchUpgradeNextScreenIsConfigurationScreen() => WithValidPreflightChecks(f=>f
 				.Wix("5.1.1", previousVersion: "5.1.0")
 				.ServicePreviouslyInstalled()
 			)
+			.IsValidOnStep(m => m.NoticeModel)
+			.ClickNext()
 			.IsValidOnStep(m => m.ConfigurationModel)
 			.CanClickNext();
 
