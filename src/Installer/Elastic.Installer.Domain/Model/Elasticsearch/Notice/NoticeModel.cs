@@ -24,12 +24,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.LocationsModel = locationsModel;
 			this.ServiceModel = serviceModel;
 			this.Header = "Notice";
-			this.ExistingVersion = versionConfig.ExistingVersion;
-			this.CurrentVersion = versionConfig.CurrentVersion;
+			this.ExistingVersion = versionConfig.PreviousVersion;
+			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
 
-			var e = versionConfig.ExistingVersion;
-			var c = versionConfig.CurrentVersion;
+			var e = versionConfig.PreviousVersion;
+			var c = versionConfig.InstallerVersion;
 			if (!string.IsNullOrWhiteSpace(c?.Prerelease))
 			{
 				this.UpgradeTextHeader = TextResources.NoticeModel_ToPrerelease_Header;
@@ -51,11 +51,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.UpgradeTextHeader = TextResources.ResourceManager.GetString(prefix + "_Header");
 				this.UpgradeText = TextResources.ResourceManager.GetString(prefix);
 			}
-			// TODO: We should show the upgrade notice, even for a patch upgrade.
-			if (this.IsRelevant
-				&& versionConfig.VersionChange == VersionChange.Patch
-				&& versionConfig.InstallationDirection == InstallationDirection.Up)
-				this.IsRelevant = false;
+			
+//			// TODO: We should show the upgrade notice, even for a patch upgrade.
+//			if (this.IsRelevant
+//				&& versionConfig.VersionChange == VersionChange.Patch
+//				&& versionConfig.InstallationDirection == InstallationDirection.Up)
+//				this.IsRelevant = false;
 
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;

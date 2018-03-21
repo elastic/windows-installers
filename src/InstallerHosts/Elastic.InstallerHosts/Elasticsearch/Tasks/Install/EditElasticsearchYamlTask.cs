@@ -7,6 +7,7 @@ using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
+using WixSharp;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 {
@@ -40,20 +41,14 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			this.Session.SendProgress(1000, "updating elasticsearch.yml with values from x-pack model if needed");
 			var xPack = this.InstallationModel.XPackModel;
-			if (!xPack.IsRelevant)
-			{
-				//make sure we unset all xpack related settings because they might prevent a node from starting
-				settings.XPackLicenseSelfGeneratedType = null;
-				settings.XPackSecurityEnabled = null;
-				var xPackKeys = settings.Keys.Where(k => k.StartsWith("xpack.")).ToList();
-				foreach (var key in xPackKeys)
-					settings.Remove(key);
-			}
-			else if (!this.InstallationModel.PluginsModel.InstalledPlugins.Contains("x-pack"))
-			{
+			//if xPack step is not relevant assume xpack was already installed and do nothing
+			if (xPack.IsRelevant) return;
+			
+			//only set these if they have no value already
+			if (settings.XPackLicenseSelfGeneratedType.IsNullOrEmpty())
 				settings.XPackLicenseSelfGeneratedType = Enum.GetName(typeof(XPackLicenseMode), xPack.XPackLicense)?.ToLowerInvariant();
+			if (settings.XPackSecurityEnabled == null)
 				settings.XPackSecurityEnabled = !xPack.XPackSecurityEnabled ? false : (bool?) null;
-			}
 		}
 
 		private void ApplyServiceModel(ElasticsearchYamlSettings settings)

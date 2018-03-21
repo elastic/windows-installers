@@ -4,6 +4,7 @@ using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Model.Base;
 using ReactiveUI;
 using Semver;
+using static Elastic.Installer.Domain.Configuration.Wix.InstallationDirection;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 {
@@ -11,22 +12,26 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 	{
 		public const XPackLicenseMode DefaultXPackLicenseMode = XPackLicenseMode.Basic;
 		
-		public XPackModel(
-			VersionConfiguration versionConfig, 
-			IObservable<bool> xPackEnabled, 
-			IObservable<bool> canAutomaticallySetupUsers)
+		public XPackModel(VersionConfiguration versionConfig,
+			IObservable<bool> canAutomaticallySetupUsers,
+			IObservable<bool> upgradeFromXPackPlugin)
 		{
-			xPackEnabled.Subscribe(t =>
+			upgradeFromXPackPlugin.Subscribe(b =>
 			{
-				this.IsRelevant = t;
+				//show x-pack tab when we're upgrading from a version lower than `6.3.0` and the x-pack plugin was not installed.
+				//otherwise assume x-pack is installed and only show the tab on new installs
+				this.IsRelevant = 
+					(versionConfig.InstallationDirection == Up && versionConfig.PreviousVersion < "6.3.0" && !b) 
+					|| versionConfig.InstallationDirection == None;
 			});
+			
 			canAutomaticallySetupUsers.Subscribe(b=>
 			{
 				this.CanAutomaticallySetupUsers = b;
 				this.SkipSettingPasswords = !b;
 			});
 			this.Header = "X-Pack";
-			this.CurrentVersion = versionConfig.CurrentVersion;
+			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.OpenLicensesAndSubscriptions = ReactiveCommand.Create();
 			this.RegisterBasicLicense = ReactiveCommand.Create();
 			this.OpenManualUserConfiguration = ReactiveCommand.Create();
