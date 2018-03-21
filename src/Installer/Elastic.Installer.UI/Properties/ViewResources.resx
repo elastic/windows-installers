@@ -442,7 +442,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
     <value>Could not find a valid Java installation.</value>
   </data>
   <data name="NoticeView_ReadOnlyPropertiesHeader" xml:space="preserve">
-    <value>Read only properties from previous installation</value>
+    <value>Read only properties during upgrade</value>
   </data>
   <data name="NoticeView_RunAsServiceHeaderLabel" xml:space="preserve">
     <value>Install as a service</value>

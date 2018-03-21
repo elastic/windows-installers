@@ -52,12 +52,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.UpgradeText = TextResources.ResourceManager.GetString(prefix);
 			}
 			
-//			// TODO: We should show the upgrade notice, even for a patch upgrade.
-//			if (this.IsRelevant
-//				&& versionConfig.VersionChange == VersionChange.Patch
-//				&& versionConfig.InstallationDirection == InstallationDirection.Up)
-//				this.IsRelevant = false;
-
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;
 			this.Refresh();
