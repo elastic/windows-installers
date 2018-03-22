@@ -24,8 +24,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
 			var state = InstallationModelTester.ValidPreflightChecks(s => s
-				.Wix(installerVersion: "6.3.0", previousVersion: "6.2.0")
-				.ServicePreviouslyInstalled()
+				.Wix(installerVersion: "6.4.0", previousVersion: "6.3.1")
 			);
 			var model = state.InstallationModel;
 

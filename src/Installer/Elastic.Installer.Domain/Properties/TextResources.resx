@@ -264,6 +264,9 @@ invalid  and prevented seeding current values.</value>
   <data name="NoticeModel_ToPrerelease_Header" xml:space="preserve">
     <value>Upgrading to prerelease from {0} to {1}</value>
   </data>
+  <data name="NoticeModel_PatchUp_Header" xml:space="preserve">
+    <value>Patch Upgrade from {0} to {1}</value>
+  </data>
   <data name="NoticeModel_MinorUp_Header" xml:space="preserve">
     <value>Minor Upgrade from {0} to {1}</value>
   </data>
@@ -279,11 +282,17 @@ invalid  and prevented seeding current values.</value>
   <data name="NoticeModel_PatchDown_Header" xml:space="preserve">
     <value>Patch Downgrade from {0} to {1}</value>
   </data>
+  <data name="NoticeModel_PatchDown_Header" xml:space="preserve">
+    <value>Patch Downgrade from {0} to {1}</value>
+  </data>
   <data name="NoticeModel_MinorUp" xml:space="preserve">
     <value>You are running a minor upgrade please take this time to read more about the best practices</value>
   </data>
   <data name="NoticeModel_MajorUp" xml:space="preserve">
     <value>You are running a major upgrade please take this time to read more about the best practices</value>
+  </data>
+  <data name="NoticeModel_PatchUp" xml:space="preserve">
+    <value>You are running a patch upgrade of elasticsearch</value>
   </data>
   <data name="NoticeModel_MajorDown" xml:space="preserve">
     <value>The chances are very high that the data will no longer be valid in this downgraded full major version.

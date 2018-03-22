@@ -78,10 +78,10 @@
              Content="{x:Static resx:ViewResources.NoticeView_ReadOnlyPropertiesHeader}" 
              HorizontalAlignment="Left" VerticalAlignment="Center" Style="{DynamicResource DescriptionHeaderStyle}" />
       
-      <Viewbox Grid.Row="1" Grid.Column="0" Width="189" Height="81" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-8, -5, 0, 0">
+      <Viewbox Grid.Row="1" Grid.Column="0" Width="189" x:Name="XPackLogo" Height="81" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-8, -5, 0, 0">
          <Image Source="{DynamicResource XPackLogo}"/>
       </Viewbox>
-      <StackPanel Grid.Row="1" Grid.Column="1">
+      <StackPanel Grid.Row="1" Grid.Column="1" x:Name="XPackStackPanel">
           <TextBlock Text="is now included by default" 
                      VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 10 0 0" 
                      Foreground="{DynamicResource VersionColorBrush}" FontSize="26"

@@ -28,16 +28,15 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
 
-			var e = versionConfig.PreviousVersion;
+			var p = versionConfig.PreviousVersion;
 			var c = versionConfig.InstallerVersion;
 			if (!string.IsNullOrWhiteSpace(c?.Prerelease))
 			{
 				this.UpgradeTextHeader = TextResources.NoticeModel_ToPrerelease_Header;
 				this.UpgradeText = TextResources.NoticeModel_ToPrerelease;
 				this.IsRelevant = true; //show prerelease notice always
-
 			}
-			else if (!string.IsNullOrWhiteSpace(e?.Prerelease))
+			else if (!string.IsNullOrWhiteSpace(p?.Prerelease))
 			{
 				this.UpgradeTextHeader = TextResources.NoticeModel_FromPrerelease_Header;
 				this.UpgradeText = TextResources.NoticeModel_FromPrerelease;
@@ -51,14 +50,30 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.UpgradeTextHeader = TextResources.ResourceManager.GetString(prefix + "_Header");
 				this.UpgradeText = TextResources.ResourceManager.GetString(prefix);
 			}
+			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
+				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
 
-			this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
+			this.ShowOpeningXPackBanner = p < "6.3.0";
+			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;
 			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;
 			this.Refresh();
 		}
+		
+		bool showUpgradeDocumentationLink;
+		public bool ShowUpgradeDocumentationLink
+		{
+			get => showUpgradeDocumentationLink;
+			private set => this.RaiseAndSetIfChanged(ref showUpgradeDocumentationLink, value);
+		}
 
+		bool showOpeningXPackBanner;
+		public bool ShowOpeningXPackBanner
+		{
+			get => showOpeningXPackBanner;
+			private set => this.RaiseAndSetIfChanged(ref showOpeningXPackBanner, value);
+		}
 
 		bool? existingVersionInstalled;
 		public bool ExistingVersionInstalled
