@@ -17,12 +17,14 @@
 
   <BitmapImage x:Key="ElasticsearchLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/Elasticsearchlogo.png" />
   <BitmapImage x:Key="KibanaLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/Kibanalogo.png" />
+  <BitmapImage x:Key="XPackLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/x-pack.png" />
 
   <!--ACCENT COLORS-->
   <Color x:Key="IdealForegroundColor">White</Color>
   <Color x:Key="HighlightColor">#FF2D448E</Color>
   <Color x:Key="SecondHighlightColor">#FF019B8F</Color>
   <Color x:Key="ThirdHighlightColor">#FF006555</Color>
+  <Color x:Key="LinkColor">#FF0078A0</Color>
   <!--80%-->
   <Color x:Key="AccentColor">#FF0078A0</Color>
   <!--60%-->
@@ -78,7 +80,7 @@
 
   <!-- re-set brushes too -->
   <SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource HighlightColor}" />
-  <SolidColorBrush x:Key="LinkColorBrush" Color="{StaticResource AccentColor}"/>
+  <SolidColorBrush x:Key="LinkColorBrush" Color="{StaticResource LinkColor}"/>
   <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource AccentColor}"/>
   <SolidColorBrush x:Key="AccentColorBrush2" Color="{StaticResource AccentColor2}"/>
   <SolidColorBrush x:Key="AccentColorBrush3" Color="{StaticResource AccentColor3}"/>
@@ -103,17 +105,24 @@
     <Setter Property="VerticalAlignment" Value="Center"/>
     <Setter Property="HorizontalAlignment" Value="Center"/>
     <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="Foreground" Value="{DynamicResource LinkColorBrush}"/>
     <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource LinkColorBrush}"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="Button">
-          <TextBlock TextDecorations="Underline" 
+          <Border BorderBrush="{DynamicResource LinkColorBrush}" BorderThickness="0,0,0,2" CornerRadius="0">
+          <TextBlock TextDecorations="None"  Typography.Capitals="SmallCaps" Margin="0,0,0,0" Padding="2,0,2,2"
                           Text="{TemplateBinding Content}"
                           Background="{TemplateBinding Background}"/>
+          </Border>
           <ControlTemplate.Triggers>
             <Trigger Property="IsPressed" Value="True">
-              <Setter Property="Foreground" Value="Red"/>
+              <Setter Property="Background" Value="{DynamicResource LinkColorBrush}"/>
+              <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter Property="Background" Value="{DynamicResource LinkColorBrush}"/>
+              <Setter Property="Foreground" Value="White"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>

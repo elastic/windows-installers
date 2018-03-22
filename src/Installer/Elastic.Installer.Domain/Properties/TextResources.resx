@@ -249,12 +249,6 @@ Java won't used compressed pointers.</value>
     <value>The elasticsearch.yml file we found in ES_PATH_CONF appears to be 
 invalid  and prevented seeding current values.</value>
   </data>
-  <data name="NoticeModel_FromPrerelease_Header" xml:space="preserve">
-    <value>Upgrading from a prerelease considerations</value>
-  </data>
-  <data name="NoticeModel_ToPrerelease_Header" xml:space="preserve">
-    <value>Running a prerelease considerations</value>
-  </data>
   <data name="NoticeModel_ExistingVersion" xml:space="preserve">
     <value>Previously installed version: {0}</value>
   </data>
@@ -264,20 +258,26 @@ invalid  and prevented seeding current values.</value>
   <data name="NoticeModel_ToPrerelease" xml:space="preserve">
     <value>Please do not run elasticsearch prereleases in production</value>
   </data>
+  <data name="NoticeModel_FromPrerelease_Header" xml:space="preserve">
+    <value>Upgrading from prerelease {0} to {1}</value>
+  </data>
+  <data name="NoticeModel_ToPrerelease_Header" xml:space="preserve">
+    <value>Upgrading to prerelease from {0} to {1}</value>
+  </data>
   <data name="NoticeModel_MinorUp_Header" xml:space="preserve">
-    <value>Minor Upgrade considerations</value>
+    <value>Minor Upgrade from {0} to {1}</value>
   </data>
   <data name="NoticeModel_MajorUp_Header" xml:space="preserve">
-    <value>Major Upgrade considerations</value>
+    <value>Major Upgrade from {0} to {1}</value>
   </data>
   <data name="NoticeModel_MajorDown_Header" xml:space="preserve">
-    <value>Major Downgrade considerations</value>
+    <value>Major Downgrade from {0} to {1}</value>
   </data>
   <data name="NoticeModel_MinorDown_Header" xml:space="preserve">
-    <value>Minor Downgrade considerations</value>
+    <value>Minor Downgrade from {0} to {1}</value>
   </data>
   <data name="NoticeModel_PatchDown_Header" xml:space="preserve">
-    <value>Patch Downgrade considerations</value>
+    <value>Patch Downgrade from {0} to {1}</value>
   </data>
   <data name="NoticeModel_MinorUp" xml:space="preserve">
     <value>You are running a minor upgrade please take this time to read more about the best practices</value>

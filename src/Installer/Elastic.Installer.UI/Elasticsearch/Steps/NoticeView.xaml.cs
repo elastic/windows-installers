@@ -40,8 +40,8 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 				.Subscribe(v => {
 					this.ReadOnlyPropertiesGrid.Visibility = v ? Visible : Collapsed;
 					this.ReadMoreOnUpgrades.Visibility = v ? Visible : Collapsed;
-					this.ExistingVersionTextBox.Content = string.Format(TextResources.NoticeModel_ExistingVersion, this.ViewModel.ExistingVersion);
-					this.ExistingVersionTextBox.Visibility = v ? Visible : Collapsed;
+//					this.ExistingVersionTextBox.Content = string.Format(TextResources.NoticeModel_ExistingVersion, this.ViewModel.ExistingVersion);
+//					this.ExistingVersionTextBox.Visibility = v ? Visible : Collapsed;
 				});
 
 			//Using a separate observable in the case we add more parameters to the control grid on the notice model

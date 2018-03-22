@@ -51,6 +51,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.UpgradeTextHeader = TextResources.ResourceManager.GetString(prefix + "_Header");
 				this.UpgradeText = TextResources.ResourceManager.GetString(prefix);
 			}
+
+			this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
 			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;

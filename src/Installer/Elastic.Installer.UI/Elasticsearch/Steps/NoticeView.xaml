@@ -19,6 +19,7 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <Grid Grid.Row="0" Grid.Column="0">
 
@@ -27,7 +28,7 @@
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
       <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
+        <RowDefinition Height="40" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
@@ -35,27 +36,20 @@
       <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="UpgradeLabel" 
              HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
 
-      <Label x:Name="ExistingVersionTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-               Background="Transparent" BorderBrush="Transparent"  Margin="0,-10,0,0" 
-               Visibility="Collapsed"
-               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-               />
-      
-      <TextBox x:Name="UpgradeTextBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" 
+      <TextBox x:Name="UpgradeTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,0" 
                TextWrapping="Wrap" BorderThickness="0"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
                ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
       
-      <Button Grid.Row="3" Grid.Column="0" x:Name="ReadMoreOnUpgrades"  Style="{DynamicResource Link}"
-             FontWeight="Bold"
-             Margin="6, 0, 0,20"
+      <Button Grid.Row="2" Grid.Column="0" x:Name="ReadMoreOnUpgrades"  Style="{DynamicResource Link}"
+             Margin="6, 0, 0, 10"
               Visibility="Collapsed"
              Content="{x:Static resx:ViewResources.NoticeView_ReadMoreOnUpgrades}" 
              HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
     </Grid>
-    <Grid Grid.Row="1" Grid.Column="0" x:Name="ControlGrid">
+    <Grid Grid.Row="1" Grid.Column="0" x:Name="ControlGrid" Margin="0, 10, 0, 0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
@@ -71,56 +65,65 @@
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
       <Grid.RowDefinitions>
+        <RowDefinition Height="40" />
         <RowDefinition Height="Auto" />
-        <RowDefinition Height="25" />
-        <RowDefinition Height="25" />
-        <RowDefinition Height="25" />
-        <RowDefinition Height="25" />
-        <RowDefinition Height="25" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
 
       <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ReadOnlyPropertiesLabel" 
              Content="{x:Static resx:ViewResources.NoticeView_ReadOnlyPropertiesHeader}" 
-             HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
+             HorizontalAlignment="Left" VerticalAlignment="Center" Style="{DynamicResource DescriptionHeaderStyle}" />
+      
+      <Viewbox Grid.Row="1" Grid.Column="0" Width="189" Height="81" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-8, -5, 0, 0">
+         <Image Source="{DynamicResource XPackLogo}"/>
+      </Viewbox>
+      <StackPanel Grid.Row="1" Grid.Column="1">
+          <TextBlock Text="is now included by default" 
+                     VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 10 0 0" 
+                     Foreground="{DynamicResource VersionColorBrush}" FontSize="26"
+                     FontFamily="{DynamicResource OpenSans}" FontWeight="Normal"
+                     />
+          <Button x:Name="LearnAboutOpeningXPack"  Style="{DynamicResource Link}"
+                     Margin="0, 0, 0,0"
+                     Content="find out more about the opening of x-pack" 
+                     HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
+      </StackPanel>
 
-      <Label Grid.Row="1" Grid.Column="0" x:Name="InstallationDirectoryHeaderLabel" 
+      <Label Grid.Row="2" Grid.Column="0" x:Name="InstallationDirectoryHeaderLabel" 
              FontWeight="Bold"
-             Margin="0, -10, 0,0"
+             Margin="0, 0, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_InstallationDirectoryLabel}" 
-             HorizontalAlignment="Left" VerticalAlignment="Top"/>
-      <Label Grid.Row="1" Grid.Column="1" x:Name="InstallationDirectoryLabel" 
-             Margin="0, -10, 0,0"
-               HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-
-      <Label Grid.Row="2" Grid.Column="0" x:Name="DataDirectoryHeaderLabel" 
+             HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+      <Label Grid.Row="2" Grid.Column="1" x:Name="InstallationDirectoryLabel" Margin="0, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Bottom" /> 
+      
+      <Label Grid.Row="3" Grid.Column="0" x:Name="DataDirectoryHeaderLabel" 
              FontWeight="Bold" 
              Margin="0, -10, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_DataDirectoryLabel}" 
-             HorizontalAlignment="Left" VerticalAlignment="Top" />
-      <Label Grid.Row="2" Grid.Column="1" x:Name="DataDirectoryLabel" 
-             Margin="0, -10, 0,0"
-               HorizontalAlignment="Stretch"  VerticalAlignment="Top" />
-
-      <Label Grid.Row="3" Grid.Column="0" x:Name="ConfigDirectoryHeaderLabel" 
+             HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+      <Label Grid.Row="3" Grid.Column="1" x:Name="DataDirectoryLabel" Margin="0, -10, 0,0" HorizontalAlignment="Left"  VerticalAlignment="Bottom" /> 
+      
+      <Label Grid.Row="4" Grid.Column="0" x:Name="ConfigDirectoryHeaderLabel" 
              FontWeight="Bold" 
              Margin="0, -10, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_ConfigDirectoryLabel}" 
-             HorizontalAlignment="Left" VerticalAlignment="Top" />
-      <Label Grid.Row="3" Grid.Column="1" x:Name="ConfigDirectoryLabel" 
-             Margin="0, -10, 0,0"
-               HorizontalAlignment="Stretch"  VerticalAlignment="Top" />
+             HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+      <Label Grid.Row="4" Grid.Column="1" x:Name="ConfigDirectoryLabel" Margin="0, -10, 0,0" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" />
 
-      <Label Grid.Row="4" Grid.Column="0" x:Name="LogsDirectoryHeaderLabel" 
+      <Label Grid.Row="5" Grid.Column="0" x:Name="LogsDirectoryHeaderLabel" 
              FontWeight="Bold"
              Margin="0, -10, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_LogsDirectoryLabel}" 
-             HorizontalAlignment="Left" VerticalAlignment="Top" />
-      <Label Grid.Row="4" Grid.Column="1" x:Name="LogsDirectoryLabel" 
-             Margin="0, -10, 0,0"
-               HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-      <Label Grid.Row="5" Grid.Column="0" x:Name="RunAsServiceHeaderLabel" FontWeight="Bold" Margin="0, -10, 0,0" Content="{x:Static resx:ViewResources.NoticeView_RunAsServiceHeaderLabel}" 
-             HorizontalAlignment="Left" VerticalAlignment="Top" />
-      <Label Grid.Row="5" Grid.Column="1" x:Name="RunAsServiceLabel" Margin="0, -10, 0,0" Content="Yes" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+             HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+      <Label Grid.Row="5" Grid.Column="1" x:Name="LogsDirectoryLabel" Margin="0, -10, 0,0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+      <Label Grid.Row="6" Grid.Column="0" x:Name="RunAsServiceHeaderLabel" FontWeight="Bold" Margin="0, -10, 0,0" Content="{x:Static resx:ViewResources.NoticeView_RunAsServiceHeaderLabel}" 
+             HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+      <Label Grid.Row="6" Grid.Column="1" x:Name="RunAsServiceLabel" Margin="0, -10, 0,0" Content="Yes" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
     </Grid>
   </Grid>
 </controls:StepControl>
