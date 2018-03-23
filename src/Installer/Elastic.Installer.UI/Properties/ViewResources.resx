@@ -309,7 +309,7 @@
     </value>
   </data>
   <data name="XPackView_BasicDescription" xml:space="preserve">
-    <value>Only access to the Basic (free) license for 30 days. 
+    <value>Access to all free x-pack features without an expiry date on the license. 
     </value>
   </data>
   <data name="XPackView_SubscriptionsLink" xml:space="preserve">
