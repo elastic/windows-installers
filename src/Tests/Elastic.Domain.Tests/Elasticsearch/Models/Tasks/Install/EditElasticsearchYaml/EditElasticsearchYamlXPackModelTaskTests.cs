@@ -34,7 +34,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().BeNull();
+					s.XPackLicenseSelfGeneratedType.Should().NotBeNull().And.Be("basic");
 					s.XPackSecurityEnabled.Should().BeNull();
 				}
 			);
