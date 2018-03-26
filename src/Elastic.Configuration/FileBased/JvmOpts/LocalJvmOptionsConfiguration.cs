@@ -12,8 +12,7 @@ namespace Elastic.Configuration.FileBased.JvmOpts
 		private readonly List<string> _options = new List<string>();
 		private readonly IFileSystem _fileSystem;
 
-		public ReadOnlyCollection<string> Options =>
-			new ReadOnlyCollection<string>(this._options ?? new List<string>());
+		public ReadOnlyCollection<string> Options => new ReadOnlyCollection<string>(this._options ?? new List<string>());
 
 		public string Xmx { get; set; }
 		public string Xms { get; set; }
@@ -31,13 +30,11 @@ namespace Elastic.Configuration.FileBased.JvmOpts
 
 			foreach (var l in _options)
 			{
-				if (l.StartsWith("-Xmx"))
-					this.Xmx = l.Replace("-Xmx", "");
-				if (l.StartsWith("-Xms"))
-					this.Xms = l.Replace("-Xms", "");
+				if (l.StartsWith("-Xmx")) this.Xmx = l.Replace("-Xmx", "");
+				if (l.StartsWith("-Xms")) this.Xms = l.Replace("-Xms", "");
 			}
-			ulong heap;
-			if (!string.IsNullOrEmpty(this.Xmx) && ulong.TryParse(this.Xmx.Replace("m", ""), out heap))
+
+			if (!string.IsNullOrEmpty(this.Xmx) && ulong.TryParse(this.Xmx.Replace("m", ""), out var heap))
 				this.ConfiguredHeapSize = heap;
 		}
 
@@ -59,8 +56,7 @@ namespace Elastic.Configuration.FileBased.JvmOpts
 
 		public override string ToString() => string.Join(" ", this._options);
 
-		public static LocalJvmOptionsConfiguration FromFolder(string configDirectory) =>
-			FromFolder(configDirectory, null);
+		public static LocalJvmOptionsConfiguration FromFolder(string configDirectory) => FromFolder(configDirectory, null);
 
 		public static LocalJvmOptionsConfiguration FromFolder(string configDirectory, IFileSystem fileSystem) =>
 			string.IsNullOrEmpty(configDirectory)

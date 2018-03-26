@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Reactive;
@@ -34,7 +35,7 @@ namespace Elastic.ProcessHosts.Process
 			lock (_lock)
 			{
 				if (this.Started) return OutStream ?? Observable.Empty<ConsoleOut>();
-				this.Process = CreateProcess(binary, args?.ToArray());
+				this.Process = CreateProcess(true, binary, args?.ToArray());
 				this.OutStream = Observable.Create<ConsoleOut>(observer =>
 				{
 					// listen to stdout and stderr
@@ -96,14 +97,24 @@ namespace Elastic.ProcessHosts.Process
 				this.Process?.WaitForExit((int)TimeSpan.FromMinutes(5).TotalMilliseconds);
 		}
 
-		private static System.Diagnostics.Process CreateProcess(string exe, params string[] args)
+		protected virtual Dictionary<string, string> ProcessVariables(bool warn)
+		{
+			return new Dictionary<string, string>()
+			{
+				{"HOSTNAME", Environment.MachineName}
+			};
+		}
+
+
+		private System.Diagnostics.Process CreateProcess(string exe, params string[] args) => CreateProcess(false, exe, args);
+		
+		private System.Diagnostics.Process CreateProcess(bool warn, string exe, params string[] args)
 		{
 			var p = new System.Diagnostics.Process
 			{
 				EnableRaisingEvents = true,
 				StartInfo =
 				{
-					EnvironmentVariables = { {"HOSTNAME", Environment.MachineName } },
 					FileName = exe,
 					Arguments = args != null ? string.Join(" ", args) : string.Empty,
 					CreateNoWindow = true,
@@ -113,8 +124,17 @@ namespace Elastic.ProcessHosts.Process
 					RedirectStandardInput = false,
 				}
 			};
+			var variables = this.ProcessVariables(warn) ?? new Dictionary<string, string>();
+			foreach (var kv in variables)
+				p.StartInfo.EnvironmentVariables[kv.Key] =  kv.Value;
+
+			var cwd = this.GetCurrentWorkingDirectory();
+			if (!string.IsNullOrWhiteSpace(cwd)) p.StartInfo.WorkingDirectory = cwd;
+			
 			return p;
 		}
+
+		protected virtual string GetCurrentWorkingDirectory() => null;
 
 		public void Stop()
 		{
