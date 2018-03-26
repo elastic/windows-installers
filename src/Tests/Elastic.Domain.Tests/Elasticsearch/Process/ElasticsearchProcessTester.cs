@@ -22,7 +22,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		{
 			var state = setup(new ElasticsearchProcessTesterStateProvider());
 
-			this.ObservableProcess = new TestableElasticsearchObservableProcess(state.ConsoleSessionState, state.InteractiveEnvironment);
+			this.ObservableProcess = new TestableElasticsearchObservableProcess(
+				state.ElasticsearchConfigState,
+				state.ConsoleSessionState, 
+				state.InteractiveEnvironment
+			);
 			this.OutHandler = state.OutHandler;
 
 			this.Process = new ElasticsearchProcess(

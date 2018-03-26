@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Elastic.Configuration.EnvironmentBased;
+using Elastic.ProcessHosts.Elasticsearch.Process;
 using Elastic.ProcessHosts.Process;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
@@ -19,15 +21,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		public bool DisposeCalled { get; private set; }
 		public string BinaryCalled { get; private set; }
 		public string[] ArgsCalled { get; private set; }
+		public Dictionary<string, string> ProcessVariables { get; }
 
 		public static string EndProcess { get; } = "-END-";
 		public static string ThrowException { get; } = "-EXCEPTION-";
 		public static string ThrowStartupException { get; } = "-STARTUP EXCEPTION-";
 
-		public TestableElasticsearchObservableProcess(ConsoleSession session, bool interactive = true)
+		public TestableElasticsearchObservableProcess(ElasticsearchEnvironmentConfiguration env, ConsoleSession session, bool interactive = true)
 		{
 			_session = session;
 			UserInteractive = interactive;
+			this.ProcessVariables = new Dictionary<string, string>();
+			ElasticsearchObservableProcess.AlterProcessVariables(env, this.ProcessVariables, warn: false);
 		}
 
 		public void Dispose()
