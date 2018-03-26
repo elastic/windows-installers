@@ -43,7 +43,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.ElasticUserPassword = null;
 			this.KibanaUserPassword = null;
 			this.LogstashSystemUserPassword = null;
-			this.BootstrapPassword = Guid.NewGuid().ToString("N").Substring(0, 12);
+			this.BootstrapPassword = null;
 			this.XPackSecurityEnabled = true;
 		}
 

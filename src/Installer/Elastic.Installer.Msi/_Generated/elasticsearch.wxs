@@ -768,7 +768,7 @@
     <Property Id="ELASTICUSERPASSWORD" Hidden="yes" />
     <Property Id="KIBANAUSERPASSWORD" Hidden="yes" />
     <Property Id="LOGSTASHSYSTEMUSERPASSWORD" Hidden="yes" />
-    <Property Id="BOOTSTRAPPASSWORD" Value="650a1a57650d" Hidden="yes" />
+    <Property Id="BOOTSTRAPPASSWORD" Hidden="yes" />
     <Property Id="ServicePassword" Hidden="yes" />
     <Property Id="ARPHELPLINK" Value="https://discuss.elastic.co/c/elasticsearch" />
     <Property Id="ARPPRODUCTICON" Value="app_icon.ico" />
@@ -937,7 +937,7 @@
       <Custom Action="Set_ElasticsearchPreserveInstallAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchPreserveInstallAction" After="StopServices"> (NOT (REMOVE="ALL")) </Custom>
       <Custom Action="ElasticsearchExistingDirectoriesAction" Before="ElasticsearchValidateArgumentsAction"> (1) </Custom>
-      <Custom Action="ElasticsearchSetBootstrapPasswordAction" After="ElasticsearchValidateArgumentsAction">(NOT Installed) AND BOOTSTRAPPASSWORD=""</Custom>
+      <Custom Action="ElasticsearchSetBootstrapPasswordAction" After="ElasticsearchValidateArgumentsAction">BOOTSTRAPPASSWORD=""</Custom>
       <Custom Action="Set_ElasticsearchDirectoriesAction_Props" After="InstallInitialize" />
       <Custom Action="ElasticsearchDirectoriesAction" After="InstallFiles"> (NOT Installed) </Custom>
       <Custom Action="ElasticsearchSetServiceParametersAction" After="ElasticsearchSetBootstrapPasswordAction"> (NOT Installed) </Custom>
