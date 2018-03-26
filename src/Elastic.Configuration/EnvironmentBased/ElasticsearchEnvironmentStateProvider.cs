@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace Elastic.Configuration.EnvironmentBased
@@ -8,6 +9,7 @@ namespace Elastic.Configuration.EnvironmentBased
 	{
 		string RunningExecutableLocation { get; }
 		string TempDirectoryVariable { get; }
+		string PrivateTempDirectoryVariable { get; }
 		
 		string HomeDirectoryUserVariable { get; }
 		string HomeDirectoryMachineVariable { get; }
@@ -21,6 +23,7 @@ namespace Elastic.Configuration.EnvironmentBased
 		string OldConfigDirectoryMachineVariable { get; }
 
 		string GetEnvironmentVariable(string variable);
+		bool TryGetEnv(string variable, out string value);
 	}
 
 	public class ElasticsearchEnvironmentStateProvider : IElasticsearchEnvironmentStateProvider
@@ -37,6 +40,8 @@ namespace Elastic.Configuration.EnvironmentBased
 		public string RunningExecutableLocation => new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
 
 		public string TempDirectoryVariable => Environment.ExpandEnvironmentVariables("%TEMP%");
+
+		public string PrivateTempDirectoryVariable => this.GetEnvironmentVariable("ES_TMPDIR");
 		
 		public string ConfigDirectoryUserVariable => 
 			Environment.GetEnvironmentVariable(ConfDir, EnvironmentVariableTarget.User)
@@ -50,6 +55,12 @@ namespace Elastic.Configuration.EnvironmentBased
 		public string ConfigDirectoryProcessVariable => 
 			Environment.GetEnvironmentVariable(ConfDir, EnvironmentVariableTarget.Process)
 			?? Environment.GetEnvironmentVariable(ConfDirOld, EnvironmentVariableTarget.Process);
+
+		public bool TryGetEnv(string variable, out string value)
+		{
+			value = GetEnvironmentVariable(variable);
+			return value != null;
+		}
 	
 		public string GetEnvironmentVariable(string variable) =>
 			Environment.GetEnvironmentVariable(variable, EnvironmentVariableTarget.Process)

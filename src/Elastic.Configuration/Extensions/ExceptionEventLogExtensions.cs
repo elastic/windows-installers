@@ -19,5 +19,18 @@ namespace Elastic.Configuration.Extensions
 				Console.Error.WriteLine("Elasticsearch.exe does not have permission to write exception to event log");
 			}
 		}
+		
+		public static void ToEventLog(this string message, string source = "Elasticsearch")
+		{
+			try
+			{
+				if (!EventLog.SourceExists(source)) EventLog.CreateEventSource(source, "Application");
+				EventLog.WriteEntry(source, message, EventLogEntryType.Warning);
+			}
+			catch (SecurityException)
+			{
+				Console.Error.WriteLine("Elasticsearch.exe does not have permission to write exception to event log");
+			}
+		}
 	}
 }

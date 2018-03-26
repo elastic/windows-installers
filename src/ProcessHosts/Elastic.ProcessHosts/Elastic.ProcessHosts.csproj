@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="Elasticsearch\Process\ElasticsearchConsoleOutHandler.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchConsoleOutParser.cs" />
+    <Compile Include="Elasticsearch\Process\ElasticsearchObservableProcess.cs" />
     <Compile Include="Elasticsearch\Process\ElasticsearchProcess.cs" />
+    <Compile Include="Elasticsearch\Process\ElasticsearchTool.cs" />
     <Compile Include="Elasticsearch\Service\ElasticsearchService.cs">
       <SubType>Component</SubType>
     </Compile>

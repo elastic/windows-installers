@@ -123,6 +123,7 @@
     <Compile Include="Elasticsearch\Process\Paths\ElasticsearchConfigFolderTests.cs" />
     <Compile Include="Elasticsearch\Process\Paths\ElasticsearchHomeAndBinaryTests.cs" />
     <Compile Include="Elasticsearch\Process\Paths\JavaHomeAndBinaryTests.cs" />
+    <Compile Include="Elasticsearch\Process\Paths\ProcessVariablesTests.cs" />
     <Compile Include="Elasticsearch\Process\TestableElasticsearchConsoleOutHandler.cs" />
     <Compile Include="Elasticsearch\Process\TestableElasticsearchObservableProcess.cs" />
     <Compile Include="Kibana\Configuration\KibanaYamlFileTests.cs" />

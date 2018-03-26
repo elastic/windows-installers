@@ -68,6 +68,8 @@ namespace Elastic.Configuration.EnvironmentBased
 			}
 		}
 
+		public string PrivateTempDirectory => this.StateProvider.PrivateTempDirectoryVariable ?? Path.Combine(this.StateProvider.TempDirectoryVariable, "elasticsearch");
+
 		public string PreviousInstallationDirectory => new[]
 			{
 				// TODO: Get the value of ES_HOME env var for the elasticsearch.exe process, if running
@@ -92,5 +94,7 @@ namespace Elastic.Configuration.EnvironmentBased
 				.AppendLine($"- {nameof(StateProvider.ConfigDirectoryMachineVariable)} = {StateProvider.ConfigDirectoryMachineVariable}")
 				.AppendLine($"- Fallback to ES_HOME = {Path.Combine(HomeDirectory, "config")}")
 				.ToString();
+
+		public bool TryGetEnv(string variable, out string value) => StateProvider.TryGetEnv(variable, out value);
 	}
 }
