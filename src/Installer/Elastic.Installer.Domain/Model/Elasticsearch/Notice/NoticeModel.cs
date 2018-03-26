@@ -27,6 +27,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.ExistingVersion = versionConfig.PreviousVersion;
 			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
+			this.ReadMoreOnXPackOpening = ReactiveCommand.Create();
 
 			var p = versionConfig.PreviousVersion;
 			var c = versionConfig.InstallerVersion;
@@ -98,6 +99,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 		public string UpgradeTextHeader { get; }
 		public string UpgradeText { get; }
 		public ReactiveCommand<object> ReadMoreOnUpgrades { get; }
+		public ReactiveCommand<object> ReadMoreOnXPackOpening { get; }
 
 		public override string ToString()
 		{

@@ -35,6 +35,9 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnUpgrades, v => v.ReadMoreOnUpgrades, nameof(ReadMoreOnUpgrades.Click));
 			this.ViewModel.ReadMoreOnUpgrades.Subscribe(x => Process.Start(string.Format(ViewResources.NoticeView_Elasticsearch_ReadMoreOnUpgrades, majorMinor)));
+			
+			this.BindCommand(ViewModel, vm => vm.ReadMoreOnXPackOpening, v => v.ReadMoreOnXPackOpening, nameof(ReadMoreOnXPackOpening.Click));
+			this.ViewModel.ReadMoreOnXPackOpening.Subscribe(x => Process.Start(ViewResources.NoticeView_Elasticsearch_ReadMoreOnXPackOpening));
 
 			this.WhenAnyValue(v => v.ViewModel.ShowOpeningXPackBanner)
 				.Subscribe(b =>

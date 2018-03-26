@@ -831,6 +831,9 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
     <value>https://www.elastic.co/guide/en/elasticsearch/reference/{0}/setup-upgrade.html</value>
     <comment>{0} = major minor version</comment>
   </data>
+  <data name="NoticeView_Elasticsearch_ReadMoreOnXPackOpening" xml:space="preserve">
+    <value>https://www.elastic.co/products/x-pack/open</value>
+  </data>
   <data name="MainWindow_DocumentationLink" xml:space="preserve">
     <value>https://www.elastic.co/guide/index.html</value>
   </data>

@@ -43,7 +43,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.ElasticUserPassword = null;
 			this.KibanaUserPassword = null;
 			this.LogstashSystemUserPassword = null;
-			this.BootstrapPassword = null;
+			this.BootstrapPassword = Guid.NewGuid().ToString("N").Substring(0, 12);
 			this.XPackSecurityEnabled = true;
 		}
 
@@ -133,7 +133,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			sb.AppendLine($"- {nameof(XPackLicense)} = " + Enum.GetName(typeof(XPackLicenseMode), XPackLicense));
 			sb.AppendLine($"- {nameof(this.CanAutomaticallySetupUsers)} = " + CanAutomaticallySetupUsers);
 			sb.AppendLine($"- {nameof(this.SkipSettingPasswords)} = " + SkipSettingPasswords);
-			sb.AppendLine($"- {nameof(this.XPackSecurityEnabled)} = " + SkipSettingPasswords);
+			sb.AppendLine($"- {nameof(this.XPackSecurityEnabled)} = " + XPackSecurityEnabled);
 			sb.AppendLine($"- {nameof(this.BootstrapPassword)} = " + !string.IsNullOrWhiteSpace(BootstrapPassword));
 			sb.AppendLine($"- {nameof(this.ElasticUserPassword)} = " + !string.IsNullOrWhiteSpace(ElasticUserPassword));
 			sb.AppendLine($"- {nameof(this.KibanaUserPassword)} = " + !string.IsNullOrWhiteSpace(KibanaUserPassword));

@@ -1312,6 +1312,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/products/x-pack/open.
+        /// </summary>
+        public static string NoticeView_Elasticsearch_ReadMoreOnXPackOpening {
+            get {
+                return ResourceManager.GetString("NoticeView_Elasticsearch_ReadMoreOnXPackOpening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read the upgrade documentation to learn more.
         /// </summary>
         public static string NoticeView_ReadMoreOnUpgrades {
