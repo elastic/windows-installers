@@ -15,7 +15,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		public string LastSetOldEsConfig { get; set; }
 
 		public string GetEnvironmentVariable(string variable) => _mockVariables.TryGetValue(variable, out string v) ? v : null;
+		public bool TryGetEnv(string variable, out string value)
+		{
+			value = GetEnvironmentVariable(variable);
+			return value != null;
+		}
 
+		
 		public MockElasticsearchEnvironmentStateProvider EnvironmentVariables(Dictionary<string, string> variables)
 		{
 			this._mockVariables = variables;
@@ -46,6 +52,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		public MockElasticsearchEnvironmentStateProvider TempDirectory(string tempDirectory)
 		{
 			this.TempDirectoryVariable = tempDirectory;
+			return this;
+		}
+		
+		public MockElasticsearchEnvironmentStateProvider PrivateTempDirectory(string privateTempDirectory)
+		{
+			this.PrivateTempDirectoryVariable = privateTempDirectory;
 			return this;
 		}
 
@@ -86,6 +98,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 		private string TempDirectoryVariable { get; set; } = @"C:\Temp";
 		string IElasticsearchEnvironmentStateProvider.TempDirectoryVariable => this.TempDirectoryVariable;
+		
+		private string PrivateTempDirectoryVariable { get; set; } = @"C:\Temp\elasticsearch";
+		string IElasticsearchEnvironmentStateProvider.PrivateTempDirectoryVariable => this.PrivateTempDirectoryVariable;
 
 		private string HomeDirectoryMachineVariable { get; set; }
 		string IElasticsearchEnvironmentStateProvider.HomeDirectoryMachineVariable => this.HomeDirectoryMachineVariable;
