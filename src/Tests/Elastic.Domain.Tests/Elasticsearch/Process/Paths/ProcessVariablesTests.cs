@@ -42,7 +42,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 		{
 			var processVariables = Start("ES_TMPDIR", "value");
 			processVariables.Should().ContainKey("ES_TMPDIR");
-			processVariables["ES_TMPDIR"].Should().Be("value");
+			processVariables["ES_TMPDIR"].Should().EndWith(@"\value");
 		}
 
 		[Fact] public void JavaOptsDoesNotMakeItToProcessVariables()

@@ -67,6 +67,7 @@
     <Compile Include="Elasticsearch\Configuration\JavaConfigurationTests.cs" />
     <Compile Include="Elasticsearch\Configuration\LocalJvmOptionsFileTests.cs" />
     <Compile Include="Elasticsearch\Configuration\Mocks\MockElasticsearchEnvironmentStateProvider.cs" />
+    <Compile Include="Elasticsearch\Configuration\Mocks\MockElasticsearchTool.cs" />
     <Compile Include="Elasticsearch\Configuration\Mocks\MockJavaEnvironmentStateProvider.cs" />
     <Compile Include="Elasticsearch\Configuration\Mocks\TestSetupStateProvider.cs" />
     <Compile Include="Elasticsearch\Models\Configuration\NetworkArgumentsTests.cs" />

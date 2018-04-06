@@ -34,19 +34,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				.FileSystem(s.AddJavaExe)
 			, e => { e.Message.Should().Contain("Expected a 'lib' directory inside:"); });
 
-		[Fact] public void MissingElasticsearchJarThrows() => CreateThrows(s => s
-				.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
-				.ConsoleSession(ConsoleSession.StartedSession)
-				.Java(j => j.JavaHomeUserVariable(JavaHomeUser))
-				.FileSystem(fs =>
-				{
-					fs = s.AddJavaExe(fs);
-					fs.AddDirectory(Path.Combine(DefaultEsHome, "lib"));
-					return fs;
-				})
-			, e => { e.Message.Should().Contain("No elasticsearch jar found in:"); });
-
-		
 		[Fact] public void ProcessVariableWinsFromUserVariable() => ElasticsearchChangesOnly(e => e
 				.EsHomeProcessVariable(EsHomeProcess)
 				.EsHomeUserVariable(EsHomeUser)
@@ -58,6 +45,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
 					.And.Contain(EsHomeArg(EsHomeProcess));
 			});
+
 		[Fact] public void UserVariableWinsFromMachineVariable() => ElasticsearchChangesOnly(e => e
 				.EsHomeUserVariable(EsHomeUser)
 				.EsHomeMachineVariable(EsHomeMachine)

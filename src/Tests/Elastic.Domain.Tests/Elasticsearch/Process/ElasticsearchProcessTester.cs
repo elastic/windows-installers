@@ -34,9 +34,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 				this.OutHandler,
 				state.FileSystemState,
 				state.ElasticsearchConfigState,
-				state.JavaConfigState,
-				state.CompletionHandle,
-				state.ProcessArgs);
+				state.JavaConfigState, 
+				state.OptsParserTool, 
+				state.JavaVersionCheckerTool, state.CompletionHandle, state.ProcessArgs);
 		}
 		private static MockElasticsearchEnvironmentStateProvider DefaultEsStateSelector(MockElasticsearchEnvironmentStateProvider e) => 
 			e.EsHomeMachineVariable(DefaultEsHome).TempDirectory(DefaultTempDirectory);
