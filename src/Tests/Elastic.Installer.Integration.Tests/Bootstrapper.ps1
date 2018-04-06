@@ -23,6 +23,10 @@
 	- local = local vagrant box with virtualbox provider
 	- azure = vagrant box created within Azure with azure provider. A box is created for each test scenario
 	- quickazure = vagrant box created within Azure with azure provider. One box is created and all tests are run on it in sequence
+.Parameter Gui
+	whether to launch vagrant with a gui. Only valid for local vagrant provider
+.Parameter VagrantDestroy
+	wether to destroy the vagrant box on test finish. Only valid for local vagrant provider
 #>
 [CmdletBinding()]
 Param(
@@ -40,7 +44,11 @@ Param(
 
 	[Parameter(Mandatory=$false)]
 	[ValidateSet("local", "azure", "quick-azure")] 
-	[string] $VagrantProvider="local"
+	[string] $VagrantProvider="local",
+
+	[switch] $Gui,
+
+	[switch] $VagrantDestroy
 )
 
 $currentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -102,6 +110,6 @@ Remove-Item "$currentDir\Tests\*" -Recurse -Force -Exclude *.ps1
 
 log "running $testcount test scenario(s)"
 
-Invoke-IntegrationTests -CurrentDir $currentDir -TestDirs $testDirs -VagrantProvider $VagrantProvider -Version $Version -PreviousVersions $PreviousVersions
+Invoke-IntegrationTests -CurrentDir $currentDir -TestDirs $testDirs -VagrantProvider $VagrantProvider -Version $Version -PreviousVersions $PreviousVersions -Gui:$Gui -VagrantDestroy:$VagrantDestroy
 
 cd $currentDir

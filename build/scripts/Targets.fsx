@@ -103,6 +103,9 @@ Target "Integrate" (fun () ->
     let version = versions |> List.last                
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
     let vagrantProvider = getBuildParamOrDefault "vagrantprovider" "local"
+    let gui = getBuildParamOrDefault "gui" "$false"
+    let noDestroy = getBuildParamOrDefault "no-destroy" "$true"
+
     let previousVersions = 
         match versions.Length with
         | 1 -> "@()"
@@ -111,12 +114,14 @@ Target "Integrate" (fun () ->
                |> String.concat ","
                |> sprintf "@(%s)"
         
-    let script = sprintf @"cd '%s'; .\Bootstrapper.ps1 -Tests '%s' -Version '%s' -PreviousVersions %s -VagrantProvider '%s'" 
+    let script = sprintf @"cd '%s'; .\Bootstrapper.ps1 -Tests '%s' -Version '%s' -PreviousVersions %s -VagrantProvider '%s' -Gui:%s -VagrantDestroy:%s" 
                     IntegrationTestsDir 
                     integrationTestsTargets 
                     version 
                     previousVersions 
                     vagrantProvider
+                    gui
+                    noDestroy
         
     trace (sprintf "Running Powershell script: '%s'" script)
     use p = PowerShell.Create()

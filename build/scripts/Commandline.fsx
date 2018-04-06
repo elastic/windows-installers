@@ -182,7 +182,13 @@ Whether to skip unit tests.
 
     let private args = getBuildParamOrDefault "cmdline" "buildinstallers" |> split ' '
     let private skipTests = args |> List.exists (fun x -> x = "skiptests")
-    let private filteredArgs = args |> List.filter (fun x -> x <> "skiptests")
+    let private gui = args |> List.exists (fun x -> x = "-gui")
+    let private noDestroy = args |> List.exists (fun x -> x = "-nodestroy")
+    let private filteredArgs = args |> List.filter (fun x -> match x with
+                                                             | "skiptests"
+                                                             | "-gui"
+                                                             | "-nodestroy" -> false
+                                                             | _ -> true)
 
     let private (|IsTarget|_|) (candidate: string) =
         match candidate.ToLowerInvariant() with
@@ -389,4 +395,6 @@ Whether to skip unit tests.
 
         setBuildParam "target" target
         if skipTests then setBuildParam "skiptests" "1"
+        if gui then setBuildParam "gui" "$true"
+        if noDestroy then setBuildParam "no-destroy" "$false"
         products

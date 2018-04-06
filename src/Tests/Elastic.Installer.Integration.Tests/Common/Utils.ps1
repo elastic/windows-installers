@@ -223,7 +223,7 @@ function Add-Cygpath() {
     }
 }
 
-function Invoke-IntegrationTestsOnLocal($Location, $Version, $PreviousVersions, $VagrantProvider) {
+function Invoke-IntegrationTestsOnLocal($Location, $Version, $PreviousVersions, $VagrantProvider, $VagrantDestroy) {
     cd $Location  
     $testDirName = Split-Path $Location -Leaf
     vagrant destroy local -f
@@ -233,7 +233,9 @@ function Invoke-IntegrationTestsOnLocal($Location, $Version, $PreviousVersions, 
 		vagrant powershell local -c "C:\common\PesterBootstrap.ps1 -Version '$Version' -PreviousVersions @($($($PreviousVersions | ForEach-Object { "'$_'" }) -join ",")) -TestDirName '$testDirName'"
 	}
 	finally {
-		vagrant destroy local -f
+		if ($VagrantDestroy) {
+			vagrant destroy local -f
+		}
 	}
 }
 
@@ -340,7 +342,7 @@ function Invoke-IntegrationTestsOnQuickAzure($Location, $Version, $PreviousVersi
 	}
 }
 
-function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Version, $PreviousVersions) {
+function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Version, $PreviousVersions, $Gui, $VagrantDestroy) {
 
 	# run all tests on one vagrant box
 	if ($VagrantProvider -eq "quick-azure") {
@@ -391,7 +393,11 @@ function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Vers
 			Copy-Item "$CurrentDir\common\Vagrantfile" -Destination $dir -Force
 
 			if ($VagrantProvider -eq "local") {
-				Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version -PreviousVersions $PreviousVersions 
+				if ($Gui) {
+					ReplaceInFile -File "$dir\Vagrantfile" -Replacements @{ "#vb.gui = true" = "vb.gui = true" }
+				}
+
+				Invoke-IntegrationTestsOnLocal -Location $dir -Version $Version -PreviousVersions $PreviousVersions -VagrantDestroy:$VagrantDestroy
 			} 
 			else {
 				Invoke-IntegrationTestsOnAzure -Location $dir -Version $Version -PreviousVersions $PreviousVersions 
