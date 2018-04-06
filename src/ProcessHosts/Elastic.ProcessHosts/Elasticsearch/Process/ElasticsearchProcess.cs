@@ -17,8 +17,8 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 	{
 		private bool NoColor { get; set; }
 		
-		private ElasticsearchTool OptsParser { get;  }
-		private ElasticsearchTool JavaVersionChecker { get;  }
+		private IElasticsearchTool JvmOptionsParser { get;  }
+		private IElasticsearchTool JavaVersionChecker { get;  }
 		
 		private string PrivateTempDirectory { get; }
 
@@ -29,16 +29,21 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 				null,
 				ElasticsearchEnvironmentConfiguration.Default,
 				JavaConfiguration.Default,
-				completedHandle,args)
-		{}
+				ElasticsearchTool.JvmOptionsParser,
+				ElasticsearchTool.JavaVersionChecker, 
+				completedHandle, 
+				args)
+		{ }
 
 		public ElasticsearchProcess(
-			IObservableProcess process,
-			IConsoleOutHandler consoleOutHandler,
-			IFileSystem fileSystem,
-			ElasticsearchEnvironmentConfiguration env,
-			JavaConfiguration java,
-			ManualResetEvent completedHandle,
+			IObservableProcess process, 
+			IConsoleOutHandler consoleOutHandler, 
+			IFileSystem fileSystem, 
+			ElasticsearchEnvironmentConfiguration env, 
+			JavaConfiguration java, 
+			IElasticsearchTool jvmOptionsParser, 
+			IElasticsearchTool javaVersionChecker, 
+			ManualResetEvent completedHandle, 
 			IEnumerable<string> args)
 			: base(
 				process ?? new ElasticsearchObservableProcess(env),
@@ -67,10 +72,8 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			if (!this.FileSystem.File.Exists(this.ProcessExe))
 				throw new StartupException($"Java executable not found, this could be because of a faulty JAVA_HOME variable: {this.ProcessExe}");
 			
-			this.OptsParser = new ElasticsearchTool("org.elasticsearch.tools.launchers.JvmOptionsParser", java, env, this.FileSystem);
-			
-			this.JavaVersionChecker = new ElasticsearchTool("org.elasticsearch.tools.launchers.JavaVersionChecker", java, env, this.FileSystem);
-			
+			this.JvmOptionsParser = jvmOptionsParser;		
+			this.JavaVersionChecker = javaVersionChecker;		
 			this.Arguments = this.CreateObservableProcessArguments(parsedArguments);
 		}
 
@@ -126,7 +129,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			if (!this.JavaVersionChecker.Start(null, out var javaVersionOut)) throw new StartupException($"Invalid Java version reported: {javaVersionOut}");
 
 			var jvmOptionsFile = Path.Combine(this.ConfigDirectory, "jvm.options");
-			if (!this.OptsParser.Start(new [] { $"\"{jvmOptionsFile}\"" }, out var jvmOptionsLine) || string.IsNullOrWhiteSpace(jvmOptionsLine)) 
+			if (!this.JvmOptionsParser.Start(new [] { $"\"{jvmOptionsFile}\"" }, out var jvmOptionsLine) || string.IsNullOrWhiteSpace(jvmOptionsLine)) 
 				throw new StartupException($"Could not evaluate jvm.options file: {jvmOptionsFile} result: {jvmOptionsLine}");
 			jvmOptionsLine = jvmOptionsLine.Replace("${ES_TMPDIR}", this.PrivateTempDirectory).Replace("\n", "").Replace("\r", "");
 
@@ -137,7 +140,9 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 				$"-Des.path.home=\"{this.HomeDirectory}\"",
 				$"-Des.path.conf=\"{this.ConfigDirectory}\"",
 				$"-cp \"{classPath}\" org.elasticsearch.bootstrap.Elasticsearch"
-			};
+			}
+			.Concat(args)
+			.ToList();
 		}
 
 		protected sealed override IEnumerable<string> ParseArguments(IEnumerable<string> args)

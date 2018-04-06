@@ -15,9 +15,14 @@ using Elastic.ProcessHosts.Process;
 
 namespace Elastic.ProcessHosts.Elasticsearch.Process
 {
+	public interface IElasticsearchTool
+	{
+		bool Start(string[] arguments, out string output);
+	}
+
 	//TODO move this to Proc once we release that.
 	//ObservableProcess as included in this solution is not very composable and reusable
-	public class ElasticsearchTool
+	public class ElasticsearchTool : IElasticsearchTool
 	{
 		public string JavaClass { get; }
 
@@ -40,12 +45,13 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			if (!fileSystem.Directory.Exists(libFolder)) throw new StartupException($"Expected a 'lib' directory inside: {homeDirectory}");
 			var classPath = $"{Path.Combine(libFolder, "*")}";
 
-			this.ProcessVariables = new Dictionary<string, string>();
-			this.ProcessVariables["ES_TMPDIR"] = env.PrivateTempDirectory;
-			this.ProcessVariables["HOSTNAME"] = Environment.MachineName;
-			this.OutputFile = fileSystem.Path.GetTempFileName();
-			this.FileSystem = fileSystem;
+			this.ProcessVariables = new Dictionary<string, string>
+			{
+				{ "ES_TMPDIR", env.PrivateTempDirectory },
+				{ "HOSTNAME", Environment.MachineName }
+			};
 
+			this.FileSystem = fileSystem;
 			this.Arguments = new[]
 			{
 				$"-cp \"{classPath}\" {javaClass}"
@@ -54,19 +60,17 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 
 		private IFileSystem FileSystem { get; }
 		
-		private string OutputFile { get; }
-
 		private Dictionary<string, string> ProcessVariables { get; }
 
 		private string[] Arguments { get; }
 
 		private string ProcessExe { get; }
 
-		public bool Start(string[] arguments, out string stdOut) => this.Start(arguments, TimeSpan.FromMinutes(1), out stdOut);
+		public bool Start(string[] arguments, out string output) => this.Start(arguments, TimeSpan.FromMinutes(1), out output);
 
-		public bool Start(string[] arguments, TimeSpan timeout, out string stdOut)
+		public bool Start(string[] arguments, TimeSpan timeout, out string output)
 		{
-			stdOut = string.Empty;
+			output = string.Empty;
 			arguments = this.Arguments.Concat(arguments ?? new string[0] { }).ToArray() ;
 			var args = string.Join(" ", arguments);
 			
@@ -96,17 +100,40 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 				{
 					if (!string.IsNullOrEmpty(d.Data)) sb.AppendLine(d.Data);
 				};
-				if (!p.Start()) return false;
+
+				try
+				{
+					if (!p.Start()) return false;
+				}
+				catch (Exception e)
+				{
+					sb.AppendLine($"Exception thrown starting process {this.ProcessExe} with arguments {args}: {e}");
+					output = sb.ToString();			
+					return false;
+				}
 				
 				p.BeginOutputReadLine();
 				p.BeginErrorReadLine();
 				
-
 				if (!p.WaitForExit((int) timeout.TotalMilliseconds)) return false;
 				p.WaitForExit();
-				stdOut = sb.ToString();
+				output = sb.ToString();
 				return p.ExitCode == 0;
 			}
 		}
+
+		public static ElasticsearchTool JvmOptionsParser =>
+			new ElasticsearchTool(
+				"org.elasticsearch.tools.launchers.JvmOptionsParser", 
+				JavaConfiguration.Default,
+				ElasticsearchEnvironmentConfiguration.Default, 
+				new FileSystem());
+
+		public static ElasticsearchTool JavaVersionChecker =>
+			new ElasticsearchTool(
+				"org.elasticsearch.tools.launchers.JavaVersionChecker",
+				JavaConfiguration.Default,
+				ElasticsearchEnvironmentConfiguration.Default,
+				new FileSystem());
 	}
 }

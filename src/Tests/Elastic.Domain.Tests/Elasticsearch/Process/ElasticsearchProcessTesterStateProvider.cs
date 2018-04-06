@@ -5,6 +5,7 @@ using System.Threading;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Configuration.EnvironmentBased.Java;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
+using Elastic.ProcessHosts.Elasticsearch.Process;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 {
@@ -87,6 +88,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			return this;
 		}
 
+		public ElasticsearchProcessTesterStateProvider OptsParser(Func<MockElasticsearchTool, MockElasticsearchTool> selector)
+		{
+			this.OptsParserTool = selector(new MockElasticsearchTool());
+			return this;
+		}
+
+		public ElasticsearchProcessTesterStateProvider JavaVersionChecker(Func<MockElasticsearchTool, MockElasticsearchTool> selector)
+		{
+			this.JavaVersionCheckerTool = selector(new MockElasticsearchTool());
+			return this;
+		}
+
 		public TestableElasticsearchConsoleOutHandler OutHandler { get; } = new TestableElasticsearchConsoleOutHandler();
 
 		public bool InteractiveEnvironment { get; private set; }
@@ -98,5 +111,15 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		public MockFileSystem FileSystemState { get; private set; } = new MockFileSystem();
 
 		public ManualResetEvent CompletionHandle { get; private set; } = new ManualResetEvent(false);
+
+		private static bool DefaultOptsParserStart(string[] arguments, out string stdOut)
+		{
+			stdOut = "${ES_TMPDIR}";
+			return true;
+		}
+
+		public MockElasticsearchTool OptsParserTool { get; private set; } = new MockElasticsearchTool(DefaultOptsParserStart);
+
+		public MockElasticsearchTool JavaVersionCheckerTool { get; private set; } = new MockElasticsearchTool();
 	}
 }
