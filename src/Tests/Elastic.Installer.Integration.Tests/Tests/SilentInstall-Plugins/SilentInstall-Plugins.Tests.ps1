@@ -13,11 +13,19 @@ $tags = @('XPack')
 
 Describe -Name "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" -Tags $tags {
 
-    Invoke-SilentInstall -Exeargs @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
+	# don't try to install X-Pack for 6.3.0+
+	$630Release = ConvertTo-SemanticVersion "6.3.0"
+	if ((Compare-SemanticVersion $Version $630Release) -ge 0) {
+		$plugins = "ingest-geoip,ingest-attachment"
+	} else {
+		$plugins = "x-pack,ingest-geoip,ingest-attachment"
+	}
+
+    Invoke-SilentInstall -Exeargs @("PLUGINS=$plugins")
 
     Context-PingNode
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins -split ",") }
 
     Context-ClusterNameAndNodeName
 
