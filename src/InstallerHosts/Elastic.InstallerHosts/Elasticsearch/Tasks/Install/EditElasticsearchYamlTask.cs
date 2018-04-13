@@ -42,11 +42,12 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			this.Session.SendProgress(1000, "updating elasticsearch.yml with values from x-pack model if needed");
 			var xPack = this.InstallationModel.XPackModel;
 			
-			//only set these if they have no value already
+			//only set if no value already
 			if (settings.XPackLicenseSelfGeneratedType.IsNullOrEmpty())
 				settings.XPackLicenseSelfGeneratedType = Enum.GetName(typeof(XPackLicenseMode), xPack.XPackLicense)?.ToLowerInvariant();
+
 			if (settings.XPackSecurityEnabled == null)
-				settings.XPackSecurityEnabled = !xPack.XPackSecurityEnabled ? false : (bool?) null;
+				settings.XPackSecurityEnabled = xPack.XPackSecurityEnabled;
 		}
 
 		private void ApplyServiceModel(ElasticsearchYamlSettings settings)

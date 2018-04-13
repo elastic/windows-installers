@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 {
 	public class EditElasticsearchYamlXPackModelTaskTests : InstallationModelTestBase
 	{
-		[Fact] void WritesExpectedDefauts() => WithValidPreflightChecks(s => s
+		[Fact] void WritesExpectedDefaults() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -35,7 +35,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
 					s.XPackLicenseSelfGeneratedType.Should().NotBeNull().And.Be("basic");
-					s.XPackSecurityEnabled.Should().BeNull();
+					s.XPackSecurityEnabled.Should().BeFalse();
 				}
 			);
 
@@ -45,7 +45,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 			)
 			.FileSystem(fs =>
 				{
-					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(""));
 					return fs;
 				})
 			)
@@ -59,18 +59,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().Be(nameof(XPackLicenseMode.Basic).ToLowerInvariant());
-					s.XPackSecurityEnabled.Should().BeNull();
+					s.XPackLicenseSelfGeneratedType.Should().Be("basic");
+					s.XPackSecurityEnabled.Should().BeFalse();
 				}
 			);
 		
-		[Fact] void SelectingTrialDoesNotWriteSecurityEnabled() => WithValidPreflightChecks(s => s
+		[Fact] void SelectingTrialWritesSecurityEnabled() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
 			.FileSystem(fs =>
 				{
-					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(""));
 					return fs;
 				})
 			)
@@ -85,8 +85,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().Be(nameof(XPackLicenseMode.Trial).ToLowerInvariant());
-					s.XPackSecurityEnabled.Should().BeNull();
+					s.XPackLicenseSelfGeneratedType.Should().Be("trial");
+					s.XPackSecurityEnabled.Should().BeTrue();
 				}
 			);
 		
@@ -96,7 +96,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 			)
 			.FileSystem(fs =>
 				{
-					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(""));
 					return fs;
 				})
 			)
@@ -115,7 +115,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().Be(nameof(XPackLicenseMode.Trial).ToLowerInvariant());
+					s.XPackLicenseSelfGeneratedType.Should().Be("trial");
 					s.XPackSecurityEnabled.Should().BeFalse();
 				}
 			);
@@ -150,6 +150,5 @@ xpack.random_setting: something
 					s.Keys.Where(k => k.StartsWith("xpack")).Should().HaveCount(1);
 				}
 			);
-
 	}
 }

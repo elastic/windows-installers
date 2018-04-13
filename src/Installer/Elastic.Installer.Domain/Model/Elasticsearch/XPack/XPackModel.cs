@@ -44,7 +44,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.KibanaUserPassword = null;
 			this.LogstashSystemUserPassword = null;
 			this.BootstrapPassword = null;
-			this.XPackSecurityEnabled = true;
+			this.XPackSecurityEnabled = false;
 		}
 
 		public SemVersion CurrentVersion { get; }
@@ -99,7 +99,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		public XPackLicenseMode XPackLicense
 		{
 			get => this.xPackLicense;
-			set => this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
+			set
+			{
+				this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
+				if (value == XPackLicenseMode.Trial)
+					this.XPackSecurityEnabled = true;
+			}
 		}
 
 		private string bootstrapPassword;
