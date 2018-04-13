@@ -62,24 +62,17 @@ Target "UnitTest" (fun () ->
 )
 
 Target "PruneFiles" (fun () ->
-    let prune files directory =
-        let keep = files |> Seq.map (fun n -> directory @@ n)
+    let prune directory =
         Directory.EnumerateFiles(directory) 
-        |> Seq.except keep
+        |> Seq.where (fun f ->
+                        let name = filename f
+                        Path.GetExtension(f) = "" || 
+                        name.StartsWith("elasticsearch-service") || 
+                        name = "elasticsearch.bat")                    
         |> Seq.iter File.Delete
         
     productsToBuild
-    |> List.iter(fun p -> 
-        p.BinDirs
-        |> List.iter(fun binDir ->
-            prune [
-                sprintf "%s-plugin.bat" p.Name;
-                sprintf "%s-env.bat" p.Name;
-                sprintf "%s-translog.bat" p.Name;
-                sprintf "%s-keystore.bat" p.Name
-            ] binDir
-        )
-    )
+    |> List.iter(fun p -> p.BinDirs |> List.iter prune)
 )
 
 Target "BuildServices" (fun () ->
