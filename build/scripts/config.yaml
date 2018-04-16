@@ -95,6 +95,8 @@ elasticsearch:
       guid: e861bc6e-5eee-46e1-9bb5-73d70e3c1be8
     - version: 6.1.3
       guid: c850d041-38e2-4066-88bf-9386775802da
+    - version: 6.1.4
+      guid: 1de011b5-03ed-4da6-8fc0-d3a68a458d8b
     - version: 6.2.0
       guid: bc4c5bb2-89a4-4958-a652-e0ff25b2df69
     - version: 6.2.1
