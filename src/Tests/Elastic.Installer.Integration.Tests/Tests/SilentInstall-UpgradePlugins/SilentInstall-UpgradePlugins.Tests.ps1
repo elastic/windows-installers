@@ -13,14 +13,14 @@ $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 $tags = @('PreviousVersions', 'XPack') 
+$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
 
 Describe -Name "Silent Install upgrade with plugins install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 
-	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
-	$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
-	if ((Compare-SemanticVersion $Global:Version $630SnapshotRelease) -ge 0) {
+	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases	
+	if ((Compare-SemanticVersion $previousVersion $630SnapshotRelease) -ge 0) {
 		$plugins = "ingest-geoip,ingest-attachment"
 	} else {
 		$plugins = "x-pack,ingest-geoip,ingest-attachment"
@@ -87,9 +87,8 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 
 	$v = $version.FullVersion
 
-	# don't try to install X-Pack for 6.3.0+
-	$630Release = ConvertTo-SemanticVersion "6.3.0"
-	if ((Compare-SemanticVersion $version $630Release) -ge 0) {
+	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
+	if ((Compare-SemanticVersion $version $630SnapshotRelease) -ge 0) {
 		$plugins = "ingest-geoip,ingest-attachment"
 	} else {
 		$plugins = "x-pack,ingest-geoip,ingest-attachment"
