@@ -134,7 +134,7 @@ Whether to skip unit tests.
         | hash when isNotNullOrEmpty hash -> BuildCandidate hash
         | _ -> Compile
 
-    let private parseVersion version =
+    let parseVersion version =
         let m = VersionRegex().Match version
         if m.Success |> not then failwithf "Could not parse version from %s" version
         let source = parseSource m.Source.Value
@@ -184,10 +184,12 @@ Whether to skip unit tests.
     let private skipTests = args |> List.exists (fun x -> x = "skiptests")
     let private gui = args |> List.exists (fun x -> x = "-gui")
     let private noDestroy = args |> List.exists (fun x -> x = "-nodestroy")
+    let private plugins = args |> List.exists (startsWith "-plugins:")
     let private filteredArgs = args |> List.filter (fun x -> match x with
                                                              | "skiptests"
                                                              | "-gui"
                                                              | "-nodestroy" -> false
+                                                             | y when startsWith "-plugins:" y -> false
                                                              | _ -> true)
 
     let private (|IsTarget|_|) (candidate: string) =
@@ -397,4 +399,10 @@ Whether to skip unit tests.
         if skipTests then setBuildParam "skiptests" "1"
         if gui then setBuildParam "gui" "$true"
         if noDestroy then setBuildParam "no-destroy" "$false"
+        if plugins then
+            let pluginPaths = args 
+                              |> List.find (startsWith "-plugins:") 
+                              |> split ':'
+                              |> List.last
+            setBuildParam "plugins" pluginPaths
         products

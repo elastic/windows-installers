@@ -484,6 +484,29 @@ function Invoke-SilentInstall {
 		$Upgrade
     )
 
+	# if there are local zips of the plugins in build/out with the same version,
+	# use them for installation
+	if ($Exeargs) {
+		$Newargs = New-Object "System.Collections.ArrayList"
+		$Exeargs | %{
+			if ($_.StartsWith("PLUGINS=")) {
+				$plugins = $_.Replace("PLUGINS=", "").Split(',') | %{
+					$plugin = $_
+					$zip = ".\..\out\$plugin-$($Version.FullVersion).zip"
+					if (Test-Path $zip) {
+						(Get-Item $zip).FullName
+					} else {
+						$plugin
+					}
+				}
+				$Newargs.Add("PLUGINS=$($plugins -join ",")") | Out-Null
+			} else {
+				$Newargs.Add($_) | Out-Null
+			}		
+		}
+		$Exeargs = $Newargs
+	}
+
 	if ($Version.Source) {
         if (!$Exeargs) {
             $Exeargs = @("PLUGINSSTAGING=$($Version.Source)")
@@ -492,6 +515,7 @@ function Invoke-SilentInstall {
             $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)") | Out-Null
         }
     }
+
 
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
@@ -502,7 +526,7 @@ function Invoke-SilentInstall {
 		$logFile = "install.log"
 	}
 	$argumentList = "/i $Exe /qn /l*v $logFile $QuotedArgs"
-    log "running installer: msiexec.exe $argumentList"
+    log "running installer: msiexec.exe $argumentList" -Level Debug
     $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList $argumentList -Wait -PassThru).ExitCode
 
     if ($ExitCode) {

@@ -11,9 +11,9 @@ Get-PreviousVersions
 
 Describe -Name "Silent Install with setting up bootstrap password and x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
 
-	# don't try to install X-Pack for 6.3.0-alpha1+
-	$630Alpha1Release = ConvertTo-SemanticVersion "6.3.0-alpha1"
-	if ((Compare-SemanticVersion $Global:Version $630Alpha1Release) -ge 0) {
+	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
+	$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
+	if ((Compare-SemanticVersion $Global:Version $630SnapshotRelease) -ge 0) {
 		$plugins = ""
 	} else {
 		$plugins = "x-pack"

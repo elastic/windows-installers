@@ -93,11 +93,28 @@ Target "Integrate" (fun () ->
                   |> List.map(fun v -> v.RawValue)
     
     // last version in the list is the _target_ version    
-    let version = versions |> List.last                
+    let version = versions |> List.last    
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
     let vagrantProvider = getBuildParamOrDefault "vagrantprovider" "local"
     let gui = getBuildParamOrDefault "gui" "$false"
     let noDestroy = getBuildParamOrDefault "no-destroy" "$true"
+    let plugins = getBuildParamOrDefault "plugins" ""
+
+    // copy any plugins specified to build/out
+    if isNotNullOrEmpty plugins then
+        let pluginNames = plugins.Split([|',';';'|], StringSplitOptions.RemoveEmptyEntries)
+        versions
+        |> List.map(fun v ->  Commandline.parseVersion v)
+        |> List.collect(fun s ->
+            pluginNames 
+            |> Array.map(fun p -> Paths.InDir </> (sprintf "%s-%s.zip" p s.FullVersion))
+            |> Array.toList
+        )
+        |> List.iter(fun p ->
+            match fileExists p with
+            | true -> CopyFile Paths.OutDir p
+            | false -> traceFAKE "%s does not exist. Will install from public url" p 
+        )
 
     let previousVersions = 
         match versions.Length with

@@ -11,15 +11,15 @@ Get-PreviousVersions
 
 $tags = @('XPack')
 
-Describe -Name "Silent Install with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" -Tags $tags {
+# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
+$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
+if ((Compare-SemanticVersion $Global:Version $630SnapshotRelease) -ge 0) {
+	$plugins = "ingest-geoip,ingest-attachment"
+} else {
+	$plugins = "x-pack,ingest-geoip,ingest-attachment"
+}
 
-	# don't try to install X-Pack for 6.3.0-alpha1+
-	$630Alpha1Release = ConvertTo-SemanticVersion "6.3.0-alpha1"
-	if ((Compare-SemanticVersion $Global:Version $630Alpha1Release) -ge 0) {
-		$plugins = "ingest-geoip,ingest-attachment"
-	} else {
-		$plugins = "x-pack,ingest-geoip,ingest-attachment"
-	}
+Describe -Name "Silent Install with $plugins plugins $(($Global:Version).Description)" -Tags $tags {
 
     Invoke-SilentInstall -Exeargs @("PLUGINS=$plugins")
 
@@ -32,7 +32,7 @@ Describe -Name "Silent Install with x-pack, ingest-geoip and ingest-attachment p
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Name "Silent Uninstall with x-pack, ingest-geoip and ingest-attachment plugins $(($Global:Version).Description)" -Tags $tags {
+Describe -Name "Silent Uninstall with $plugin plugins $(($Global:Version).Description)" -Tags $tags {
 
 	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
 	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"

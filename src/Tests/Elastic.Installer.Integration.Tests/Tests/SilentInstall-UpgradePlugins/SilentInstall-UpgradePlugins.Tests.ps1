@@ -18,9 +18,9 @@ Describe -Name "Silent Install upgrade with plugins install $($previousVersion.D
 
 	$v = $previousVersion.FullVersion
 
-	# don't try to install X-Pack for 6.3.0-alpha1+
-	$630Alpha1Release = ConvertTo-SemanticVersion "6.3.0-alpha1"
-	if ((Compare-SemanticVersion $Global:Version $630Alpha1Release) -ge 0) {
+	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
+	$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
+	if ((Compare-SemanticVersion $Global:Version $630SnapshotRelease) -ge 0) {
 		$plugins = "ingest-geoip,ingest-attachment"
 	} else {
 		$plugins = "x-pack,ingest-geoip,ingest-attachment"
