@@ -29,15 +29,21 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
 			this.ReadMoreOnXPackOpening = ReactiveCommand.Create();
 
-			var p = versionConfig.PreviousVersion;
-			var c = versionConfig.InstallerVersion;
-			if (!string.IsNullOrWhiteSpace(c?.Prerelease))
+			if (!string.IsNullOrWhiteSpace(this.CurrentVersion?.Prerelease))
 			{
-				this.UpgradeTextHeader = TextResources.NoticeModel_ToPrerelease_Header;
-				this.UpgradeText = TextResources.NoticeModel_ToPrerelease;
+				if (versionConfig.ExistingVersionInstalled)
+				{
+					this.UpgradeTextHeader = TextResources.NoticeModel_ToPrerelease_Header;
+					this.UpgradeText = TextResources.NoticeModel_ToPrerelease;
+				}
+				else
+				{
+					this.UpgradeTextHeader = TextResources.NoticeModel_Prerelease_Header;
+					this.UpgradeText = TextResources.NoticeModel_Prerelease;
+				}
 				this.IsRelevant = true; //show prerelease notice always
 			}
-			else if (!string.IsNullOrWhiteSpace(p?.Prerelease))
+			else if (!string.IsNullOrWhiteSpace(this.ExistingVersion?.Prerelease))
 			{
 				this.UpgradeTextHeader = TextResources.NoticeModel_FromPrerelease_Header;
 				this.UpgradeText = TextResources.NoticeModel_FromPrerelease;
@@ -54,7 +60,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
 				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
 
-			this.ShowOpeningXPackBanner = p < "6.3.0";
+			this.ShowOpeningXPackBanner = this.ExistingVersion < "6.3.0";
 			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;
 			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;

@@ -89,7 +89,7 @@
                      />
           <Button x:Name="ReadMoreOnXPackOpening"  Style="{DynamicResource Link}"
                      Margin="0, 0, 0,0"
-                     Content="find out more about the opening of x-pack" 
+                     Content="Find out more about the opening of x-pack" 
                      HorizontalAlignment="Left" VerticalAlignment="Top"/>
         
       </StackPanel>

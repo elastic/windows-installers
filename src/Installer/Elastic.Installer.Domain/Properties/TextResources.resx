@@ -282,9 +282,6 @@ invalid  and prevented seeding current values.</value>
   <data name="NoticeModel_PatchDown_Header" xml:space="preserve">
     <value>Patch Downgrade from {0} to {1}</value>
   </data>
-  <data name="NoticeModel_PatchDown_Header" xml:space="preserve">
-    <value>Patch Downgrade from {0} to {1}</value>
-  </data>
   <data name="NoticeModel_MinorUp" xml:space="preserve">
     <value>You are running a minor upgrade please take this time to read more about the best practices</value>
   </data>
@@ -437,5 +434,12 @@ PLEASE NOTE: an uninstall will always remove the data folder be sure you move it
   <data name="PluginsModelValidator_InvalidHttpsProxyPort" xml:space="preserve">
     <value>HTTPS proxy port must be between {0} and {1}.</value>
     <comment>{0} = minimum port number. {1} = maximum port number</comment>
+  </data>
+  <data name="NoticeModel_Prerelease" xml:space="preserve">
+    <value>Please do not run elasticsearch prereleases in production</value>
+  </data>
+  <data name="NoticeModel_Prerelease_Header" xml:space="preserve">
+    <value>Installing prerelease {1}</value>
+    <comment>{1} = current version</comment>
   </data>
 </root>
