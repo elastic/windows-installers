@@ -111,7 +111,7 @@
       <Setter.Value>
         <ControlTemplate TargetType="Button">
           <Border BorderBrush="{DynamicResource LinkColorBrush}" BorderThickness="0,0,0,2" CornerRadius="0">
-          <TextBlock TextDecorations="None"  Typography.Capitals="SmallCaps" Margin="0,0,0,0" Padding="2,0,2,2"
+          <TextBlock TextDecorations="None" Margin="0,0,0,0" Padding="2,0,2,2"
                           Text="{TemplateBinding Content}"
                           Background="{TemplateBinding Background}"/>
           </Border>
