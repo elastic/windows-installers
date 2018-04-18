@@ -9,7 +9,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 	{
 		[Fact(Skip = "need an integration test for this")]
 		void InstallByDefault() => WithValidPreflightChecks()
-			.OnStep(m=>m.PluginsModel, step=>step.ChangeXPackSelection(true))
 			.OnStep(m=>m.XPackModel, step =>
 			{
 				step.XPackLicense = XPackLicenseMode.Trial;

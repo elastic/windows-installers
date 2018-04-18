@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 {
 	public class EditElasticsearchYamlXPackModelTaskTests : InstallationModelTestBase
 	{
-		[Fact] void WritesExpectedDefauts() => WithValidPreflightChecks(s => s
+		[Fact] void WritesExpectedDefaults() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -34,8 +34,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().BeNull();
-					s.XPackSecurityEnabled.Should().BeNull();
+					s.XPackLicenseSelfGeneratedType.Should().NotBeNull().And.Be("basic");
+					s.XPackSecurityEnabled.Should().BeFalse();
 				}
 			);
 
@@ -45,11 +45,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 			)
 			.FileSystem(fs =>
 				{
-					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(""));
 					return fs;
 				})
 			)
-			.OnStep(m => m.PluginsModel, s => s.ChangeXPackSelection(true))
 			.AssertTask(
 				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
 				(m, t) =>
@@ -60,22 +59,21 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().Be(nameof(XPackLicenseMode.Basic).ToLowerInvariant());
-					s.XPackSecurityEnabled.Should().BeNull();
+					s.XPackLicenseSelfGeneratedType.Should().Be("basic");
+					s.XPackSecurityEnabled.Should().BeFalse();
 				}
 			);
 		
-		[Fact] void SelectingTrialDoesNotWriteSecurityEnabled() => WithValidPreflightChecks(s => s
+		[Fact] void SelectingTrialWritesSecurityEnabled() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
 			.FileSystem(fs =>
 				{
-					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(""));
 					return fs;
 				})
 			)
-			.OnStep(m => m.PluginsModel, s => s.ChangeXPackSelection(true))
 			.OnStep(m => m.XPackModel, s => s.XPackLicense = XPackLicenseMode.Trial)
 			.AssertTask(
 				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
@@ -87,8 +85,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().Be(nameof(XPackLicenseMode.Trial).ToLowerInvariant());
-					s.XPackSecurityEnabled.Should().BeNull();
+					s.XPackLicenseSelfGeneratedType.Should().Be("trial");
+					s.XPackSecurityEnabled.Should().BeTrue();
 				}
 			);
 		
@@ -98,11 +96,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 			)
 			.FileSystem(fs =>
 				{
-					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(""));
 					return fs;
 				})
 			)
-			.OnStep(m => m.PluginsModel, s => s.ChangeXPackSelection(true))
 			.OnStep(m => m.XPackModel, s =>
 			{
 				s.XPackLicense = XPackLicenseMode.Trial;
@@ -118,42 +115,40 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().Be(nameof(XPackLicenseMode.Trial).ToLowerInvariant());
+					s.XPackLicenseSelfGeneratedType.Should().Be("trial");
 					s.XPackSecurityEnabled.Should().BeFalse();
 				}
 			);
 		
-		[Fact] void RemovesXPackSettingsIfXPackIsNotBeingInstalled() => WithValidPreflightChecks(s => s
+		[Fact] void XPackSettingsAlreadyInPlaceAreNotOverwritten() => WithValidPreflightChecks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
 			.FileSystem(fs =>
 				{
 					var yaml = $@"bootstrap.memory_lock: true
-xpack.security.enabled = false
-xpack.license.self_generated.type = trial
-xpack.random_setting = something
+xpack.security.enabled: false
+xpack.license.self_generated.type: trial
+xpack.random_setting: something
 ";
-					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@""));
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), yaml);
 					return fs;
 				})
 			)
-			.OnStep(m => m.PluginsModel, s => s.ChangeXPackSelection(false))
 			.AssertTask(
 				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
 				(m, t) =>
 				{
 					var dir = m.LocationsModel.ConfigDirectory;
 					var yaml = Path.Combine(dir, "elasticsearch.yml");
-					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
-					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
 					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
 					var s = config.Settings;
-					s.XPackLicenseSelfGeneratedType.Should().BeNull();
-					s.XPackSecurityEnabled.Should().BeNull();
-					s.Keys.Where(k => k.StartsWith("xpack")).Should().HaveCount(0);
+					s.MemoryLock.Should().BeTrue();
+					s.XPackLicenseSelfGeneratedType.Should().Be("trial");
+					s.XPackSecurityEnabled.Should().BeFalse();
+					//unknown x-pack setting is preserved
+					s.Keys.Where(k => k.StartsWith("xpack")).Should().HaveCount(1);
 				}
 			);
-
 	}
 }

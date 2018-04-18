@@ -10,8 +10,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 		[Fact] void CanPassTrialLicense() => Argument(nameof(XPackModel.XPackLicense), "trIal", "Trial", (m, v) =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Trial);
-			m.XPackModel.IsValid.Should().BeTrue("{0}", m);
-			m.PluginsModel.XPackEnabled.Should().BeFalse();
+			m.PluginsModel.XPackEnabled.Should().BeTrue();
+			m.XPackModel.IsValid.Should().BeFalse("{0}", m); //needs passwords by default
 		});
 		
 		[Fact] void SignalUsersWillBeGeneratedLater() => 

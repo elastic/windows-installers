@@ -76,6 +76,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
+    <Resource Include="Resources\x-pack.png" />
     <Resource Include="Resources\Entypo.ttf">
       <Paket>True</Paket>
     </Resource>
@@ -335,7 +336,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)%(Filename)')" />
   </Target>
   <Import Project="..\..\..\.paket\paket.targets" />
   <Choose>

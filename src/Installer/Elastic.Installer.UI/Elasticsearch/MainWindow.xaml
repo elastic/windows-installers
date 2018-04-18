@@ -64,7 +64,7 @@
             <TextBlock Grid.Column="1" 
                            Text="{DynamicResource InstallerTitle}" 
                            TextTrimming="CharacterEllipsis" VerticalAlignment="Center" 
-                           HorizontalAlignment="Left" Margin="20 18 0 0" Foreground="{DynamicResource VersionColorBrush}" FontSize="26"
+                           HorizontalAlignment="Left" Margin="10 28 0 0" Foreground="{DynamicResource VersionColorBrush}" FontSize="43"
                                FontFamily="{DynamicResource OpenSans}" FontWeight="Normal"
                                />
 
@@ -79,8 +79,8 @@
         <RowDefinition Height="45" />
         <RowDefinition Height="30" />
       </Grid.RowDefinitions>
-      <controls:MetroAnimatedSingleRowTabControl x:Name="StepsTab" Grid.Row="0" Padding="-5" Margin="0, 0, 0,0 "/>
-      <Grid Grid.Row="1" Margin="5, 0,0,0">
+      <controls:MetroAnimatedSingleRowTabControl x:Name="StepsTab" Grid.Row="0" Padding="-5" Margin="6, 0, 0,0 "/>
+      <Grid Grid.Row="1" Margin="0, 0,0,0">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="50"/>
           <ColumnDefinition Width="50"/>

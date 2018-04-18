@@ -16,8 +16,7 @@
         <Grid.RowDefinitions>
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <ContentControl Grid.Row="0" Margin="10,10,10,10" Grid.Column="0" Content="{Binding Path=Step, ElementName=Control}" Grid.RowSpan="3"/>
+        <ContentControl Grid.Row="0" Margin="4,10,10,10" Grid.Column="0" Content="{Binding Path=Step, ElementName=Control}" Grid.RowSpan="3"/>
       </Grid>
     </ControlTemplate>
   </UserControl.Template>

@@ -19,7 +19,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		public const int HttpPortMinimum = 80;
 		public const int HttpsPortMinimum = 443;
 		public const int PortMaximum = 65535;
-
+		
 		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies)
 			: base(pluginStateProvider)
 		{
@@ -38,19 +38,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				this.Refresh();
 			});
 
+			this.WhenAnyValue(vm => vm.InstalledPlugins, l => l.Contains("x-pack"))
+				.Subscribe(b => this.PreviousInstallationHasXPack = b);
+			
 			this.AvailablePlugins.ItemChanged.Select(e => this.Plugins.Any())
 				.Subscribe(any =>
 				{
 					if (!any) this.HasInternetConnection = true;
-				});
-
-			this.AvailablePlugins.ItemChanged
-				.Where(x => x.PropertyName == nameof(Plugin.Selected) && x.Sender.PluginType == PluginType.XPack)
-				.Select(x => x.Sender.Selected)
-				.Subscribe(selected =>
-				{
-					this.XPackEnabled = selected;
-					this.Validate();
 				});
 
 			Observable.Timer(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(2))
@@ -100,20 +94,20 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			this.Validate();
 		}
 
-		bool xPackEnabled;
-
-		public bool XPackEnabled
-		{
-			get => this.xPackEnabled;
-			private set => this.RaiseAndSetIfChanged(ref this.xPackEnabled, value);
-		}
+		public bool XPackEnabled => true;
 
 		bool? hasInternetConnection;
-
 		public bool? HasInternetConnection
 		{
 			get => this.hasInternetConnection;
 			set => this.RaiseAndSetIfChanged(ref this.hasInternetConnection, value);
+		}
+		
+		bool previousInstallationHasXPack;
+		public bool PreviousInstallationHasXPack
+		{
+			get => this.previousInstallationHasXPack;
+			set => this.RaiseAndSetIfChanged(ref this.previousInstallationHasXPack, value);
 		}
 
 		private string httpProxy;
@@ -165,14 +159,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 
 		protected override IEnumerable<Plugin> GetPlugins()
 		{
-			yield return new Plugin
-			{
-				PluginType = PluginType.XPack,
-				Url = "x-pack",
-				DisplayName = "X-Pack",
-				Description = TextResources.PluginsModel_XPack,
-			};
-
 			yield return new Plugin
 			{
 				PluginType = PluginType.Ingest,

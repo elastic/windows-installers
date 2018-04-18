@@ -68,8 +68,7 @@ namespace Elastic.Installer.Domain.Model.Kibana
 				.Where(x => x.PropertyName == nameof(Plugin.Selected) && x.Sender.PluginType == PluginType.XPack)
 				.Select(x => x.Sender.Selected);
 
-			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog,
-				observeKibanaLog, observeInstallXPack, serviceStateProvider);
+			this.ClosingModel = new ClosingModel(wixStateProvider.InstallerVersion, isUpgrade, observeHost, observeInstallationLog, observeKibanaLog, serviceStateProvider);
 
 			this.AllSteps.AddRange(new List<IStep>
 			{

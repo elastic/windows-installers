@@ -183,5 +183,13 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			}
 			return newArgs;
 		}
+
+		public override void Start()
+		{
+			if (!this.FileSystem.Directory.Exists(this.PrivateTempDirectory))
+				this.FileSystem.Directory.CreateDirectory(this.PrivateTempDirectory);
+
+			base.Start();
+		}
 	}
 }

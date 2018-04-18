@@ -316,7 +316,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Upgrading from a prerelease considerations.
+        ///   Looks up a localized string similar to Upgrading from prerelease {0} to {1}.
         /// </summary>
         public static string NoticeModel_FromPrerelease_Header {
             get {
@@ -336,7 +336,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Major Downgrade considerations.
+        ///   Looks up a localized string similar to Major Downgrade from {0} to {1}.
         /// </summary>
         public static string NoticeModel_MajorDown_Header {
             get {
@@ -354,7 +354,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Major Upgrade considerations.
+        ///   Looks up a localized string similar to Major Upgrade from {0} to {1}.
         /// </summary>
         public static string NoticeModel_MajorUp_Header {
             get {
@@ -374,7 +374,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minor Downgrade considerations.
+        ///   Looks up a localized string similar to Minor Downgrade from {0} to {1}.
         /// </summary>
         public static string NoticeModel_MinorDown_Header {
             get {
@@ -392,7 +392,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minor Upgrade considerations.
+        ///   Looks up a localized string similar to Minor Upgrade from {0} to {1}.
         /// </summary>
         public static string NoticeModel_MinorUp_Header {
             get {
@@ -412,11 +412,47 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Patch Downgrade considerations.
+        ///   Looks up a localized string similar to Patch Downgrade from {0} to {1}.
         /// </summary>
         public static string NoticeModel_PatchDown_Header {
             get {
                 return ResourceManager.GetString("NoticeModel_PatchDown_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are running a patch upgrade of elasticsearch.
+        /// </summary>
+        public static string NoticeModel_PatchUp {
+            get {
+                return ResourceManager.GetString("NoticeModel_PatchUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patch Upgrade from {0} to {1}.
+        /// </summary>
+        public static string NoticeModel_PatchUp_Header {
+            get {
+                return ResourceManager.GetString("NoticeModel_PatchUp_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please do not run elasticsearch prereleases in production.
+        /// </summary>
+        public static string NoticeModel_Prerelease {
+            get {
+                return ResourceManager.GetString("NoticeModel_Prerelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installing prerelease {1}.
+        /// </summary>
+        public static string NoticeModel_Prerelease_Header {
+            get {
+                return ResourceManager.GetString("NoticeModel_Prerelease_Header", resourceCulture);
             }
         }
         
@@ -430,7 +466,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Running a prerelease considerations.
+        ///   Looks up a localized string similar to Upgrading to prerelease from {0} to {1}.
         /// </summary>
         public static string NoticeModel_ToPrerelease_Header {
             get {
