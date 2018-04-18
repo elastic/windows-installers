@@ -46,7 +46,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.Bind(ViewModel, vm => vm.SkipSettingPasswords, v => v.SkipPasswordGenerationCheckBox.IsChecked);
 			this.Bind(ViewModel, vm => vm.XPackSecurityEnabled, v => v.EnableXPackSecurityCheckBox.IsChecked);
 			this.BindCommand(ViewModel, vm => vm.OpenLicensesAndSubscriptions, v => v.OpenSubscriptionsLink, nameof(OpenSubscriptionsLink.Click));
-			this.BindCommand(ViewModel, vm => vm.RegisterBasicLicense, v => v.RegisterBasicLicenseLink, nameof(RegisterBasicLicenseLink.Click));
 			this.BindCommand(ViewModel, vm => vm.OpenManualUserConfiguration, v => v.OpenManualUserConfigurationLink, nameof(OpenManualUserConfigurationLink.Click));
 
 			this.ViewModel.OpenLicensesAndSubscriptions.Subscribe(x => Process.Start(ViewResources.XPackView_OpenLicensesAndSubscriptions));

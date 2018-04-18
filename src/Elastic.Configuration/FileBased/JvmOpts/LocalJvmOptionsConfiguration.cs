@@ -26,7 +26,7 @@ namespace Elastic.Configuration.FileBased.JvmOpts
 			this._path = path;
 			if (string.IsNullOrEmpty(path) || !this._fileSystem.File.Exists(this._path)) return;
 
-			this._options = this._fileSystem.File.ReadAllLines(this._path).Where(l => l.StartsWith("-")).ToList();
+			this._options = this._fileSystem.File.ReadAllLines(this._path).ToList();
 
 			foreach (var l in _options)
 			{

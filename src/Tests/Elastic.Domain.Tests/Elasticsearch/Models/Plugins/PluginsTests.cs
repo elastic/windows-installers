@@ -29,8 +29,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 		[Fact] void SelectingXPackIsPropagated() => this._model
 			.OnStep(m => m.PluginsModel, step =>
 			{
-				step.XPackEnabled.Should().BeFalse();
-				step.ChangeXPackSelection(true);
 				step.XPackEnabled.Should().BeTrue();
 
 			})

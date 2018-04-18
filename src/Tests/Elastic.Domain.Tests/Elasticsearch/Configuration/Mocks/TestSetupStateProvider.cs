@@ -37,18 +37,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this;
 		}
 
-		public TestSetupStateProvider Wix(string currentVersion, string existingVersion = null, string existingInstallDir = null)
+		public TestSetupStateProvider Wix(string installerVersion, string previousVersion = null, string previousVersionInstallDir = null)
 		{
-			this.WixState = new MockWixStateProvider { CurrentVersion = currentVersion };
-			if (!string.IsNullOrWhiteSpace(existingVersion))
+			this.WixState = new MockWixStateProvider { InstallerVersion = installerVersion };
+			if (!string.IsNullOrWhiteSpace(previousVersion))
 			{
-				this.WixState.ExistingVersion = existingVersion;
+				this.WixState.PreviousVersion = previousVersion;
 
 				if (this.ElasticsearchState == null)
 					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
 
 				if (this.ElasticsearchState.LastSetEsHome == null)
-					this.ElasticsearchState.EsHomeMachineVariable(existingInstallDir ?? $@"C:\Elasticsearch\{existingVersion}");
+					this.ElasticsearchState.EsHomeMachineVariable(previousVersionInstallDir ?? $@"C:\Elasticsearch\{previousVersion}");
 			}
 			return this;
 		}
@@ -56,10 +56,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		public static readonly string DefaultTestVersion = "5.0.0";
 		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null)
 		{
-			this.WixState = new MockWixStateProvider() { CurrentVersion = DefaultTestVersion };
+			this.WixState = new MockWixStateProvider() { InstallerVersion = DefaultTestVersion };
 			if (alreadyInstalled)
 			{
-				this.WixState.ExistingVersion = DefaultTestVersion;
+				this.WixState.PreviousVersion = DefaultTestVersion;
 
 				if (this.ElasticsearchState == null)
 					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();

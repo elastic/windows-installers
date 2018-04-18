@@ -72,13 +72,20 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			tester.ClickNext();
 		
 			tester.IsValidOnStep(m => m.PluginsModel);
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
+			tester.ClickNext();
+			
+			tester.IsValidOnStep(m => m.XPackModel);
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_InstallText);
 			tester.ClickNext();
 		}
 		
-		[Fact] public void HappyFlowWithXPackMakesItToInstallByOnlyClickingNext()
+		[Fact] public void WhenPreviousVersionHadXPackInstalledSkipXPackStep()
 		{
-			var tester = WithValidPreflightChecks();
+			var tester = WithValidPreflightChecks(t=>t
+				.Wix(installerVersion: "6.3.0", previousVersion: "6.2.0")
+				.PreviouslyInstalledPlugins("x-pack")
+			);
 			tester.IsValidOnFirstStep();
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
 			tester.ClickNext();
@@ -93,17 +100,50 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 			tester.IsValidOnStep(m => m.PluginsModel);
 			tester.InstallationModel.XPackModel.IsRelevant.Should().BeFalse();
-			var step = tester.InstallationModel.PluginsModel;
-			step.ChangeXPackSelection(true);
-			tester.InstallationModel.XPackModel.IsRelevant.Should().BeTrue();
-			
-			tester.ClickNext();
-			//Basic license selected by default
-			tester.IsValidOnStep(m => m.XPackModel);
-			tester.CanClickNext();
-		
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_InstallText);
+		}
+		
+		[Fact] public void WhenPreviousVersionOlderThan630DoesNotHaveXPackInstalledShowIt()
+		{
+			var tester = WithValidPreflightChecks(t=>t
+				.Wix(installerVersion: "6.3.0", previousVersion: "6.2.0")
+			);
+			tester.IsValidOnFirstStep();
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
 			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.ServiceModel);
+			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.ConfigurationModel);
+			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.PluginsModel);
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
+			tester.ClickNext();
+			
+			tester.IsValidOnStep(m => m.XPackModel);
+			tester.InstallationModel.XPackModel.IsRelevant.Should().BeTrue();
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_InstallText);
+		}
+		[Fact] public void WhenPreviousVersionNewerOrEqualTo630AlwaysShowXpack()
+		{
+			var tester = WithValidPreflightChecks(t=>t
+				.Wix(installerVersion: "6.3.1", previousVersion: "6.3.0")
+			);
+			tester.IsValidOnFirstStep();
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
+			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.ServiceModel);
+			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.ConfigurationModel);
+			tester.ClickNext();
+
+			tester.IsValidOnStep(m => m.PluginsModel);
+			tester.InstallationModel.XPackModel.IsRelevant.Should().BeFalse();
+			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_InstallText);
 		}
 	}
 }

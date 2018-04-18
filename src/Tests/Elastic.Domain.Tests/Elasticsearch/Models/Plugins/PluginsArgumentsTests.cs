@@ -36,9 +36,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(2);
 		});
 		
-		[Fact] void XPackSetsBasicLicenseAutomatically() => Argument(nameof(PluginsModel.Plugins), "x-pack", (m, v) =>
+		[Fact] void ProvidingXPackInTheListOfPluginsIsIgnored() => Argument(nameof(PluginsModel.Plugins), "x-pack", "", (m, v) =>
 		{
-			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("x-pack");
+			m.PluginsModel.Plugins.Should().BeEmpty();
 			m.XPackModel.IsRelevant.Should().BeTrue();
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
 		});

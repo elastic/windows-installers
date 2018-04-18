@@ -20,7 +20,9 @@ Vagrant.configure("2") do |config|
     
     local.vm.provision "powershellget", type: "shell", inline: configure_powershellget()
     # TODO: use another proxy available on chocolatey
-	#local.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
+	#local.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()
+	# TODO: test with java 9 for versions that support it
+	#local.vm.provision "java9", 		type: "shell", inline: configure_java_9()
 	local.vm.provision "partition", 	type: "shell", inline: create_partition() 
   end
 
@@ -61,7 +63,9 @@ Vagrant.configure("2") do |config|
 
     azure.vm.provision "chocolatey", 	type: "shell", inline: configure_chocolatey() 
     azure.vm.provision "powershellget", type: "shell", inline: configure_powershellget()   
-    azure.vm.provision "java", 			type: "shell", inline: configure_java()  
+    azure.vm.provision "java8", 			type: "shell", inline: configure_java_8()  
+    # TODO: test with java 9 for versions that support it
+	#azure.vm.provision "java9", 			type: "shell", inline: configure_java_9()  
     # TODO: use another proxy available on chocolatey
 	#azure.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
   end
@@ -81,9 +85,15 @@ def configure_powershellget()
   SHELL
 end
 
-def configure_java()
+def configure_java_8()
   return <<-SHELL
     choco install jdk8 -y
+  SHELL
+end
+
+def configure_java_9()
+  return <<-SHELL
+    choco install jdk9 -y
   SHELL
 end
 

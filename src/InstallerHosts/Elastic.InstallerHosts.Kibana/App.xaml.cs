@@ -22,9 +22,9 @@ namespace Elastic.InstallerHosts.Kibana
 	{
 		class DemoWixStateProvider : IWixStateProvider
 		{
-			public SemVersion CurrentVersion => "5.0.0";
+			public SemVersion InstallerVersion => "5.0.0";
 
-			public SemVersion ExistingVersion => null;
+			public SemVersion PreviousVersion => null;
 		}
 
 		public void Application_Startup(object sender, StartupEventArgs e)
@@ -43,7 +43,7 @@ namespace Elastic.InstallerHosts.Kibana
 
 			RxApp.MainThreadScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
 
-			Application.Current.Resources["InstallerTitle"] = wix.CurrentVersion.ToString();
+			Application.Current.Resources["InstallerTitle"] = wix.InstallerVersion.ToString();
 		}
 	}
 }

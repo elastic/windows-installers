@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Elastic.Configuration.EnvironmentBased;
@@ -12,6 +13,13 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		where TModel : ValidatableReactiveObjectBase<TModel, TModelValidator>
 		where TModelValidator : AbstractValidator<TModel>, new()
 	{
+		protected PluginsModelBase(IPluginStateProvider pluginStateProvider)
+		{
+			this.Header = "Plugins";
+			this.PluginStateProvider = pluginStateProvider;
+			this.InstalledPlugins.Changed.Subscribe(e => this.InstalledPlugins.RaisePropertyChanged());
+		}
+		
 		public IPluginStateProvider PluginStateProvider { get; }
 		protected ReactiveList<Plugin> _availablePlugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
 		protected ReactiveList<string> _installedPlugins = new ReactiveList<string> { ChangeTrackingEnabled = true };
@@ -49,11 +57,6 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			set => this.RaiseAndSetIfChanged(ref _installedPlugins, value);
 		}
 
-		protected PluginsModelBase(IPluginStateProvider pluginStateProvider)
-		{
-			this.Header = "Plugins";
-			this.PluginStateProvider = pluginStateProvider;
-		}
 
 		public override void Refresh()
 		{
@@ -70,14 +73,9 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			foreach (var plugin in this.AvailablePlugins.Where(p => selectedPlugins.Contains(p.Url)))
 				plugin.Selected = true;
 
-			if (installedPlugins != null)
-				InstalledPlugins.AddRange(installedPlugins);
-		}
-
-		public void ChangeXPackSelection(bool selected)
-		{
-			var xpackPlugin = this.AvailablePlugins.First(p => p.PluginType == PluginType.XPack);
-			xpackPlugin.Selected = selected;
+			if (installedPlugins != null) InstalledPlugins.AddRange(installedPlugins);
+			
+			
 		}
 
 		public override string ToString()
