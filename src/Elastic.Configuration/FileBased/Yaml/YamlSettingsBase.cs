@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using SharpYaml.Serialization;
@@ -28,7 +29,7 @@ namespace Elastic.Configuration.FileBased.Yaml
 
 				this.YamlSettings = this._serializer.Deserialize<TSettings>(flattenedYaml) ?? new TSettings();
 			}
-			catch
+			catch (Exception e)
 			{
 				this.FoundButNotValid = true;
 				this.YamlSettings = new TSettings();

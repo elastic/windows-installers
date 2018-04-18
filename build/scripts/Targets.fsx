@@ -62,24 +62,17 @@ Target "UnitTest" (fun () ->
 )
 
 Target "PruneFiles" (fun () ->
-    let prune files directory =
-        let keep = files |> Seq.map (fun n -> directory @@ n)
+    let prune directory =
         Directory.EnumerateFiles(directory) 
-        |> Seq.except keep
+        |> Seq.where (fun f ->
+                        let name = filename f
+                        Path.GetExtension(f) = "" || 
+                        name.StartsWith("elasticsearch-service") || 
+                        name = "elasticsearch.bat")                    
         |> Seq.iter File.Delete
         
     productsToBuild
-    |> List.iter(fun p -> 
-        p.BinDirs
-        |> List.iter(fun binDir ->
-            prune [
-                sprintf "%s-plugin.bat" p.Name;
-                sprintf "%s-env.bat" p.Name;
-                sprintf "%s-translog.bat" p.Name;
-                sprintf "%s-keystore.bat" p.Name
-            ] binDir
-        )
-    )
+    |> List.iter(fun p -> p.BinDirs |> List.iter prune)
 )
 
 Target "BuildServices" (fun () ->
@@ -100,9 +93,29 @@ Target "Integrate" (fun () ->
                   |> List.map(fun v -> v.RawValue)
     
     // last version in the list is the _target_ version    
-    let version = versions |> List.last                
+    let version = versions |> List.last    
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
     let vagrantProvider = getBuildParamOrDefault "vagrantprovider" "local"
+    let gui = getBuildParamOrDefault "gui" "$false"
+    let noDestroy = getBuildParamOrDefault "no-destroy" "$true"
+    let plugins = getBuildParamOrDefault "plugins" ""
+
+    // copy any plugins specified to build/out
+    if isNotNullOrEmpty plugins then
+        let pluginNames = plugins.Split([|',';';'|], StringSplitOptions.RemoveEmptyEntries)
+        versions
+        |> List.map(fun v ->  Commandline.parseVersion v)
+        |> List.collect(fun s ->
+            pluginNames 
+            |> Array.map(fun p -> Paths.InDir </> (sprintf "%s-%s.zip" p s.FullVersion))
+            |> Array.toList
+        )
+        |> List.iter(fun p ->
+            match fileExists p with
+            | true -> CopyFile Paths.OutDir p
+            | false -> traceFAKE "%s does not exist. Will install from public url" p 
+        )
+
     let previousVersions = 
         match versions.Length with
         | 1 -> "@()"
@@ -111,12 +124,14 @@ Target "Integrate" (fun () ->
                |> String.concat ","
                |> sprintf "@(%s)"
         
-    let script = sprintf @"cd '%s'; .\Bootstrapper.ps1 -Tests '%s' -Version '%s' -PreviousVersions %s -VagrantProvider '%s'" 
+    let script = sprintf @"cd '%s'; .\Bootstrapper.ps1 -Tests '%s' -Version '%s' -PreviousVersions %s -VagrantProvider '%s' -Gui:%s -VagrantDestroy:%s" 
                     IntegrationTestsDir 
                     integrationTestsTargets 
                     version 
                     previousVersions 
                     vagrantProvider
+                    gui
+                    noDestroy
         
     trace (sprintf "Running Powershell script: '%s'" script)
     use p = PowerShell.Create()

@@ -4,6 +4,7 @@ using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Model.Base;
 using ReactiveUI;
 using Semver;
+using static Elastic.Installer.Domain.Configuration.Wix.InstallationDirection;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 {
@@ -11,22 +12,26 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 	{
 		public const XPackLicenseMode DefaultXPackLicenseMode = XPackLicenseMode.Basic;
 		
-		public XPackModel(
-			VersionConfiguration versionConfig, 
-			IObservable<bool> xPackEnabled, 
-			IObservable<bool> canAutomaticallySetupUsers)
+		public XPackModel(VersionConfiguration versionConfig,
+			IObservable<bool> canAutomaticallySetupUsers,
+			IObservable<bool> upgradeFromXPackPlugin)
 		{
-			xPackEnabled.Subscribe(t =>
+			upgradeFromXPackPlugin.Subscribe(b =>
 			{
-				this.IsRelevant = t;
+				//show x-pack tab when we're upgrading from a version lower than `6.3.0` and the x-pack plugin was not installed.
+				//otherwise assume x-pack is installed and only show the tab on new installs
+				this.IsRelevant = 
+					(versionConfig.InstallationDirection == Up && versionConfig.PreviousVersion < "6.3.0" && !b) 
+					|| versionConfig.InstallationDirection == None;
 			});
+			
 			canAutomaticallySetupUsers.Subscribe(b=>
 			{
 				this.CanAutomaticallySetupUsers = b;
 				this.SkipSettingPasswords = !b;
 			});
 			this.Header = "X-Pack";
-			this.CurrentVersion = versionConfig.CurrentVersion;
+			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.OpenLicensesAndSubscriptions = ReactiveCommand.Create();
 			this.RegisterBasicLicense = ReactiveCommand.Create();
 			this.OpenManualUserConfiguration = ReactiveCommand.Create();
@@ -39,7 +44,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.KibanaUserPassword = null;
 			this.LogstashSystemUserPassword = null;
 			this.BootstrapPassword = null;
-			this.XPackSecurityEnabled = true;
+			this.XPackSecurityEnabled = false;
 		}
 
 		public SemVersion CurrentVersion { get; }
@@ -94,7 +99,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		public XPackLicenseMode XPackLicense
 		{
 			get => this.xPackLicense;
-			set => this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
+			set
+			{
+				this.RaiseAndSetIfChanged(ref this.xPackLicense, value);
+				if (value == XPackLicenseMode.Trial)
+					this.XPackSecurityEnabled = true;
+			}
 		}
 
 		private string bootstrapPassword;
@@ -128,7 +138,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			sb.AppendLine($"- {nameof(XPackLicense)} = " + Enum.GetName(typeof(XPackLicenseMode), XPackLicense));
 			sb.AppendLine($"- {nameof(this.CanAutomaticallySetupUsers)} = " + CanAutomaticallySetupUsers);
 			sb.AppendLine($"- {nameof(this.SkipSettingPasswords)} = " + SkipSettingPasswords);
-			sb.AppendLine($"- {nameof(this.XPackSecurityEnabled)} = " + SkipSettingPasswords);
+			sb.AppendLine($"- {nameof(this.XPackSecurityEnabled)} = " + XPackSecurityEnabled);
 			sb.AppendLine($"- {nameof(this.BootstrapPassword)} = " + !string.IsNullOrWhiteSpace(BootstrapPassword));
 			sb.AppendLine($"- {nameof(this.ElasticUserPassword)} = " + !string.IsNullOrWhiteSpace(ElasticUserPassword));
 			sb.AppendLine($"- {nameof(this.KibanaUserPassword)} = " + !string.IsNullOrWhiteSpace(KibanaUserPassword));

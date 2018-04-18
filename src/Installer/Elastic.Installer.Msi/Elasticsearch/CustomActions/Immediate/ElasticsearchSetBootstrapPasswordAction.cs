@@ -12,8 +12,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Immediate
 	{
 		public override string Name => nameof(ElasticsearchSetBootstrapPasswordAction);
 		public override int Order => (int)ElasticsearchCustomActionOrder.BootstrapPasswordProperty;
-		public override Condition Condition => 
-			new Condition($"(NOT Installed) AND {nameof(XPackModel.BootstrapPassword).ToUpperInvariant()}=\"\"");
+		public override Condition Condition => new Condition($"{nameof(XPackModel.BootstrapPassword).ToUpperInvariant()}=\"\"");
 		public override Return Return => Return.check;
 		public override Sequence Sequence => Sequence.InstallExecuteSequence;
 		public override Step Step => new Step(nameof(ElasticsearchValidateArgumentsAction));

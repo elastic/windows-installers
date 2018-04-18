@@ -21,12 +21,12 @@ namespace Elastic.Installer.Domain.Model.Kibana.Notice
 			this.IsRelevant = versionConfig.ExistingVersionInstalled;
 			this.LocationsModel = locationsModel;
 			this.Header = "Notice";
-			this.ExistingVersion = versionConfig.ExistingVersion;
-			this.CurrentVersion = versionConfig.CurrentVersion;
+			this.ExistingVersion = versionConfig.PreviousVersion;
+			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
 
-			var e = versionConfig.ExistingVersion;
-			var c = versionConfig.CurrentVersion;
+			var e = versionConfig.PreviousVersion;
+			var c = versionConfig.InstallerVersion;
 			if (!string.IsNullOrWhiteSpace(c?.Prerelease))
 			{
 				this.UpgradeTextHeader = TextResources.NoticeModel_ToPrerelease_Header;

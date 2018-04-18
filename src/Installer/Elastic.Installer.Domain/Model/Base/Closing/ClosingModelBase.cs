@@ -17,13 +17,11 @@ namespace Elastic.Installer.Domain.Model.Base.Closing
 			IObservable<string> hostName,
 			IObservable<string> wixLogFile,
 			IObservable<string> productLog,
-			IObservable<bool> installXPack,
 			IServiceStateProvider serviceStateProvider)
 		{
 			this.Header = "";
 			this.CurrentVersion = currentVersion;
 			this.Host = hostName;
-			this.InstallXPack = installXPack;
 			this.IsUpgrade = isUpgrade;
 			this.WixLogFile = wixLogFile;
 			this.ServiceStateProvider = serviceStateProvider;	
@@ -48,7 +46,6 @@ namespace Elastic.Installer.Domain.Model.Base.Closing
 		public ReactiveCommand<object> OpenProduct { get; protected set; }
 		public IObservable<string> ProductLog { get; protected set; }
 		public IObservable<string> Host { get; protected set; }
-		public IObservable<bool> InstallXPack { get; protected set; }
 
 		ClosingResult? installed;
 		public ClosingResult? Installed

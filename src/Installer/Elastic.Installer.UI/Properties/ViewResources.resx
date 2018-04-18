@@ -309,7 +309,7 @@
     </value>
   </data>
   <data name="XPackView_BasicDescription" xml:space="preserve">
-    <value>Only access to the Basic (free) license for 30 days. 
+    <value>Access to all free x-pack features without an expiry date on the license. 
     </value>
   </data>
   <data name="XPackView_SubscriptionsLink" xml:space="preserve">
@@ -442,7 +442,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
     <value>Could not find a valid Java installation.</value>
   </data>
   <data name="NoticeView_ReadOnlyPropertiesHeader" xml:space="preserve">
-    <value>Read only properties from previous installation</value>
+    <value>Read only properties during upgrade</value>
   </data>
   <data name="NoticeView_RunAsServiceHeaderLabel" xml:space="preserve">
     <value>Install as a service</value>
@@ -830,6 +830,9 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   <data name="NoticeView_Elasticsearch_ReadMoreOnUpgrades" xml:space="preserve">
     <value>https://www.elastic.co/guide/en/elasticsearch/reference/{0}/setup-upgrade.html</value>
     <comment>{0} = major minor version</comment>
+  </data>
+  <data name="NoticeView_Elasticsearch_ReadMoreOnXPackOpening" xml:space="preserve">
+    <value>https://www.elastic.co/products/x-pack/open</value>
   </data>
   <data name="MainWindow_DocumentationLink" xml:space="preserve">
     <value>https://www.elastic.co/guide/index.html</value>

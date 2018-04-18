@@ -5,11 +5,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Elastic.Installer.Domain;
-using Elastic.Installer.Domain.Configuration.Wix;
-using Elastic.Installer.Domain.Configuration.Wix.Session;
 using Elastic.Installer.Domain.Model.Base.Closing;
-using Elastic.Installer.Domain.Model.Elasticsearch;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Models;
 using Elastic.Installer.UI.Elasticsearch;
 using ReactiveUI;
@@ -24,7 +20,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
 			var state = InstallationModelTester.ValidPreflightChecks(s => s
-				.Wix(currentVersion:"6.1.0", existingVersion:"6.0.0")
+				.Wix(installerVersion: "6.3.0-SNAPSHOT", previousVersion: "6.2.3")
 			);
 			var model = state.InstallationModel;
 

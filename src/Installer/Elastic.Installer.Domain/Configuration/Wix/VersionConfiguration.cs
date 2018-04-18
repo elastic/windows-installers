@@ -1,43 +1,45 @@
 ﻿using Semver;
+using static Elastic.Installer.Domain.Configuration.Wix.InstallationDirection;
+using static Elastic.Installer.Domain.Configuration.Wix.VersionChange;
 
 namespace Elastic.Installer.Domain.Configuration.Wix
 {
 	public class VersionConfiguration
 	{
-		public SemVersion ExistingVersion { get; }
-		public SemVersion CurrentVersion { get; }
+		public SemVersion PreviousVersion { get; }
+		public SemVersion InstallerVersion { get; }
 
 		public VersionChange VersionChange { get; } 
 		public InstallationDirection InstallationDirection { get; }
 
-		public bool ExistingVersionInstalled => VersionChange != VersionChange.New;
-		public bool ThisVersionInstalled { get; }
-		public bool SameVersionAlreadyInstalled => VersionChange == VersionChange.Same;
-		public bool HigherVersionAlreadyInstalled => InstallationDirection == InstallationDirection.Down; 
+		public bool ExistingVersionInstalled => VersionChange != New;
+		public bool AlreadyInstalled { get; }
+		public bool SameVersionAlreadyInstalled => VersionChange == Same;
+		public bool HigherVersionAlreadyInstalled => InstallationDirection == Down; 
 
-		public VersionConfiguration(IWixStateProvider wixStateProvider, bool thisVersionInstalled)
+		public VersionConfiguration(IWixStateProvider wixStateProvider, bool alreadyInstalled)
 		{
-			ThisVersionInstalled = thisVersionInstalled;
-			var c = this.CurrentVersion = wixStateProvider.CurrentVersion;
-			var e = this.ExistingVersion = wixStateProvider.ExistingVersion;
+			this.AlreadyInstalled = alreadyInstalled;
+			var c = this.InstallerVersion = wixStateProvider.InstallerVersion;
+			var e = this.PreviousVersion = wixStateProvider.PreviousVersion;
 
-			var v = VersionChange.New;
-			var d = InstallationDirection.None;
+			var v = New;
+			var d = None;
 
 			if (e != null)
 			{
 				if (c == e)
 				{
-					v = VersionChange.Same;
-					d = InstallationDirection.None;
+					v = Same;
+					d = None;
 				}
-				else if (c > e) d = InstallationDirection.Up;
-				else if (c < e) d = InstallationDirection.Down;
+				else if (c > e) d = Up;
+				else if (c < e) d = Down;
 
-				if (c.Major != e.Major) v = VersionChange.Major;
-				else if (c.Minor != e.Minor) v = VersionChange.Minor;
-				else if (c.Patch != e.Patch) v = VersionChange.Patch;
-				else if (c.Prerelease != e.Prerelease) v = VersionChange.Prerelease;
+				if (c.Major != e.Major) v = Major;
+				else if (c.Minor != e.Minor) v = Minor;
+				else if (c.Patch != e.Patch) v = Patch;
+				else if (c.Prerelease != e.Prerelease) v = Prerelease;
 			}
 			this.VersionChange = v;
 			this.InstallationDirection = d;

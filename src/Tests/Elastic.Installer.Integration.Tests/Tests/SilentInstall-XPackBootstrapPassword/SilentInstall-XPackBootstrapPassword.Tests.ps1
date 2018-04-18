@@ -11,8 +11,16 @@ Get-PreviousVersions
 
 Describe -Name "Silent Install with setting up bootstrap password $(($Global:Version).Description)" -Tags @('XPack') {
 
+	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
+	$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
+	if ((Compare-SemanticVersion $Global:Version $630SnapshotRelease) -ge 0) {
+		$plugins = ""
+	} else {
+		$plugins = "x-pack"
+	}
+
 	$exeArgs = @(
-		"PLUGINS=x-pack", 
+		"PLUGINS=$plugins", 
 		"XPACKSECURITYENABLED=true", 
 		"XPACKLICENSE=Trial", 
 		"SKIPSETTINGPASSWORDS=true",
@@ -22,7 +30,7 @@ Describe -Name "Silent Install with setting up bootstrap password $(($Global:Ver
 
     Context-PingNode -XPackSecurityInstalled
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack") }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins -split ",") }
 
     Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:elastic" }
 
