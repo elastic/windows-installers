@@ -49,12 +49,10 @@ namespace Elastic.Installer.UI.Kibana.Steps
 			this.ViewModel.OpenReference.Subscribe(x => Process.Start(string.Format(ViewResources.ClosingView_Kibana_OpenReference, majorMinor)));
 			this.ViewModel.OpenGettingStarted.Subscribe(x => Process.Start(string.Format(ViewResources.ClosingView_Kibana_OpenGettingStarted, majorMinor)));
 
-			this.ViewModel.InstallXPack.Subscribe(x =>
-			{
-				this.OpenKibana.Content = x
+				//TODO this should listen to basic (no security) vs trial (security)
+				this.OpenKibana.Content = false
 					? ViewResources.ClosingView_KibanaRunningAtHeaderWithCredentials
 					: ViewResources.ClosingView_KibanaRunningAtHeader;
-			});
 
 			string wixLog = null;
 			this.ViewModel.WixLogFile.Subscribe(l =>

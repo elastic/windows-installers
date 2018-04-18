@@ -1312,6 +1312,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://www.elastic.co/products/x-pack/open.
+        /// </summary>
+        public static string NoticeView_Elasticsearch_ReadMoreOnXPackOpening {
+            get {
+                return ResourceManager.GetString("NoticeView_Elasticsearch_ReadMoreOnXPackOpening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read the upgrade documentation to learn more.
         /// </summary>
         public static string NoticeView_ReadMoreOnUpgrades {
@@ -1321,7 +1330,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Read only properties from previous installation.
+        ///   Looks up a localized string similar to Read only properties during upgrade.
         /// </summary>
         public static string NoticeView_ReadOnlyPropertiesHeader {
             get {
@@ -1765,7 +1774,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only access to the Basic (free) license for 30 days. 
+        ///   Looks up a localized string similar to Access to all free x-pack features without an expiry date on the license. 
         ///    .
         /// </summary>
         public static string XPackView_BasicDescription {

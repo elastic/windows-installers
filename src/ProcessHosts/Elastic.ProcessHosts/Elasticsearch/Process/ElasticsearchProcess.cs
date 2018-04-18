@@ -16,27 +16,37 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 	public class ElasticsearchProcess : ProcessBase
 	{
 		private bool NoColor { get; set; }
+		
+		private IElasticsearchTool JvmOptionsParser { get;  }
+		private IElasticsearchTool JavaVersionChecker { get;  }
+		
+		private string PrivateTempDirectory { get; }
 
 		public ElasticsearchProcess(ManualResetEvent completedHandle, IEnumerable<string> args)
 			: this(
-				new ObservableProcess(),
+				new ElasticsearchObservableProcess(ElasticsearchEnvironmentConfiguration.Default),
 				null,
 				null,
 				ElasticsearchEnvironmentConfiguration.Default,
 				JavaConfiguration.Default,
-				completedHandle,args)
-		{}
+				ElasticsearchTool.JvmOptionsParser,
+				ElasticsearchTool.JavaVersionChecker, 
+				completedHandle, 
+				args)
+		{ }
 
 		public ElasticsearchProcess(
-			IObservableProcess process,
-			IConsoleOutHandler consoleOutHandler,
-			IFileSystem fileSystem,
-			ElasticsearchEnvironmentConfiguration env,
-			JavaConfiguration java,
-			ManualResetEvent completedHandle,
+			IObservableProcess process, 
+			IConsoleOutHandler consoleOutHandler, 
+			IFileSystem fileSystem, 
+			ElasticsearchEnvironmentConfiguration env, 
+			JavaConfiguration java, 
+			IElasticsearchTool jvmOptionsParser, 
+			IElasticsearchTool javaVersionChecker, 
+			ManualResetEvent completedHandle, 
 			IEnumerable<string> args)
 			: base(
-				process,
+				process ?? new ElasticsearchObservableProcess(env),
 				consoleOutHandler ?? new ElasticsearchConsoleOutHandler(process?.UserInteractive ?? false),
 				fileSystem,
 				completedHandle)
@@ -50,6 +60,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 
 			this.HomeDirectory = homeDirectory;
 			this.ConfigDirectory = configDirectory;
+			this.PrivateTempDirectory = env.PrivateTempDirectory;
 
 			var parsedArguments = this.ParseArguments(args);
 
@@ -60,7 +71,9 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			this.ProcessExe = java.JavaExecutable;
 			if (!this.FileSystem.File.Exists(this.ProcessExe))
 				throw new StartupException($"Java executable not found, this could be because of a faulty JAVA_HOME variable: {this.ProcessExe}");
-
+			
+			this.JvmOptionsParser = jvmOptionsParser;		
+			this.JavaVersionChecker = javaVersionChecker;		
 			this.Arguments = this.CreateObservableProcessArguments(parsedArguments);
 		}
 
@@ -110,34 +123,26 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 		protected sealed override IEnumerable<string> CreateObservableProcessArguments(IEnumerable<string> args)
 		{
 			var libFolder = Path.Combine(this.HomeDirectory, "lib");
-			if (!FileSystem.Directory.Exists(libFolder))
-				throw new StartupException($"Expected a 'lib' directory inside: {this.HomeDirectory}");
+			if (!FileSystem.Directory.Exists(libFolder)) throw new StartupException($"Expected a 'lib' directory inside: {this.HomeDirectory}");
+			var classPath = $"{Path.Combine(libFolder, "*")}";
+			
+			if (!this.JavaVersionChecker.Start(null, out var javaVersionOut)) throw new StartupException($"Invalid Java version reported: {javaVersionOut}");
 
-			var jars = new HashSet<string>(FileSystem.Directory.GetFiles(libFolder));
+			var jvmOptionsFile = Path.Combine(this.ConfigDirectory, "jvm.options");
+			if (!this.JvmOptionsParser.Start(new [] { $"\"{jvmOptionsFile}\"" }, out var jvmOptionsLine) || string.IsNullOrWhiteSpace(jvmOptionsLine)) 
+				throw new StartupException($"Could not evaluate jvm.options file: {jvmOptionsFile} result: {jvmOptionsLine}");
+			jvmOptionsLine = jvmOptionsLine.Replace("${ES_TMPDIR}", this.PrivateTempDirectory).Replace("\n", "").Replace("\r", "");
 
-			var elasticsearchJar = jars.FirstOrDefault(f => Path.GetFileName(f).StartsWith("elasticsearch-"));
-			if (elasticsearchJar == null)
-				throw new StartupException($"No elasticsearch jar found in: {libFolder}");
-
-			jars.ExceptWith(new [] { elasticsearchJar });
-
-			var libs = jars.ToArray();
-
-			var javaOpts = new LocalJvmOptionsConfiguration(Path.Combine(this.ConfigDirectory, "jvm.options"));
-			var classPath = $"{elasticsearchJar};{string.Join(";", libs)}";
-
-			var arguments = javaOpts.Options
-				.Concat(new []
-				{
-					$"-Delasticsearch",
-					$"-Des.path.home=\"{this.HomeDirectory}\"",
-					$"-Des.path.conf=\"{this.ConfigDirectory}\"",
-					$"-cp \"{classPath}\" org.elasticsearch.bootstrap.Elasticsearch"
-				})
-				.Concat(args)
-				.ToList();
-
-			return arguments;
+			return new []
+			{
+				jvmOptionsLine,
+				$"-Delasticsearch",
+				$"-Des.path.home=\"{this.HomeDirectory}\"",
+				$"-Des.path.conf=\"{this.ConfigDirectory}\"",
+				$"-cp \"{classPath}\" org.elasticsearch.bootstrap.Elasticsearch"
+			}
+			.Concat(args)
+			.ToList();
 		}
 
 		protected sealed override IEnumerable<string> ParseArguments(IEnumerable<string> args)
@@ -179,13 +184,12 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			return newArgs;
 		}
 
-
-
-		private static string ParseKeyValue(string arg)
+		public override void Start()
 		{
-			var kv = arg.Split(new [] {'='}, 2, StringSplitOptions.RemoveEmptyEntries);
-			return kv.Length != 2 ? null : kv[1];
-		}
+			if (!this.FileSystem.Directory.Exists(this.PrivateTempDirectory))
+				this.FileSystem.Directory.CreateDirectory(this.PrivateTempDirectory);
 
+			base.Start();
+		}
 	}
 }

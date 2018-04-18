@@ -27,7 +27,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 		{
 			this.OneWayBind(ViewModel, vm => vm.UpgradeText, view => view.UpgradeTextBox.Text);
 			this.OneWayBind(ViewModel, vm => vm.UpgradeTextHeader, view => view.UpgradeLabel.Content);
-			this.OneWayBind(ViewModel, vm => vm.LocationsModel.PreviousInstallationDirectory, view => view.InstallationDirectoryLabel.Content);
+			this.OneWayBind(ViewModel, vm => vm.LocationsModel.InstallDir, view => view.InstallationDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.DataDirectory, view => view.DataDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.ConfigDirectory, view => view.ConfigDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.LogsDirectory, view => view.LogsDirectoryLabel.Content);
@@ -35,13 +35,24 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnUpgrades, v => v.ReadMoreOnUpgrades, nameof(ReadMoreOnUpgrades.Click));
 			this.ViewModel.ReadMoreOnUpgrades.Subscribe(x => Process.Start(string.Format(ViewResources.NoticeView_Elasticsearch_ReadMoreOnUpgrades, majorMinor)));
+			
+			this.BindCommand(ViewModel, vm => vm.ReadMoreOnXPackOpening, v => v.ReadMoreOnXPackOpening, nameof(ReadMoreOnXPackOpening.Click));
+			this.ViewModel.ReadMoreOnXPackOpening.Subscribe(x => Process.Start(ViewResources.NoticeView_Elasticsearch_ReadMoreOnXPackOpening));
 
-			this.WhenAny(view => view.ViewModel.ExistingVersionInstalled, v=>v.GetValue())
-				.Subscribe(v => {
-					this.ReadOnlyPropertiesGrid.Visibility = v ? Visible : Collapsed;
-					this.ReadMoreOnUpgrades.Visibility = v ? Visible : Collapsed;
-					this.ExistingVersionTextBox.Content = string.Format(TextResources.NoticeModel_ExistingVersion, this.ViewModel.ExistingVersion);
-					this.ExistingVersionTextBox.Visibility = v ? Visible : Collapsed;
+			this.WhenAnyValue(v => v.ViewModel.ShowOpeningXPackBanner)
+				.Subscribe(b =>
+				{
+					this.XPackLogo.Visibility = b ? Visible : Collapsed;
+					this.XPackStackPanel.Visibility = b ? Visible : Collapsed;
+					
+				});
+
+			this.WhenAnyValue(view => view.ViewModel.ExistingVersionInstalled, view => view.ViewModel.ShowUpgradeDocumentationLink)
+				.Subscribe(tuple =>
+				{
+					bool installed = tuple.Item1, showUpgrade = tuple.Item2;
+					this.ReadOnlyPropertiesGrid.Visibility = installed ? Visible : Collapsed;
+					this.ReadMoreOnUpgrades.Visibility = installed && showUpgrade ? Visible : Collapsed;
 				});
 
 			//Using a separate observable in the case we add more parameters to the control grid on the notice model

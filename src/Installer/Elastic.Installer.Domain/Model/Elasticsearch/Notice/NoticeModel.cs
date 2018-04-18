@@ -24,20 +24,26 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.LocationsModel = locationsModel;
 			this.ServiceModel = serviceModel;
 			this.Header = "Notice";
-			this.ExistingVersion = versionConfig.ExistingVersion;
-			this.CurrentVersion = versionConfig.CurrentVersion;
+			this.ExistingVersion = versionConfig.PreviousVersion;
+			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
+			this.ReadMoreOnXPackOpening = ReactiveCommand.Create();
 
-			var e = versionConfig.ExistingVersion;
-			var c = versionConfig.CurrentVersion;
-			if (!string.IsNullOrWhiteSpace(c?.Prerelease))
+			if (!string.IsNullOrWhiteSpace(this.CurrentVersion?.Prerelease))
 			{
-				this.UpgradeTextHeader = TextResources.NoticeModel_ToPrerelease_Header;
-				this.UpgradeText = TextResources.NoticeModel_ToPrerelease;
+				if (versionConfig.ExistingVersionInstalled)
+				{
+					this.UpgradeTextHeader = TextResources.NoticeModel_ToPrerelease_Header;
+					this.UpgradeText = TextResources.NoticeModel_ToPrerelease;
+				}
+				else
+				{
+					this.UpgradeTextHeader = TextResources.NoticeModel_Prerelease_Header;
+					this.UpgradeText = TextResources.NoticeModel_Prerelease;
+				}
 				this.IsRelevant = true; //show prerelease notice always
-
 			}
-			else if (!string.IsNullOrWhiteSpace(e?.Prerelease))
+			else if (!string.IsNullOrWhiteSpace(this.ExistingVersion?.Prerelease))
 			{
 				this.UpgradeTextHeader = TextResources.NoticeModel_FromPrerelease_Header;
 				this.UpgradeText = TextResources.NoticeModel_FromPrerelease;
@@ -51,17 +57,30 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.UpgradeTextHeader = TextResources.ResourceManager.GetString(prefix + "_Header");
 				this.UpgradeText = TextResources.ResourceManager.GetString(prefix);
 			}
-			// TODO: We should show the upgrade notice, even for a patch upgrade.
-			if (this.IsRelevant
-				&& versionConfig.VersionChange == VersionChange.Patch
-				&& versionConfig.InstallationDirection == InstallationDirection.Up)
-				this.IsRelevant = false;
+			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
+				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
 
+			this.ShowOpeningXPackBanner = this.ExistingVersion < "6.3.0";
+			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;
+			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
 			this.InstalledAsService = serviceStateProvider.SeesService;
 			this.Refresh();
 		}
+		
+		bool showUpgradeDocumentationLink;
+		public bool ShowUpgradeDocumentationLink
+		{
+			get => showUpgradeDocumentationLink;
+			private set => this.RaiseAndSetIfChanged(ref showUpgradeDocumentationLink, value);
+		}
 
+		bool showOpeningXPackBanner;
+		public bool ShowOpeningXPackBanner
+		{
+			get => showOpeningXPackBanner;
+			private set => this.RaiseAndSetIfChanged(ref showOpeningXPackBanner, value);
+		}
 
 		bool? existingVersionInstalled;
 		public bool ExistingVersionInstalled
@@ -86,6 +105,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 		public string UpgradeTextHeader { get; }
 		public string UpgradeText { get; }
 		public ReactiveCommand<object> ReadMoreOnUpgrades { get; }
+		public ReactiveCommand<object> ReadMoreOnXPackOpening { get; }
 
 		public override string ToString()
 		{
