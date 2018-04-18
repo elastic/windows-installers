@@ -10,13 +10,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 		[Fact] void CanPassTrialLicense() => Argument(nameof(XPackModel.XPackLicense), "Trial", (m, v) =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Trial);
-			m.PluginsModel.XPackEnabled.Should().BeFalse();
+			m.PluginsModel.XPackEnabled.Should().BeTrue();
 		});
 		
 		[Fact] void CanPassBasicLicense() => Argument(nameof(XPackModel.XPackLicense), "Basic", (m, v) =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
-			m.PluginsModel.XPackEnabled.Should().BeFalse();
+			m.PluginsModel.XPackEnabled.Should().BeTrue();
 		});
 		
 		[Fact] void CanPassEmptyLicense() => Argument(nameof(XPackModel.XPackLicense), "", "Basic", (m, v) =>
@@ -25,22 +25,22 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 			m.PluginsModel.Plugins.Should().BeEmpty();
 		});
 		
-		[Fact] void BasicWithMultiplePluginsContainingXPack() => 
+		[Fact] void BasicWithMultiplePluginsContainingXPackIgnoresXPack() => 
 			Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Basic))
-			.Argument(nameof(PluginsModel.Plugins), "x-pack, analysis-icu")
+			.Argument(nameof(PluginsModel.Plugins), "x-pack, analysis-icu", "analysis-icu")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
-			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(2).And.Contain("x-pack");
+			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("analysis-icu");
 		});
 		
 		[Fact] void TrialWithMultiplePluginsContainingXPack() => 
 			Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Trial))
-			.Argument(nameof(PluginsModel.Plugins), "x-pack, analysis-icu")
+			.Argument(nameof(PluginsModel.Plugins), "x-pack, analysis-icu", "analysis-icu")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Trial);
-			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(2).And.Contain("x-pack");
+			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.NotContain("x-pack");
 		});
 		
 		[Fact] void BasicWithMultiplePluginsNotContainingXPack() => 
@@ -63,29 +63,32 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 		
 		[Fact] void EmptyLicenseWithXpackInPluginsAutoSelectsBasicLicense() => 
 			Argument(nameof(XPackModel.XPackLicense), "", nameof(XPackLicenseMode.Basic))
-			.Argument(nameof(PluginsModel.Plugins), "x-pack")
+			.Argument(nameof(PluginsModel.Plugins), "x-pack", "")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
-			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("x-pack");
+			m.PluginsModel.Plugins.Should().BeEmpty();
+			m.PluginsModel.XPackEnabled.Should().BeTrue();
 		});
 		
 		[Fact] void EmptyLicenseWithXpackInPluginsAutoSelectsBasicLicenseReverse() => 
-			Argument(nameof(PluginsModel.Plugins), "x-pack")
+			Argument(nameof(PluginsModel.Plugins), "x-pack", "")
 			.Argument(nameof(XPackModel.XPackLicense), "", nameof(XPackLicenseMode.Basic))
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
-			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("x-pack");
+			m.PluginsModel.Plugins.Should().BeEmpty();
+			m.PluginsModel.XPackEnabled.Should().BeTrue();
 		});
 		
-		[Fact] void EmptyPluginsStillInjectsXpackWhenXPackLicenseIsPassed() => 
+		[Fact] void WhenPassingNoPluginsXPackIsNoLongerAutomaticallySelected() => 
 			Argument(nameof(XPackModel.XPackLicense), "trial" , nameof(XPackLicenseMode.Trial))
-			.Argument(nameof(PluginsModel.Plugins), "", "x-pack")
+			.Argument(nameof(PluginsModel.Plugins), "", "")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Trial);
-			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(1).And.Contain("x-pack");
+			m.PluginsModel.Plugins.Should().BeEmpty();
+			m.PluginsModel.XPackEnabled.Should().BeTrue();
 		});
 	}
 }

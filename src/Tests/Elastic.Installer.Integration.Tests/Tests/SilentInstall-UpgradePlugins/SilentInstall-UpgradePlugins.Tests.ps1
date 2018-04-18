@@ -13,11 +13,20 @@ $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
 $tags = @('PreviousVersions', 'XPack') 
+$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
 
 Describe -Name "Silent Install upgrade with plugins install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
-	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
+
+	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases	
+	if ((Compare-SemanticVersion $previousVersion $630SnapshotRelease) -ge 0) {
+		$plugins = "ingest-geoip,ingest-attachment"
+	} else {
+		$plugins = "x-pack,ingest-geoip,ingest-attachment"
+	}
+
+	$ExeArgs = @("PLUGINS=$plugins")
 
 	# set bootstrap password and x-pack security
 	if ($version.Major -ge 6) {
@@ -48,7 +57,7 @@ Describe -Name "Silent Install upgrade with plugins install $($previousVersion.D
 		Path = $ExpectedConfigFolder
 	}
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins -split ",") }
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
@@ -78,7 +87,14 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 
 	$v = $version.FullVersion
 
-	$ExeArgs = @("PLUGINS=x-pack,ingest-geoip,ingest-attachment")
+	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
+	if ((Compare-SemanticVersion $version $630SnapshotRelease) -ge 0) {
+		$plugins = "ingest-geoip,ingest-attachment"
+	} else {
+		$plugins = "x-pack,ingest-geoip,ingest-attachment"
+	}
+
+	$ExeArgs = @("PLUGINS=$plugins")
 
 	# set bootstrap password and x-pack security
 	if ($version.Major -ge 6) {
@@ -113,7 +129,7 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 
 	Context-PingNode -XPackSecurityInstalled
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("x-pack","ingest-geoip","ingest-attachment") }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins -split ",") }
 
     Context-MsiRegistered
 

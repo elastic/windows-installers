@@ -39,7 +39,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 
 		[Fact] void RollbackToPreviousInstallationDoesNotRemoveDirectories() =>
 			WithValidPreflightChecks(s => s
-				.Wix(currentVersion: "5.6.0", existingVersion: "5.5.0")
+				.Wix(installerVersion: "5.6.0", previousVersion: "5.5.0")
 				.Session(rollback: true, uninstalling: false)
 			)
 			.AssertTask((m, s, fs) =>
@@ -61,7 +61,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 		
 		[Fact] void RollbackToPreviousInstallationDoesNotRemoveDirectoriesWhenSessionVariablesAreSet() =>
 			WithValidPreflightChecks(s => s
-				.Wix(currentVersion: "5.6.0", existingVersion: "5.5.0")
+				.Wix(installerVersion: "5.6.0", previousVersion: "5.5.0")
 				.Session(rollback: true, uninstalling: false, sessionVariables: new Dictionary<string, string>
 					{
 						{ "ConfigDirectoryExists", "True"},

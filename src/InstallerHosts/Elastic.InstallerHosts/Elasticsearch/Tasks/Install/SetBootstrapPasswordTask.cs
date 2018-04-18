@@ -20,12 +20,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			var xPackModel = this.InstallationModel.XPackModel;
 			var locationsModel = this.InstallationModel.LocationsModel;
-			var pluginsModel = this.InstallationModel.PluginsModel;
-
-			// bootstrap password can *only* be set when X-Pack is installed
-			if (!xPackModel.IsRelevant || 
-				!pluginsModel.Plugins.Any(plugin => plugin.Equals("x-pack", StringComparison.OrdinalIgnoreCase)))
-				return true;
+			
+			if (!xPackModel.IsRelevant) return true;
 
 			var installationDir = locationsModel.InstallDir;
 			var password = xPackModel.BootstrapPassword;

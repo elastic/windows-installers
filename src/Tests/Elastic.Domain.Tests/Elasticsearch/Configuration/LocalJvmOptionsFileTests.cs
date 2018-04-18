@@ -97,5 +97,28 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration
 			fileContentsAfterSave.Replace("\r", "").Should().Be(jvmOptsAfterSave.Replace("\r", ""));
 
 		}
+		[Fact] public void CommentsBlankLinesAndJDKDependantOptionsArePreserved()
+		{
+			var jvmOpts = $@"-XX:+UseParNewGC
+-XX:+UseConcMarkSweepGC
+
+## COMMENT
+
+-XX:+UseCMSInitiatingOccupancyOnly
+
+9-:-Djava.locale.providers=COMPAT
+";
+			var path = "C:\\Java\\jvm.options";
+			var fs = new MockFileSystem(new Dictionary<string, MockFileData>
+			{
+				{ path , new MockFileData(jvmOpts) }
+			});
+			var optsFile = new LocalJvmOptionsConfiguration(path, fs);
+			optsFile.Save();
+
+			var fileContentsAfterSave = fs.File.ReadAllText(path);
+			fileContentsAfterSave.Replace("\r", "").Should().Be(jvmOpts.Replace("\r", ""));
+
+		}
 	}
 }

@@ -71,13 +71,13 @@
       <Label Grid.Row="2" Grid.Column="0" x:Name="LogstashSystemLabel" Content="{x:Static resx:ViewResources.XPackView_LogstashSystemUserLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="LogstashSystemPasswordBox" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
     </Grid>
-    <Grid Grid.Column="0" x:Name="ManualSetupGrid" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+    <Grid Grid.Column="0" x:Name="ManualSetupGrid" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
       <TextBox x:Name="ManualConfigurationNeededTextBox" Grid.Row="0" Grid.Column="0" Text="{x:Static resx:ViewResources.XPackView_ManualUserConfigurationNeeded}"
-               Background="Transparent" BorderBrush="Transparent"  Margin="0,20,0,10" Foreground="{DynamicResource AccentColorBrush2}"
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,20,0,10"
                TextWrapping="Wrap" BorderThickness="0"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
                ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
@@ -87,7 +87,7 @@
              Content="{x:Static resx:ViewResources.XPackView_ManualUserConfigurationLink}" 
              HorizontalAlignment="Left" VerticalAlignment="Top" />
     </Grid>
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="2" Grid.RowSpan="4">
+    <Grid HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
@@ -96,29 +96,23 @@
         <RowDefinition Height="30"/>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="40"/>
-        <RowDefinition Height="30"/>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="40"/>
       </Grid.RowDefinitions>
       <Label Grid.Row="0" Grid.Column="0" x:Name="ChooseYourLicenseLabel" Content="{x:Static resx:ViewResources.XPackView_ChooseYourLicense}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
       <Label Grid.Row="1" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource AccentColorBrush}" x:Name="BasicLicenseLabel" Content="{x:Static resx:ViewResources.XPackView_BasicLicense}" HorizontalAlignment="Left" VerticalAlignment="Top" />
       <TextBox x:Name="BasicDescriptionTextBox" Grid.Row="2" Grid.Column="0" Text="{x:Static resx:ViewResources.XPackView_BasicDescription}"
-               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" Foreground="{DynamicResource AccentColorBrush}"
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,-10" 
                TextWrapping="Wrap" BorderThickness="0"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
                ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
-      <Button Grid.Row="3" Grid.Column="0" x:Name="RegisterBasicLicenseLink"  Style="{DynamicResource Link}" 
-              FontWeight="Bold" 
-              Margin="6, 12, 0,0"
-              Content="{x:Static resx:ViewResources.XPackView_RegisterBasicLicenseLink}" 
-              HorizontalAlignment="Left" VerticalAlignment="Top" />
-      <Label Grid.Row="4" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource AccentColorBrush}" x:Name="TrialLicenseLabel" Content="{x:Static resx:ViewResources.XPackView_TrialLicense}" HorizontalAlignment="Left" VerticalAlignment="Top" />
-      <TextBox x:Name="TrialDescriptionTextBox" Grid.Row="5" Grid.Column="0" Text="{x:Static resx:ViewResources.XPackView_TrialDescription}"
-               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,10" Foreground="{DynamicResource AccentColorBrush}"
+      <Label Grid.Row="3" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource AccentColorBrush}" x:Name="TrialLicenseLabel" Content="{x:Static resx:ViewResources.XPackView_TrialLicense}" HorizontalAlignment="Left" VerticalAlignment="Top" />
+      <TextBox x:Name="TrialDescriptionTextBox" Grid.Row="4" Grid.Column="0" Text="{x:Static resx:ViewResources.XPackView_TrialDescription}"
+               Background="Transparent" BorderBrush="Transparent"  Margin="0,0,0,-10" 
                TextWrapping="Wrap" BorderThickness="0"
                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True"
                ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
-      <Button Grid.Row="6" Grid.Column="0" x:Name="OpenSubscriptionsLink"  Style="{DynamicResource Link}" 
+      <Button Grid.Row="5" Grid.Column="0" x:Name="OpenSubscriptionsLink"  Style="{DynamicResource Link}" 
             FontWeight="Bold" 
             Margin="6, 12, 0,0"
             Content="{x:Static resx:ViewResources.XPackView_SubscriptionsLink}" 

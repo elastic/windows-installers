@@ -29,8 +29,7 @@ using ReactiveUI;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch
 {
-	public class ElasticsearchInstallationModel
-		: InstallationModelBase<ElasticsearchInstallationModel, ElasticsearchInstallationModelValidator>
+	public class ElasticsearchInstallationModel : InstallationModelBase<ElasticsearchInstallationModel, ElasticsearchInstallationModelValidator>
 	{
 		public JavaConfiguration JavaConfiguration { get; }
 		public ElasticsearchEnvironmentConfiguration ElasticsearchEnvironmentConfiguration { get; }
@@ -91,10 +90,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				vm => vm.LocationsModel.ConfigDirectory
 			);
 			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);
-			var observeXPackEnabled = this.WhenAnyValue(vm => vm.PluginsModel.XPackEnabled);
+			var upgradeFromXPackPlugin = this.WhenAnyValue(vm => vm.PluginsModel.PreviousInstallationHasXPack);
+			
 			var canAutomaticallySetup = this.WhenAnyValue(vm => vm.ServiceModel.StartAfterInstall, vm => vm.ServiceModel.InstallAsService)
 				.Select(t => t.Item1 && t.Item2);
-			this.XPackModel = new XPackModel(versionConfig, observeXPackEnabled, canAutomaticallySetup);
+			this.XPackModel = new XPackModel(versionConfig, canAutomaticallySetup, upgradeFromXPackPlugin);
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(vm => vm.ConfigurationModel.NetworkHost, vm => vm.ConfigurationModel.HttpPort,
@@ -102,10 +102,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 			var observeElasticsearchLog = this.WhenAnyValue(vm => vm.LocationsModel.ElasticsearchLog);
 
-			var installXPack = this.PluginsModel.DefaultPlugins().Contains("x-pack");
-
-			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, installXPack, observeHost, observeInstallationLog,
-				observeElasticsearchLog, observeXPackEnabled, serviceStateProvider);
+			this.ClosingModel = new ClosingModel(wixStateProvider.InstallerVersion, isUpgrade, observeHost, observeInstallationLog, observeElasticsearchLog, serviceStateProvider);
 			
 			this.AllSteps.AddRange(new List<IStep>
 			{
