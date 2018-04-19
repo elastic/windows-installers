@@ -83,7 +83,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		[Fact] public void WhenPreviousVersionHadXPackInstalledSkipXPackStep()
 		{
 			var tester = WithValidPreflightChecks(t=>t
-				.Wix(installerVersion: "6.3.0", previousVersion: "6.2.0")
+				.Wix(current: "6.3.0", upgradeFrom: "6.2.0")
 				.PreviouslyInstalledPlugins("x-pack")
 			);
 			tester.IsValidOnFirstStep();
@@ -106,7 +106,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		[Fact] public void WhenPreviousVersionOlderThan630DoesNotHaveXPackInstalledShowIt()
 		{
 			var tester = WithValidPreflightChecks(t=>t
-				.Wix(installerVersion: "6.3.0", previousVersion: "6.2.0")
+				.Wix(current: "6.3.0", upgradeFrom: "6.2.0")
 			);
 			tester.IsValidOnFirstStep();
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
@@ -129,7 +129,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		[Fact] public void WhenPreviousVersionNewerOrEqualTo630AlwaysShowXpack()
 		{
 			var tester = WithValidPreflightChecks(t=>t
-				.Wix(installerVersion: "6.3.1", previousVersion: "6.3.0")
+				.Wix(current: "6.3.1", upgradeFrom: "6.3.0")
 			);
 			tester.IsValidOnFirstStep();
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);

@@ -7,11 +7,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 	{
 		public MockWixStateProvider()
 		{
-			this.InstallerVersion = TestSetupStateProvider.DefaultTestVersion;
+			this.CurrentVersion = TestSetupStateProvider.DefaultTestVersion;
 		}
 
-		public SemVersion PreviousVersion { get; set; }
+		public SemVersion UpgradeFromVersion { get; set; }
 
-		public SemVersion InstallerVersion { get; set; }
+		public SemVersion CurrentVersion { get; set; }
 	}
 }

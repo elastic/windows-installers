@@ -39,28 +39,28 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this;
 		}
 
-		public TestSetupStateProvider Wix(string installerVersion, string previousVersion = null, string previousVersionInstallDir = null)
+		public TestSetupStateProvider Wix(string current, string upgradeFrom = null, string previousVersionInstallDir = null)
 		{
-			this.WixState = new MockWixStateProvider { InstallerVersion = installerVersion };
-			if (!string.IsNullOrWhiteSpace(previousVersion))
+			this.WixState = new MockWixStateProvider { CurrentVersion = current };
+			if (!string.IsNullOrWhiteSpace(upgradeFrom))
 			{
-				this.WixState.PreviousVersion = previousVersion;
+				this.WixState.UpgradeFromVersion = upgradeFrom;
 
 				if (this.ElasticsearchState == null)
 					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
 
 				if (this.ElasticsearchState.LastSetEsHome == null)
-					this.ElasticsearchState.EsHomeMachineVariable(previousVersionInstallDir ?? $@"C:\Elasticsearch\{previousVersion}");
+					this.ElasticsearchState.EsHomeMachineVariable(previousVersionInstallDir ?? $@"C:\Elasticsearch\{upgradeFrom}");
 			}
-			return this.Session(sessionVariables: new Dictionary<string, string> {{"CurrentVersion", installerVersion}});
+			return this.Session(sessionVariables: new Dictionary<string, string> {{"CurrentVersion", current}});
 		}
 
 		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null)
 		{
-			this.WixState = new MockWixStateProvider() { InstallerVersion = DefaultTestVersion };
+			this.WixState = new MockWixStateProvider() { CurrentVersion = DefaultTestVersion };
 			if (alreadyInstalled)
 			{
-				this.WixState.PreviousVersion = DefaultTestVersion;
+				this.WixState.UpgradeFromVersion = DefaultTestVersion;
 
 				if (this.ElasticsearchState == null)
 					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();

@@ -22,7 +22,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 				//show x-pack tab when we're upgrading from a version lower than `6.3.0` and the x-pack plugin was not installed.
 				//otherwise assume x-pack is installed and only show the tab on new installs
 				this.IsRelevant = 
-					(versionConfig.InstallationDirection == Up && versionConfig.PreviousVersion < XPackInstalledByDefaultVersion && !b) 
+					(versionConfig.InstallationDirection == Up && versionConfig.UpgradeFromVersion < XPackInstalledByDefaultVersion && !b) 
 					|| versionConfig.InstallationDirection == None;
 			});
 			
@@ -32,7 +32,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 				this.SkipSettingPasswords = !b;
 			});
 			this.Header = "X-Pack";
-			this.CurrentVersion = versionConfig.InstallerVersion;
+			this.CurrentVersion = versionConfig.CurrentVersion;
 			this.OpenLicensesAndSubscriptions = ReactiveCommand.Create();
 			this.OpenManualUserConfiguration = ReactiveCommand.Create();
 			this.Refresh();

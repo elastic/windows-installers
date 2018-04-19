@@ -22,32 +22,32 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Notice
 			.IsValidOnStep(m => m.LocationsModel)
 			.CanClickNext();
 
-		[Fact] public void MajorDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0", previousVersion: "6.0.0"))
+		[Fact] public void MajorDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0", upgradeFrom: "6.0.0"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void MajorUpgradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("6.0.0", previousVersion: "5.0.0"))
+		[Fact] public void MajorUpgradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("6.0.0", upgradeFrom: "5.0.0"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void MinorDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0", previousVersion: "5.1.0"))
+		[Fact] public void MinorDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0", upgradeFrom: "5.1.0"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void MinorUpgradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.1.0", previousVersion: "5.0.0"))
+		[Fact] public void MinorUpgradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.1.0", upgradeFrom: "5.0.0"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void PatchDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.1.0", previousVersion: "5.1.1"))
+		[Fact] public void PatchDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.1.0", upgradeFrom: "5.1.1"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void PatchUpgradeDoesNotShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.1.1", previousVersion: "5.1.0"))
+		[Fact] public void PatchUpgradeDoesNotShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.1.1", upgradeFrom: "5.1.0"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
 		[Fact] public void PatchUpgradeNextScreenIsConfigurationScreen() => WithValidPreflightChecks(f=>f
-				.Wix("5.1.1", previousVersion: "5.1.0")
+				.Wix("5.1.1", upgradeFrom: "5.1.0")
 				.ServicePreviouslyInstalled()
 			)
 			.IsValidOnStep(m => m.NoticeModel)
@@ -55,19 +55,19 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Notice
 			.IsValidOnStep(m => m.ConfigurationModel)
 			.CanClickNext();
 
-		[Fact] public void PrereleaseShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0-alpha1", previousVersion: "5.0.0-alpha2"))
+		[Fact] public void PrereleaseShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0-alpha1", upgradeFrom: "5.0.0-alpha2"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void PrereleaseDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0", previousVersion: "5.0.0-alpha2"))
+		[Fact] public void PrereleaseDowngradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0", upgradeFrom: "5.0.0-alpha2"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void PrereleaseUpgradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0-rc2", previousVersion: "5.0.0"))
+		[Fact] public void PrereleaseUpgradeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0-rc2", upgradeFrom: "5.0.0"))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 
-		[Fact] public void InstallingPrereleaseFirstTimeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0-beta2", previousVersion: null))
+		[Fact] public void InstallingPrereleaseFirstTimeShowsNotice() => WithValidPreflightChecks(f=>f.Wix("5.0.0-beta2", upgradeFrom: null))
 			.IsValidOnStep(m => m.NoticeModel)
 			.CanClickNext();
 	}

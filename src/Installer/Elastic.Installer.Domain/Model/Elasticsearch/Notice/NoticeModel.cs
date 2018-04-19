@@ -27,8 +27,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.LocationsModel = locationsModel;
 			this.ServiceModel = serviceModel;
 			this.Header = "Notice";
-			this.ExistingVersion = versionConfig.PreviousVersion;
-			this.CurrentVersion = versionConfig.InstallerVersion;
+			this.ExistingVersion = versionConfig.UpgradeFromVersion;
+			this.CurrentVersion = versionConfig.CurrentVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
 			this.ReadMoreOnXPackOpening = ReactiveCommand.Create();
 			this._serviceStateProvider = serviceStateProvider;
@@ -64,7 +64,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			}
 
 			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
-				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
+				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.UpgradeFromVersion, versionConfig.CurrentVersion);
 
 			this.ShowOpeningXPackBanner = this.ExistingVersion < XPackModel.XPackInstalledByDefaultVersion;
 			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;

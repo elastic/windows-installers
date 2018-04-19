@@ -102,7 +102,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			var observeInstallationLog = this.WhenAnyValue(vm => vm.MsiLogFileLocation);
 			var observeElasticsearchLog = this.WhenAnyValue(vm => vm.LocationsModel.ElasticsearchLog);
 
-			this.ClosingModel = new ClosingModel(wixStateProvider.InstallerVersion, isUpgrade, observeHost, observeInstallationLog, observeElasticsearchLog, serviceStateProvider);
+			this.ClosingModel = new ClosingModel(wixStateProvider.CurrentVersion, isUpgrade, observeHost, observeInstallationLog, observeElasticsearchLog, serviceStateProvider);
 			
 			this.AllSteps.AddRange(new List<IStep>
 			{
