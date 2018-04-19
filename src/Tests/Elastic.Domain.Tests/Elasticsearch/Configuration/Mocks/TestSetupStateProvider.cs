@@ -13,6 +13,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 	public class TestSetupStateProvider
 	{
+		public static readonly string DefaultTestVersion = "6.3.0";
+
 		public TestSetupStateProvider Java(Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> setter)
 		{
 			this.JavaState = setter(new MockJavaEnvironmentStateProvider());
@@ -53,7 +55,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this.Session(sessionVariables: new Dictionary<string, string> {{"CurrentVersion", installerVersion}});
 		}
 
-		public static readonly string DefaultTestVersion = "6.3.0-SNAPSHOT";
 		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null)
 		{
 			this.WixState = new MockWixStateProvider() { InstallerVersion = DefaultTestVersion };
@@ -104,7 +105,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 				if (sessionVariables != null)
 				{
 					foreach (var sessionVariable in sessionVariables)
-						this.SessionState.SessionValues[sessionVariable.Key] = sessionVariable.Value;					
+						this.SessionState.Set(sessionVariable.Key, sessionVariable.Value);					
 				}
 			}
 		
@@ -123,7 +124,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 		public NoopPluginStateProvider PluginState { get; private set; } = new NoopPluginStateProvider();
 
-		public NoopSession SessionState { get; private set; } = NoopSession.Elasticsearch;
+		public NoopSession SessionState { get; private set; }
 
 		private List<string> IntermediateArguments = new List<string>();
 		public string[] Arguments => IntermediateArguments.ToArray();
