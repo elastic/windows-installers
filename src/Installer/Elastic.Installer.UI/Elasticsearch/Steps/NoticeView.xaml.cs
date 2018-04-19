@@ -21,21 +21,15 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 		}
 
 		public NoticeView() => InitializeComponent();
-
+		
 		protected override void InitializeBindings()
 		{
-			var visibility = ViewModel.InstalledAsService ? Visible : Collapsed;
-			RunAsServiceHeaderLabel.Visibility = visibility;
-			RunAsServiceLabel.Visibility = visibility;
-			StartServiceAfterInstallCheckBox.Visibility = visibility;
-
 			this.OneWayBind(ViewModel, vm => vm.UpgradeText, view => view.UpgradeTextBox.Text);
 			this.OneWayBind(ViewModel, vm => vm.UpgradeTextHeader, view => view.UpgradeLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.InstallDir, view => view.InstallationDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.DataDirectory, view => view.DataDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.ConfigDirectory, view => view.ConfigDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.LogsDirectory, view => view.LogsDirectoryLabel.Content);
-			this.Bind(ViewModel, vm => vm.InstalledAsService, v => v.StartServiceAfterInstallCheckBox.IsChecked);
 			this.Bind(ViewModel, vm => vm.ServiceModel.StartAfterInstall, v => v.StartServiceAfterInstallCheckBox.IsChecked);
 
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
@@ -44,6 +38,15 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnXPackOpening, v => v.ReadMoreOnXPackOpening, nameof(ReadMoreOnXPackOpening.Click));
 			this.ViewModel.ReadMoreOnXPackOpening.Subscribe(x => Process.Start(ViewResources.NoticeView_Elasticsearch_ReadMoreOnXPackOpening));
+
+			this.WhenAnyValue(v => v.ViewModel.ServiceModel.InstallAsService)
+				.Subscribe(b =>
+				{
+					var visibility = b ? Visible : Collapsed;
+					RunAsServiceHeaderLabel.Visibility = visibility;
+					RunAsServiceLabel.Visibility = visibility;
+					StartServiceAfterInstallCheckBox.Visibility = visibility;
+				});
 
 			this.WhenAnyValue(v => v.ViewModel.ShowOpeningXPackBanner)
 				.Subscribe(b =>

@@ -93,16 +93,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			private set => this.RaiseAndSetIfChanged(ref existingVersionInstalled, value);
 		}
 
-		bool? installedAsService;
-		public bool InstalledAsService
-		{
-			get => installedAsService.GetValueOrDefault();
-			private set => this.RaiseAndSetIfChanged(ref installedAsService, value);
-		}
-
 		public sealed override void Refresh()
 		{
-			this.InstalledAsService = _serviceStateProvider.SeesService;
+			this.ServiceModel.StartAfterInstall = _serviceStateProvider.SeesService;
 		}
 
 		public ServiceModel ServiceModel { get; }
