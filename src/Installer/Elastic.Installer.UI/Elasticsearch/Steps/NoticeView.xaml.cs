@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Windows;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
-using Elastic.Installer.Domain.Properties;
 using Elastic.Installer.UI.Controls;
 using Elastic.Installer.UI.Properties;
 using ReactiveUI;
@@ -22,7 +21,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 		}
 
 		public NoticeView() => InitializeComponent();
-
+		
 		protected override void InitializeBindings()
 		{
 			this.OneWayBind(ViewModel, vm => vm.UpgradeText, view => view.UpgradeTextBox.Text);
@@ -31,6 +30,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.DataDirectory, view => view.DataDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.ConfigDirectory, view => view.ConfigDirectoryLabel.Content);
 			this.OneWayBind(ViewModel, vm => vm.LocationsModel.LogsDirectory, view => view.LogsDirectoryLabel.Content);
+			this.Bind(ViewModel, vm => vm.ServiceModel.StartAfterInstall, v => v.StartServiceAfterInstallCheckBox.IsChecked);
 
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnUpgrades, v => v.ReadMoreOnUpgrades, nameof(ReadMoreOnUpgrades.Click));
@@ -39,12 +39,20 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnXPackOpening, v => v.ReadMoreOnXPackOpening, nameof(ReadMoreOnXPackOpening.Click));
 			this.ViewModel.ReadMoreOnXPackOpening.Subscribe(x => Process.Start(ViewResources.NoticeView_Elasticsearch_ReadMoreOnXPackOpening));
 
+			this.WhenAnyValue(v => v.ViewModel.ServiceModel.PreviouslyInstalledAsAService)
+				.Subscribe(b =>
+				{
+					var visibility = b ? Visible : Collapsed;
+					RunAsServiceHeaderLabel.Visibility = visibility;
+					RunAsServiceLabel.Visibility = visibility;
+					StartServiceAfterInstallCheckBox.Visibility = visibility;
+				});
+
 			this.WhenAnyValue(v => v.ViewModel.ShowOpeningXPackBanner)
 				.Subscribe(b =>
 				{
 					this.XPackLogo.Visibility = b ? Visible : Collapsed;
-					this.XPackStackPanel.Visibility = b ? Visible : Collapsed;
-					
+					this.XPackStackPanel.Visibility = b ? Visible : Collapsed;				
 				});
 
 			this.WhenAnyValue(view => view.ViewModel.ExistingVersionInstalled, view => view.ViewModel.ShowUpgradeDocumentationLink)
@@ -54,22 +62,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					this.ReadOnlyPropertiesGrid.Visibility = installed ? Visible : Collapsed;
 					this.ReadMoreOnUpgrades.Visibility = installed && showUpgrade ? Visible : Collapsed;
 				});
-
-			//Using a separate observable in the case we add more parameters to the control grid on the notice model
-			this.WhenAny(view => view.ViewModel.InstalledAsService, v => v.GetValue())
-				.Subscribe(v =>
-				{
-					this.ControlGrid.Visibility = v ? Visible : Collapsed;
-				});
-
-			this.WhenAny(view => view.ViewModel.InstalledAsService, v=>v.GetValue())
-				.Subscribe(v => {
-					this.RunAsServiceHeaderLabel.Visibility = v ? Visible : Collapsed;
-					this.RunAsServiceLabel.Visibility = v ? Visible : Collapsed;
-					this.StartServiceAfterInstallCheckBox.Visibility = v ? Visible : Collapsed;
-				});
-			
-			this.Bind(ViewModel, vm => vm.ServiceModel.StartAfterInstall, v => v.StartServiceAfterInstallCheckBox.IsChecked);
 		}
 	}
 }

@@ -82,14 +82,14 @@
          <Image Source="{DynamicResource XPackLogo}"/>
       </Viewbox>
       <StackPanel Grid.Row="1" Grid.Column="1" x:Name="XPackStackPanel">
-          <TextBlock Text="is now included by default" 
+        <TextBlock Text="{x:Static resx:ViewResources.NoticeView_XPackIncludedByDefault}" 
                      VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 10 0 0" 
                      Foreground="{DynamicResource VersionColorBrush}" FontSize="26"
                      FontFamily="{DynamicResource OpenSans}" FontWeight="Normal"
                      />
           <Button x:Name="ReadMoreOnXPackOpening"  Style="{DynamicResource Link}"
                      Margin="0, 0, 0,0"
-                     Content="Find out more about the opening of x-pack" 
+                     Content="{x:Static resx:ViewResources.NoticeView_ReadMoreOnXPackOpening}" 
                      HorizontalAlignment="Left" VerticalAlignment="Top"/>
         
       </StackPanel>

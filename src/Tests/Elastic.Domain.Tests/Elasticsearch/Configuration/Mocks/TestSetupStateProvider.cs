@@ -13,6 +13,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 	public class TestSetupStateProvider
 	{
+		public static readonly string DefaultTestVersion = "6.3.0";
+
 		public TestSetupStateProvider Java(Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> setter)
 		{
 			this.JavaState = setter(new MockJavaEnvironmentStateProvider());
@@ -37,29 +39,28 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this;
 		}
 
-		public TestSetupStateProvider Wix(string installerVersion, string previousVersion = null, string previousVersionInstallDir = null)
+		public TestSetupStateProvider Wix(string current, string upgradeFrom = null, string previousVersionInstallDir = null)
 		{
-			this.WixState = new MockWixStateProvider { InstallerVersion = installerVersion };
-			if (!string.IsNullOrWhiteSpace(previousVersion))
+			this.WixState = new MockWixStateProvider { CurrentVersion = current };
+			if (!string.IsNullOrWhiteSpace(upgradeFrom))
 			{
-				this.WixState.PreviousVersion = previousVersion;
+				this.WixState.UpgradeFromVersion = upgradeFrom;
 
 				if (this.ElasticsearchState == null)
 					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
 
 				if (this.ElasticsearchState.LastSetEsHome == null)
-					this.ElasticsearchState.EsHomeMachineVariable(previousVersionInstallDir ?? $@"C:\Elasticsearch\{previousVersion}");
+					this.ElasticsearchState.EsHomeMachineVariable(previousVersionInstallDir ?? $@"C:\Elasticsearch\{upgradeFrom}");
 			}
-			return this;
+			return this.Session(sessionVariables: new Dictionary<string, string> {{"CurrentVersion", current}});
 		}
 
-		public static readonly string DefaultTestVersion = "5.0.0";
 		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null)
 		{
-			this.WixState = new MockWixStateProvider() { InstallerVersion = DefaultTestVersion };
+			this.WixState = new MockWixStateProvider() { CurrentVersion = DefaultTestVersion };
 			if (alreadyInstalled)
 			{
-				this.WixState.PreviousVersion = DefaultTestVersion;
+				this.WixState.UpgradeFromVersion = DefaultTestVersion;
 
 				if (this.ElasticsearchState == null)
 					this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
@@ -67,7 +68,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 				if (this.ElasticsearchState.LastSetEsHome == null)
 					this.ElasticsearchState.EsHomeMachineVariable(existingInstallDir ?? $@"C:\Elasticsearch\{DefaultTestVersion}");
 			}
-			return this;
+			return this.Session(sessionVariables: new Dictionary<string, string> { { "CurrentVersion", DefaultTestVersion } });
 		}
 
 		public TestSetupStateProvider FileSystem(Func<MockFileSystem, MockFileSystem> selector)
@@ -85,13 +86,29 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 		public TestSetupStateProvider Session(bool uninstalling = true, bool rollback = false, Dictionary<string, string> sessionVariables = null)
 		{
-			this.SessionState = new NoopSession(nameof(NoopSession.Elasticsearch), sessionVariables)
+			if (this.SessionState == null)
 			{
-				IsUninstalling = uninstalling, 
-				IsRollback = rollback,
-				IsInstalled = uninstalling, 
-				IsInstalling = !uninstalling
-			};
+				this.SessionState = new NoopSession(nameof(NoopSession.Elasticsearch), sessionVariables)
+				{
+					IsUninstalling = uninstalling,
+					IsRollback = rollback,
+					IsInstalled = uninstalling,
+					IsInstalling = !uninstalling
+				};
+			}
+			else
+			{
+				this.SessionState.IsUninstalling = uninstalling;
+				this.SessionState.IsRollback = rollback;
+				this.SessionState.IsInstalled = uninstalling;
+				this.SessionState.IsInstalling = !uninstalling;
+				if (sessionVariables != null)
+				{
+					foreach (var sessionVariable in sessionVariables)
+						this.SessionState.Set(sessionVariable.Key, sessionVariable.Value);					
+				}
+			}
+		
 			return this;
 		}
 
@@ -107,7 +124,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 		public NoopPluginStateProvider PluginState { get; private set; } = new NoopPluginStateProvider();
 
-		public NoopSession SessionState { get; private set; } = NoopSession.Elasticsearch;
+		public NoopSession SessionState { get; private set; }
 
 		private List<string> IntermediateArguments = new List<string>();
 		public string[] Arguments => IntermediateArguments.ToArray();

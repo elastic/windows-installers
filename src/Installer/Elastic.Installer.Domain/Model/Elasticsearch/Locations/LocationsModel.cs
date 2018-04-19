@@ -60,8 +60,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this.Header = "Locations";
 			this._elasticsearchEnvironmentConfiguration = elasticsearchEnvironmentConfiguration;
 			this._yamlConfiguration = yamlConfiguration;
-			this.CurrentVersion = versionConfig.InstallerVersion.ToString();
-			this.ExistingVersion = versionConfig.PreviousVersion?.ToString();
+			this.CurrentVersion = versionConfig.CurrentVersion.ToString();
+			this.ExistingVersion = versionConfig.UpgradeFromVersion?.ToString();
 			this.FileSystem = fileSystem;
 
 			this.Refresh();

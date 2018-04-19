@@ -38,6 +38,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using Elastic.Installer.UI.Elasticsearch.Steps;
 using Elastic.Installer.UI.Shared.Steps;
 using FluentValidation.Internal;
+using Semver;
 
 namespace Elastic.Installer.UI.Elasticsearch
 {
@@ -46,6 +47,19 @@ namespace Elastic.Installer.UI.Elasticsearch
 	/// </summary>
 	public partial class MainWindow : MetroWindow, IViewFor<ElasticsearchInstallationModel>, IEmbeddedWindow
 	{
+		private readonly ManualResetEvent _installerStartEvent;
+		private readonly ISession _session;	
+		private readonly string _currentVersion;
+		private readonly IDictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>> _stepModelToControl;
+		private readonly IDictionary<Type, MetroTabItem> _cachedTabs = new Dictionary<Type, MetroTabItem>();
+		private readonly SolidColorBrush _defaultTabForeground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+		private readonly SolidColorBrush _hoverTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
+		private readonly SolidColorBrush _disabledTabForeground = new SolidColorBrush(Color.FromRgb(160, 160, 160));
+		private readonly SolidColorBrush _selectedTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
+		private readonly SolidColorBrush _badTabForeground = new SolidColorBrush(Color.FromRgb(233, 73, 152));
+		private ProgressDialogController _controller;
+		private InstallProgressCounter _progressCounter;
+
 		object IViewFor.ViewModel
 		{
 			get => ViewModel;
@@ -54,17 +68,36 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 		public ElasticsearchInstallationModel ViewModel { get; set; }
 
-		private readonly ManualResetEvent _installerStartEvent;
-		private readonly ISession _session;
-		private ProgressDialogController _controller;
-		private InstallProgressCounter _progressCounter;
-		private readonly string _currentVersion;
-
 		public MainWindow(ElasticsearchInstallationModel setupViewModel, ManualResetEvent startEvent)
 		{
 			this._installerStartEvent = startEvent;
 			this._session = setupViewModel.Session;
 			this._currentVersion = _session.Get<string>("CurrentVersion");
+			var semanticVersion = SemVersion.Parse(this._currentVersion);
+
+			_stepModelToControl = new Dictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>>
+			{
+				{
+					typeof(NoticeModel), (m, s) => Step(s, new NoticeView { ViewModel = m as NoticeModel },
+						ViewResources.MainWindow_Help_Header, string.Format(ViewResources.MainWindow_Help, "Elasticsearch")) },
+				{
+					typeof(LocationsModel), (m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel },
+						ViewResources.LocationsView_Elasticsearch_Help_Header, ViewResources.LocationsView_Elasticsearch_Help)  },
+				{
+					typeof(ServiceModel), (m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel },
+						ViewResources.ServiceView_Elasticsearch_Help_Header, ViewResources.ServiceView_Elasticsearch_Help) },
+				{
+					typeof(ConfigurationModel), (m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel },
+						ViewResources.ConfigurationView_Elasticsearch_Help_Header, ViewResources.ConfigurationView_Elasticsearch_Help) },
+				{
+					typeof(PluginsModel), (m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel },
+						ViewResources.PluginsView_Elasticsearch_Help_Header, ViewResources.PluginsView_Elasticsearch_Help) },
+				{
+					typeof(XPackModel), (m, s) => Step(s, new XPackView { ViewModel = m as XPackModel },
+						ViewResources.XPackView_Elasticsearch_Help_Header, string.Format(ViewResources.XPackView_Elasticsearch_Help, $"{semanticVersion.Major}.{semanticVersion.Minor}")) },
+				{ typeof(ClosingModel), (m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null, null) },
+			};
+
 			Application.Current.Resources["InstallerTitle"] = this._currentVersion;
 
 			InitializeComponent();
@@ -120,30 +153,6 @@ namespace Elastic.Installer.UI.Elasticsearch
 			return MessageResult.OK;
 		}
 
-		private readonly IDictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>> StepModelToControl =
-			new Dictionary<Type, Action<IValidatableReactiveObject, StepWithHelp>>
-		{
-			{ typeof(NoticeModel), (m, s) => Step(s, new NoticeView { ViewModel = m as NoticeModel }, 
-				ViewResources.MainWindow_Help_Header, string.Format(ViewResources.MainWindow_Help, "Elasticsearch")) },
-			{ typeof(LocationsModel), (m, s) => Step(s, new LocationsView { ViewModel = m as LocationsModel }, 
-				ViewResources.LocationsView_Elasticsearch_Help_Header, ViewResources.LocationsView_Elasticsearch_Help)  },
-			{ typeof(ServiceModel), (m, s) => Step(s, new ServiceView { ViewModel = m as ServiceModel }, 
-				ViewResources.ServiceView_Elasticsearch_Help_Header, ViewResources.ServiceView_Elasticsearch_Help) },
-			{ typeof(ConfigurationModel), (m, s) => Step(s, new ConfigurationView { ViewModel = m as ConfigurationModel }, 
-				ViewResources.ConfigurationView_Elasticsearch_Help_Header, ViewResources.ConfigurationView_Elasticsearch_Help) },
-			{ typeof(PluginsModel), (m, s) => Step(s, new PluginsView { ViewModel = m as PluginsModel }, 
-				ViewResources.PluginsView_Elasticsearch_Help_Header, ViewResources.PluginsView_Elasticsearch_Help) },
-			{ typeof(XPackModel), (m, s) => Step(s, new XPackView { ViewModel = m as XPackModel }, 
-				ViewResources.XPackView_Elasticsearch_Help_Header, ViewResources.XPackView_Elasticsearch_Help) },
-			{ typeof(ClosingModel), (m, s) => Step(s, new ClosingView { ViewModel = m as ClosingModel }, null, null) },
-		};
-		private readonly IDictionary<Type, MetroTabItem> CachedTabs = new Dictionary<Type, MetroTabItem>();
-		private readonly SolidColorBrush _defaultTabForeground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-		private readonly SolidColorBrush _hoverTabForeground = new SolidColorBrush(Color.FromRgb(0, 169, 224));
-		private readonly SolidColorBrush _disabledTabForeground = new SolidColorBrush(Color.FromRgb(160, 160, 160));
-		private readonly SolidColorBrush _selectedTabForeground =new SolidColorBrush(Color.FromRgb(0, 169, 224));
-		private readonly SolidColorBrush _badTabForeground= new SolidColorBrush(Color.FromRgb(233, 73, 152));
-
 		private static void Step(StepWithHelp step, UserControl view, string helpHeaderText, string help)
 		{
 			step.Step = view;
@@ -174,7 +183,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 		private bool RedrawTabColor(int selected, int max, IStep step, int i)
 		{
-			if (!this.CachedTabs.TryGetValue(step.GetType(), out var child)) return false;
+			if (!this._cachedTabs.TryGetValue(step.GetType(), out var child)) return false;
 
 			var label = child.FindChildren<Label>().First();
 			child.IsEnabled = true;
@@ -215,7 +224,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 		private MetroTabItem CreateTab(IStep m, int i)
 		{
 			var type = m.GetType();
-			if (this.CachedTabs.TryGetValue(type, out var tabItem))
+			if (this._cachedTabs.TryGetValue(type, out var tabItem))
 				return tabItem;
 			
 			var step = new StepWithHelp
@@ -224,7 +233,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 				VerticalAlignment = VerticalAlignment.Stretch,
 				HorizontalAlignment = HorizontalAlignment.Stretch,
 			};
-			StepModelToControl[type](m, step);
+			_stepModelToControl[type](m, step);
 
 			var model = this.ViewModel;
 			void Reset() => RedrawTabColor(model.TabSelectedIndex, model.TabSelectionMax, m, i);
@@ -245,7 +254,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 			};
 
 			var tab = new MetroTabItem {Content = step, Header = headerLabel};
-			this.CachedTabs.Add(type, tab);
+			this._cachedTabs.Add(type, tab);
 			return tab;
 		}
 
@@ -293,11 +302,6 @@ namespace Elastic.Installer.UI.Elasticsearch
 				if (this.ViewModel.ClosingModel.OpenDocumentationAfterInstallation)
 					Process.Start(ViewResources.MainWindow_DocumentationLink);
 				this.Close();
-			});
-
-			this.ViewModel.Proxy.Subscribe(x =>
-			{
-
 			});
 
 			this.WhenAnyValue(view => view.ViewModel.NextButtonText)

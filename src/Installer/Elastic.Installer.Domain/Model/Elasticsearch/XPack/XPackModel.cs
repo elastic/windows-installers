@@ -11,7 +11,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 	public class XPackModel : StepBase<XPackModel, XPackModelValidator>
 	{
 		public const XPackLicenseMode DefaultXPackLicenseMode = XPackLicenseMode.Basic;
-		
+		public static readonly SemVersion XPackInstalledByDefaultVersion = "6.3.0";
+
 		public XPackModel(VersionConfiguration versionConfig,
 			IObservable<bool> canAutomaticallySetupUsers,
 			IObservable<bool> upgradeFromXPackPlugin)
@@ -21,7 +22,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 				//show x-pack tab when we're upgrading from a version lower than `6.3.0` and the x-pack plugin was not installed.
 				//otherwise assume x-pack is installed and only show the tab on new installs
 				this.IsRelevant = 
-					(versionConfig.InstallationDirection == Up && versionConfig.PreviousVersion < "6.3.0" && !b) 
+					(versionConfig.InstallationDirection == Up && versionConfig.UpgradeFromVersion < XPackInstalledByDefaultVersion && !b) 
 					|| versionConfig.InstallationDirection == None;
 			});
 			
@@ -31,9 +32,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 				this.SkipSettingPasswords = !b;
 			});
 			this.Header = "X-Pack";
-			this.CurrentVersion = versionConfig.InstallerVersion;
+			this.CurrentVersion = versionConfig.CurrentVersion;
 			this.OpenLicensesAndSubscriptions = ReactiveCommand.Create();
-			this.RegisterBasicLicense = ReactiveCommand.Create();
 			this.OpenManualUserConfiguration = ReactiveCommand.Create();
 			this.Refresh();
 		}
@@ -45,6 +45,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.LogstashSystemUserPassword = null;
 			this.BootstrapPassword = null;
 			this.XPackSecurityEnabled = false;
+			this.XPackLicense = DefaultXPackLicenseMode;
 		}
 
 		public SemVersion CurrentVersion { get; }
@@ -123,8 +124,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			&& this.XPackSecurityEnabled;
 
 		public ReactiveCommand<object> OpenLicensesAndSubscriptions { get; }
-
-		public ReactiveCommand<object> RegisterBasicLicense { get; }
 
 		public ReactiveCommand<object> OpenManualUserConfiguration { get; }
 
