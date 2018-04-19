@@ -50,10 +50,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 				if (this.ElasticsearchState.LastSetEsHome == null)
 					this.ElasticsearchState.EsHomeMachineVariable(previousVersionInstallDir ?? $@"C:\Elasticsearch\{previousVersion}");
 			}
-			return this;
+			return this.Session(sessionVariables: new Dictionary<string, string> {{"CurrentVersion", installerVersion}});
 		}
 
-		public static readonly string DefaultTestVersion = "5.0.0";
+		public static readonly string DefaultTestVersion = "6.3.0-SNAPSHOT";
 		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null)
 		{
 			this.WixState = new MockWixStateProvider() { InstallerVersion = DefaultTestVersion };
@@ -67,7 +67,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 				if (this.ElasticsearchState.LastSetEsHome == null)
 					this.ElasticsearchState.EsHomeMachineVariable(existingInstallDir ?? $@"C:\Elasticsearch\{DefaultTestVersion}");
 			}
-			return this;
+			return this.Session(sessionVariables: new Dictionary<string, string> { { "CurrentVersion", DefaultTestVersion } });
 		}
 
 		public TestSetupStateProvider FileSystem(Func<MockFileSystem, MockFileSystem> selector)
@@ -85,13 +85,29 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 		public TestSetupStateProvider Session(bool uninstalling = true, bool rollback = false, Dictionary<string, string> sessionVariables = null)
 		{
-			this.SessionState = new NoopSession(nameof(NoopSession.Elasticsearch), sessionVariables)
+			if (this.SessionState == null)
 			{
-				IsUninstalling = uninstalling, 
-				IsRollback = rollback,
-				IsInstalled = uninstalling, 
-				IsInstalling = !uninstalling
-			};
+				this.SessionState = new NoopSession(nameof(NoopSession.Elasticsearch), sessionVariables)
+				{
+					IsUninstalling = uninstalling,
+					IsRollback = rollback,
+					IsInstalled = uninstalling,
+					IsInstalling = !uninstalling
+				};
+			}
+			else
+			{
+				this.SessionState.IsUninstalling = uninstalling;
+				this.SessionState.IsRollback = rollback;
+				this.SessionState.IsInstalled = uninstalling;
+				this.SessionState.IsInstalling = !uninstalling;
+				if (sessionVariables != null)
+				{
+					foreach (var sessionVariable in sessionVariables)
+						this.SessionState.SessionValues[sessionVariable.Key] = sessionVariable.Value;					
+				}
+			}
+		
 			return this;
 		}
 

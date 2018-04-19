@@ -33,7 +33,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			this.Header = "X-Pack";
 			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.OpenLicensesAndSubscriptions = ReactiveCommand.Create();
-			this.RegisterBasicLicense = ReactiveCommand.Create();
 			this.OpenManualUserConfiguration = ReactiveCommand.Create();
 			this.Refresh();
 		}
@@ -123,8 +122,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			&& this.XPackSecurityEnabled;
 
 		public ReactiveCommand<object> OpenLicensesAndSubscriptions { get; }
-
-		public ReactiveCommand<object> RegisterBasicLicense { get; }
 
 		public ReactiveCommand<object> OpenManualUserConfiguration { get; }
 
