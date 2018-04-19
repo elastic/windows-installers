@@ -116,6 +116,7 @@ function Context-PluginsInstalled($Expected) {
 
     Context "Plugins installed" {
         $Plugins = & $($Expected.EsPluginBat) "list"
+		log "Installed plugins: $Plugins" -Level Debug
 
         if (($Expected.Plugins -eq $null) -or $($Expected.Plugins).Count -eq 0) {
             It "No plugins should be installed" {
@@ -125,7 +126,7 @@ function Context-PluginsInstalled($Expected) {
         else {
             foreach($Plugin in $Expected.Plugins) {
                 It "Plugin $Plugin is installed" {
-                    {$Plugins -contains $Plugin} | Should Be $true
+                    $Plugins -contains $Plugin | Should Be $true
                 }
             }
         }
