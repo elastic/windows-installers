@@ -24,6 +24,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
 using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
+using Elastic.Installer.Domain.Model.Shared;
 using FluentValidation.Results;
 using ReactiveUI;
 
