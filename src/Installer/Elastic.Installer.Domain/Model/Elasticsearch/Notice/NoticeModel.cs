@@ -95,7 +95,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 
 		public sealed override void Refresh()
 		{
-			this.ServiceModel.StartAfterInstall = _serviceStateProvider.SeesService;
+			if (ExistingVersionInstalled && this.ServiceModel.PreviouslyInstalledAsAService)
+				this.ServiceModel.StartAfterInstall = true;
 		}
 
 		public ServiceModel ServiceModel { get; }

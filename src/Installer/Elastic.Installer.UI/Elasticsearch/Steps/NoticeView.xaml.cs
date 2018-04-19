@@ -39,7 +39,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.BindCommand(ViewModel, vm => vm.ReadMoreOnXPackOpening, v => v.ReadMoreOnXPackOpening, nameof(ReadMoreOnXPackOpening.Click));
 			this.ViewModel.ReadMoreOnXPackOpening.Subscribe(x => Process.Start(ViewResources.NoticeView_Elasticsearch_ReadMoreOnXPackOpening));
 
-			this.WhenAnyValue(v => v.ViewModel.ServiceModel.InstallAsService)
+			this.WhenAnyValue(v => v.ViewModel.ServiceModel.PreviouslyInstalledAsAService)
 				.Subscribe(b =>
 				{
 					var visibility = b ? Visible : Collapsed;

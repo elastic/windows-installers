@@ -23,13 +23,12 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 		public static readonly string DefaultPassword = null;
 
 		private readonly bool _existingVersionInstalled;
-		private readonly bool _sawService;
 
 		public ServiceModel(IServiceStateProvider serviceStateProvider, VersionConfiguration versionConfig)
 		{
 			this._existingVersionInstalled = versionConfig.ExistingVersionInstalled;
-			this._sawService = serviceStateProvider.SeesService;
-			this.IsRelevant = !this._existingVersionInstalled || (this._existingVersionInstalled && !this._sawService);
+			this.PreviouslyInstalledAsAService = serviceStateProvider.SeesService;
+			this.IsRelevant = !this._existingVersionInstalled || (this._existingVersionInstalled && !this.PreviouslyInstalledAsAService);
 			this.Header = "Service";
 			this.Refresh();
 			this.WhenAny(vm => vm.User, vm => vm.Password,
@@ -75,7 +74,7 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 			this.UseNetworkService = DefaultUseNetworkService;
 			if (!this._internalRefresh) 
 			{
-				this.InstallAsService = !this._existingVersionInstalled || this._sawService;
+				this.InstallAsService = !this._existingVersionInstalled || this.PreviouslyInstalledAsAService;
 			}
 			this._internalRefresh = false;
 		}
@@ -89,6 +88,14 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 		{
 			get => installAsService;
 			set => this.RaiseAndSetIfChanged(ref installAsService, value);
+		}
+
+		bool previouslyInstalledAsAService = true;
+		[StaticArgument(nameof(PreviouslyInstalledAsAService))]
+		public bool PreviouslyInstalledAsAService
+		{
+			get => previouslyInstalledAsAService;
+			set => this.RaiseAndSetIfChanged(ref previouslyInstalledAsAService, value);
 		}
 
 		bool startAfterInstall = true;
