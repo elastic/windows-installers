@@ -5,6 +5,7 @@ using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Model.Base;
 using Elastic.Installer.Domain.Model.Base.Service;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using Elastic.Installer.Domain.Properties;
 using ReactiveUI;
 using Semver;
@@ -13,7 +14,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 {
 	public class NoticeModel : StepBase<NoticeModel, NoticeModelValidator>
 	{
-		private static readonly SemVersion XPackInstalledByDefaultVersion = "6.3.0";
 		private readonly IServiceStateProvider _serviceStateProvider;
 
 		public NoticeModel(
@@ -66,7 +66,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
 				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
 
-			this.ShowOpeningXPackBanner = this.ExistingVersion < XPackInstalledByDefaultVersion;
+			this.ShowOpeningXPackBanner = this.ExistingVersion < XPackModel.XPackInstalledByDefaultVersion;
 			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;
 			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
