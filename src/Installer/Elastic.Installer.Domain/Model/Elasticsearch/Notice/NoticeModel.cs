@@ -13,6 +13,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 {
 	public class NoticeModel : StepBase<NoticeModel, NoticeModelValidator>
 	{
+		private static readonly SemVersion XPackInstalledByDefaultVersion = "6.3.0";
+		private readonly IServiceStateProvider _serviceStateProvider;
+
 		public NoticeModel(
 			VersionConfiguration versionConfig, 
 			IServiceStateProvider serviceStateProvider, 
@@ -28,6 +31,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.CurrentVersion = versionConfig.InstallerVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
 			this.ReadMoreOnXPackOpening = ReactiveCommand.Create();
+			this._serviceStateProvider = serviceStateProvider;
+			this.Refresh();
 
 			if (!string.IsNullOrWhiteSpace(this.CurrentVersion?.Prerelease))
 			{
@@ -57,15 +62,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.UpgradeTextHeader = TextResources.ResourceManager.GetString(prefix + "_Header");
 				this.UpgradeText = TextResources.ResourceManager.GetString(prefix);
 			}
+
 			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
 				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
 
-			this.ShowOpeningXPackBanner = this.ExistingVersion < "6.3.0";
+			this.ShowOpeningXPackBanner = this.ExistingVersion < XPackInstalledByDefaultVersion;
 			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;
 			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
-			this.InstalledAsService = serviceStateProvider.SeesService;
-			this.Refresh();
 		}
 		
 		bool showUpgradeDocumentationLink;
@@ -96,7 +100,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			private set => this.RaiseAndSetIfChanged(ref installedAsService, value);
 		}
 
-		public sealed override void Refresh() { }
+		public sealed override void Refresh()
+		{
+			this.InstalledAsService = _serviceStateProvider.SeesService;
+		}
 
 		public ServiceModel ServiceModel { get; }
 		public LocationsModel LocationsModel { get; }
@@ -114,6 +121,5 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
 			return sb.ToString();
 		}
-
 	}
 }
