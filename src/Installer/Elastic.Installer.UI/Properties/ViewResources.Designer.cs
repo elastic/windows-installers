@@ -433,7 +433,7 @@ namespace Elastic.Installer.UI.Properties {
         ///   Looks up a localized string similar to This step allows you to specify some settings found in the [b]elasticsearch.yml[/b] and [b]jvm.options[/b] files located in the [b]config[/b] folder.  We&apos;re only exposing common settings here that you almost always want to change.  Any options not shown here must be set manually in the files after the installation has been completed.
         ///
         ///
-        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important no [rest of string was truncated]&quot;;.
+        ///[b]Cluster name[/b]: The name of the cluster this Elasticsearch node should be a part of.  The cluster name is used to discover and auto-join other nodes.  It is important [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Elasticsearch_Help {
             get {
@@ -485,7 +485,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Server name[/b]: A human-readable display name that identifies this Kibana instance.
         ///
-        ///[b]Base Path[/b]: Enables you to specify a path to m [rest of string was truncated]&quot;;.
+        ///[b]Base Path[/b]: Enables you to specify a pa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConfigurationView_Kibana_Help {
             get {
@@ -665,15 +665,6 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string ConfigurationView_UnicastExplanationLabel {
-            get {
-                return ResourceManager.GetString("ConfigurationView_UnicastExplanationLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unicast Hosts.
         /// </summary>
         public static string ConfigurationView_UnicastHostsLabel {
@@ -762,7 +753,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Index Name[/b]: Kibana uses an index in Elasticsearch to store saved searches, visualizations and dashboards. Kibana creates a new index if the index doesn’t already exist.
         ///
-        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that the Kiba [rest of string was truncated]&quot;;.
+        ///[b]Username[/b] and [b]Password[/b]: If your Elasticsearch is protected with basic authentication, these settings provide the username and password that t [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ConnectingView_Kibana_Help {
             get {
@@ -1042,7 +1033,7 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]Config[/b]: The directory where Elasticsearch will store its configuration files.
         ///
-        ///It is a best practice to keep your logs, config, and data directories separate from yo [rest of string was truncated]&quot;;.
+        ///It is a best practice to keep your logs, config, and data directories separa [rest of string was truncated]&quot;;.
         /// </summary>
         public static string LocationsView_Elasticsearch_Help {
             get {
@@ -1137,9 +1128,9 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Heya! Welcome the {0} Windows intaller.
+        ///   Looks up a localized string similar to Heya! Welcome the {0} Windows Installer.
         ///
-        ///This installer will walk you through various steps to help you configure and install {0} on your system.  To make things easier, we&apos;ve gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you may want to change..
+        ///This installer will walk you through various steps to help you configure and install {0} on your system.  To make things easier, we&apos;ve gone ahead and pre-populated everything with sensible defaults, but there are a few things you may want to change..
         /// </summary>
         public static string MainWindow_Help {
             get {
@@ -1330,6 +1321,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read more about the opening of X-Pack.
+        /// </summary>
+        public static string NoticeView_ReadMoreOnXPackOpening {
+            get {
+                return ResourceManager.GetString("NoticeView_ReadMoreOnXPackOpening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read only properties during upgrade.
         /// </summary>
         public static string NoticeView_ReadOnlyPropertiesHeader {
@@ -1344,6 +1344,15 @@ namespace Elastic.Installer.UI.Properties {
         public static string NoticeView_RunAsServiceHeaderLabel {
             get {
                 return ResourceManager.GetString("NoticeView_RunAsServiceHeaderLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to is now included by default.
+        /// </summary>
+        public static string NoticeView_XPackIncludedByDefault {
+            get {
+                return ResourceManager.GetString("NoticeView_XPackIncludedByDefault", resourceCulture);
             }
         }
         
@@ -1375,11 +1384,11 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), custom discovery, and more.
+        ///   Looks up a localized string similar to Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom datatypes for mapping, custom analyzers (in a more built-in fashion), custom discovery, and more.
         ///
-        ///We&apos;ve only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins are downloaded at installation time.
+        ///We&apos;ve only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins selected within the installer will be downloaded at installation time, so an internet connection must be available.
         ///
-        ///It is common for many companies to set up a proxy through which resources will be downloaded from the internet. As such, you may need to specify [rest of string was truncated]&quot;;.
+        ///It is common for many companies to set up a proxy thr [rest of string was truncated]&quot;;.
         /// </summary>
         public static string PluginsView_Elasticsearch_Help {
             get {
@@ -1684,97 +1693,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Uninstall Elasticsearch.
-        /// </summary>
-        public static string SilentSetup__Uninstall {
-            get {
-                return ResourceManager.GetString("SilentSetup__Uninstall", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Can not start setup because of conflicting parameters e.g specifying /i and /u.
-        /// </summary>
-        public static string SilentSetup_AmbiguousFlags {
-            get {
-                return ResourceManager.GetString("SilentSetup_AmbiguousFlags", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Options signal how and what routine the setup should run.
-        /// </summary>
-        public static string SilentSetup_CommandLineOptions {
-            get {
-                return ResourceManager.GetString("SilentSetup_CommandLineOptions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Variables control the values used during (un)installation.
-        /// </summary>
-        public static string SilentSetup_CommandLineVariables {
-            get {
-                return ResourceManager.GetString("SilentSetup_CommandLineVariables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Installs Elasticsearch on Windows. Run without arguments for interactive setup or with command line options for silent setup..
-        /// </summary>
-        public static string SilentSetup_Description {
-            get {
-                return ResourceManager.GetString("SilentSetup_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Display help text and exit.
-        /// </summary>
-        public static string SilentSetup_Help {
-            get {
-                return ResourceManager.GetString("SilentSetup_Help", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Install Variables.
-        /// </summary>
-        public static string SilentSetup_InstallVariables {
-            get {
-                return ResourceManager.GetString("SilentSetup_InstallVariables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Options.
-        /// </summary>
-        public static string SilentSetup_Options {
-            get {
-                return ResourceManager.GetString("SilentSetup_Options", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Elasticsearch {0} Installer.
-        /// </summary>
-        public static string SilentSetup_Title {
-            get {
-                return ResourceManager.GetString("SilentSetup_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Uninstall Variables.
-        /// </summary>
-        public static string SilentSetup_UninstallVariables {
-            get {
-                return ResourceManager.GetString("SilentSetup_UninstallVariables", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Access to all free x-pack features without an expiry date on the license. 
+        ///   Looks up a localized string similar to Access to all free X-Pack Basic features without an expiry date on the license. 
         ///    .
         /// </summary>
         public static string XPackView_BasicDescription {
@@ -1806,11 +1725,9 @@ namespace Elastic.Installer.UI.Properties {
         ///
         ///[b]License[/b]: This setting specifies the type of license to apply to X-Pack. 
         ///
-        ///    A [b]Basic license[/b] is free and provides access only to a subset of X-Pack features. 
+        ///    A [b]Basic license[/b] is free and provides access only to a subset of X-Pack features. A Basic license does not expire and you do not need to register it.
         ///
-        ///    A [b]Trial license[/b] provides access to all of the X-Pack Enterprise features, including Machine Learning, Graph, Alerting, Security, amongst others.
-        ///
-        ///    Both Basic and Trial licenses applied are valid for 30 days. You can register to receive a free 1 year Basic license  [rest of string was truncated]&quot;;.
+        ///    A [b]Trial license[/b] provides access to all of the X-Pack features, including Machine Learning, Graph, Alerting, Security, amongst others. A Trial license is valid for 30 days after which time X-Pack [rest of string was truncated]&quot;;.
         /// </summary>
         public static string XPackView_Elasticsearch_Help {
             get {
@@ -1891,7 +1808,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Elasticsearch system users need to be setup manually. Either you are not installing as a service that gets started after installation, or you&apos;ve opted to start Elasticsearch manually when needed..
+        ///   Looks up a localized string similar to Elasticsearch built-in users need to be setup manually. Either you are not installing as a service that gets started after installation, or you&apos;ve opted to start Elasticsearch manually when needed..
         /// </summary>
         public static string XPackView_ManualUserConfigurationNeeded {
             get {
@@ -1918,24 +1835,6 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://register.elastic.co/.
-        /// </summary>
-        public static string XPackView_RegisterBasicLicense {
-            get {
-                return ResourceManager.GetString("XPackView_RegisterBasicLicense", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Register for a free Basic license .
-        /// </summary>
-        public static string XPackView_RegisterBasicLicenseLink {
-            get {
-                return ResourceManager.GetString("XPackView_RegisterBasicLicenseLink", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Security.
         /// </summary>
         public static string XPackView_SecurityLabel {
@@ -1954,7 +1853,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Access to all X-Pack Enterprise features for 30 days, including Machine Learning, Graph, Alerting, Security, and others.
+        ///   Looks up a localized string similar to Access to all X-Pack features for 30 days, including Machine Learning, Graph, Alerting, Security, and others.
         ///    .
         /// </summary>
         public static string XPackView_TrialDescription {

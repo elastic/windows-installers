@@ -5,6 +5,7 @@ using Elastic.Installer.Domain.Configuration.Wix;
 using Elastic.Installer.Domain.Model.Base;
 using Elastic.Installer.Domain.Model.Base.Service;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
+using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
 using Elastic.Installer.Domain.Properties;
 using ReactiveUI;
 using Semver;
@@ -13,6 +14,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 {
 	public class NoticeModel : StepBase<NoticeModel, NoticeModelValidator>
 	{
+		private readonly IServiceStateProvider _serviceStateProvider;
+
 		public NoticeModel(
 			VersionConfiguration versionConfig, 
 			IServiceStateProvider serviceStateProvider, 
@@ -24,10 +27,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.LocationsModel = locationsModel;
 			this.ServiceModel = serviceModel;
 			this.Header = "Notice";
-			this.ExistingVersion = versionConfig.PreviousVersion;
-			this.CurrentVersion = versionConfig.InstallerVersion;
+			this.ExistingVersion = versionConfig.UpgradeFromVersion;
+			this.CurrentVersion = versionConfig.CurrentVersion;
 			this.ReadMoreOnUpgrades = ReactiveCommand.Create();
 			this.ReadMoreOnXPackOpening = ReactiveCommand.Create();
+			this._serviceStateProvider = serviceStateProvider;
+			this.Refresh();
 
 			if (!string.IsNullOrWhiteSpace(this.CurrentVersion?.Prerelease))
 			{
@@ -57,15 +62,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 				this.UpgradeTextHeader = TextResources.ResourceManager.GetString(prefix + "_Header");
 				this.UpgradeText = TextResources.ResourceManager.GetString(prefix);
 			}
-			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
-				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.PreviousVersion, versionConfig.InstallerVersion);
 
-			this.ShowOpeningXPackBanner = this.ExistingVersion < "6.3.0";
+			if (!string.IsNullOrWhiteSpace(this.UpgradeTextHeader))
+				this.UpgradeTextHeader = string.Format(this.UpgradeTextHeader, versionConfig.UpgradeFromVersion, versionConfig.CurrentVersion);
+
+			this.ShowOpeningXPackBanner = this.ExistingVersion < XPackModel.XPackInstalledByDefaultVersion;
 			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;
 			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
-			this.InstalledAsService = serviceStateProvider.SeesService;
-			this.Refresh();
 		}
 		
 		bool showUpgradeDocumentationLink;
@@ -89,14 +93,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			private set => this.RaiseAndSetIfChanged(ref existingVersionInstalled, value);
 		}
 
-		bool? installedAsService;
-		public bool InstalledAsService
+		public sealed override void Refresh()
 		{
-			get => installedAsService.GetValueOrDefault();
-			private set => this.RaiseAndSetIfChanged(ref installedAsService, value);
+			if (ExistingVersionInstalled && this.ServiceModel.PreviouslyInstalledAsAService)
+				this.ServiceModel.StartAfterInstall = true;
 		}
-
-		public sealed override void Refresh() { }
 
 		public ServiceModel ServiceModel { get; }
 		public LocationsModel LocationsModel { get; }
@@ -114,6 +115,5 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
 			return sb.ToString();
 		}
-
 	}
 }

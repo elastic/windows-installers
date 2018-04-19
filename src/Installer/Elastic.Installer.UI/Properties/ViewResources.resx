@@ -177,9 +177,6 @@
   <data name="ConfigurationView_SliderLabel" xml:space="preserve">
     <value>Max</value>
   </data>
-  <data name="ConfigurationView_UnicastExplanationLabel" xml:space="preserve">
-    <value />
-  </data>
   <data name="ConfigurationView_UnicastHostsLabel" xml:space="preserve">
     <value>Unicast Hosts</value>
   </data>
@@ -305,18 +302,18 @@
     <value>Basic License</value>
   </data>
   <data name="XPackView_TrialDescription" xml:space="preserve">
-    <value>Access to all X-Pack Enterprise features for 30 days, including Machine Learning, Graph, Alerting, Security, and others.
+    <value>Access to all X-Pack features for 30 days, including Machine Learning, Graph, Alerting, Security, and others.
     </value>
   </data>
   <data name="XPackView_BasicDescription" xml:space="preserve">
-    <value>Access to all free x-pack features without an expiry date on the license. 
+    <value>Access to all free X-Pack Basic features without an expiry date on the license. 
     </value>
   </data>
   <data name="XPackView_SubscriptionsLink" xml:space="preserve">
     <value>Full overview of licences and subscriptions</value>
   </data>
   <data name="XPackView_ManualUserConfigurationNeeded" xml:space="preserve">
-    <value>Elasticsearch system users need to be setup manually. Either you are not installing as a service that gets started after installation, or you've opted to start Elasticsearch manually when needed.</value>
+    <value>Elasticsearch built-in users need to be setup manually. Either you are not installing as a service that gets started after installation, or you've opted to start Elasticsearch manually when needed.</value>
   </data>
   <data name="XPackView_ManualUserConfigurationLink" xml:space="preserve">
     <value>How to setup users manually</value>
@@ -458,17 +455,19 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
 
 [b]Node name[/b]: The unique name given to this particular Elasticsearch node.
 
-[b]Node role[/b]: The type(s) of role(s) this node should have.  If no roles are assigned, then it will act as a coordinating node, and only route requests to other nodes in your cluster.
+[b]Roles[/b]: The type(s) of role(s) this node should have.  If no roles are assigned, then it will act as a coordinating node, and only route requests to other nodes in your cluster.
 
 [b]Memory[/b]: The amount of memory to allocate to the JVM heap for Elasticsearch.  The standard rule of thumb is to allocate 50% of available memory to the heap, but never exceed 30.5 GB, leaving the remaining 50% free to ensure there is enough for kernel file system caches.  The 30.5 GB limit is recommended in order to prevent the JVM from entering 64-bit address space, which will result in a performance degradation.
 
-[b]Lock memory[/b]: Windows will try to use as much memory as possible for file system caches and eagerly swap out unused application memory, possibly resulting in the Elasticsearch process being swapped, which is very bad for performance and node stability. By choosing to lock memory, Elasticsearch will leverage the native VirtualLock function in Windows, in an effort to keep the JVM in physical memory at all times.
+[b]Lock JVM memory[/b]: Windows will try to use as much memory as possible for file system caches and eagerly swap out unused application memory, possibly resulting in the Elasticsearch process being swapped, which is very bad for performance and node stability. By choosing to lock memory, Elasticsearch will leverage the native VirtualLock function in Windows, in an effort to keep the JVM in physical memory at all times.
 
 [b]Network host[/b]: By default, Elasticsearch binds to loopback addresses only (e.g. [b]127.0.0.1[/b]).  This is sufficient to run a single development node on a server. However, in order to communicate to form a cluster on other servers, your node will need to bind to a non-loopback address.
 
 [b]HTTP port[/b]: The port to communicate with Elasticsearch REST API over HTTP.
 
-[b]Transport port[/b]: The port to use for node-to-node communication over the Elasticsearch transport protocol.</value>
+[b]Transport port[/b]: The port to use for node-to-node communication over the Elasticsearch transport protocol.
+
+[b]Unicast Hosts[/b]: A collection of hosts (with optional ports) to use for unicast discovery, a process for discovering nodes within a cluster, as well as electing a master node.</value>
   </data>
   <data name="LocationsView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Locations Help</value>
@@ -490,20 +489,20 @@ It is a best practice to keep your logs, config, and data directories separate f
     <value>Installation Help</value>
   </data>
   <data name="MainWindow_Help" xml:space="preserve">
-    <value>Heya! Welcome the {0} Windows intaller.
+    <value>Heya! Welcome the {0} Windows Installer.
 
-This installer will walk you through various steps to help you configure and install {0} on your system.  To make things easier, we've gone ahead and pre-populated everything with all of the sensible defaults, but there are a few things you may want to change.</value>
+This installer will walk you through various steps to help you configure and install {0} on your system.  To make things easier, we've gone ahead and pre-populated everything with sensible defaults, but there are a few things you may want to change.</value>
     <comment>{0} = Product name</comment>
   </data>
   <data name="PluginsView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Plugin Help</value>
   </data>
   <data name="PluginsView_Elasticsearch_Help" xml:space="preserve">
-    <value>Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom mapping types, custom analyzers (in a more built-in fashion), custom discovery, and more.
+    <value>Plugins are a way to enhance the core Elasticsearch functionality.  They range from adding custom datatypes for mapping, custom analyzers (in a more built-in fashion), custom discovery, and more.
 
-We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins are downloaded at installation time.
+We've only listed the official Elasticsearch plugins here, but there are many more community plugins that can be installed manually. Plugins selected within the installer will be downloaded at installation time, so an internet connection must be available.
 
-It is common for many companies to set up a proxy through which resources will be downloaded from the internet. As such, you may need to specify the host name and port of a corporate proxy to allow the installer to successfully install plugins. Since official Elasticsearch plugins are installed from 
+It is common for many companies to set up a proxy through which resources will be downloaded from the internet. As such, you may need to specify the host name and port of a corporate proxy to allow the installer to successfully install plugins. Since official Elasticsearch plugins are installed from
 https://artifacts.elastic.co, a HTTPS proxy can be specified.</value>
   </data>
   <data name="XPackView_Elasticsearch_Help_Header" xml:space="preserve">
@@ -514,21 +513,22 @@ https://artifacts.elastic.co, a HTTPS proxy can be specified.</value>
 
 [b]License[/b]: This setting specifies the type of license to apply to X-Pack. 
 
-    A [b]Basic license[/b] is free and provides access only to a subset of X-Pack features. 
+    A [b]Basic license[/b] is free and provides access only to a subset of X-Pack features. A Basic license does not expire and you do not need to register it.
 
-    A [b]Trial license[/b] provides access to all of the X-Pack Enterprise features, including Machine Learning, Graph, Alerting, Security, amongst others.
+    A [b]Trial license[/b] provides access to all of the X-Pack features, including Machine Learning, Graph, Alerting, Security, amongst others. A Trial license is valid for 30 days after which time X-Pack will operate in a degraded mode. See https://www.elastic.co/guide/en/x-pack/{0}/license-expiration.html for further details.
 
-    Both Basic and Trial licenses applied are valid for 30 days. You can register to receive a free 1 year Basic license at https://register.elastic.co/ and get in touch if you'd like to request information on other license types at https://www.elastic.co/subscriptions.
+    Get in touch if you'd like further information on licenses and subscriptions at https://www.elastic.co/subscriptions.
 
 [b]Enable X-Pack Security[/b]: Whether X-Pack Security should be enabled on the node. Enabling X-Pack Security will require authentication credentials to communicate with the cluster.
 
-[b]Defer setting up users until later[/b]: Whether the built-in user roles should be set up as part of installation. Setting these users up requires a running cluster as the credentials are stored within an index in the cluster.
+[b]Defer setting up users until later[/b]: Whether the built-in users should be set up as part of installation. Setting up built-in users requires a running cluster as the credentials are stored within an index in the cluster.
 
 [b]elastic[/b]: The password for the built-in 'elastic' user account.
 
 [b]kibana[/b]: The password for the built-in 'kibana' user account.
 
 [b]logstash system[/b]: The password for the built-in 'logstash_system' user account.</value>
+    <comment>{0} = major minor version</comment>
   </data>
   <data name="ServiceView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Service Help</value>
@@ -636,37 +636,6 @@ Alternatively, you may choose to not install Elasticsearch as a service and run 
   </data>
   <data name="InstallOptions_UnicastHosts" xml:space="preserve">
     <value>A comma-separated list of hosts to use for unicast discovery</value>
-  </data>
-  <data name="SilentSetup_CommandLineOptions" xml:space="preserve">
-    <value>Options signal how and what routine the setup should run</value>
-  </data>
-  <data name="SilentSetup_CommandLineVariables" xml:space="preserve">
-    <value>Variables control the values used during (un)installation</value>
-  </data>
-  <data name="SilentSetup_Options" xml:space="preserve">
-    <value>Options</value>
-  </data>
-  <data name="SilentSetup_InstallVariables" xml:space="preserve">
-    <value>Install Variables</value>
-  </data>
-  <data name="SilentSetup_UninstallVariables" xml:space="preserve">
-    <value>Uninstall Variables</value>
-  </data>
-  <data name="SilentSetup_Description" xml:space="preserve">
-    <value>Installs Elasticsearch on Windows. Run without arguments for interactive setup or with command line options for silent setup.</value>
-  </data>
-  <data name="SilentSetup_Help" xml:space="preserve">
-    <value>Display help text and exit</value>
-  </data>
-  <data name="SilentSetup_AmbiguousFlags" xml:space="preserve">
-    <value>Can not start setup because of conflicting parameters e.g specifying /i and /u</value>
-  </data>
-  <data name="SilentSetup_Title" xml:space="preserve">
-    <value>Elasticsearch {0} Installer</value>
-    <comment>{0} = Installer Version</comment>
-  </data>
-  <data name="SilentSetup__Uninstall" xml:space="preserve">
-    <value>Uninstall Elasticsearch</value>
   </data>
   <data name="LocationsView_KibanaCustomLocationsCheckBox" xml:space="preserve">
     <value>Place logs in the same directory</value>
@@ -847,16 +816,16 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   <data name="XPackView_OpenLicensesAndSubscriptions" xml:space="preserve">
     <value>https://www.elastic.co/subscriptions</value>
   </data>
-  <data name="XPackView_RegisterBasicLicense" xml:space="preserve">
-    <value>https://register.elastic.co/</value>
-  </data>
-  <data name="XPackView_RegisterBasicLicenseLink" xml:space="preserve">
-    <value>Register for a free Basic license </value>
-  </data>
   <data name="PluginsView_SetHttpsProxy_Message" xml:space="preserve">
     <value>Configure a HTTPS proxy through which to download plugins as part of installation. A proxy can be specified in the form of host or host:port. If no port is specified, defaults to using port 443.</value>
   </data>
   <data name="PluginsView_SetHttpsProxy_Title" xml:space="preserve">
     <value>HTTPS proxy</value>
+  </data>
+  <data name="NoticeView_ReadMoreOnXPackOpening" xml:space="preserve">
+    <value>Read more about the opening of X-Pack</value>
+  </data>
+  <data name="NoticeView_XPackIncludedByDefault" xml:space="preserve">
+    <value>is now included by default</value>
   </data>
 </root>

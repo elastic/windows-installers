@@ -49,7 +49,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.BindCommand(ViewModel, vm => vm.OpenManualUserConfiguration, v => v.OpenManualUserConfigurationLink, nameof(OpenManualUserConfigurationLink.Click));
 
 			this.ViewModel.OpenLicensesAndSubscriptions.Subscribe(x => Process.Start(ViewResources.XPackView_OpenLicensesAndSubscriptions));
-			this.ViewModel.RegisterBasicLicense.Subscribe(x => Process.Start(ViewResources.XPackView_RegisterBasicLicense));
 
 			var majorMinor = $"{this.ViewModel.CurrentVersion.Major}.{this.ViewModel.CurrentVersion.Minor}";
 			this.ViewModel.OpenManualUserConfiguration.Subscribe(x => Process.Start(string.Format(ViewResources.XPackView_ManualUserConfiguration, majorMinor)));

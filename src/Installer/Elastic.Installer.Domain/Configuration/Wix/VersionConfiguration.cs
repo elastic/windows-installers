@@ -6,8 +6,11 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 {
 	public class VersionConfiguration
 	{
-		public SemVersion PreviousVersion { get; }
-		public SemVersion InstallerVersion { get; }
+		/// <summary> The version we are upgrading from</summary>
+		public SemVersion UpgradeFromVersion { get; }
+		
+		/// <summary> The version that is currently being installed</summary>
+		public SemVersion CurrentVersion { get; }
 
 		public VersionChange VersionChange { get; } 
 		public InstallationDirection InstallationDirection { get; }
@@ -20,8 +23,8 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 		public VersionConfiguration(IWixStateProvider wixStateProvider, bool alreadyInstalled)
 		{
 			this.AlreadyInstalled = alreadyInstalled;
-			var c = this.InstallerVersion = wixStateProvider.InstallerVersion;
-			var e = this.PreviousVersion = wixStateProvider.PreviousVersion;
+			var c = this.CurrentVersion = wixStateProvider.CurrentVersion;
+			var e = this.UpgradeFromVersion = wixStateProvider.UpgradeFromVersion;
 
 			var v = New;
 			var d = None;

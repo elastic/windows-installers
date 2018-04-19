@@ -4,7 +4,10 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 {
 	public interface IWixStateProvider
 	{
-		SemVersion PreviousVersion { get; }
-		SemVersion InstallerVersion { get; }
+		/// <summary> The version we are upgrading from </summary>
+		SemVersion UpgradeFromVersion { get; }
+		
+		/// <summary> The version that is currently being installed </summary>
+		SemVersion CurrentVersion { get; }
 	}
 }
