@@ -281,12 +281,6 @@ namespace Elastic.Installer.UI.Elasticsearch
 			this.ViewModel.ShowLicenseBlurb.Subscribe(async x =>
 			{
 				await ShowLicenseDialog();
-
-				//await this.ShowMessageAsync(
-				//	ViewResources.MainWindow_LicenseHeader,
-				//	ViewResources.MainWindow_LicenseInformation,
-				//	MessageDialogStyle.Affirmative,
-				//	new MetroDialogSettings()).ConfigureAwait(true);
 			});
 
 			this.ViewModel.ShowCurrentStepErrors.Subscribe(async x =>
