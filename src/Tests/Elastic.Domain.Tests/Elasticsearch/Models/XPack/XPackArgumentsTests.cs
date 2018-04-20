@@ -27,7 +27,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 		
 		[Fact] void BasicWithMultiplePluginsContainingXPackIgnoresXPack() => 
 			Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Basic))
-			.Argument(nameof(PluginsModel.Plugins), "x-pack, analysis-icu", "analysis-icu")
+			.Argument(nameof(PluginsModel.Plugins), "x-pack,analysis-icu", "analysis-icu")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
@@ -36,7 +36,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 		
 		[Fact] void TrialWithMultiplePluginsContainingXPack() => 
 			Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Trial))
-			.Argument(nameof(PluginsModel.Plugins), "x-pack, analysis-icu", "analysis-icu")
+			.Argument(nameof(PluginsModel.Plugins), "x-pack,analysis-icu", "analysis-icu")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Trial);
@@ -45,7 +45,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 		
 		[Fact] void BasicWithMultiplePluginsNotContainingXPack() => 
 			Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Basic), "Basic")
-			.Argument(nameof(PluginsModel.Plugins), "analysis-icu, analysis-phonetic")
+			.Argument(nameof(PluginsModel.Plugins), "analysis-icu,analysis-phonetic")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Basic);
@@ -54,7 +54,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 		
 		[Fact] void TrialWithMultiplePluginsNotContainingXPack() => 
 			Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Trial), "Trial")
-			.Argument(nameof(PluginsModel.Plugins), "analysis-icu, analysis-phonetic")
+			.Argument(nameof(PluginsModel.Plugins), "analysis-icu,analysis-phonetic")
 			.Assert(m =>
 		{
 			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Trial);

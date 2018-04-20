@@ -57,7 +57,7 @@ namespace Elastic.Installer.Domain.Model.Kibana
 				vm => vm.LocationsModel.InstallDir,
 				vm => vm.LocationsModel.ConfigDirectory
 			);
-			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);
+			this.PluginsModel = new PluginsModel(pluginStateProvider, versionConfig.CurrentVersion, pluginDependencies);
 
 			var isUpgrade = versionConfig.InstallationDirection == InstallationDirection.Up;
 			var observeHost = this.WhenAnyValue(x => x.ConfigurationModel.HostName, x => x.ConfigurationModel.HttpPort,

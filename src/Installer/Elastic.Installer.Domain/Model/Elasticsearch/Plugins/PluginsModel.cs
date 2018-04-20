@@ -9,6 +9,7 @@ using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Model.Base.Plugins;
 using Elastic.Installer.Domain.Properties;
 using ReactiveUI;
+using Semver;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 {
@@ -20,8 +21,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 		public const int HttpsPortMinimum = 443;
 		public const int PortMaximum = 65535;
 		
-		public PluginsModel(IPluginStateProvider pluginStateProvider, IObservable<Tuple<bool, string, string>> pluginDependencies)
-			: base(pluginStateProvider)
+		public PluginsModel(
+			IPluginStateProvider pluginStateProvider, 
+			SemVersion version, 
+			IObservable<Tuple<bool, string, string>> pluginDependencies)
+			: base(pluginStateProvider, version)
 		{
 			EnvironmentVariables = new Dictionary<string, string>
 			{

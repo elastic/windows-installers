@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 	public abstract class PluginStateProviderBase : IPluginStateProvider
 	{
 		private readonly string _product;
-		private readonly IFileSystem _fileSystem;
+		protected readonly IFileSystem FileSystem;
 
 		protected readonly ISession Session;
 
@@ -32,7 +32,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 		{
 			this._product = product;
 			this.Session = session;
-			this._fileSystem = fileSystem;
+			this.FileSystem = fileSystem;
 		}
 
 		public IList<string> InstalledPlugins(string installDirectory, IDictionary<string, string> environmentVariables = null)
@@ -40,9 +40,9 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			var pluginsDirectory = Path.Combine(installDirectory, "plugins");
 			var pluginScript = PluginScript(installDirectory);
 
-			if (!this._fileSystem.File.Exists(pluginScript) ||
-				!this._fileSystem.Directory.Exists(pluginsDirectory) || 
-				!this._fileSystem.Directory.EnumerateFileSystemEntries(pluginsDirectory).Any())
+			if (!this.FileSystem.File.Exists(pluginScript) ||
+				!this.FileSystem.Directory.Exists(pluginsDirectory) || 
+				!this.FileSystem.Directory.EnumerateFileSystemEntries(pluginsDirectory).Any())
 				return new List<string>();
 			
 			var command = "list";
@@ -75,7 +75,7 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 
 		public abstract DataReceivedEventHandler CreateInstallHandler(int perDownloadIncrement, string plugin);
 
-		public void Install(int pluginTicks, string installDirectory, string configDirectory, 
+		public virtual void Install(int pluginTicks, string installDirectory, string configDirectory, 
 			string plugin, string[] additionalArguments = null, IDictionary<string, string> environmentVariables = null)
 		{
 			var downloadingTicks = pluginTicks * 0.9;

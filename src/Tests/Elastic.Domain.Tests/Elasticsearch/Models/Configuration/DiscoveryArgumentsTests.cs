@@ -16,10 +16,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 			m.ConfigurationModel.UnicastNodes.Should().NotBeEmpty().And.HaveCount(1).And.Contain(v);
 		});
 
-		[Fact] void UnicastNodesMultipe() => Argument(
+		[Fact] void UnicastNodesMultiple() => Argument(
 			nameof(ConfigurationModel.UnicastNodes),
 			"my-domain:9200,,,  192.3.3.1:8080",
-			"my-domain:9200, 192.3.3.1:8080",
+			"my-domain:9200,192.3.3.1:8080",
 			(m, v) =>
 		{
 			m.ConfigurationModel.UnicastNodes.Should().NotBeEmpty().And.HaveCount(2).And.Contain("my-domain:9200");
