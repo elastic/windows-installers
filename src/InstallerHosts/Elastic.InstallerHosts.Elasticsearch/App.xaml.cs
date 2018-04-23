@@ -22,6 +22,10 @@ namespace Elastic.InstallerHosts.Elasticsearch
 			var state = InstallationModelTester.ValidPreflightChecks(s => s
 				//.Wix(current: "6.3.0", upgradeFrom: "6.2.3")
 				.Wix(current: "6.3.0")
+				.Elasticsearch(es=>es
+					.EsHomeMachineVariable(@"C:\elasticsearch")
+					.EsConfigMachineVariable(@"C:\elasticsearch\config")
+				)
 				.ServicePreviouslyInstalled()
 			);
 			var model = state.InstallationModel;

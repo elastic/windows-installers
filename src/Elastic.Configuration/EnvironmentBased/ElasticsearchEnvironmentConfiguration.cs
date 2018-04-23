@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using Elastic.Configuration.Extensions;
 
 namespace Elastic.Configuration.EnvironmentBased
 {
@@ -65,6 +66,30 @@ namespace Elastic.Configuration.EnvironmentBased
 
 				var homeDir = this.HomeDirectory;
 				return string.IsNullOrEmpty(homeDir) ? null : Path.Combine(homeDir, "config");
+			}
+		}
+
+		public bool ConfigDirectoryIsSpecifiedAndSubPathOfEsHome
+		{
+			get
+			{
+				var esHome = new[]
+				{
+					StateProvider.HomeDirectoryProcessVariable,
+					StateProvider.HomeDirectoryUserVariable,
+					StateProvider.HomeDirectoryMachineVariable,
+				}.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
+
+				if (string.IsNullOrWhiteSpace(esHome)) return false;
+				
+				var config = new []
+				{
+					StateProvider.ConfigDirectoryProcessVariable,
+					StateProvider.ConfigDirectoryUserVariable,
+					StateProvider.ConfigDirectoryMachineVariable,
+				}.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
+				
+				return !string.IsNullOrWhiteSpace(config) && config.IsSubPathOf(esHome);
 			}
 		}
 

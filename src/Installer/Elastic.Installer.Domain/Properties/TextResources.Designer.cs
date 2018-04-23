@@ -494,6 +494,16 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The previous ES_PATH_CONF or ES_CONFIG appears to be a subfolder 
+        ///of ES_HOME please move these before starting the installation..
+        /// </summary>
+        public static string NoticeModelValidator_ConfigDirectoryIsSpecifiedAndSubPathOfEsHome {
+            get {
+                return ResourceManager.GetString("NoticeModelValidator_ConfigDirectoryIsSpecifiedAndSubPathOfEsHome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A higher version is already installed.  In order to downgrade, you must uninstall this version first.
         ///PLEASE NOTE: an uninstall will always remove the data folder be sure you move it elsewhere if you need to keep it..
         /// </summary>

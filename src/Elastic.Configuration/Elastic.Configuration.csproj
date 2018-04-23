@@ -47,6 +47,7 @@
     <Compile Include="EnvironmentBased\Java\JavaEnvironmentStateProvider.cs" />
     <Compile Include="EnvironmentBased\KibanaEnvironmentStateProvider.cs" />
     <Compile Include="Extensions\ExceptionEventLogExtensions.cs" />
+    <Compile Include="Extensions\StringPathExtensions.cs" />
     <Compile Include="FileBased\JvmOpts\LocalJvmOptionsConfiguration.cs" />
     <Compile Include="FileBased\Yaml\ElasticsearchYamlConfiguration.cs" />
     <Compile Include="FileBased\Yaml\ElasticsearchYamlSettings.cs" />

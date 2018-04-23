@@ -249,6 +249,10 @@ Java won't used compressed pointers.</value>
     <value>The elasticsearch.yml file we found in ES_PATH_CONF appears to be 
 invalid  and prevented seeding current values.</value>
   </data>
+  <data name="NoticeModelValidator_ConfigDirectoryIsSpecifiedAndSubPathOfEsHome" xml:space="preserve">
+    <value>The previous ES_PATH_CONF or ES_CONFIG appears to be a subfolder 
+of ES_HOME please move these before starting the installation.</value>
+  </data>
   <data name="NoticeModel_ExistingVersion" xml:space="preserve">
     <value>Previously installed version: {0}</value>
   </data>
