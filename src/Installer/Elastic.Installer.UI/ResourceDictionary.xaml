@@ -130,4 +130,23 @@
     </Setter>
   </Style>
 
+  <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="true">
+        <Setter Property="Background" Value="{DynamicResource LinkColorBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource WindowTitleColorBrush}"/>
+      </Trigger>
+      <Trigger Property="IsEnabled" Value="False">
+        <Setter Property="Foreground" Value="LightGray" />
+      </Trigger>
+      <Trigger Property="IsEnabled" Value="True">
+        <Setter Property="Cursor" Value="Hand" />
+      </Trigger>
+    </Style.Triggers>
+    <Setter Property="Foreground" Value="{DynamicResource LinkColorBrush}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="TextDecorations" Value="Underline" />
+    <Setter Property="BaselineAlignment" Value="Center" />
+    <Setter Property="OverridesDefaultStyle" Value="True"></Setter>
+  </Style>
 </ResourceDictionary>

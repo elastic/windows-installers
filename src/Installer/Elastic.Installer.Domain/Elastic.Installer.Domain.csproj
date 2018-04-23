@@ -135,6 +135,7 @@
     <Compile Include="Model\Kibana\Plugins\PluginsModelValidator.cs" />
     <Compile Include="Model\ModelArgument.cs" />
     <Compile Include="Model\ModelArgumentParser.cs" />
+    <Compile Include="Model\Shared\LicenseModel.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductGuids.cs" />
     <Compile Include="Properties\TextResources.Designer.cs">

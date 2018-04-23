@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="Elastic.Installer.UI.Shared.LicenseDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:resx="clr-namespace:Elastic.Installer.UI.Properties"
+             xmlns:shared="clr-namespace:Elastic.Installer.Domain.Model.Shared;assembly=Elastic.Installer.Domain"
+             d:DesignHeight="300"
+             d:DesignWidth="600"
+             d:DataContext="{d:DesignInstance d:Type=shared:LicenseModel }"
+             mc:Ignorable="d">
+  <Grid Margin="0 10 0 0" FocusManager.FocusedElement="{Binding ElementName=OkButton}" Grid.IsSharedSizeScope="True">
+
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <TextBlock Grid.Row="0"
+               Grid.Column="0"
+               Text="{x:Static resx:ViewResources.MainWindow_LicenseInformation}"
+               TextWrapping="Wrap">
+      
+      <Hyperlink Command="{Binding OpenLicense}">
+        <TextBlock Text="{x:Static resx:ViewResources.MainWindow_LicenseName}"/>
+      </Hyperlink>
+    </TextBlock>
+
+    <Button x:Name="OkButton"
+            Grid.Row="1"
+            MinWidth="80"
+            Margin="8 8 0 8"
+            HorizontalAlignment="Right"
+            Command="{Binding Close}"
+            Content="OK" />
+  </Grid>
+</UserControl>

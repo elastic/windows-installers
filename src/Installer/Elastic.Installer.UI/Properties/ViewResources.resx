@@ -347,9 +347,7 @@
     <value>License Information</value>
   </data>
   <data name="MainWindow_LicenseInformation" xml:space="preserve">
-    <value>Except as otherwise noted, Elasticsearch is distributed and licensed 
-under the Apache 2.0 License.
-X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
+    <value>Except as otherwise noted, Elasticsearch is distributed and licensed under the </value>
   </data>
   <data name="MainWindow_ValidationError" xml:space="preserve">
     <value>Validation Error</value>
@@ -827,5 +825,13 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   </data>
   <data name="NoticeView_XPackIncludedByDefault" xml:space="preserve">
     <value>is now included by default</value>
+  </data>
+  <data name="MainWindow_LicenseLink" xml:space="preserve">
+    <value>https://github.com/elastic/{0}/blob/v{1}/licenses/ELASTIC-LICENSE.txt</value>
+    <comment>{0} = lowercase product name
+{1} = version</comment>
+  </data>
+  <data name="MainWindow_LicenseName" xml:space="preserve">
+    <value>Elastic License</value>
   </data>
 </root>
