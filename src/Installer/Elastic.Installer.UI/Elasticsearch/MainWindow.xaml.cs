@@ -35,7 +35,9 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
 using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
+using Elastic.Installer.Domain.Model.Shared;
 using Elastic.Installer.UI.Elasticsearch.Steps;
+using Elastic.Installer.UI.Shared;
 using Elastic.Installer.UI.Shared.Steps;
 using FluentValidation.Internal;
 using Semver;
@@ -278,11 +280,7 @@ namespace Elastic.Installer.UI.Elasticsearch
 
 			this.ViewModel.ShowLicenseBlurb.Subscribe(async x =>
 			{
-				await this.ShowMessageAsync(
-					ViewResources.MainWindow_LicenseHeader,
-					ViewResources.MainWindow_LicenseInformation,
-					MessageDialogStyle.Affirmative,
-					new MetroDialogSettings()).ConfigureAwait(true);
+				await ShowLicenseDialog();
 			});
 
 			this.ViewModel.ShowCurrentStepErrors.Subscribe(async x =>
@@ -350,6 +348,18 @@ namespace Elastic.Installer.UI.Elasticsearch
 			this.ViewModel.ClosingModel.Installed = ClosingResult.Preempted;
 			this.ViewModel.ClosingModel.PrerequisiteFailures = this.ViewModel.PrerequisiteFailures;
 			this.ViewModel.ClosingModel.PrerequisiteFailureMessages = this.ViewModel.PrerequisiteFailures.Select(v => v.ErrorMessage);
+		}
+
+		private async Task ShowLicenseDialog()
+		{
+			var customDialog = new CustomDialog { Title = ViewResources.MainWindow_LicenseHeader };
+			var licenseModel = new LicenseModel();
+			licenseModel.OpenLicense.Subscribe(x => 
+				Process.Start(string.Format(ViewResources.MainWindow_LicenseLink, "elasticsearch", _currentVersion)));
+			licenseModel.Close.Subscribe(async x => await this.HideMetroDialogAsync(customDialog));
+			customDialog.Content = new LicenseDialog { DataContext = licenseModel };
+
+			await this.ShowMetroDialogAsync(customDialog);
 		}
 
 		private async Task<IObservable<ClosingResult>> InstallAsync()

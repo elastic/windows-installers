@@ -151,6 +151,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Shared\LicenseDialog.xaml.cs">
+      <DependentUpon>LicenseDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shared\Steps\ServiceView.xaml.cs">
       <DependentUpon>ServiceView.xaml</DependentUpon>
     </Compile>
@@ -221,6 +224,10 @@
       <Paket>True</Paket>
     </Page>
     <Page Include="Elasticsearch\Steps\ConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Shared\LicenseDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
