@@ -112,16 +112,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 				{
 					IsUninstalling = uninstalling,
 					IsRollback = rollback,
-					IsInstalled = uninstalling,
-					IsInstalling = !uninstalling
 				};
 			}
 			else
 			{
 				this.SessionState.IsUninstalling = uninstalling;
 				this.SessionState.IsRollback = rollback;
-				this.SessionState.IsInstalled = uninstalling;
-				this.SessionState.IsInstalling = !uninstalling;
 				if (sessionVariables != null)
 				{
 					foreach (var sessionVariable in sessionVariables)
