@@ -134,7 +134,7 @@
     <Style.Triggers>
       <Trigger Property="IsMouseOver" Value="true">
         <Setter Property="Background" Value="{DynamicResource LinkColorBrush}"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{DynamicResource WindowTitleColorBrush}"/>
       </Trigger>
       <Trigger Property="IsEnabled" Value="False">
         <Setter Property="Foreground" Value="LightGray" />
