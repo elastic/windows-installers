@@ -51,6 +51,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				nameof(JavaMisconfigured),
 				nameof(Using32BitJava),
 				nameof(BadElasticsearchYamlFile),
+				nameof(HasEsHomeVariableButNoPreviousInstallation),
 				nameof(ConfigDirectoryIsSpecifiedAndSubPathOfEsHome)
 			})
 			.ToArray();
@@ -250,6 +251,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			set => this.RaiseAndSetIfChanged(ref configDirectoryIsSpecifiedAndSubPathOfEsHome, value);
 		}
 		
+		bool hasEsHomeVariableButNoPreviousInstallation;
+		public bool HasEsHomeVariableButNoPreviousInstallation
+		{
+			get => hasEsHomeVariableButNoPreviousInstallation;
+			set => this.RaiseAndSetIfChanged(ref hasEsHomeVariableButNoPreviousInstallation, value);
+		}
+		
 		bool using32BitJava;
 		public bool Using32BitJava
 		{
@@ -270,6 +278,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			this.JavaInstalled = JavaConfiguration.JavaInstalled;
 			this.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome = ElasticsearchEnvironmentConfiguration.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome;
+
+			this.HasEsHomeVariableButNoPreviousInstallation = 
+				!this.Installed && !string.IsNullOrWhiteSpace(ElasticsearchEnvironmentConfiguration.HomeDirectoryFromEnvironmentVariable);
+
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;
 			this.Using32BitJava = JavaConfiguration.Using32BitJava;
 			this.BadElasticsearchYamlFile = _yamlConfiguration.FoundButNotValid;

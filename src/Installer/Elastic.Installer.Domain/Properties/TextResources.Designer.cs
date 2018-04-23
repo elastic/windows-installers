@@ -504,6 +504,17 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An ES_HOME environment variable exists but no previous installation was detected.
+        ///The MSI does not support upgrading from a previous zip based deploy.
+        ///.
+        /// </summary>
+        public static string NoticeModelValidator_HasEsHomeVariableButNoPreviousInstallation {
+            get {
+                return ResourceManager.GetString("NoticeModelValidator_HasEsHomeVariableButNoPreviousInstallation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A higher version is already installed.  In order to downgrade, you must uninstall this version first.
         ///PLEASE NOTE: an uninstall will always remove the data folder be sure you move it elsewhere if you need to keep it..
         /// </summary>

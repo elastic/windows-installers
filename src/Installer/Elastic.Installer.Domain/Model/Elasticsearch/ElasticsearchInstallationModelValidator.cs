@@ -10,6 +10,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		public static readonly string AlreadyInstalled = TextResources.NoticeModelValidator_AlreadyInstalled;
 		public static readonly string HigherVersionInstalled = TextResources.NoticeModelValidator_HigherVersionInstalled;
 		public static readonly string ConfigDirectoryIsSpecifiedAndSubPathOfEsHome = TextResources.NoticeModelValidator_ConfigDirectoryIsSpecifiedAndSubPathOfEsHome;
+		public static readonly string HasEsHomeVariableButNoPreviousInstallation = TextResources.NoticeModelValidator_HasEsHomeVariableButNoPreviousInstallation;
 		public static readonly string JavaInstalled = TextResources.NoticeModelValidator_JavaInstalled;
 		public static readonly string JavaMisconfigured = TextResources.NoticeModelValidator_JavaMisconfigured;
 		public static readonly string Using32BitJava = TextResources.NoticeModelValidator_Using32BitJava;
@@ -27,6 +28,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			RuleFor(vm => vm.BadElasticsearchYamlFile).Must(b => !b).WithMessage(BadElasticsearchYamlFile);
 			
 			RuleFor(vm => vm.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome).Must(b => !b).WithMessage(ConfigDirectoryIsSpecifiedAndSubPathOfEsHome);
+
+			RuleFor(vm => vm.HasEsHomeVariableButNoPreviousInstallation).Must(b => !b).WithMessage(HasEsHomeVariableButNoPreviousInstallation);
 
 			RuleFor(vm => vm.SameVersionAlreadyInstalled)
 				.Must(b => !b)
