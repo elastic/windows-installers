@@ -33,7 +33,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 		protected override void InitializeBindings()
 		{
 			this.Bind(ViewModel, vm => vm.ConfigureLocations, v => v.CustomLocationsRadioButton.IsChecked);
-			this.Bind(ViewModel, vm => vm.PlaceWritableLocationsInSamePath, v => v.CustomLocationsCheckBox.IsChecked);
 
 			this.WhenAnyValue(view => view.ViewModel.ConfigureLocations)
 				.Subscribe(x =>
@@ -42,10 +41,9 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					//this.InstallDirectoryLabel.IsEnabled = x;
 					this.InstallDirectoryTextBox.IsEnabled = x;
 					this.InstallDirectoryBrowseButton.IsEnabled = x;
-					this.CustomLocationsCheckBox.IsEnabled = x;
 				});
 
-			this.WhenAnyValue(view => view.ViewModel.ConfigureAllLocations)
+			this.WhenAnyValue(view => view.ViewModel.ConfigureLocations)
 				.Subscribe(x =>
 				{
 					this.DataDirectoryLabel.IsEnabled = x;
@@ -64,14 +62,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.Bind(ViewModel, vm => vm.ConfigDirectory, v => v.ConfigDirectoryTextBox.Text);
 			this.Bind(ViewModel, vm => vm.LogsDirectory, v => v.LogsDirectoryTextBox.Text);
 
-			this.InstallDirectoryTextBox.Events().TextChanged
-				.Subscribe(e =>
-				{
-					if (ViewModel.PlaceWritableLocationsInSamePath && this.CustomLocationsCheckBox.IsChecked.HasValue)
-						ViewModel.PlaceWritableLocationsInSamePath = this.CustomLocationsCheckBox.IsChecked.Value;
-				});
-			this.CustomLocationsCheckBox.Events().Click
-				.Subscribe(e => ViewModel.PlaceWritableLocationsInSamePath = this.CustomLocationsCheckBox.IsChecked.GetValueOrDefault());
 			this.InstallDirectoryBrowseButton.Events().Click
 				.Subscribe(folder => this.BrowseForFolder(ViewModel.InstallDir, (result) => { ViewModel.InstallDir = result; }));
 			this.DataDirectoryBrowseButton.Events().Click

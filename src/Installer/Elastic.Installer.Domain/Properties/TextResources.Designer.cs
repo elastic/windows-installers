@@ -235,20 +235,20 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} directory must be a sub folder of {1} because the place in same folder flag was also set..
-        /// </summary>
-        public static string LocationsModelValidator_DirectoryMustBeChildOf {
-            get {
-                return ResourceManager.GetString("LocationsModelValidator_DirectoryMustBeChildOf", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} directory must be specified..
         /// </summary>
         public static string LocationsModelValidator_DirectoryMustBeSpecified {
             get {
                 return ResourceManager.GetString("LocationsModelValidator_DirectoryMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} directory can not be a sub folder of the installation directory.
+        /// </summary>
+        public static string LocationsModelValidator_DirectoryMustNotBeChildOf {
+            get {
+                return ResourceManager.GetString("LocationsModelValidator_DirectoryMustNotBeChildOf", resourceCulture);
             }
         }
         

@@ -160,9 +160,9 @@ Java won't used compressed pointers.</value>
     <value>{0} directory must be specified.</value>
     <comment>{0} = Directory Name</comment>
   </data>
-  <data name="LocationsModelValidator_DirectoryMustBeChildOf" xml:space="preserve">
-    <value>{0} directory must be a sub folder of {1} because the place in same folder flag was also set.</value>
-    <comment>{0} = Directory Name, {1} = Installation Directory</comment>
+  <data name="LocationsModelValidator_DirectoryMustNotBeChildOf" xml:space="preserve">
+    <value>{0} directory can not be a sub folder of the installation directory</value>
+    <comment>{0} = Directory Name</comment>
   </data>
   <data name="LocationsModelValidator_DirectoryMustNotBeRelative" xml:space="preserve">
     <value>{0} directory must not be relative.</value>

@@ -31,36 +31,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 				step.ConfigureLocations.Should().BeFalse();
 			});
 
-		[Fact] void ConfigureAllLocationsShouldBeFalse() => this._model
-			.OnStep(m => m.LocationsModel, step =>
-			{
-				step.ConfigureAllLocations.Should().BeFalse();
-			});
-
-		[Fact] void ConfigureAllIsReactive() => this._model 
-			//When setting configure locations ConfigureAllLocations is also set
-			.OnStep(m => m.LocationsModel, step =>
-			{
-				var allLocations = false;
-				step.WhenAnyValue(vm => vm.ConfigureAllLocations).Subscribe(b => allLocations = b);
-				step.ConfigureLocations = true;
-				allLocations.Should().BeTrue();
-			})
-			//When setting PlaceWritableLocationsInSamePath however we are no longer configuring all locations
-			.OnStep(m => m.LocationsModel, step =>
-			{
-				var allLocations = true;
-				step.WhenAnyValue(vm => vm.ConfigureAllLocations).Subscribe(b => allLocations = b);
-				step.PlaceWritableLocationsInSamePath = true;
-				allLocations.Should().BeFalse();
-			});
 
 		[Fact] void UpdatingInstallDirectoryShouldSetConfigureLocations() => this._model
 			.OnStep(m => m.LocationsModel, step =>
 			{
 				step.InstallDir = "C:\\Elasticsearch";
 				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeTrue();
 			});
 
 		[Fact] void UpdatingDataDirectoryShouldBothFlags() => this._model
@@ -68,7 +44,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			{
 				step.DataDirectory = "C:\\Elasticsearch";
 				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeTrue();
 			});
 
 		[Fact] void UpdatingConfDirectoryShouldBothFlags() => this._model
@@ -76,39 +51,19 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			{
 				step.ConfigDirectory = "C:\\Elasticsearch";
 				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeTrue();
-			});
-
-		[Fact] void UpdatingLogsDirectoryShouldBothFlags() => this._model
-			.OnStep(m => m.LocationsModel, step =>
-			{
-				step.LogsDirectory = "C:\\Elasticsearch";
-				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeTrue();
-			})
-			.OnStep(m => m.LocationsModel, step =>
-			{
-				step.PlaceWritableLocationsInSamePath = true;
-				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeFalse();
-				step.LogsDirectory.Should().NotBe("C:\\Elasticsearch");
 			});
 
 		[Fact] void UnsettingConfigureLocationsResets() => this._model
 			.OnStep(m => m.LocationsModel, step =>
 			{
 				step.LogsDirectory = "C:\\Elasticsearch";
-				step.PlaceWritableLocationsInSamePath = true;
 				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeFalse();
 			})
 			.OnStep(m => m.LocationsModel, step =>
 			{
 				step.ConfigureLocations = false;
 				step.LogsDirectory.Should().NotBe("C:\\Elasticsearch");
-				step.ConfigureAllLocations.Should().BeFalse();
 				step.ConfigureLocations.Should().BeFalse();
-				step.PlaceWritableLocationsInSamePath.Should().BeFalse();
 			});
 
 	}

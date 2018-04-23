@@ -42,19 +42,18 @@
       <TextBox x:Name="InstallDirectoryTextBox" IsReadOnly="True" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="5,0,5,0" />
       <Button x:Name="InstallDirectoryBrowseButton" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_InstallDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
 
-      <CheckBox x:Name="CustomLocationsCheckBox" Grid.Row="2" Grid.ColumnSpan="3" Content="{x:Static resx:ViewResources.LocationsView_ElasticsearchCustomLocationsCheckBox}" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontWeight="SemiBold" Margin="5,0,0,0"/>
 
-      <Label x:Name="DataDirectoryLabel" Grid.Row="3" Grid.Column="0" Content="{x:Static resx:ViewResources.LocationsView_DataDirectoryLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-      <TextBox x:Name="DataDirectoryTextBox"  IsReadOnly="True" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="0,0,5,0" />
-      <Button x:Name="DataDirectoryBrowseButton" Grid.Row="3" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_DataDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
+      <Label x:Name="DataDirectoryLabel" Grid.Row="2" Grid.Column="0" Content="{x:Static resx:ViewResources.LocationsView_DataDirectoryLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+      <TextBox x:Name="DataDirectoryTextBox"  IsReadOnly="True" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="0,0,5,0" />
+      <Button x:Name="DataDirectoryBrowseButton" Grid.Row="2" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_DataDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
 
-      <Label x:Name="ConfigDirectoryLabel" Grid.Row="4" Grid.Column="0" Content="{x:Static resx:ViewResources.LocationsView_ConfigDirectoryLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
-      <TextBox x:Name="ConfigDirectoryTextBox"  IsReadOnly="True" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="0,0,5,0" />
-      <Button x:Name="ConfigDirectoryBrowseButton" Grid.Row="4" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_ConfigDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
+      <Label x:Name="ConfigDirectoryLabel" Grid.Row="3" Grid.Column="0" Content="{x:Static resx:ViewResources.LocationsView_ConfigDirectoryLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <TextBox x:Name="ConfigDirectoryTextBox"  IsReadOnly="True" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="0,0,5,0" />
+      <Button x:Name="ConfigDirectoryBrowseButton" Grid.Row="3" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_ConfigDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
 
-      <Label x:Name="LogsDirectoryLabel" Grid.Row="5" Grid.Column="0" Content="{x:Static resx:ViewResources.LocationsView_LogsDirectoryLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-      <TextBox x:Name="LogsDirectoryTextBox"  IsReadOnly="True" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="0,0,5,0" />
-      <Button x:Name="LogsDirectoryBrowseButton" Grid.Row="5" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_LogsDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
+      <Label x:Name="LogsDirectoryLabel" Grid.Row="4" Grid.Column="0" Content="{x:Static resx:ViewResources.LocationsView_LogsDirectoryLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+      <TextBox x:Name="LogsDirectoryTextBox"  IsReadOnly="True" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" Margin="0,0,5,0" />
+      <Button x:Name="LogsDirectoryBrowseButton" Grid.Row="4" Grid.Column="2" Content="{x:Static resx:ViewResources.LocationsView_LogsDirectoryBrowseButton}" Height="30" VerticalAlignment="Center" />
 
 
     </Grid>
