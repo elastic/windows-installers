@@ -8,6 +8,7 @@ open Fake
 open Fake.FileHelper
 
 module Paths =
+    open System
 
     let BuildDir = "./build/"
     let ToolsDir = BuildDir @@ "tools/"
@@ -25,9 +26,10 @@ module Paths =
 
     let ArtifactDownloadsUrl = "https://artifacts.elastic.co/downloads"
 
-    let StagingDownloadsUrl product version hash = 
-        sprintf "https://staging.elastic.co/%s-%s/downloads/%s/%s-%s.msi" 
-            version hash product product version
+    let StagingDownloadsUrl product versionNumber hash (fullVersion:string) = 
+        if (fullVersion.EndsWith("snapshot", StringComparison.OrdinalIgnoreCase))
+        then sprintf "https://snapshots.elastic.co/%s-%s/downloads/%s/%s-%s.msi" versionNumber hash product product fullVersion
+        else sprintf "https://staging.elastic.co/%s-%s/downloads/%s/%s-%s.msi" versionNumber hash product product fullVersion
 
 module Products =
     open Paths
@@ -100,7 +102,7 @@ module Products =
             | Released ->
                 sprintf "%s/%s/%s-%s.msi" ArtifactDownloadsUrl this.Name this.Name version.FullVersion 
             | BuildCandidate hash ->
-                StagingDownloadsUrl this.Name version.FullVersion hash
+                StagingDownloadsUrl this.Name (sprintf "%i.%i.%i" version.Major version.Minor version.Patch) hash version.FullVersion
 
         member private this.ZipFile (version:Version) =
             let fullPathInDir = InDir |> Path.GetFullPath
