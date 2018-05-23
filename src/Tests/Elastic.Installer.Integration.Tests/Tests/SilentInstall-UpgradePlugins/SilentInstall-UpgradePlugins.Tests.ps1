@@ -57,7 +57,7 @@ Describe -Name "Silent Install upgrade with plugins install $($previousVersion.D
 		Path = $ExpectedConfigFolder
 	}
 
-    Context-PluginsInstalled -Expected @{ Plugins=($plugins -split ",") }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins.Split(@(','), [StringSplitOptions]::RemoveEmptyEntries)) }
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
@@ -129,7 +129,7 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 
 	Context-PingNode -XPackSecurityInstalled
 
-    Context-PluginsInstalled -Expected @{ Plugins=($plugins -split ",") }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins.Split(@(','), [StringSplitOptions]::RemoveEmptyEntries)) }
 
     Context-MsiRegistered
 

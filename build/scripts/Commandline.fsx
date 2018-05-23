@@ -58,8 +58,9 @@ Target:
 
   Example: build.bat release es 5.5.3 C:/path_to_cert_file C:/path_to_password_file
 
-* integrate [Products] [Versions] [VagrantProvider] [TestTargets] [skiptests]  -
-  - run integration tests. Can filter tests by wildcard [TestTargets]
+* integrate [Products] [Versions] [VagrantProvider] [TestTargets] [switches] [skiptests]  -
+  - run integration tests. Can filter tests by wildcard [TestTargets], 
+    which match against the directory names of tests
 
   Example: build.bat integrate es 5.5.1,5.5.2 local * skiptests
 
@@ -117,6 +118,17 @@ skiptests:
 ----------
 
 Whether to skip unit tests.
+
+switches:
+---------
+
+Integration tests against a local vagrant provider support several switches
+    - -gui: launch vagrant with a GUI
+    - -nodestroy: do not destroy the vagrant box after the test has run
+    - -plugins:<comma separated plugins>: a list of plugin zips that exist within
+                                          the build/in directory, that should be installed
+                                          within integration tests instead of downloading. The plugin
+                                          zip names must match the installer version.
 
 """
 

@@ -25,7 +25,7 @@ Describe -Name "Silent Install with $plugins plugins $(($Global:Version).Descrip
 
     Context-PingNode
 
-    Context-PluginsInstalled -Expected @{ Plugins=($plugins -split ",") }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins.Split(@(','), [StringSplitOptions]::RemoveEmptyEntries)) }
 
     Context-ClusterNameAndNodeName
 
