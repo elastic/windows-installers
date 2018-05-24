@@ -13,6 +13,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		public const XPackLicenseMode DefaultXPackLicenseMode = XPackLicenseMode.Basic;
 		public static readonly SemVersion XPackInstalledByDefaultVersion = "6.3.0";
 
+		public static readonly string DefaultElasticUserPassword = null;
+		public static readonly string DefaultKibanaUserPassword = null;
+		public static readonly string DefaultLogstashSystemUserPassword = null;
+
 		public XPackModel(VersionConfiguration versionConfig,
 			IObservable<bool> canAutomaticallySetupUsers,
 			IObservable<bool> upgradeFromXPackPlugin)
@@ -40,9 +44,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 
 		public sealed override void Refresh()
 		{
-			this.ElasticUserPassword = null;
-			this.KibanaUserPassword = null;
-			this.LogstashSystemUserPassword = null;
+			this.ElasticUserPassword = DefaultElasticUserPassword;
+			this.KibanaUserPassword = DefaultKibanaUserPassword;
+			this.LogstashSystemUserPassword = DefaultLogstashSystemUserPassword;
 			this.BootstrapPassword = null;
 			this.XPackSecurityEnabled = false;
 			this.XPackLicense = DefaultXPackLicenseMode;
