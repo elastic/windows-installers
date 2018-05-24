@@ -401,7 +401,7 @@
     <value>Use Network Service account</value>
   </data>
   <data name="ServiceView_PasswordLabel" xml:space="preserve">
-    <value>password</value>
+    <value>Password</value>
   </data>
   <data name="ServiceView_ServiceNameLabel" xml:space="preserve">
     <value>Service name</value>
@@ -413,7 +413,7 @@
     <value>Start the service when Windows starts (Automatic)</value>
   </data>
   <data name="ServiceView_UserLabel" xml:space="preserve">
-    <value>user</value>
+    <value>User</value>
   </data>
   <data name="SetupView_ExitText" xml:space="preserve">
     <value>Exit</value>

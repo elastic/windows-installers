@@ -69,6 +69,15 @@ namespace Elastic.Installer.UI.Shared.Steps
 					this.PasswordTextBox.IsEnabled = x;
 					this.ValidateCredentials.IsEnabled = x;
 				});
+			
+			this.WhenAnyValue(view => view.ViewModel.Password)
+				.Subscribe(x =>
+				{
+					if (x == ServiceModel.DefaultPassword)
+					{
+						PasswordTextBox.Clear();	
+					}
+				});
 
 			// cannot bind to the Password property directly as it does not expose a DP
 			this.PasswordTextBox.Events().PasswordChanged
