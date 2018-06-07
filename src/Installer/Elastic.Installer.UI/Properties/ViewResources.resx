@@ -313,7 +313,7 @@
     <value>Full overview of licences and subscriptions</value>
   </data>
   <data name="XPackView_ManualUserConfigurationNeeded" xml:space="preserve">
-    <value>Elasticsearch built-in users need to be setup manually. Either you are not installing as a service that gets started after installation, or you've opted to start Elasticsearch manually when needed.</value>
+    <value>The Elasticsearch built-in users will need to be setup manually. Take a look at the documentation to understand how to do this:</value>
   </data>
   <data name="XPackView_ManualUserConfigurationLink" xml:space="preserve">
     <value>How to setup users manually</value>
