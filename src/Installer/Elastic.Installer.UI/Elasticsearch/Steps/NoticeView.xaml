@@ -99,28 +99,29 @@
              Margin="0, 0, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_InstallationDirectoryLabel}" 
              HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-      <Label Grid.Row="2" Grid.Column="1" x:Name="InstallationDirectoryLabel" Margin="0, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Bottom" /> 
-      
+      <TextBlock Grid.Row="2" Grid.Column="1" x:Name="InstallationDirectoryTextBlock" Margin="5, -10, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Center" /> 
+
       <Label Grid.Row="3" Grid.Column="0" x:Name="DataDirectoryHeaderLabel" 
              FontWeight="Bold" 
              Margin="0, -10, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_DataDirectoryLabel}" 
              HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-      <Label Grid.Row="3" Grid.Column="1" x:Name="DataDirectoryLabel" Margin="0, -10, 0,0" HorizontalAlignment="Left"  VerticalAlignment="Bottom" /> 
-      
+      <TextBlock Grid.Row="3" Grid.Column="1" x:Name="DataDirectoryTextBlock" Margin="5, -10, 0,0" HorizontalAlignment="Left"  VerticalAlignment="Center" /> 
+
       <Label Grid.Row="4" Grid.Column="0" x:Name="ConfigDirectoryHeaderLabel" 
              FontWeight="Bold" 
              Margin="0, -10, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_ConfigDirectoryLabel}" 
              HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-      <Label Grid.Row="4" Grid.Column="1" x:Name="ConfigDirectoryLabel" Margin="0, -10, 0,0" HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" />
+      <TextBlock Grid.Row="4" Grid.Column="1" x:Name="ConfigDirectoryTextBlock" Margin="5, -10, 0,0" HorizontalAlignment="Stretch"  VerticalAlignment="Center" />
 
       <Label Grid.Row="5" Grid.Column="0" x:Name="LogsDirectoryHeaderLabel" 
              FontWeight="Bold"
              Margin="0, -10, 0,0"
              Content="{x:Static resx:ViewResources.LocationsView_LogsDirectoryLabel}" 
              HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-      <Label Grid.Row="5" Grid.Column="1" x:Name="LogsDirectoryLabel" Margin="0, -10, 0,0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+      <TextBlock Grid.Row="5" Grid.Column="1" x:Name="LogsDirectoryTextBlock" Margin="5, -10, 0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+      
       <Label Grid.Row="6" Grid.Column="0" x:Name="RunAsServiceHeaderLabel" FontWeight="Bold" Margin="0, -10, 0,0" Content="{x:Static resx:ViewResources.NoticeView_RunAsServiceHeaderLabel}" 
              HorizontalAlignment="Left" VerticalAlignment="Bottom" />
       <Label Grid.Row="6" Grid.Column="1" x:Name="RunAsServiceLabel" Margin="0, -10, 0,0" Content="Yes" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
