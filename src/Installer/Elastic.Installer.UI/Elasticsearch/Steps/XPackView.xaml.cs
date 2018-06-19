@@ -93,31 +93,19 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					
 				});
 
-			this.WhenAnyValue(view => view.ViewModel.ElasticUserPassword)
+			this.WhenAnyValue(view => view.ViewModel.ElasticUserPassword,
+							  view => view.ViewModel.KibanaUserPassword,
+							  view => view.ViewModel.LogstashSystemUserPassword)
 				.Subscribe(x =>
 				{
-					if (x == XPackModel.DefaultElasticUserPassword)
-					{
+					if (x.Item1 == XPackModel.DefaultElasticUserPassword)
 						ElasticPasswordBox.Clear();
-					}
-				});
 
-			this.WhenAnyValue(view => view.ViewModel.KibanaUserPassword)
-				.Subscribe(x =>
-				{
-					if (x == XPackModel.DefaultKibanaUserPassword)
-					{
+					if (x.Item2 == XPackModel.DefaultKibanaUserPassword)
 						KibanaUserPasswordBox.Clear();
-					}
-				});
 
-			this.WhenAnyValue(view => view.ViewModel.LogstashSystemUserPassword)
-				.Subscribe(x =>
-				{
-					if (x == XPackModel.DefaultLogstashSystemUserPassword)
-					{
+					if (x.Item3 == XPackModel.DefaultLogstashSystemUserPassword)
 						LogstashSystemPasswordBox.Clear();
-					}
 				});
 		}
 
