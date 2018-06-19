@@ -39,7 +39,6 @@ namespace Elastic.Installer.UI.Shared.Steps
 			this.Bind(ViewModel, vm => vm.User, v => v.UserTextBox.Text);
 			this.BindCommand(ViewModel, vm => vm.ValidateCredentials, v => v.ValidateCredentials, nameof(ValidateCredentials.Click));
 
-
 			this.WhenAnyValue(view => view.ViewModel.ValidatingCredentials)
 				.Subscribe(x =>
 				{
@@ -74,9 +73,7 @@ namespace Elastic.Installer.UI.Shared.Steps
 				.Subscribe(x =>
 				{
 					if (x == ServiceModel.DefaultPassword)
-					{
 						PasswordTextBox.Clear();	
-					}
 				});
 
 			// cannot bind to the Password property directly as it does not expose a DP
