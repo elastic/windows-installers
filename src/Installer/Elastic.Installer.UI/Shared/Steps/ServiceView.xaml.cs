@@ -39,7 +39,6 @@ namespace Elastic.Installer.UI.Shared.Steps
 			this.Bind(ViewModel, vm => vm.User, v => v.UserTextBox.Text);
 			this.BindCommand(ViewModel, vm => vm.ValidateCredentials, v => v.ValidateCredentials, nameof(ValidateCredentials.Click));
 
-
 			this.WhenAnyValue(view => view.ViewModel.ValidatingCredentials)
 				.Subscribe(x =>
 				{
@@ -68,6 +67,13 @@ namespace Elastic.Installer.UI.Shared.Steps
 					this.PasswordLabel.IsEnabled = x;
 					this.PasswordTextBox.IsEnabled = x;
 					this.ValidateCredentials.IsEnabled = x;
+				});
+			
+			this.WhenAnyValue(view => view.ViewModel.Password)
+				.Subscribe(x =>
+				{
+					if (x == ServiceModel.DefaultPassword)
+						PasswordTextBox.Clear();	
 				});
 
 			// cannot bind to the Password property directly as it does not expose a DP

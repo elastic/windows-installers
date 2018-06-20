@@ -92,6 +92,21 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					this.SkipPasswordGenerationCheckBox.IsEnabled = securityEnabled && canGenerateUsers;
 					
 				});
+
+			this.WhenAnyValue(view => view.ViewModel.ElasticUserPassword,
+							  view => view.ViewModel.KibanaUserPassword,
+							  view => view.ViewModel.LogstashSystemUserPassword)
+				.Subscribe(x =>
+				{
+					if (x.Item1 == XPackModel.DefaultElasticUserPassword)
+						ElasticPasswordBox.Clear();
+
+					if (x.Item2 == XPackModel.DefaultKibanaUserPassword)
+						KibanaUserPasswordBox.Clear();
+
+					if (x.Item3 == XPackModel.DefaultLogstashSystemUserPassword)
+						LogstashSystemPasswordBox.Clear();
+				});
 		}
 
 		protected override void UpdateValidState(bool isValid, IList<ValidationFailure> failures)
