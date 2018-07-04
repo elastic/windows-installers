@@ -13,19 +13,15 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 	{
 		/* Instantiatiing a new InstallationModel will be invalid without 
 		 * Setting some preflight checks */
-		[Fact] void PreflightChecks() => Pristine()
-			.HasSetupValidationFailures(errors=>errors
-				.ShouldHaveErrors(
-					TextResources.NoticeModelValidator_JavaInstalled
-				)
-			)
-			//Java is a fixable prequisite error
-			.HasPrerequisiteErrors(errors=>errors
+		[Fact]
+		void PreflightChecks() => Pristine()
+			.HasSetupValidationFailures(errors => errors
 				.ShouldHaveErrors(TextResources.NoticeModelValidator_JavaInstalled)
 			)
-			.IsValidOnFirstStep()
-			//Assure we can not proceed past the current step
-			.CanClickNext(true);
+			//Java is a fixable prequisite error
+			.HasPrerequisiteErrors(errors => errors
+				.ShouldHaveErrors(TextResources.NoticeModelValidator_JavaInstalled)
+			);
 	
 		/* A model with all preflight checks set is valid */
 		[Fact] void CanClickNextWhenValid() => WithValidPreflightChecks()

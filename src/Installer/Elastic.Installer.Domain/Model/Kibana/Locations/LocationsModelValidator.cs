@@ -12,7 +12,6 @@ namespace Elastic.Installer.Domain.Model.Kibana.Locations
 		public static readonly string DirectoryMustNotBeRelative = TextResources.LocationsModelValidator_DirectoryMustNotBeRelative;
 		public static readonly string DirectoryUsesUnknownDrive = TextResources.LocationsModelValidator_DirectoryUsesUnknownDrive;
 		public static readonly string DirectorySetToNonWritableLocation = TextResources.LocationsModelValidator_DirectorySetToNonWritableLocation;
-		public static readonly string DirectoryMustBeChildOf = TextResources.LocationsModelValidator_DirectoryMustBeChildOf;
 		public static readonly string Installation = TextResources.LocationsModelValidator_Installation;
 		public static readonly string ConfigurationText = TextResources.LocationsModelValidator_Configuration;
 		public static readonly string DataText = TextResources.LocationsModelValidator_Data;
@@ -35,10 +34,6 @@ namespace Elastic.Installer.Domain.Model.Kibana.Locations
 				.WithMessage(DirectoryUsesUnknownDrive, x => LogsText, x => new DirectoryInfo(x.LogsDirectory).Root.Name)
 				.Must(this.NotBeChildOfProgramFiles).WithMessage(DirectorySetToNonWritableLocation, LogsText);
 
-			RuleFor(vm => vm.LogsDirectory)
-				.Must((vm, logs) => this.IsSubPathOf(vm.InstallDir, logs))
-				.When(vm => vm.PlaceWritableLocationsInSamePath)
-				.WithMessage(DirectoryMustBeChildOf, vm => LogsText, vm => vm.InstallDir);
 		}
 
 		public bool MustBeRooted(string path)

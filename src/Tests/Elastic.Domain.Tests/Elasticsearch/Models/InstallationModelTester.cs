@@ -122,7 +122,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 				.And.HaveCount(this.InstallationModel.FirstInvalidStepValidationFailures.Count);
 
 			validateErrors?.Invoke(step.ValidationFailures);
-
+			
 			return this;
 		}
 
@@ -170,6 +170,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 			this.InstallationModel.FirstInvalidStepValidationFailures.Should().BeEmpty();
 			step.ValidationFailures.Should().BeEmpty();
+			
+			this.InstallationModel.ValidationFailures.Should().BeEmpty();
+			this.InstallationModel.PrerequisiteFailures.Should().BeEmpty();
 
 			return this;
 		}
