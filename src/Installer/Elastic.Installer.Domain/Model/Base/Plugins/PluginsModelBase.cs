@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Plugin;
+using Elastic.Installer.Domain.Configuration.Wix;
 using FluentValidation;
 using ReactiveUI;
+using Semver;
 
 namespace Elastic.Installer.Domain.Model.Base.Plugins
 {
@@ -13,16 +17,20 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		where TModel : ValidatableReactiveObjectBase<TModel, TModelValidator>
 		where TModelValidator : AbstractValidator<TModel>, new()
 	{
-		protected PluginsModelBase(IPluginStateProvider pluginStateProvider)
+		private const string FileProtocol = "file:///";
+
+		protected PluginsModelBase(IPluginStateProvider pluginStateProvider, SemVersion version)
 		{
 			this.Header = "Plugins";
 			this.PluginStateProvider = pluginStateProvider;
+			this._version = version;
 			this.InstalledPlugins.Changed.Subscribe(e => this.InstalledPlugins.RaisePropertyChanged());
 		}
 		
 		public IPluginStateProvider PluginStateProvider { get; }
 		protected ReactiveList<Plugin> _availablePlugins = new ReactiveList<Plugin> { ChangeTrackingEnabled = true };
 		protected ReactiveList<string> _installedPlugins = new ReactiveList<string> { ChangeTrackingEnabled = true };
+		private readonly SemVersion _version;
 
 		protected bool AlreadyInstalled { get; set; }
 		protected string PreviousInstallDirectory { get; set; }
@@ -41,13 +49,41 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		[StaticArgument(nameof(Plugins))]
 		public IEnumerable<string> Plugins
 		{
-			get { return _availablePlugins.Where(p => p.Selected).Select(p => p.Url); }
+			get { return _availablePlugins.Where(p => p.Selected).Select(p => p.Input ?? p.Url); }
 			set
 			{
 				foreach (var p in AvailablePlugins) p.Selected = false;
 				if (value == null) return;
-				foreach (var p in AvailablePlugins.Where(p => value.Contains(p.Url)))
-					p.Selected = true;
+				var pluginsDictionary = AvailablePlugins.ToDictionary(ap => ap.Url, StringComparer.OrdinalIgnoreCase);
+				foreach (var p in value)
+				{ 
+					if (pluginsDictionary.TryGetValue(p, out var plugin))
+					{
+						plugin.Selected = true;
+						continue;
+					}
+
+					try
+					{
+						var path = p.StartsWith(FileProtocol) 
+							? Path.GetFullPath(p.Replace(FileProtocol, string.Empty)) 
+							: Path.GetFullPath(p);
+						if (Path.HasExtension(path) && Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+						{
+							var fileName = Path.GetFileNameWithoutExtension(path).Replace($"-{_version}", string.Empty);
+							if (pluginsDictionary.TryGetValue(fileName, out plugin))
+							{
+								plugin.Selected = true;
+								// preserve the original value for installation
+								plugin.Input = p;
+							}
+						}
+					}
+					catch
+					{
+						// suppress any errors associated with getting a full path
+					}
+				}
 			}
 		}
 
@@ -56,7 +92,6 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			get => _installedPlugins;
 			set => this.RaiseAndSetIfChanged(ref _installedPlugins, value);
 		}
-
 
 		public override void Refresh()
 		{
@@ -74,8 +109,6 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 				plugin.Selected = true;
 
 			if (installedPlugins != null) InstalledPlugins.AddRange(installedPlugins);
-			
-			
 		}
 
 		public override string ToString()

@@ -92,7 +92,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 				vm => vm.LocationsModel.PreviousInstallationDirectory,
 				vm => vm.LocationsModel.ConfigDirectory
 			);
-			this.PluginsModel = new PluginsModel(pluginStateProvider, pluginDependencies);
+			this.PluginsModel = new PluginsModel(pluginStateProvider, versionConfig.CurrentVersion, pluginDependencies);
 			var upgradeFromXPackPlugin = this.WhenAnyValue(vm => vm.PluginsModel.PreviousInstallationHasXPack);
 			
 			var canAutomaticallySetup = this.WhenAnyValue(vm => vm.ServiceModel.StartAfterInstall, vm => vm.ServiceModel.InstallAsService)

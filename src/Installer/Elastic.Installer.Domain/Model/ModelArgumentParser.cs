@@ -85,7 +85,7 @@ namespace Elastic.Installer.Domain.Model
 			{
 				var values = (IEnumerable<string>)v;
 				if (values.Any(s => !string.IsNullOrEmpty(s)))
-					return string.Join(", ", values.Where(s => !string.IsNullOrEmpty(s)));
+					return string.Join(",", values.Where(s => !string.IsNullOrEmpty(s)));
 				return null;
 			}
 			if (v is bool)
@@ -211,7 +211,8 @@ namespace Elastic.Installer.Domain.Model
 				}
 				else if (p == typeof(IEnumerable<string>))
 				{
-					((Action<IEnumerable<string>>)setter)(a.Value.Split(',').Select(v => v.Trim()));
+					var value = a.Value.Split(',').Select(v => v.Trim()).ToList();
+					((Action<IEnumerable<string>>)setter)(value);
 				}
 				else if (p == typeof(ReactiveList<string>))
 				{
