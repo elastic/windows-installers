@@ -235,20 +235,20 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} directory must be a sub folder of {1} because the place in same folder flag was also set..
-        /// </summary>
-        public static string LocationsModelValidator_DirectoryMustBeChildOf {
-            get {
-                return ResourceManager.GetString("LocationsModelValidator_DirectoryMustBeChildOf", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} directory must be specified..
         /// </summary>
         public static string LocationsModelValidator_DirectoryMustBeSpecified {
             get {
                 return ResourceManager.GetString("LocationsModelValidator_DirectoryMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} directory can not be a sub folder of the installation directory.
+        /// </summary>
+        public static string LocationsModelValidator_DirectoryMustNotBeChildOf {
+            get {
+                return ResourceManager.GetString("LocationsModelValidator_DirectoryMustNotBeChildOf", resourceCulture);
             }
         }
         
@@ -490,6 +490,27 @@ namespace Elastic.Installer.Domain.Properties {
         public static string NoticeModelValidator_BadElasticsearchYamlFile {
             get {
                 return ResourceManager.GetString("NoticeModelValidator_BadElasticsearchYamlFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The previous ES_PATH_CONF or ES_CONFIG appears to be a subfolder 
+        ///of ES_HOME please move these before starting the installation..
+        /// </summary>
+        public static string NoticeModelValidator_ConfigDirectoryIsSpecifiedAndSubPathOfEsHome {
+            get {
+                return ResourceManager.GetString("NoticeModelValidator_ConfigDirectoryIsSpecifiedAndSubPathOfEsHome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An ES_HOME environment variable exists but no previous installation was detected.
+        ///The MSI does not support upgrading from a previous zip based deploy.
+        ///.
+        /// </summary>
+        public static string NoticeModelValidator_HasEsHomeVariableButNoPreviousInstallation {
+            get {
+                return ResourceManager.GetString("NoticeModelValidator_HasEsHomeVariableButNoPreviousInstallation", resourceCulture);
             }
         }
         

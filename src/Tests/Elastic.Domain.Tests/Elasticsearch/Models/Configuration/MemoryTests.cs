@@ -65,6 +65,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 
 
 		[Fact] void RespectsJvmOptsFile() => WithValidPreflightChecks(s => s
+				.Wix(alreadyInstalled: true)
 				.Elasticsearch(e => e
 					.EsHomeMachineVariable(LocationsModel.DefaultProgramFiles)
 					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)

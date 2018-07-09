@@ -313,7 +313,7 @@
     <value>Full overview of licences and subscriptions</value>
   </data>
   <data name="XPackView_ManualUserConfigurationNeeded" xml:space="preserve">
-    <value>Elasticsearch built-in users need to be setup manually. Either you are not installing as a service that gets started after installation, or you've opted to start Elasticsearch manually when needed.</value>
+    <value>The Elasticsearch built-in users will need to be setup manually. Take a look at the documentation to understand how to do this:</value>
   </data>
   <data name="XPackView_ManualUserConfigurationLink" xml:space="preserve">
     <value>How to setup users manually</value>
@@ -347,9 +347,7 @@
     <value>License Information</value>
   </data>
   <data name="MainWindow_LicenseInformation" xml:space="preserve">
-    <value>Except as otherwise noted, Elasticsearch is distributed and licensed 
-under the Apache 2.0 License.
-X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
+    <value>Except as otherwise noted, Elasticsearch is distributed and licensed under the </value>
   </data>
   <data name="MainWindow_ValidationError" xml:space="preserve">
     <value>Validation Error</value>
@@ -403,7 +401,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
     <value>Use Network Service account</value>
   </data>
   <data name="ServiceView_PasswordLabel" xml:space="preserve">
-    <value>password</value>
+    <value>Password</value>
   </data>
   <data name="ServiceView_ServiceNameLabel" xml:space="preserve">
     <value>Service name</value>
@@ -415,7 +413,7 @@ X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
     <value>Start the service when Windows starts (Automatic)</value>
   </data>
   <data name="ServiceView_UserLabel" xml:space="preserve">
-    <value>user</value>
+    <value>User</value>
   </data>
   <data name="SetupView_ExitText" xml:space="preserve">
     <value>Exit</value>
@@ -827,5 +825,13 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
   </data>
   <data name="NoticeView_XPackIncludedByDefault" xml:space="preserve">
     <value>is now included by default</value>
+  </data>
+  <data name="MainWindow_LicenseLink" xml:space="preserve">
+    <value>https://github.com/elastic/{0}/blob/v{1}/licenses/ELASTIC-LICENSE.txt</value>
+    <comment>{0} = lowercase product name
+{1} = version</comment>
+  </data>
+  <data name="MainWindow_LicenseName" xml:space="preserve">
+    <value>Elastic License</value>
   </data>
 </root>

@@ -30,7 +30,7 @@ Describe -Name "Silent Install with setting up bootstrap password $(($Global:Ver
 
     Context-PingNode -XPackSecurityInstalled
 
-    Context-PluginsInstalled -Expected @{ Plugins=($plugins.Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)) }
+    Context-PluginsInstalled -Expected @{ Plugins=($plugins.Split(@(','), [StringSplitOptions]::RemoveEmptyEntries)) }
 
     Context-ClusterNameAndNodeName -Expected @{ Credentials = "elastic:elastic" }
 

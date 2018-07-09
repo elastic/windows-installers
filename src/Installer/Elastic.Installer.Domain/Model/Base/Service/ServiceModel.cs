@@ -91,7 +91,6 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 		}
 
 		bool previouslyInstalledAsAService = true;
-		[StaticArgument(nameof(PreviouslyInstalledAsAService))]
 		public bool PreviouslyInstalledAsAService
 		{
 			get => previouslyInstalledAsAService;

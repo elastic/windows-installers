@@ -2,13 +2,13 @@
 
 #r "FakeLib.dll"
 
+open System
 open System.Globalization
 open System.IO
 open Fake
 open Fake.FileHelper
 
 module Paths =
-
     let BuildDir = "./build/"
     let ToolsDir = BuildDir @@ "tools/"
     let InDir = BuildDir @@ "in/"
@@ -25,9 +25,11 @@ module Paths =
 
     let ArtifactDownloadsUrl = "https://artifacts.elastic.co/downloads"
 
-    let StagingDownloadsUrl product version hash = 
-        sprintf "https://staging.elastic.co/%s-%s/downloads/%s/%s-%s.msi" 
-            version hash product product version
+    let StagingDownloadsUrl product hash fullVersion = 
+        sprintf "https://staging.elastic.co/%s-%s/downloads/%s/%s-%s.msi" fullVersion hash product product fullVersion
+
+    let SnapshotDownloadsUrl product versionNumber hash fullVersion =
+        sprintf "https://snapshots.elastic.co/%s-%s/downloads/%s/%s-%s.msi" versionNumber hash product product fullVersion
 
 module Products =
     open Paths
@@ -100,7 +102,9 @@ module Products =
             | Released ->
                 sprintf "%s/%s/%s-%s.msi" ArtifactDownloadsUrl this.Name this.Name version.FullVersion 
             | BuildCandidate hash ->
-                StagingDownloadsUrl this.Name version.FullVersion hash
+                if (version.FullVersion.EndsWith("snapshot", StringComparison.OrdinalIgnoreCase))
+                then SnapshotDownloadsUrl this.Name (sprintf "%i.%i.%i" version.Major version.Minor version.Patch) hash version.FullVersion
+                else StagingDownloadsUrl this.Name hash version.FullVersion
 
         member private this.ZipFile (version:Version) =
             let fullPathInDir = InDir |> Path.GetFullPath
