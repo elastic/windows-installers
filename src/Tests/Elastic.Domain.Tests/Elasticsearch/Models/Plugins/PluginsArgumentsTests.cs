@@ -20,7 +20,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(1);
 		});
 
-		[Fact] void PluginsMultipleValues() => Argument(nameof(PluginsModel.Plugins), "analysis-icu, analysis-phonetic", (m, v) =>
+		[Fact] void PluginsMultipleValues() => Argument(nameof(PluginsModel.Plugins), "analysis-icu,analysis-phonetic", (m, v) =>
 		{
 			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(2).And.Contain("analysis-phonetic");
 			m.PluginsModel.AvailablePlugins.Count(p => p.Selected).Should().Be(2);
@@ -28,8 +28,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 
 		[Fact] void PluginsMultipleValuesIgnoresUnknown() => Argument(
 			nameof(PluginsModel.Plugins), 
-			"analysis-icu, analysis-phonetic, badplugin", 
-			"analysis-icu, analysis-phonetic", 
+			"analysis-icu,analysis-phonetic,badplugin", 
+			"analysis-icu,analysis-phonetic", 
 			(m, v) =>
 		{
 			m.PluginsModel.Plugins.Should().NotBeEmpty().And.HaveCount(2).And.Contain("analysis-phonetic");

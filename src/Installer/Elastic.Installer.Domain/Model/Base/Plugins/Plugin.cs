@@ -6,6 +6,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 	{
 		private bool _selected;
 
+		public string Input { get; set; }
 		public string Url { get; set; }
 		public string DisplayName { get; set; }
 		public string Version { get; set; }
