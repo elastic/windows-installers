@@ -67,15 +67,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this.Refresh();
 			this._refreshing = true;
 
-			//when configurelocations is checked and place paths in samefolder is not set, set configureall locations to true
-			var prop = this.WhenAny(
-				vm => vm.ConfigureLocations,
-				vm => vm.PlaceWritableLocationsInSamePath,
-				vm => vm.InstallDir,
-				(configureLocations, samePath, i) => configureLocations.GetValue() && !samePath.GetValue()
-				)
-				.ToProperty(this, vm => vm.ConfigureAllLocations, out configureAllLocations);
-
 			this.WhenAny(
 				vm => vm.LogsDirectory,
 				(c) => {
@@ -113,7 +104,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		{
 			this._refreshing = true;
 			this.ConfigureLocations = false;
-			this.PlaceWritableLocationsInSamePath = false;
 			this.SetDefaultLocations();
 			this._refreshing = false;
 		}
@@ -142,48 +132,18 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this._refreshing = false;
 		}
 
-		public bool SamePathAs(string pathA, string pathB)
+		private bool SamePathAs(string pathA, string pathB)
 		{
-			if (!string.IsNullOrEmpty(pathA) && !string.IsNullOrEmpty(pathB))
-			{
-				var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-				var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-				return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
-			}
+			if (string.IsNullOrEmpty(pathA) || string.IsNullOrEmpty(pathB)) return false;
+			
+			var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+			var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+			return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
 
-			return false;
 		}
-
-		public void SetWritableLocationsToInstallDirectory(bool sameFolder)
-		{
-			if (!sameFolder) return;
-			this._refreshing = true;
-			this.DataDirectory = this.FileSystem.Path.Combine(this.InstallDir, Data);
-			this.ConfigDirectory = this.FileSystem.Path.Combine(this.InstallDir, Config);
-			this.LogsDirectory = this.FileSystem.Path.Combine(this.InstallDir, Logs);
-			this._refreshing = false;
-		}
-
-		// ReactiveUI conventions do not change
-		// ReSharper disable InconsistentNaming
-		// ReSharper disable ArrangeTypeMemberModifiers
-		readonly ObservableAsPropertyHelper<bool> configureAllLocations;
-		public bool ConfigureAllLocations => configureAllLocations.Value;
 
 		readonly ObservableAsPropertyHelper<string> elasticsearchLog;
 		public string ElasticsearchLog => elasticsearchLog.Value;
-
-		bool placeWriteableLocationsInSamePath;
-		[Argument(nameof(PlaceWritableLocationsInSamePath))]
-		public bool PlaceWritableLocationsInSamePath
-		{
-			get => placeWriteableLocationsInSamePath;
-			set {
-				this.RaiseAndSetIfChanged(ref placeWriteableLocationsInSamePath, value); 
-				this.SetWritableLocationsToInstallDirectory(value);
-			}
-
-		}
 
 		bool configureLocations;
 		public bool ConfigureLocations
@@ -191,7 +151,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			get => configureLocations;
 			set => this.RaiseAndSetIfChanged(ref configureLocations, value);
 		}
-
 
 		string installDirectory;
 		[Argument(nameof(InstallDir), PersistInRegistry = true)]
@@ -202,7 +161,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			{
 				var rooted = GetRootedPathIfNecessary(value);
 				this.RaiseAndSetIfChanged(ref installDirectory, rooted);
-				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
 		}
 
@@ -262,8 +220,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			var sb = new StringBuilder();
 			sb.AppendLine(nameof(LocationsModel));
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
-			sb.AppendLine($"- {nameof(ConfigureAllLocations)} = " + ConfigureAllLocations);
-			sb.AppendLine($"- {nameof(PlaceWritableLocationsInSamePath)} = " + PlaceWritableLocationsInSamePath);
 			sb.AppendLine($"- {nameof(ConfigureLocations)} = " + ConfigureLocations);
 			sb.AppendLine($"- {nameof(InstallDir)} = " + InstallDir);
 			sb.AppendLine($"- {nameof(PreviousInstallationDirectory)} = " + PreviousInstallationDirectory);

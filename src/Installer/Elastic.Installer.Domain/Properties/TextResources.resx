@@ -160,9 +160,9 @@ Java won't used compressed pointers.</value>
     <value>{0} directory must be specified.</value>
     <comment>{0} = Directory Name</comment>
   </data>
-  <data name="LocationsModelValidator_DirectoryMustBeChildOf" xml:space="preserve">
-    <value>{0} directory must be a sub folder of {1} because the place in same folder flag was also set.</value>
-    <comment>{0} = Directory Name, {1} = Installation Directory</comment>
+  <data name="LocationsModelValidator_DirectoryMustNotBeChildOf" xml:space="preserve">
+    <value>{0} directory can not be a sub folder of the installation directory</value>
+    <comment>{0} = Directory Name</comment>
   </data>
   <data name="LocationsModelValidator_DirectoryMustNotBeRelative" xml:space="preserve">
     <value>{0} directory must not be relative.</value>
@@ -248,6 +248,15 @@ Java won't used compressed pointers.</value>
   <data name="NoticeModelValidator_BadElasticsearchYamlFile" xml:space="preserve">
     <value>The elasticsearch.yml file we found in ES_PATH_CONF appears to be 
 invalid  and prevented seeding current values.</value>
+  </data>
+  <data name="NoticeModelValidator_ConfigDirectoryIsSpecifiedAndSubPathOfEsHome" xml:space="preserve">
+    <value>The previous ES_PATH_CONF or ES_CONFIG appears to be a subfolder 
+of ES_HOME please move these before starting the installation.</value>
+  </data>
+  <data name="NoticeModelValidator_HasEsHomeVariableButNoPreviousInstallation" xml:space="preserve">
+    <value>An ES_HOME environment variable exists but no previous installation was detected.
+The MSI does not support upgrading from a previous zip based deploy.
+</value>
   </data>
   <data name="NoticeModel_ExistingVersion" xml:space="preserve">
     <value>Previously installed version: {0}</value>

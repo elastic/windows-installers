@@ -14,8 +14,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.InvalidExternalSta
 		[Fact] void SeedsFromEmptyElasticsearchYaml() => WithExistingElasticsearchYaml($@"")
 				.IsValidOnFirstStep();
 		
-		[Fact] void SeedsInvalidYamlFile() => WithExistingElasticsearchYaml($@"x=")
-				.HasSetupValidationFailures(errors=>errors.ShouldHaveErrors(TextResources.NoticeModelValidator_BadElasticsearchYamlFile));
+		[Fact] void SeedsInvalidYamlFile() => 
+			WithExistingElasticsearchYaml($@"x=")
+				.HasSetupValidationFailures(errors=>errors
+					.ShouldHaveErrors(
+						TextResources.NoticeModelValidator_BadElasticsearchYamlFile
+					)
+				);
 
 	}
 }

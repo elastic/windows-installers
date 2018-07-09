@@ -17,16 +17,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 		}
 
 		[Fact] void InstallDirectoryNotEmpty() => this._model
-			.OnStep(m => m.LocationsModel, step =>
+			.OnStep(m => m.LocationsModel, model =>
 			{
-				step.InstallDir = null;
-			})
-			.IsInvalidOnStep(m => m.LocationsModel, errors => errors
-				.ShouldHaveErrors(string.Format(LocationsModelValidator.DirectoryMustBeSpecified, LocationsModelValidator.Installation))
-			)
-			.OnStep(m => m.LocationsModel, step =>
-			{
-				step.InstallDir = string.Empty;
+				model.InstallDir = string.Empty;
 			})
 			.IsInvalidOnStep(m => m.LocationsModel, errors => errors
 				.ShouldHaveErrors(string.Format(LocationsModelValidator.DirectoryMustBeSpecified, LocationsModelValidator.Installation))

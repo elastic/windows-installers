@@ -20,6 +20,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		protected InstallationModelTester WithExistingElasticsearchYaml(string yamlContents)  =>
 			InstallationModelTester.ValidPreflightChecks(s=>s
+				.Wix(alreadyInstalled: true)
 				.Elasticsearch(e=>e
 					.EsHomeMachineVariable(LocationsModel.DefaultProgramFiles)
 					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)

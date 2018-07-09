@@ -30,7 +30,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			{
 				step.ConfigDirectory.Should().Be(_customConfig);
 				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeTrue();
 			});
 
 		[Fact] void DataDirectoryIsReadFromElasticsearchYaml() => WithValidPreflightChecks(s => s
@@ -46,7 +45,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			.OnStep(m => m.LocationsModel, step =>
 			{
 				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeTrue();
 				step.DataDirectory.Should().Be($"{_customHome}\\MyDataFolder");
 			});
 
@@ -63,7 +61,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			.OnStep(m => m.LocationsModel, step =>
 			{
 				step.ConfigureLocations.Should().BeTrue();
-				step.ConfigureAllLocations.Should().BeTrue();
 				step.LogsDirectory.Should().Be($"{_customHome}\\MyDataFolder");
 			});
 	}

@@ -15,7 +15,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 		{
 			m.LocationsModel.ConfigDirectory.Should().Be(this.CustomConfig);
 			m.LocationsModel.ConfigureLocations.Should().BeTrue();
-			m.LocationsModel.ConfigureAllLocations.Should().BeTrue();
 		});
 
 		[Fact] void DataDirectory() => Argument(nameof(LocationsModel.DataDirectory), this.CustomConfig, m =>
@@ -28,8 +27,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			m.LocationsModel.LogsDirectory.Should().Be(this.CustomConfig);
 		});
 
-		[Fact]
-		void InstallDirectory()
+		[Fact] void InstallDirectory()
 		{
 			var customHome = this.CustomHome;
 			var customHomeVersion = Path.Combine(this.CustomHome, TestSetupStateProvider.DefaultTestVersion);
@@ -37,6 +35,15 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 			{
 				m.LocationsModel.InstallDir.Should().Be(customHomeVersion);
 				m.LocationsModel.ConfigureLocations.Should().BeTrue();
+			});
+		}
+		[Fact] void InstallDirectoryEmpty()
+		{
+			Argument(nameof(LocationsModel.InstallDir), "", "", (m, s) =>
+			{
+				m.LocationsModel.InstallDir.Should().Be("");
+				m.LocationsModel.ConfigureLocations.Should().BeTrue();
+				m.LocationsModel.IsValid.Should().BeFalse();
 			});
 		}
 	}

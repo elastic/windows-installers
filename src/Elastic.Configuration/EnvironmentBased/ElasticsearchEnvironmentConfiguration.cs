@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using Elastic.Configuration.Extensions;
 
 namespace Elastic.Configuration.EnvironmentBased
 {
@@ -41,15 +42,28 @@ namespace Elastic.Configuration.EnvironmentBased
 				StateProvider.ConfigDirectoryMachineVariable,
 			}
 			.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
-
-		public string HomeDirectory => new []
+		
+		public string HomeDirectoryFromEnvironmentVariable => new []
 			{
 				StateProvider.HomeDirectoryProcessVariable,
 				StateProvider.HomeDirectoryUserVariable,
-				StateProvider.HomeDirectoryMachineVariable,
+				StateProvider.HomeDirectoryMachineVariable
+			}
+			.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
+
+		public string HomeDirectory => new []
+			{
+				this.HomeDirectoryFromEnvironmentVariable,
 				this.HomeDirectoryInferred
 			}
 			.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
+
+		public string ConfigDirectoryFromEnvironmentVariable => new []
+		{
+			StateProvider.ConfigDirectoryProcessVariable,
+			StateProvider.ConfigDirectoryUserVariable,
+			StateProvider.ConfigDirectoryMachineVariable,
+		}.FirstOrDefault(v=>!string.IsNullOrWhiteSpace(v));
 
 		public string ConfigDirectory
 		{
@@ -65,6 +79,18 @@ namespace Elastic.Configuration.EnvironmentBased
 
 				var homeDir = this.HomeDirectory;
 				return string.IsNullOrEmpty(homeDir) ? null : Path.Combine(homeDir, "config");
+			}
+		}
+
+		public bool ConfigDirectoryIsSpecifiedAndSubPathOfEsHome
+		{
+			get
+			{
+				var esHome = this.HomeDirectoryFromEnvironmentVariable;
+				if (string.IsNullOrWhiteSpace(esHome)) return false;
+
+				var config = this.ConfigDirectoryFromEnvironmentVariable;
+				return !string.IsNullOrWhiteSpace(config) && config.IsSubPathOf(esHome);
 			}
 		}
 
