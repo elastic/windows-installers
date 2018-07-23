@@ -280,7 +280,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome = ElasticsearchEnvironmentConfiguration.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome;
 
 			this.HasEsHomeVariableButNoPreviousInstallation = 
-				!this.Installed && !string.IsNullOrWhiteSpace(ElasticsearchEnvironmentConfiguration.HomeDirectoryFromEnvironmentVariable);
+				!this.UnInstalling && !this.Installed && !string.IsNullOrWhiteSpace(ElasticsearchEnvironmentConfiguration.HomeDirectoryFromEnvironmentVariable);
 
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;
 			this.Using32BitJava = JavaConfiguration.Using32BitJava;
