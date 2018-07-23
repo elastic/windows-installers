@@ -174,6 +174,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 
 		private string ForceVersionFolder(string directory)
 		{
+			if (string.IsNullOrWhiteSpace(directory)) return directory;
+			if (!Path.IsPathRooted(directory)) return directory;
 			return Path.Combine(GetRootedPathIfNecessary(directory), CurrentVersion);
 		}
 
