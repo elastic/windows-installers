@@ -24,5 +24,10 @@ namespace Elastic.Installer.UI.Shared
 		{
 			InitializeComponent();
 		}
+		public LicenseDialog(string content)
+		{
+			InitializeComponent();
+			this.LicenseInformation.Text = content;
+		}
 	}
 }
