@@ -52,7 +52,7 @@ start /wait msiexec.exe /i elasticsearch-5.5.0.msi /qn /l elastic-install.log NO
 
 | Parameter name                   | Description                      | Default value                    |
 | -------------------------------- | -------------------------------- | -------------------------------- |
-| INSTALLDIR                       | Elasticsearch installation path  | `%ProgramW6432%`\Elastic\Elasticsearch |
+| INSTALLDIR                       | Elasticsearch installation path, has to end with the current version number, | `%ProgramW6432%`\Elastic\Elasticsearch\6.3.1 |
 | DATADIRECTORY                    | Data directory path              | `%ALLUSERSPROFILE%`\Elastic\Elasticsearch\data |
 | CONFIGDIRECTORY                  | Config directory path            | `%ALLUSERSPROFILE%`\Elastic\Elasticsearch\config |
 | LOGSDIRECTORY                    | Logs directory path              | `%ALLUSERSPROFILE%`\Elastic\Elasticsearch\logs |
