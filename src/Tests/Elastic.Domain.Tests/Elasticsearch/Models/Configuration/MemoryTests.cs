@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 
 		public MemoryTests()
 		{
-			this._model = WithValidPreflightChecks()
+			this._model = DefaultValidModel()
 				.ClickNext()
 				.ClickNext()
 				.IsValidOnStep(m => m.ConfigurationModel);
@@ -64,7 +64,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 			));
 
 
-		[Fact] void RespectsJvmOptsFile() => WithValidPreflightChecks(s => s
+		[Fact] void RespectsJvmOptsFile() => DefaultValidModel(s => s
 				.Wix(alreadyInstalled: true)
 				.Elasticsearch(e => e
 					.EsHomeMachineVariable(LocationsModel.DefaultProgramFiles)

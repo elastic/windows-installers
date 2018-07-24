@@ -16,6 +16,7 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Closing;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks;
 using Elastic.InstallerHosts.Elasticsearch.Tasks;
+using Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate;
 using FluentAssertions;
 using FluentValidation.Results;
 
@@ -239,6 +240,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		);
 
 		public static InstallationModelTester ValidPreflightChecks(Func<TestSetupStateProvider, TestSetupStateProvider> selector) => New(s => selector(s
+			.Wix(alreadyInstalled: false, installationInProgress: true)
+			.Java(j => j.JavaHomeMachineVariable(@"C:\Java"))
+			)
+		);
+		public static InstallationModelTester ValidPreflightChecksForTasks(Func<TestSetupStateProvider, TestSetupStateProvider> selector) => New(s => selector(s
 			.Wix(alreadyInstalled: false)
 			.Java(j => j.JavaHomeMachineVariable(@"C:\Java"))
 			)

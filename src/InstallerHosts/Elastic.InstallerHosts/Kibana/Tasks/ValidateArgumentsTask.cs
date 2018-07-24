@@ -6,7 +6,7 @@ namespace Elastic.InstallerHosts.Kibana.Tasks
 {
 	public class ValidateArgumentsTask : KibanaInstallationTask
 	{
-		public ValidateArgumentsTask(string[] args, ISession session) : base(args, session) { }
+		public ValidateArgumentsTask(string[] args, ISession session) : base(args, session, installationInProgress: false) { }
 
 		protected override bool ExecuteTask()
 		{
