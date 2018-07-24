@@ -8,8 +8,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 {
 	public class LocationsArgumentsTests : InstallationModelArgumentsTestsBase
 	{
-		protected readonly string CustomHome = @"C:\\Elasticsearch";
-		protected readonly string CustomConfig = @"C:\\Conf";
+		protected readonly string CustomHome = @"C:\Elasticsearch";
+		protected readonly string CustomConfig = @"C:\Conf";
 
 		[Fact] void ConfigDirectory() => Argument(nameof(LocationsModel.ConfigDirectory), this.CustomConfig, m =>
 		{

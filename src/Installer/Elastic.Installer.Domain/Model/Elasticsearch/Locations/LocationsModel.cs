@@ -142,16 +142,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			this._refreshing = false;
 		}
 
-		public bool SamePathAs(string pathA, string pathB)
+		private bool SamePathAs(string pathA, string pathB)
 		{
-			if (!string.IsNullOrEmpty(pathA) && !string.IsNullOrEmpty(pathB))
-			{
-				var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-				var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-				return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
-			}
+			if (string.IsNullOrEmpty(pathA) || string.IsNullOrEmpty(pathB)) return false;
 
-			return false;
+			var fullPathA = this.FileSystem.Path.GetFullPath(pathA).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+			var fullPathB = this.FileSystem.Path.GetFullPath(pathB).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+			return 0 == string.Compare(fullPathA, fullPathB, StringComparison.OrdinalIgnoreCase);
 		}
 
 		public void SetWritableLocationsToInstallDirectory(bool sameFolder)
@@ -192,16 +189,15 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 			set => this.RaiseAndSetIfChanged(ref configureLocations, value);
 		}
 
-
 		string installDirectory;
 		[Argument(nameof(InstallDir), PersistInRegistry = true)]
 		public string InstallDir
 		{
-			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : Path.Combine(installDirectory, CurrentVersion);
+			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : ForceVersionFolder(installDirectory);
 			set
-			{
-				var rooted = GetRootedPathIfNecessary(value);
-				this.RaiseAndSetIfChanged(ref installDirectory, rooted);
+			{			
+				var versionFolder = ForceVersionFolder(value);
+				this.RaiseAndSetIfChanged(ref installDirectory, versionFolder);
 				this.SetWritableLocationsToInstallDirectory(this.PlaceWritableLocationsInSamePath);
 			}
 		}
@@ -212,6 +208,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		{
 			get => previousInstallationDirectory;
 			set => this.RaiseAndSetIfChanged(ref previousInstallationDirectory, value);
+		}
+
+		private string ForceVersionFolder(string directory)
+		{
+			if (string.IsNullOrWhiteSpace(directory)) return directory;
+			if (!Path.IsPathRooted(directory)) return directory;
+			return Path.Combine(GetRootedPathIfNecessary(directory), CurrentVersion);
 		}
 
 		private string GetRootedPathIfNecessary(string value)
