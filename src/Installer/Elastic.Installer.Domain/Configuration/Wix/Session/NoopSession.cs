@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Elastic.Installer.Domain.Model.Base.Service;
-using Microsoft.VisualBasic.ApplicationServices;
 
 namespace Elastic.Installer.Domain.Configuration.Wix.Session
 {
@@ -23,15 +21,9 @@ namespace Elastic.Installer.Domain.Configuration.Wix.Session
 			? (T)Convert.ChangeType(value, typeof(T)) 
 			: default(T);
 
-		public void Set(string property, string value)
-		{
-			this.SessionValues[property] = value;
-		}
+		public void Set(string property, string value) => this.SessionValues[property] = value;
 
-		public void Log(string message)
-		{
-			this.LoggedMessages.Add(message);
-		}
+		public void Log(string message) => this.LoggedMessages.Add(message);
 
 		public void SendActionStart(int totalTicks, string actionName, string message, string actionDataTemplate = null) { }
 

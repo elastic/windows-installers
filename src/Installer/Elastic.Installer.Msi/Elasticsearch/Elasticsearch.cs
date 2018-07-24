@@ -133,7 +133,6 @@ namespace Elastic.Installer.Msi.Elasticsearch
 			{
 				var directoryId = directory.Attribute("Id").Value;
 				var componentId = "Component." + directoryId;
-				var directoryName = directory.Attribute("Name").Value;
 
 				// WixSharp appends a .{DIGIT} to duplicate file names in different directories in installer e.g. plugin_descriptor.properties
 				// for Elasticsearch plugins. Problem is duplicated file names may not represent the same file path across versions so

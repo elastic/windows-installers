@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using Elastic.Installer.Domain.Model.Base.Plugins;
-using Elastic.Installer.Domain.Properties;
 using Semver;
 
 namespace Elastic.Installer.Domain.Model.Kibana.Plugins
@@ -25,15 +24,6 @@ namespace Elastic.Installer.Domain.Model.Kibana.Plugins
 			});
 		}
 
-		protected override IEnumerable<Plugin> GetPlugins()
-		{
-			yield return new Plugin
-			{
-				PluginType = PluginType.XPack,
-				Url = "x-pack",
-				DisplayName = "X-Pack",
-				Description = TextResources.PluginsModel_XPack,
-			};
-		}
+		protected override IEnumerable<Plugin> GetPlugins() => new List<Plugin>();
 	}
 }
