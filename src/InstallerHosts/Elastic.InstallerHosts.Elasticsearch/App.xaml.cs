@@ -30,7 +30,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 				.Wix(current: "6.3.0", upgradeFrom: "6.2.3")
 				.Elasticsearch(es=>es
 					.EsHomeMachineVariable(@"C:\elasticsearch\6.2.3")
-					.EsConfigMachineVariable(@"C:\elasticsearch\6.2.3\config")
+					.EsConfigMachineVariable(@"C:\ProgramData\6.2.3\config")
 				)
 				.ServicePreviouslyInstalled()
 			);
@@ -38,7 +38,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 			var state = InstallationModelTester.ValidPreflightChecks(s => s
 				.Wix(current: "6.3.1")
 			);
-			var model = state.InstallationModel;
+			var model = upgradeState.InstallationModel;
 
 			var window = new MainWindow(model, new ManualResetEvent(false));
 			model.InstallUITask = async () =>

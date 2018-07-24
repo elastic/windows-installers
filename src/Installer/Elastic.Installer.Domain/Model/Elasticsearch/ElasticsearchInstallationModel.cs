@@ -284,8 +284,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			// skip validation during the execution of the tasks, the validate argument tasks will handle this.
 			if (this.InstallationInProgress) this.HasEsHomeVariableButNoPreviousInstallation = false;
-			else this.HasEsHomeVariableButNoPreviousInstallation = 
-				!this.UnInstalling && !this.Installed && !string.IsNullOrWhiteSpace(ElasticsearchEnvironmentConfiguration.HomeDirectoryFromEnvironmentVariable);
+			else if (!string.IsNullOrWhiteSpace(ElasticsearchEnvironmentConfiguration.HomeDirectoryFromEnvironmentVariable))
+			{
+				var doesNotHavePreviousVersion = this._wixStateProvider.UpgradeFromVersion == null;
+				this.HasEsHomeVariableButNoPreviousInstallation = doesNotHavePreviousVersion;
+			}
 
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;
 			this.Using32BitJava = JavaConfiguration.Using32BitJava;
