@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Elastic.Installer.Domain.Configuration.Wix.Session;
 
 namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate
@@ -28,6 +29,11 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate
 				var validationFailures = ValidationFailures(failures);
 				throw new Exception("Cannot continue installation because of the following errors" + Environment.NewLine + validationFailures);
 			}
+
+			var installDir = this.Session.Get<string>("INSTALLDIR");
+			var version = this.InstallationModel.NoticeModel.CurrentVersion.ToString();
+			if (!new Regex(version + @"\\?$").IsMatch(installDir))
+				throw new Exception($"INSTALLDIR does not end in current version number: {version} ({installDir})");
 			return true;
 		}
 	}
