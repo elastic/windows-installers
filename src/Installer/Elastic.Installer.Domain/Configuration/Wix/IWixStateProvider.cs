@@ -9,5 +9,8 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 		
 		/// <summary> The version that is currently being installed </summary>
 		SemVersion CurrentVersion { get; }
+		
+		/// <summary> Indicates the model was instantatiated when the installation is in progresss</summary>
+		bool InstallationInProgress { get; }
 	}
 }

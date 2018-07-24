@@ -92,7 +92,8 @@ namespace Elastic.Installer.UI
 			if (!this._session.TryGetValue("ElasticProduct", out var product))
 				throw new Exception("ElasticProduct not found in session state.");
 
-			this._mainWindow = GetMainWindow(product, new WixStateProvider(GetProduct(product), version), new SessionWrapper(_session));
+			var wixStateProvider = new WixStateProvider(GetProduct(product), version, installationInProgress: false);
+			this._mainWindow = GetMainWindow(product, wixStateProvider, new SessionWrapper(_session));
 
 			Application.ResourceAssembly = _mainWindow.GetType().Assembly;
 			this._app.Run(this._mainWindow as Window);

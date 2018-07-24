@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 
 		public WritableLocationsTests()
 		{
-			this._model = WithValidPreflightChecks()
+			this._model = DefaultValidModel()
 				.IsValidOnStep(m => m.LocationsModel);
 		}
 

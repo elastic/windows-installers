@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 {
 	public class EditElasticsearchYamlConfigurationModelTaskTests : InstallationModelTestBase
 	{
-		[Fact] void CustomConfigValues() => WithValidPreflightChecks(s => s
+		[Fact] void CustomConfigValues() => DefaultValidModelForTasks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)

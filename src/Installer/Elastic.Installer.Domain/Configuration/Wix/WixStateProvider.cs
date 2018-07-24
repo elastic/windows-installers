@@ -54,15 +54,19 @@ namespace Elastic.Installer.Domain.Configuration.Wix
 		/// <inheritdoc />
 		public SemVersion CurrentVersion { get; }
 
-		public WixStateProvider(Product product, Guid currentProductCode) 
-			:this(product, GetVersion(product, currentProductCode))
+		/// <inheritdoc />
+		public bool InstallationInProgress { get; }
+
+		public WixStateProvider(Product product, Guid currentProductCode, bool installationInProgress) 
+			:this(product, GetVersion(product, currentProductCode), installationInProgress)
 		{
 		}
 
-		public WixStateProvider(Product product, string currentVersion) 
+		public WixStateProvider(Product product, string currentVersion, bool installationInProgress) 
 		{
 			var installed = IsAlreadyInstalled(product, out var existingVersions);
 			this.CurrentVersion = currentVersion;
+			this.InstallationInProgress = installationInProgress;
 			// use the latest existing version installed.
 			// TODO: What should we do about prerelease versions here?
 			if (installed) this.UpgradeFromVersion = existingVersions.OrderByDescending(v => v).First();

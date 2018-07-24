@@ -74,6 +74,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			var versionConfig = new VersionConfiguration(wixStateProvider, this.Session.IsInstalled);
 			this.SameVersionAlreadyInstalled = versionConfig.SameVersionAlreadyInstalled;
 			this.UnInstalling = this.Session.IsUninstalling;
+			this.InstallationInProgress = this._wixStateProvider.InstallationInProgress;
 			this.Installing = this.Session.IsInstalling;
 			this.Installed = this.Session.IsInstalled;
 			this.Upgrading = this.Session.IsUpgrading;
@@ -198,6 +199,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.ActiveStep.Validate();
 		}
 
+		/// <summary>
+		/// Indicates wheter the model was instantiated during the execution of the tasks.
+		/// </summary>
+		public bool InstallationInProgress { get; }
+
 		public bool Installing { get; }
 
 		public bool Installed { get; }
@@ -210,7 +216,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			var esEnvironmentConfig = ElasticsearchEnvironmentConfiguration.Default;
 			var serviceState = ServiceStateProvider.FromSession(session, ServiceModel.ElasticsearchServiceName);
 			var pluginState = PluginStateProviderBase.ElasticsearchDefault(session);
-
+			
 			var esConfig = ElasticsearchYamlConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
 			var jvmConfig = LocalJvmOptionsConfiguration.FromFolder(esEnvironmentConfig.ConfigDirectory);
 			var fileSystem = new FileSystem();
@@ -276,7 +282,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			this.JavaInstalled = JavaConfiguration.JavaInstalled;
 			this.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome = ElasticsearchEnvironmentConfiguration.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome;
 
-			this.HasEsHomeVariableButNoPreviousInstallation = 
+			// skip validation during the execution of the tasks, the validate argument tasks will handle this.
+			if (this.InstallationInProgress) this.HasEsHomeVariableButNoPreviousInstallation = false;
+			else this.HasEsHomeVariableButNoPreviousInstallation = 
 				!this.UnInstalling && !this.Installed && !string.IsNullOrWhiteSpace(ElasticsearchEnvironmentConfiguration.HomeDirectoryFromEnvironmentVariable);
 
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;

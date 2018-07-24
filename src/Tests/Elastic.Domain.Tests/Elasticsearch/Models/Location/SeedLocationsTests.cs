@@ -11,7 +11,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 		private string _customHome = "C:\\Elasticsearch";
 		private string _customConfig = "C:\\MyConfigLocation";
 
-		[Fact] void InstallationDirectoryReflectsES_HOME() => WithValidPreflightChecks(s => s
+		[Fact] void InstallationDirectoryReflectsES_HOME() => DefaultValidModel(s => s
 			.Elasticsearch(e => e
 				.EsHomeMachineVariable(_customHome)
 			))
@@ -22,7 +22,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 				step.ConfigureLocations.Should().BeTrue();
 			});
 
-		[Fact] void ConfigDirectoryReflectsES_PATH_CONF() => WithValidPreflightChecks(s => s
+		[Fact] void ConfigDirectoryReflectsES_PATH_CONF() => DefaultValidModel(s => s
 			.Elasticsearch(e => e
 				.EsConfigMachineVariable(_customConfig)
 			))
@@ -32,7 +32,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 				step.ConfigureLocations.Should().BeTrue();
 			});
 
-		[Fact] void DataDirectoryIsReadFromElasticsearchYaml() => WithValidPreflightChecks(s => s
+		[Fact] void DataDirectoryIsReadFromElasticsearchYaml() => DefaultValidModel(s => s
 			.Elasticsearch(e => e
 				.EsHomeMachineVariable(_customHome)
 				.EsConfigMachineVariable(_customConfig)
@@ -48,7 +48,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 				step.DataDirectory.Should().Be($"{_customHome}\\MyDataFolder");
 			});
 
-		[Fact] void LogsDirectoryIsReadFromElasticsearchYaml() => WithValidPreflightChecks(s => s
+		[Fact] void LogsDirectoryIsReadFromElasticsearchYaml() => DefaultValidModel(s => s
 			.Elasticsearch(e => e
 				.EsHomeMachineVariable(_customHome)
 				.EsConfigMachineVariable(_customConfig)

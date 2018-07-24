@@ -8,7 +8,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 	{
 		[Fact] void InstallByDefault()
 		{
-			var model = WithValidPreflightChecks();
+			var model = DefaultValidModelForTasks();
 			model.AssertTask(
 				(m, s, fs) => new InstallPluginsTask(m, s, fs),
 				(m, t) =>
@@ -19,7 +19,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 		}
 		[Fact] void PreviouslyInstalledPluginSelectionCarriesOver()
 		{
-			var model = WithValidPreflightChecks(s=>s
+			var model = DefaultValidModelForTasks(s=>s
 				.Wix("5.1.0", "5.0.0")
 				.PreviouslyInstalledPlugins("ingest-geoip", "analysis-kuromoji")
 			);
@@ -37,7 +37,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 		}
 		[Fact] void PreviouslyInstalledPluginSelectionCarriesOverEvenWhenEmpty()
 		{
-			var model = WithValidPreflightChecks(s=>s
+			var model = DefaultValidModelForTasks(s=>s
 				.Wix("5.1.0", "5.0.0")
 				.PreviouslyInstalledPlugins()
 			);

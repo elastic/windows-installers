@@ -21,7 +21,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Location
 
 		public LocationsFlagTests()
 		{
-			this._model = WithValidPreflightChecks()
+			this._model = DefaultValidModel()
 				.IsValidOnFirstStep();
 		}
 
