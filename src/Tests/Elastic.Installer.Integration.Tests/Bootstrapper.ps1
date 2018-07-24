@@ -108,7 +108,7 @@ Remove-Item "$currentDir\Tests\*" -Recurse -Force -Exclude *.ps1
 # Run Tests
 ###########
 
-log "running $testcount test scenario(s)"
+log "running $testcount test scenario(s)" -l Debug
 
 Invoke-IntegrationTests -CurrentDir $currentDir -TestDirs $testDirs -VagrantProvider $VagrantProvider -Version $Version -PreviousVersions $PreviousVersions -Gui:$Gui -VagrantDestroy:$VagrantDestroy
 
