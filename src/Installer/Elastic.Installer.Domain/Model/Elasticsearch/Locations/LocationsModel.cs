@@ -156,11 +156,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		[Argument(nameof(InstallDir), PersistInRegistry = true)]
 		public string InstallDir
 		{
-			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : Path.Combine(installDirectory, CurrentVersion);
+			get => string.IsNullOrWhiteSpace(installDirectory) ? installDirectory : ForceVersionFolder(installDirectory);
 			set
 			{
-				var rooted = GetRootedPathIfNecessary(value);
-				this.RaiseAndSetIfChanged(ref installDirectory, rooted);
+				var versionFolder = ForceVersionFolder(value);
+				this.RaiseAndSetIfChanged(ref installDirectory, versionFolder);
 			}
 		}
 
@@ -170,6 +170,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Locations
 		{
 			get => previousInstallationDirectory;
 			set => this.RaiseAndSetIfChanged(ref previousInstallationDirectory, value);
+		}
+
+		private string ForceVersionFolder(string directory)
+		{
+			if (string.IsNullOrWhiteSpace(directory)) return directory;
+			if (!Path.IsPathRooted(directory)) return directory;
+			return Path.Combine(GetRootedPathIfNecessary(directory), CurrentVersion);
 		}
 
 		private string GetRootedPathIfNecessary(string value)

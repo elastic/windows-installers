@@ -146,7 +146,12 @@ Target "Integrate" (fun () ->
         p.AddScript(script).BeginInvoke(null, output)
               |> Async.AwaitIAsyncResult
               |> Async.Ignore
-    Async.RunSynchronously async)
+    Async.RunSynchronously async
+
+    if (p.InvocationStateInfo.State = PSInvocationState.Failed) then
+        failwith "PowerShell completed abnormally due to an error"
+)
+
 
 Target "Help" (fun () -> trace Commandline.usage)
 
