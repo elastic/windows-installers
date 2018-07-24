@@ -18,11 +18,12 @@
 
     <TextBlock Grid.Row="0"
                Grid.Column="0"
+               x:Name="LicenseInformation"
                Text="{x:Static resx:ViewResources.MainWindow_LicenseInformation}"
                TextWrapping="Wrap">
       
       <Hyperlink Command="{Binding OpenLicense}">
-        <TextBlock Text="{x:Static resx:ViewResources.MainWindow_LicenseName}"/>
+        <TextBlock Text="{x:Static resx:ViewResources.MainWindow_LicenseName}" />
       </Hyperlink>
     </TextBlock>
 

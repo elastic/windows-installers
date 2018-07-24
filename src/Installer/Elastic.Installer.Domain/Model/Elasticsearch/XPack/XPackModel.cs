@@ -90,7 +90,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			get => this.xPackSecurityEnabled;
 			set => this.RaiseAndSetIfChanged(ref this.xPackSecurityEnabled, value);
 		}
-		
+
 		bool skipSettingPasswords;
 		[Argument(nameof(SkipSettingPasswords))]
 		public bool SkipSettingPasswords
@@ -100,7 +100,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 		}
 
 		XPackLicenseMode xPackLicense;
-		[Argument(nameof(XPackLicense))]
+		// using order of 10 to make sure other arguments are parsed after setting the license which switches to 
+		// per license defaults
+		[Argument(nameof(XPackLicense), Order = 10)]
 		public XPackLicenseMode XPackLicense
 		{
 			get => this.xPackLicense;
@@ -120,12 +122,18 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack
 			set => this.RaiseAndSetIfChanged(ref this.bootstrapPassword, value);
 		}
 
-		public bool NeedsPasswords =>
-			this.IsRelevant 
-			&& this.CanAutomaticallySetupUsers 
-			&& this.XPackLicense == XPackLicenseMode.Trial
-			&& !this.SkipSettingPasswords
-			&& this.XPackSecurityEnabled;
+		public bool NeedsPasswords
+		{
+			get
+			{
+				if (!this.XPackSecurityEnabled) return false;
+				return this.IsRelevant
+				       && this.CanAutomaticallySetupUsers
+				       && this.XPackLicense == XPackLicenseMode.Trial
+				       && !this.SkipSettingPasswords
+				       && this.XPackSecurityEnabled;
+			}
+		}
 
 		public ReactiveCommand<object> OpenLicensesAndSubscriptions { get; }
 
