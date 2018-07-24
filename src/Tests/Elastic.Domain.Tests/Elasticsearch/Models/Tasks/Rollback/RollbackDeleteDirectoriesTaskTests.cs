@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 	public class RollbackDeleteDirectoriesTaskTests : InstallationModelTestBase
 	{
 		[Fact] void RollbackNewInstallationRemovesDirectories() =>
-			WithValidPreflightChecks(s => s
+			DefaultValidModelForTasks(s => s
 				.Session(rollback: true, uninstalling: false)
 			)
 			.AssertTask((m, s, fs) =>
@@ -38,7 +38,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 			fs.AllPaths.Aggregate(new StringBuilder().AppendLine("FileSystem:"), (sb, s) => sb.AppendLine($" {s}"), sb => sb.ToString());
 
 		[Fact] void RollbackToPreviousInstallationDoesNotRemoveDirectories() =>
-			WithValidPreflightChecks(s => s
+			DefaultValidModelForTasks(s => s
 				.Wix(current: "5.6.0", upgradeFrom: "5.5.0")
 				.Session(rollback: true, uninstalling: false)
 			)
@@ -60,7 +60,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Rollback
 		);
 		
 		[Fact] void RollbackToPreviousInstallationDoesNotRemoveDirectoriesWhenSessionVariablesAreSet() =>
-			WithValidPreflightChecks(s => s
+			DefaultValidModelForTasks(s => s
 				.Wix(current: "5.6.0", upgradeFrom: "5.5.0")
 				.Session(rollback: true, uninstalling: false, sessionVariables: new Dictionary<string, string>
 					{

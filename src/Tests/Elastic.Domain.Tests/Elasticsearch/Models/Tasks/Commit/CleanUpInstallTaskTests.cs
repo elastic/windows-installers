@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Commit
 {
 	public class CleanUpInstallTaskTests : InstallationModelTestBase
 	{
-		[Fact] void CleansProductInstallTempDirectory() => WithValidPreflightChecks()
+		[Fact] void CleansProductInstallTempDirectory() => DefaultValidModelForTasks()
 			.AssertTask(
 				(m, s, fs) =>
 				{

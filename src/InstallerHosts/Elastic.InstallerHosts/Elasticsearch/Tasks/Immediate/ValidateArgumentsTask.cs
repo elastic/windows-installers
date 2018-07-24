@@ -7,7 +7,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Immediate
 {
 	public class ValidateArgumentsTask : ElasticsearchInstallationTaskBase
 	{
-		public ValidateArgumentsTask(string[] args, ISession session) : base(args, session) { }
+		public ValidateArgumentsTask(string[] args, ISession session) : base(args, session, installationInProgress: false) { }
 
 		protected override bool ExecuteTask()
 		{

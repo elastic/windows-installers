@@ -16,7 +16,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 		private readonly string EsLogs = @"c:\es-logs";
 		
 		[Fact]
-		void CreatesDefaultDirectories() => WithValidPreflightChecks()
+		void CreatesDefaultDirectories() => DefaultValidModelForTasks()
 			.AssertTask(
 				(m, s, fs) =>
 				{
@@ -35,7 +35,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 			);
 
 		[Fact]
-		void CreatesUserDirectories() => WithValidPreflightChecks(s => s
+		void CreatesUserDirectories() => DefaultValidModelForTasks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
@@ -61,7 +61,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 			);
 
 		[Fact]
-		void ExisitingDirectoriesAreReused() => WithValidPreflightChecks(s => s
+		void ExisitingDirectoriesAreReused() => DefaultValidModelForTasks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)
@@ -87,7 +87,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 			);
 
 		[Fact]
-		void DefaultConfigContentsCopied() => WithValidPreflightChecks(s => s
+		void DefaultConfigContentsCopied() => DefaultValidModelForTasks(s => s
 				.SetupArgument(nameof(LocationsModel.DataDirectory), EsData)
 				.SetupArgument(nameof(LocationsModel.ConfigDirectory), EsConfig)
 				.SetupArgument(nameof(LocationsModel.LogsDirectory), EsLogs)

@@ -13,7 +13,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 {
 	public class PreserveInstallTaskTests : InstallationModelTestBase
 	{
-		[Fact] void DoesNotRemoveTempDirectoryIfNotEmpty() => WithValidPreflightChecks()
+		[Fact] void DoesNotRemoveTempDirectoryIfNotEmpty() => DefaultValidModelForTasks()
 			.AssertTask(
 				(m, s, fs) =>
 				{
@@ -39,7 +39,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 		
-		[Fact] void DeletesConfigFolderIfOneIsSomehowPreset() => WithValidPreflightChecks()
+		[Fact] void DeletesConfigFolderIfOneIsSomehowPreset() => DefaultValidModelForTasks()
 			.AssertTask(
 				(m, s, fs) =>
 				{
@@ -63,7 +63,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 
-		[Fact] void CopiesExistingConfigDirectory() => WithValidPreflightChecks(s => s
+		[Fact] void CopiesExistingConfigDirectory() => DefaultValidModelForTasks(s => s
 				.FileSystem(fs =>
 				{
 					fs.AddDirectory(LocationsModel.DefaultConfigDirectory);
@@ -103,7 +103,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 				}
 			);
 		
-		[Fact] void MovesPluginFolder() => WithValidPreflightChecks(s => s
+		[Fact] void MovesPluginFolder() => DefaultValidModelForTasks(s => s
 				.FileSystem(fs =>
 				{
 					var pluginFolder = Path.Combine(VersionSpecificInstallDirectory, "plugins");

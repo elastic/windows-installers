@@ -12,10 +12,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		
 		protected InstallationModelTester Pristine() => InstallationModelTester.New();
 
-		protected InstallationModelTester WithValidPreflightChecks() => 
-			InstallationModelTester.ValidPreflightChecks();
+		protected InstallationModelTester DefaultValidModel() => InstallationModelTester.ValidPreflightChecks();
 
-		protected InstallationModelTester WithValidPreflightChecks(Func<TestSetupStateProvider, TestSetupStateProvider> selector)  =>
+		protected InstallationModelTester DefaultValidModel(Func<TestSetupStateProvider, TestSetupStateProvider> selector)  =>
 			InstallationModelTester.ValidPreflightChecks(selector);
 
 		protected InstallationModelTester WithExistingElasticsearchYaml(string yamlContents)  =>
@@ -31,6 +30,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 					return f;
 				})
 			);
+		
+		protected InstallationModelTester DefaultValidModelForTasks() => DefaultValidModelForTasks(s=>s);
+
+		protected InstallationModelTester DefaultValidModelForTasks(Func<TestSetupStateProvider, TestSetupStateProvider> selector)  =>
+			InstallationModelTester.ValidPreflightChecksForTasks(selector);
 	}
 }
 

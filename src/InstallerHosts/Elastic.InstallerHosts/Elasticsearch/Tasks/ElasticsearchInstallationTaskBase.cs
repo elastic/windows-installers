@@ -12,8 +12,10 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks
 	{
 		protected ElasticsearchInstallationModel InstallationModel => this.Model as ElasticsearchInstallationModel;
 
-		protected ElasticsearchInstallationTaskBase(string[] args, ISession session)
-			: this(ElasticsearchInstallationModel.Create(new WixStateProvider(Product.Elasticsearch, Guid.Parse(session.Get<string>("ProductCode"))), session, args), session, new FileSystem())
+		protected ElasticsearchInstallationTaskBase(string[] args, ISession session, bool installationInProgress = true)
+			: this(ElasticsearchInstallationModel.Create(
+				new WixStateProvider(Product.Elasticsearch, Guid.Parse(session.Get<string>("ProductCode")), installationInProgress), session, args), session, new FileSystem()
+			)
 		{
 			this.Args = args;
 		}

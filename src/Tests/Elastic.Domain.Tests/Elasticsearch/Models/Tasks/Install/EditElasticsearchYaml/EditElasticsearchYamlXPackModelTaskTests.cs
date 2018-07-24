@@ -14,7 +14,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 {
 	public class EditElasticsearchYamlXPackModelTaskTests : InstallationModelTestBase
 	{
-		[Fact] void WritesExpectedDefaults() => WithValidPreflightChecks(s => s
+		[Fact] void WritesExpectedDefaults() => DefaultValidModelForTasks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -39,7 +39,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				}
 			);
 
-		[Fact] void SelectingXPackPluginDefaultsToWritingLicenseType() => WithValidPreflightChecks(s => s
+		[Fact] void SelectingXPackPluginDefaultsToWritingLicenseType() => DefaultValidModelForTasks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -64,7 +64,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				}
 			);
 		
-		[Fact] void SelectingTrialWritesSecurityEnabled() => WithValidPreflightChecks(s => s
+		[Fact] void SelectingTrialWritesSecurityEnabled() => DefaultValidModelForTasks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -90,7 +90,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				}
 			);
 		
-		[Fact] void DeselectingSecurityWritesFalseToYamlFile() => WithValidPreflightChecks(s => s
+		[Fact] void DeselectingSecurityWritesFalseToYamlFile() => DefaultValidModelForTasks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -120,7 +120,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				}
 			);
 		
-		[Fact] void XPackSettingsAlreadyInPlaceAreNotOverwritten() => WithValidPreflightChecks(s => s
+		[Fact] void XPackSettingsAlreadyInPlaceAreNotOverwritten() => DefaultValidModelForTasks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)

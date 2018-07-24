@@ -54,9 +54,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 			return this.SessionFromWix();
 		}
 
-		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null)
+		public TestSetupStateProvider Wix(bool alreadyInstalled, string existingInstallDir = null, bool installationInProgress = false)
 		{
-			this.WixState = new MockWixStateProvider() { CurrentVersion = DefaultTestVersion };
+			this.WixState = new MockWixStateProvider() { CurrentVersion = DefaultTestVersion, InstallationInProgress = installationInProgress};
 			if (!alreadyInstalled) return this.SessionFromWix();
 			this.WixState.UpgradeFromVersion = DefaultTestVersion;
 

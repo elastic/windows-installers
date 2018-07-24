@@ -8,7 +8,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 	public class SetupXPackPasswordsTaskTests : InstallationModelTestBase
 	{
 		[Fact(Skip = "need an integration test for this")]
-		void InstallByDefault() => WithValidPreflightChecks()
+		void InstallByDefault() => DefaultValidModelForTasks()
 			.OnStep(m=>m.XPackModel, step =>
 			{
 				step.XPackLicense = XPackLicenseMode.Trial;
