@@ -9,7 +9,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Service
 
 		public ServiceTests()
 		{
-			this._model = WithValidPreflightChecks()
+			this._model = DefaultValidModel()
 				.ClickNext()
 				.IsValidOnStep(m => m.ServiceModel);
 		}

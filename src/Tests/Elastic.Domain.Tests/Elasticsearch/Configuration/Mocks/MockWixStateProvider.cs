@@ -13,5 +13,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		public SemVersion UpgradeFromVersion { get; set; }
 
 		public SemVersion CurrentVersion { get; set; }
+
+		public bool InstallationInProgress { get; set; }
 	}
 }

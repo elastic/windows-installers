@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 {
 	public class EditElasticsearchYamlServiceModelTaskTests : InstallationModelTestBase
 	{
-		[Fact] void DefaultMaxLocalStorageNodesNotService() => WithValidPreflightChecks(s => s
+		[Fact] void DefaultMaxLocalStorageNodesNotService() => DefaultValidModelForTasks(s => s
 			.Elasticsearch(es => es
 				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 			)
@@ -38,7 +38,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				}
 			);
 
-		[Fact] void MaxLocalStorageNodesShouldBeSetWhenInstallingAsService() => WithValidPreflightChecks(s => s
+		[Fact] void MaxLocalStorageNodesShouldBeSetWhenInstallingAsService() => DefaultValidModelForTasks(s => s
 				.Elasticsearch(es => es
 					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)

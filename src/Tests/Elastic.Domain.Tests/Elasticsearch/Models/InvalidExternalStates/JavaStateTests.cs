@@ -7,7 +7,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.InvalidExternalSta
 {
 	public class JavaStateTests : InstallationModelTestBase
 	{
-		private InstallationModelTester EmptyJavaModel(Func<TestSetupStateProvider, TestSetupStateProvider> selector) => WithValidPreflightChecks(s => selector(s
+		private InstallationModelTester EmptyJavaModel(Func<TestSetupStateProvider, TestSetupStateProvider> selector) => DefaultValidModel(s => selector(s
 			.Java(j => j
 				.JavaHomeMachineVariable(null)
 				.JavaHomeUserVariable(null)

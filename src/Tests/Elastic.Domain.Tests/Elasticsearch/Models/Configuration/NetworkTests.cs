@@ -10,7 +10,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 
 		public NetworkTests()
 		{
-			this._model = WithValidPreflightChecks()
+			this._model = DefaultValidModel()
 				.ClickNext()
 				.ClickNext()
 				.IsValidOnStep(m => m.ConfigurationModel);

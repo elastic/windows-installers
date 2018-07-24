@@ -12,7 +12,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 	public class EditJvmOptionsTaskTests : InstallationModelTestBase
 	{
 		[Fact]
-		void PicksUpExistingConfiguration() => WithValidPreflightChecks(s => s
+		void PicksUpExistingConfiguration() => DefaultValidModelForTasks(s => s
 				.Elasticsearch(e => e
 					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
@@ -41,7 +41,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 			);
 
 		[Fact]
-		void WritesExpectedDefaults() => WithValidPreflightChecks(s => s
+		void WritesExpectedDefaults() => DefaultValidModelForTasks(s => s
 				.Elasticsearch(es => es
 					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)
@@ -68,7 +68,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 			);
 
 		[Fact]
-		void WritesConfiguredMemory() => WithValidPreflightChecks(s => s
+		void WritesConfiguredMemory() => DefaultValidModelForTasks(s => s
 				.Elasticsearch(es => es
 					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
 				)

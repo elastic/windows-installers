@@ -10,7 +10,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 	public class UninstallDeleteDirectoriesTaskTests : InstallationModelTestBase
 	{
 		[Fact] void RemoveDirectoriesOnUninstall() =>
-			WithValidPreflightChecks(s => s
+			DefaultValidModelForTasks(s => s
 				.Session(uninstalling: true, rollback: false)
 			)
 			.AssertTask((m, s, fs) =>
@@ -33,7 +33,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 		);
 		
 		[Fact] void RemovesParentInstallationFoldersWhenEmpty() =>
-			WithValidPreflightChecks(s => s
+			DefaultValidModelForTasks(s => s
 				.Session(uninstalling: true, rollback: false)
 			)
 			.AssertTask((m, s, fs) =>
@@ -54,7 +54,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 		);
 
 		[Fact] void LeavesParentFolderAloneIfOtherProductIsInstalled() =>
-			WithValidPreflightChecks(s => s
+			DefaultValidModelForTasks(s => s
 				.Session(uninstalling: true, rollback: false)
 			)
 			.AssertTask((m, s, fs) =>
@@ -76,7 +76,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Uninstall
 		);
 		
 		[Fact] void LeavesCompanyDataDirectoryAloneIfOtherProductUsesIt() =>
-			WithValidPreflightChecks(s => s
+			DefaultValidModelForTasks(s => s
 				.Session(uninstalling: true, rollback: false)
 			)
 			.AssertTask((m, s, fs) =>

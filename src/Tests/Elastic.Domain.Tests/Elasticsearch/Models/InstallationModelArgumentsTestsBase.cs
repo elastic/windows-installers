@@ -15,7 +15,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		protected void Argument<T>(string key, T value, Action<ElasticsearchInstallationModel, T> assert)
 		{
-			var model = WithValidPreflightChecks().InstallationModel;
+			var model = DefaultValidModel().InstallationModel;
 			string msiParams = AssertParser(model, key, value, assert);
 			var msiParamString = model.ParsedArguments.MsiString(value);
 
@@ -24,7 +24,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		protected void Argument<T>(string key, T value, string msiParam, Action<ElasticsearchInstallationModel, T> assert)
 		{
-			var model = WithValidPreflightChecks().InstallationModel;
+			var model = DefaultValidModel().InstallationModel;
 			string msiParams = AssertParser(model, key, value, assert);
 			msiParams.Should().Contain($"{key.ToUpperInvariant()}=\"{msiParam}\"");
 		}
@@ -44,13 +44,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		protected MultipleArgumentsTester Argument<T>(string key, T value)
 		{
-			var model = WithValidPreflightChecks().InstallationModel;
+			var model = DefaultValidModel().InstallationModel;
 			return new MultipleArgumentsTester(model).Argument(key, value);
 		}
 
 		protected MultipleArgumentsTester Argument<T>(string key, T value, string msiParam)
 		{
-			var model = WithValidPreflightChecks().InstallationModel;
+			var model = DefaultValidModel().InstallationModel;
 			return new MultipleArgumentsTester(model).Argument(key, value, msiParam);
 		}
 

@@ -25,6 +25,8 @@ namespace Elastic.InstallerHosts.Kibana
 			public SemVersion CurrentVersion => "5.0.0";
 
 			public SemVersion UpgradeFromVersion => null;
+
+			public bool InstallationInProgress => false;
 		}
 
 		public void Application_Startup(object sender, StartupEventArgs e)

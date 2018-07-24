@@ -24,13 +24,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			);
 	
 		/* A model with all preflight checks set is valid */
-		[Fact] void CanClickNextWhenValid() => WithValidPreflightChecks()
+		[Fact] void CanClickNextWhenValid() => DefaultValidModel()
 			.IsValidOnFirstStep()
 			.CanClickNext();
 
 		/* When the first step is valid and we go to the next step and back
 		* the model should still be valid and not reset */
-		[Fact] public void ClickingBackDoesNotReset() => WithValidPreflightChecks()
+		[Fact] public void ClickingBackDoesNotReset() => DefaultValidModel()
 			.IsValidOnFirstStep()
 			.ClickNext()
 			.IsValidOnStep(m => m.ServiceModel)
@@ -41,7 +41,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 
 		/** Make sure that the active step never exceeds the first step with errors */
-		[Fact] public void ActiveStepFollowsFirstViewModelWithErrors() => WithValidPreflightChecks()
+		[Fact] public void ActiveStepFollowsFirstViewModelWithErrors() => DefaultValidModel()
 			.IsValidOnFirstStep()
 			.ClickNext()
 			.ClickNext()
@@ -54,7 +54,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		All the other step models are valid by default and we can click next untill we get to the install phase */
 		[Fact] public void GivenValidPreflightChecksCanClickNextTillInstall()
 		{
-			var tester = WithValidPreflightChecks();
+			var tester = DefaultValidModel();
 			tester.IsValidOnFirstStep();
 			tester.InstallationModel.NextButtonText.Should().Be(TextResources.SetupView_NextText);
 			tester.ClickNext();
@@ -78,7 +78,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		
 		[Fact] public void WhenPreviousVersionHadXPackInstalledSkipXPackStep()
 		{
-			var tester = WithValidPreflightChecks(t=>t
+			var tester = DefaultValidModel(t=>t
 				.Wix(current: "6.3.0", upgradeFrom: "6.2.0")
 				.PreviouslyInstalledPlugins("x-pack")
 			);
@@ -101,7 +101,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		
 		[Fact] public void WhenPreviousVersionOlderThan630DoesNotHaveXPackInstalledShowIt()
 		{
-			var tester = WithValidPreflightChecks(t=>t
+			var tester = DefaultValidModel(t=>t
 				.Wix(current: "6.3.0", upgradeFrom: "6.2.0")
 			);
 			tester.IsValidOnFirstStep();
@@ -124,7 +124,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 		}
 		[Fact] public void WhenPreviousVersionNewerOrEqualTo630AlwaysShowXpack()
 		{
-			var tester = WithValidPreflightChecks(t=>t
+			var tester = DefaultValidModel(t=>t
 				.Wix(current: "6.3.1", upgradeFrom: "6.3.0")
 			);
 			tester.IsValidOnFirstStep();
