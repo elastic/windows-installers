@@ -571,15 +571,6 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An Elasticsearch plugin written in Clojure that provides clojure as a scripting language for Elasticsearch queries..
-        /// </summary>
-        public static string PluginsModel_ClojureLanguagePlugin {
-            get {
-                return ResourceManager.GetString("PluginsModel_ClojureLanguagePlugin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The EC2 discovery plugin uses the AWS API for unicast discovery..
         /// </summary>
         public static string PluginsModel_EC2Discovery {
@@ -598,7 +589,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allows Elasticsearch to use the Haddop file-system as a repository for snapshot/restore..
+        ///   Looks up a localized string similar to Allows Elasticsearch to use the Hadoop file-system as a repository for snapshot/restore..
         /// </summary>
         public static string PluginsModel_HdfsRepository {
             get {
@@ -643,24 +634,6 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The JavaScript language plugin allows to have javascript (or js) as the language of scripts to execute..
-        /// </summary>
-        public static string PluginsModel_JavaScriptLanguagePlugin {
-            get {
-                return ResourceManager.GetString("PluginsModel_JavaScriptLanguagePlugin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The mapper attachments plugin adds the attachment type to Elasticsearch using Apache Tika. The attachment type allows to index different \&quot;attachment\&quot; type field (encoded as base64), for example, microsoft office formats, open document formats, ePub, HTML, and so on..
-        /// </summary>
-        public static string PluginsModel_MapperAttachments {
-            get {
-                return ResourceManager.GetString("PluginsModel_MapperAttachments", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The mapper-murmur3 plugin provides the ability to compute a hash of field values at index-time and store them in the index. This can sometimes be helpful when running cardinality aggregations on high-cardinality and large string fields..
         /// </summary>
         public static string PluginsModel_MapperMurmur3 {
@@ -684,15 +657,6 @@ namespace Elastic.Installer.Domain.Properties {
         public static string PluginsModel_Phonetic {
             get {
                 return ResourceManager.GetString("PluginsModel_Phonetic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Python (jython) language plugin allows to have python as the language of scripts to execute..
-        /// </summary>
-        public static string PluginsModel_PythonLanguagePlugin {
-            get {
-                return ResourceManager.GetString("PluginsModel_PythonLanguagePlugin", resourceCulture);
             }
         }
         
@@ -729,15 +693,6 @@ namespace Elastic.Installer.Domain.Properties {
         public static string PluginsModel_StoreSmb {
             get {
                 return ResourceManager.GetString("PluginsModel_StoreSmb", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, graph and machine learning capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA..
-        /// </summary>
-        public static string PluginsModel_XPack {
-            get {
-                return ResourceManager.GetString("PluginsModel_XPack", resourceCulture);
             }
         }
         
@@ -951,7 +906,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;elastic&apos; password needs to be at least 6 characters.
+        ///   Looks up a localized string similar to &apos;elastic&apos; built-in user password needs to be at least 6 characters.
         /// </summary>
         public static string XPackModelValidator_ElasticPasswordAtLeast6Characters {
             get {
@@ -960,7 +915,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;elastic&apos; password is required.
+        ///   Looks up a localized string similar to &apos;elastic&apos; built-in user password is required.
         /// </summary>
         public static string XPackModelValidator_ElasticPasswordRequired {
             get {
@@ -969,7 +924,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;kibana&apos; password needs to be at least 6 characters.
+        ///   Looks up a localized string similar to &apos;kibana&apos; built-in user password needs to be at least 6 characters.
         /// </summary>
         public static string XPackModelValidator_KibanaPasswordAtLeast6Characters {
             get {
@@ -978,7 +933,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;kibana&apos; password is required.
+        ///   Looks up a localized string similar to &apos;kibana&apos; built-in user password is required.
         /// </summary>
         public static string XPackModelValidator_KibanaPasswordRequired {
             get {
@@ -987,7 +942,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;logstash_system&apos; password needs to be at least 6 characters.
+        ///   Looks up a localized string similar to &apos;logstash_system&apos; built-in user password needs to be at least 6 characters.
         /// </summary>
         public static string XPackModelValidator_LogstashPasswordAtLeast6Characters {
             get {
@@ -996,7 +951,7 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;logstash_system&apos; is required.
+        ///   Looks up a localized string similar to &apos;logstash_system&apos; built-in user password is required.
         /// </summary>
         public static string XPackModelValidator_LogstashPasswordRequired {
             get {

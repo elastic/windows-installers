@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Plugin;
-using Elastic.Installer.Domain.Configuration.Wix;
 using FluentValidation;
 using ReactiveUI;
 using Semver;
