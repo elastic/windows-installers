@@ -34,6 +34,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.XPack
 			m.XPackModel.IsValid.Should().BeTrue("{0}", m);
 		});
 		
+		[Fact] void TrialArgumentShouldBeParsedFirstSoThatSecurityCanBeDisabledBeforeOrAfter() => 
+			Argument(nameof(XPackModel.XPackSecurityEnabled), "0", "false")
+			.Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Trial))
+			.Assert(m =>
+		{
+			m.XPackModel.XPackLicense.Should().Be(XPackLicenseMode.Trial);
+			m.XPackModel.XPackSecurityEnabled.Should().BeFalse();
+			m.XPackModel.NeedsPasswords.Should().BeFalse();
+			m.XPackModel.IsValid.Should().BeTrue("{0}", m);
+		});
+		
 		[Fact] void CanPassSystemUserPasswords() => 
 			Argument(nameof(XPackModel.XPackLicense), nameof(XPackLicenseMode.Trial))
 			.Argument(nameof(XPackModel.ElasticUserPassword), "es-pass")

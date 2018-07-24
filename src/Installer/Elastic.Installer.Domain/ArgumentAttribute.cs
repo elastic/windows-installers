@@ -59,6 +59,12 @@ namespace Elastic.Installer.Domain
 		/// </summary>
 		public bool PersistInRegistry { get; set; }
 
+
+		/// <summary>
+		/// Controls the parsing order, a higher order means this argument will be parsed before others.
+		/// </summary>
+		public int Order { get; set; }
+
 		public ArgumentAttribute(string name, bool uppercase = true) => 
 			this.Name = uppercase ? name.ToUpperInvariant() : name;
 	}

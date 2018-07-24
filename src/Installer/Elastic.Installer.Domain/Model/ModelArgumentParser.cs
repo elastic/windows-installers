@@ -175,7 +175,7 @@ namespace Elastic.Installer.Domain.Model
 		}
 		private void ApplyViewModelArguments()
 		{
-			foreach (var a in this.ViewModelArguments)
+			foreach (var a in this.ViewModelArguments.OrderByDescending(v=>v.Attribute.Order))
 			{
 				var setter = SetterDelegate(a);
 				var p = a.PropertyType;
