@@ -188,26 +188,14 @@ Java won't used compressed pointers.</value>
   <data name="PluginsModel_AzureRepository" xml:space="preserve">
     <value>The Azure Repository plugin adds support for using Azure as a repository for Snapshot/Restore.</value>
   </data>
-  <data name="PluginsModel_ClojureLanguagePlugin" xml:space="preserve">
-    <value>An Elasticsearch plugin written in Clojure that provides clojure as a scripting language for Elasticsearch queries.</value>
-  </data>
   <data name="PluginsModel_HdfsRepository" xml:space="preserve">
-    <value>Allows Elasticsearch to use the Haddop file-system as a repository for snapshot/restore.</value>
+    <value>Allows Elasticsearch to use the Hadoop file-system as a repository for snapshot/restore.</value>
   </data>
   <data name="PluginsModel_ICUAnalysis" xml:space="preserve">
     <value>The ICU Analysis plugin integrates the Lucene ICU module into Elasticsearch, adding extended Unicode support using the ICU libraries, including better analysis of Asian languages, Unicode normalization, Unicode-aware case folding, collation support, and transliteration.</value>
   </data>
   <data name="PluginsModel_JapaneseAnalysis" xml:space="preserve">
     <value>The Japanese (kuromoji) Analysis plugin integrates the Lucene kuromoji analysis module into Elasticsearch.</value>
-  </data>
-  <data name="PluginsModel_JavaScriptLanguagePlugin" xml:space="preserve">
-    <value>The JavaScript language plugin allows to have javascript (or js) as the language of scripts to execute.</value>
-  </data>
-  <data name="PluginsModel_MapperAttachments" xml:space="preserve">
-    <value>The mapper attachments plugin adds the attachment type to Elasticsearch using Apache Tika. The attachment type allows to index different \"attachment\" type field (encoded as base64), for example, microsoft office formats, open document formats, ePub, HTML, and so on.</value>
-  </data>
-  <data name="PluginsModel_PythonLanguagePlugin" xml:space="preserve">
-    <value>The Python (jython) language plugin allows to have python as the language of scripts to execute.</value>
   </data>
   <data name="PluginsModel_SmartChineseAnalysis" xml:space="preserve">
     <value>The Smart Chinese Analysis plugin integrates the Lucene Smart Chinese analysis module into Elasticsearch.</value>
@@ -336,9 +324,6 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
   <data name="PluginsModel_StoreSmb" xml:space="preserve">
     <value>The Store SMB plugin works around a bug in Windows SMB and Java on Windows.</value>
   </data>
-  <data name="PluginsModel_XPack" xml:space="preserve">
-    <value>X-Pack is an Elastic Stack extension that bundles security, alerting, monitoring, reporting, graph and machine learning capabilities into one easy-to-install package. While the X-Pack components are designed to work together seamlessly, you can easily enable or disable the features you want to use. X-Pack is a proprietary plugin that falls under the Elastic EULA.</value>
-  </data>
   <data name="PluginType_Ingest" xml:space="preserve">
     <value>Ingest</value>
   </data>
@@ -398,22 +383,22 @@ PLEASE NOTE: an uninstall will always remove the data folder be sure you move it
     to the internet and refresh the installer.</value>
   </data>
   <data name="XPackModelValidator_ElasticPasswordRequired" xml:space="preserve">
-    <value>'elastic' password is required</value>
+    <value>'elastic' built-in user password is required</value>
   </data>
   <data name="XPackModelValidator_KibanaPasswordRequired" xml:space="preserve">
-    <value>'kibana' password is required</value>
+    <value>'kibana' built-in user password is required</value>
   </data>
   <data name="XPackModelValidator_LogstashPasswordRequired" xml:space="preserve">
-    <value>'logstash_system' is required</value>
+    <value>'logstash_system' built-in user password is required</value>
   </data>
   <data name="XPackModelValidator_ElasticPasswordAtLeast6Characters" xml:space="preserve">
-    <value>'elastic' password needs to be at least 6 characters</value>
+    <value>'elastic' built-in user password needs to be at least 6 characters</value>
   </data>
   <data name="XPackModelValidator_KibanaPasswordAtLeast6Characters" xml:space="preserve">
-    <value>'kibana' password needs to be at least 6 characters</value>
+    <value>'kibana' built-in user password needs to be at least 6 characters</value>
   </data>
   <data name="XPackModelValidator_LogstashPasswordAtLeast6Characters" xml:space="preserve">
-    <value>'logstash_system' password needs to be at least 6 characters</value>
+    <value>'logstash_system' built-in user password needs to be at least 6 characters</value>
   </data>
   <data name="PluginsModelValidator_InvalidHttpProxyHost" xml:space="preserve">
     <value>HTTP proxy host is unknown. Enter a valid host name </value>

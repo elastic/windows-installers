@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Management.Instrumentation;
 using Elastic.Installer.Domain.Properties;
 using FluentValidation;
 

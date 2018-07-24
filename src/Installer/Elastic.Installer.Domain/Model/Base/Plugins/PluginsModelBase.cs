@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using Elastic.Configuration.EnvironmentBased;
 using Elastic.Installer.Domain.Configuration.Plugin;
 using FluentValidation;
 using ReactiveUI;
+using Semver;
 
 namespace Elastic.Installer.Domain.Model.Base.Plugins
 {
@@ -57,7 +58,6 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			set => this.RaiseAndSetIfChanged(ref _installedPlugins, value);
 		}
 
-
 		public override void Refresh()
 		{
 			this.AvailablePlugins.Clear();
@@ -74,8 +74,6 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 				plugin.Selected = true;
 
 			if (installedPlugins != null) InstalledPlugins.AddRange(installedPlugins);
-			
-			
 		}
 
 		public override string ToString()

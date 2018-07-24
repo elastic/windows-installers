@@ -9,8 +9,7 @@ using WixSharp;
 namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 {
 	/// <summary>
-	/// Changes the Windows Service installation start type from the default "auto"
-	/// to "demand".
+	/// Changes the Windows Service installation start type from the default "auto" to "demand".
 	/// </summary>
 	public class ElasticsearchServiceStartTypeAction : CustomAction<Elasticsearch>
 	{

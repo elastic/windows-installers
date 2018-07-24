@@ -1,5 +1,4 @@
-﻿using System;
-using Elastic.Installer.Domain.Properties;
+﻿using Elastic.Installer.Domain.Properties;
 using FluentValidation;
 
 namespace Elastic.Installer.Domain.Model.Elasticsearch.XPack

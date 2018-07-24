@@ -73,26 +73,27 @@ namespace Elastic.Installer.Domain.Model
 
 		public string MsiString(object v)
 		{
-			if (v == null) return null;
-			if (v is string)
-				return (string)v;
-			// handles both int and an int? that has a value
-			if (v is int)
-				return ((int)v).ToString(CultureInfo.InvariantCulture);
-			if (v is ulong)
-				return ((ulong)v).ToString(CultureInfo.InvariantCulture);
-			if (v is IEnumerable<string>)
+			switch (v)
 			{
-				var values = (IEnumerable<string>)v;
-				if (values.Any(s => !string.IsNullOrEmpty(s)))
-					return string.Join(", ", values.Where(s => !string.IsNullOrEmpty(s)));
-				return null;
+				case null:
+					return null;
+				case string s:
+					return s;
+				// handles both int and an int? that has a value
+				case int i:
+					return i.ToString(CultureInfo.InvariantCulture);
+				case ulong u:
+					return u.ToString(CultureInfo.InvariantCulture);
+				case IEnumerable<string> values:
+					return values.Any(s => !string.IsNullOrEmpty(s)) 
+						? string.Join(", ", values.Where(s => !string.IsNullOrEmpty(s)))
+						: null;
+				case bool b:
+					return b.ToString().ToLowerInvariant();
+				case Enum _:
+					return Enum.GetName(v.GetType(), v);
 			}
-			if (v is bool)
-				return ((bool)v).ToString().ToLowerInvariant();
-			if (v is Enum)
-				return Enum.GetName(v.GetType(), v);
-
+		
 			throw new Exception($"{v.GetType().FullName} has no supported getter");
 		}
 
@@ -211,7 +212,8 @@ namespace Elastic.Installer.Domain.Model
 				}
 				else if (p == typeof(IEnumerable<string>))
 				{
-					((Action<IEnumerable<string>>)setter)(a.Value.Split(',').Select(v => v.Trim()));
+					var value = a.Value.Split(',').Select(v => v.Trim()).ToList();
+					((Action<IEnumerable<string>>)setter)(value);
 				}
 				else if (p == typeof(ReactiveList<string>))
 				{

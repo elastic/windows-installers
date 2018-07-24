@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
-using System.ServiceProcess;
 using System.Text;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.Configuration.EnvironmentBased.Java;
@@ -24,7 +22,6 @@ using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
 using Elastic.Installer.Domain.Model.Elasticsearch.Notice;
 using Elastic.Installer.Domain.Model.Elasticsearch.Plugins;
 using Elastic.Installer.Domain.Model.Elasticsearch.XPack;
-using Elastic.Installer.Domain.Model.Shared;
 using FluentValidation.Results;
 using ReactiveUI;
 

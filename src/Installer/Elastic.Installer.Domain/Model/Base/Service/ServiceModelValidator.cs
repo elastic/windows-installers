@@ -32,7 +32,7 @@ namespace Elastic.Installer.Domain.Model.Base.Service
 				.When(vm => vm.UseExistingUser).WithMessage(CredentialsFailed);
 
 			RuleFor(vm => vm.UseLocalSystem)
-				.Must((vm, l) => new[] { vm.UseLocalSystem, vm.UseExistingUser, vm.UseNetworkService }.Where(u => u).Count() == 1).WithMessage(MultipleRunAsTypes);
+				.Must((vm, l) => new[] { vm.UseLocalSystem, vm.UseExistingUser, vm.UseNetworkService }.Count(u => u) == 1).WithMessage(MultipleRunAsTypes);
 		}
 
 		public bool ValidateCredentials(string user, string password)
