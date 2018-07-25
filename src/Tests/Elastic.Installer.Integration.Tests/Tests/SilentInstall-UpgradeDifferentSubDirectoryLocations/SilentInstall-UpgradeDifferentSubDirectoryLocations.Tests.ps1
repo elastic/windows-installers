@@ -11,6 +11,7 @@ Get-PreviousVersions
 
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
+$640Release = ConvertTo-SemanticVersion "6.4.0"
 
 # install data, config and logs as sub directories
 $InstallDir = "D:\Elastic"
@@ -73,67 +74,104 @@ Describe -Name "Silent Install upgrade different sub directory locations from $(
 	$v = $version.FullVersion
 	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$UpgradedDataDir","CONFIGDIRECTORY=$UpgradedConfigDir","LOGSDIRECTORY=$UpgradedLogsDir","PLUGINS=ingest-geoip"
 
-    Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
+	# compiled MSI will fail when trying to upgrade from 
+	# an installation that has config, logs, data in a sub
+	# directory of a previous installation
+	if ($version.SourceType -eq "Compile" -or (Compare-SemanticVersion $version $640Release) -ge 0) {
+		$startDate = Get-Date
+		Context "Failed installation" {
+			$exitCode = Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
-    Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v\"
+			It "Exit code is 1603" {
+				$exitCode | Should Be 1603
+			}
+		}
 
-    Context-EsConfigEnvironmentVariable -Expected @{ 
-		Version = $version 
-		Path = $UpgradedConfigDir
+		Copy-ElasticsearchLogToOut
+
+		Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $v
+	} 
+	else {
+		Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
+
+		Context-EsHomeEnvironmentVariable -Expected "$InstallDir\$v\"
+
+		Context-EsConfigEnvironmentVariable -Expected @{ 
+			Version = $version 
+			Path = $UpgradedConfigDir
+		}
+
+		$expectedStatus = Get-ExpectedServiceStatus -Version $version -PreviousVersion $previousVersion
+
+		Context-ElasticsearchService -Expected @{
+			Status = $expectedStatus
+		}
+
+		Context-PingNode
+
+		Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
+
+		Context-MsiRegistered
+
+		Context-ServiceRunningUnderAccount -Expected "LocalSystem"
+
+		Context-EmptyEventLog -Version $previousVersion
+
+		Context-ClusterNameAndNodeName
+
+		Context-ElasticsearchConfiguration -Expected @{
+			Version = $version
+			Data = $UpgradedDataDir
+			Logs = $UpgradedLogsDir
+		}
+
+		Context-JvmOptions -Expected @{
+			Version = $version
+		}
+
+		Copy-ElasticsearchLogToOut		
 	}
-
-	$expectedStatus = Get-ExpectedServiceStatus -Version $version -PreviousVersion $previousVersion
-
-    Context-ElasticsearchService -Expected @{
-		Status = $expectedStatus
-	}
-
-	Context-PingNode
-
-    Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
-
-    Context-MsiRegistered
-
-    Context-ServiceRunningUnderAccount -Expected "LocalSystem"
-
-    Context-EmptyEventLog -Version $previousVersion
-
-	Context-ClusterNameAndNodeName
-
-    Context-ElasticsearchConfiguration -Expected @{
-		Version = $version
-		Data = $UpgradedDataDir
-		Logs = $UpgradedLogsDir
-	}
-
-    Context-JvmOptions -Expected @{
-		Version = $version
-	}
-
-	Copy-ElasticsearchLogToOut
 }
 
 Describe -Name "Silent Uninstall upgrade different sub directory locations uninstall $($version.Description)" -Tags $tags {
 
-	$v = $version.FullVersion
+	# compiled MSI will fail when trying to upgrade from 
+	# an installation that has config, logs, data in a sub
+	# directory of a previous installation
+	if ($version.SourceType -eq 'Compile') {
+		Invoke-SilentUninstall -Version $previousVersion
 
-    Invoke-SilentUninstall -Version $version
+		Context-NodeNotRunning
 
-	Context-NodeNotRunning
+		Context-EsConfigEnvironmentVariableNull
 
-	Context-EsConfigEnvironmentVariableNull
+		Context-EsHomeEnvironmentVariableNull
 
-	Context-EsHomeEnvironmentVariableNull
+		Context-MsiNotRegistered
 
-	Context-MsiNotRegistered
+		Context-ElasticsearchServiceNotInstalled
+	}
+	else {
+		$v = $version.FullVersion
 
-	Context-ElasticsearchServiceNotInstalled
+		Invoke-SilentUninstall -Version $version
 
-	Context-EmptyInstallDirectory -Path "$InstallDir\$($version.FullVersion)"
+		Context-NodeNotRunning
 
-	Context-DirectoryExists -Path $ConfigDir -DeleteAfter
-	Context-DirectoryExists -Path $DataDir -DeleteAfter
-	Context-DirectoryExists -Path $LogsDir -DeleteAfter
+		Context-EsConfigEnvironmentVariableNull
 
-	Context-DataDirectories -Path @($UpgradedConfigDir, $UpgradedDataDir, $UpgradedLogsDir) -DeleteAfter
+		Context-EsHomeEnvironmentVariableNull
+
+		Context-MsiNotRegistered
+
+		Context-ElasticsearchServiceNotInstalled
+
+		Context-EmptyInstallDirectory -Path "$InstallDir\$($version.FullVersion)"
+
+		Context-DirectoryExists -Path $ConfigDir -DeleteAfter
+		Context-DirectoryExists -Path $DataDir -DeleteAfter
+		Context-DirectoryExists -Path $LogsDir -DeleteAfter
+
+		Context-DataDirectories -Path @($UpgradedConfigDir, $UpgradedDataDir, $UpgradedLogsDir) -DeleteAfter
+	}
 }
