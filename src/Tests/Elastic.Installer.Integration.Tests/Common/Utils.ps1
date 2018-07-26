@@ -540,6 +540,9 @@ function Invoke-SilentInstall {
 	}
 	$argumentList = "/i $Exe /qn /l*v $logFile $QuotedArgs"
     log "running installer: msiexec.exe $argumentList" -Level Debug
+
+	$global:InstallStartDate = Get-Date
+
     $ExitCode = (Start-Process C:\Windows\System32\msiexec.exe -ArgumentList $argumentList -Wait -PassThru).ExitCode
 
     if ($ExitCode) {

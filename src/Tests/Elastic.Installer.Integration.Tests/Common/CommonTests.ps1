@@ -230,7 +230,7 @@ function Context-ServiceRunningUnderAccount($Expected = "LocalSystem") {
     }
 }
 
-function Context-EmptyEventLog($Version = $Global:Version) {
+function Context-EmptyEventLog($StartDate = $Global:InstallStartDate, $Version = $Global:Version) {
 
     Context "Event log" {
         $ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic*
@@ -245,7 +245,7 @@ function Context-EmptyEventLog($Version = $Global:Version) {
 			# 
 			# when running Cleanup action in the old installer uninstall process, 
 			# because the old install plugin script no longer exists. Filter these out
-			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* `
+			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* -After $StartDate `
 				| Where { $_.Message -notmatch $failedMessage } | Format-List | Out-String
 
 			It "Event log doesn't contain unexpected messages" {
@@ -254,16 +254,17 @@ function Context-EmptyEventLog($Version = $Global:Version) {
 		}
 		else {
 			# convert to string so in the event of error we can see what the log entries actually are in the test output
-			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* | Format-List | Out-String
+			$ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic* -After $StartDate `
+				| Format-List | Out-String
 
 			It "Event log is empty" {
-					$ElasticsearchEventLogs | Should BeNullOrEmpty
+				$ElasticsearchEventLogs | Should BeNullOrEmpty
 			}
 		}
 	}
 }
 
-function Context-EventContainsFailedInstallMessage($StartDate, $Version) {
+function Context-EventContainsFailedInstallMessage($StartDate = $Global:InstallStartDate, $Version) {
     Context "Event log" {
 		$failedMessage = "Product: Elasticsearch $Version -- Installation failed."
 

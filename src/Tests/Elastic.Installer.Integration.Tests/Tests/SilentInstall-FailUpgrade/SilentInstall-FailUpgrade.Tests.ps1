@@ -66,7 +66,6 @@ Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Ta
 
 	$v = $version.FullVersion
 	$pv = $previousVersion.FullVersion
-	$startDate = Get-Date
 
 	Context "Failed installation" {
 		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1") -Version $version -Upgrade
@@ -78,7 +77,7 @@ Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Ta
 
 	Copy-ElasticsearchLogToOut
 
-	Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $v
+	Context-EventContainsFailedInstallMessage -Version $v
 
 	# Existing version should still be installed and running
 	# NOTE: It may be in StartingPending to begin, after failed upgrade
