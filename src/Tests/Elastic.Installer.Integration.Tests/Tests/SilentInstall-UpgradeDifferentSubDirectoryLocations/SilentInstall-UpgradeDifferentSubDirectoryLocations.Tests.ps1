@@ -78,7 +78,6 @@ Describe -Name "Silent Install upgrade different sub directory locations from $(
 	# an installation that has config, logs, data in a sub
 	# directory of a previous installation
 	if ($version.SourceType -eq "Compile" -or (Compare-SemanticVersion $version $640Release) -ge 0) {
-		$startDate = Get-Date
 		Context "Failed installation" {
 			$exitCode = Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
@@ -89,7 +88,7 @@ Describe -Name "Silent Install upgrade different sub directory locations from $(
 
 		Copy-ElasticsearchLogToOut
 
-		Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $v
+		Context-EventContainsFailedInstallMessage -Version $v
 	} 
 	else {
 		Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade

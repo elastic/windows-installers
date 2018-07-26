@@ -27,8 +27,6 @@ Describe "Silent Install with same install locations $(($Global:Version).Descrip
 		"PLACEWRITABLELOCATIONSINSAMEPATH=true")
 
 	if ($version.SourceType -eq "Compile" -or (Compare-SemanticVersion $Version $640Release) -ge 0) {
-		$startDate = Get-Date
-
 		Context "Failed installation" {
 			$exitCode = Invoke-SilentInstall -Exeargs $ExeArgs
 
@@ -37,7 +35,7 @@ Describe "Silent Install with same install locations $(($Global:Version).Descrip
 			}
 		}
 
-		Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $version.FullVersion
+		Context-EventContainsFailedInstallMessage -Version $version.FullVersion
 
 		Context-NodeNotRunning
 

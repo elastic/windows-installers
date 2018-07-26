@@ -16,8 +16,6 @@ $LogsDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\logs_log
 
 Describe "Silent Expected Failed Install with same install locations $(($Global:Version).Description)" {
  	$InstallLocations = "INSTALLDIR=$InstallDir","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir"
-
-	$startDate = Get-Date
 	$version = $Global:Version.FullVersion
 
 	Context "Failed installation" {
@@ -28,7 +26,7 @@ Describe "Silent Expected Failed Install with same install locations $(($Global:
 		}
 	}
 
-	Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $version
+	Context-EventContainsFailedInstallMessage -Version $version
 
 	Context-NodeNotRunning
 

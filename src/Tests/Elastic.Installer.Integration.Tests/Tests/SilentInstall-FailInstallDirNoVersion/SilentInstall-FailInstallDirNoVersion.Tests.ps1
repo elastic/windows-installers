@@ -11,7 +11,6 @@ Get-PreviousVersions
 
 Describe "Silent Failed Install with Installation directory not ending in version $(($Global:Version).Description)" {
 
-	$startDate = Get-Date
 	$version = $Global:Version.FullVersion
 
 	Context "Failed installation" {
@@ -22,7 +21,7 @@ Describe "Silent Failed Install with Installation directory not ending in versio
 		}
 	}
 
-	Context-EventContainsFailedInstallMessage -StartDate $startDate -Version $version
+	Context-EventContainsFailedInstallMessage -Version $version
 
 	Context-NodeNotRunning
 
