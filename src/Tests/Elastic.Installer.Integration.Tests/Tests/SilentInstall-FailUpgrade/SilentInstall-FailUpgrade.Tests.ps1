@@ -60,8 +60,6 @@ Describe -Name "Silent Install fail upgrade install $($previousVersion.Descripti
     Context-JvmOptions -Expected @{
 		Version = $previousVersion
 	}
-
-	Context-InsertData
 }
 
 Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Tags $tags {
@@ -89,26 +87,7 @@ Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Ta
 		It "Service is not null" {
             $Service | Should Not Be $null
         }
-
-		if ($service.Status -ne "Running") {
-			$service.Refresh()
-			$startTime = Get-Date
-			$timeout = New-TimeSpan -Seconds 30
-
-			while ($service.Status -ne "Running") {
-				if ($(Get-Date) - $startTime -gt $timeout) {
-					throw "Attempted to start the service in $timeout, but did not start"
-				}
-
-				Start-Sleep -m 250
-				$service.Refresh()
-			}
-		}
 	}
-
-    Context-ElasticsearchService
-
-    Context-PingNode
 
     $ProgramFiles = Get-ProgramFilesFolder
 	$ChildPath = Get-ChildPath $previousVersion
@@ -141,8 +120,6 @@ Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Ta
 
     Context-ServiceRunningUnderAccount -Expected "LocalSystem"
 
-	Context-ClusterNameAndNodeName
-
     Context-ElasticsearchConfiguration -Expected @{
 		Version = $previousVersion
 	}
@@ -150,9 +127,6 @@ Describe -Name "Silent Install fail upgrade fail to $($version.Description)" -Ta
     Context-JvmOptions -Expected @{
 		Version = $previousVersion
 	}
-
-	# Check inserted data still exists
-	Context-ReadData
 }
 
 Describe -Name "Silent Uninstall fail upgrade uninstall $($previousVersion.Description)" -Tags $tags {
