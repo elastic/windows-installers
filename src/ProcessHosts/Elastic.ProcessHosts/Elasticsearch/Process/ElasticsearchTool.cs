@@ -131,7 +131,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 
 		public static ElasticsearchTool JavaVersionChecker =>
 			new ElasticsearchTool(
-				"org.elasticsearch.tools.launchers.JavaVersionChecker",
+				"org.elasticsearch.tools.java_version_checker.JavaVersionChecker",
 				JavaConfiguration.Default,
 				ElasticsearchEnvironmentConfiguration.Default,
 				new FileSystem());
