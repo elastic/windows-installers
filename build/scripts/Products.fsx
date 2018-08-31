@@ -1,12 +1,14 @@
 ﻿#I "../../packages/build/FAKE.x64/tools"
 
 #r "FakeLib.dll"
+#load "Snapshots.fsx"
 
 open System
 open System.Globalization
 open System.IO
 open Fake
 open Fake.FileHelper
+open Snapshots
 
 module Paths =
     let BuildDir = "./build/"
@@ -84,6 +86,13 @@ module Products =
         Source : Source;
         RawValue: string;
     }
+        
+    let lastSnapshotVersionAsset (product : Product) =
+        let latestAsset = Snapshots.GetVersions
+                            |> Seq.map (fun x -> (x, Snapshots.GetSnapshotBuilds x |> Seq.head))
+                            |> Seq.map (fun xy -> Snapshots.GetSnapshotBuildAssets product.Name (fst xy) (snd xy))
+                            |> Seq.head
+        latestAsset
 
     type ProductVersions(product:Product, versions:Version list) =
         member this.Product = product
@@ -96,14 +105,18 @@ module Products =
             | Compile ->
                 match product with
                 | Elasticsearch ->
-                    sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl version.FullVersion
+                    let useSnapshots = getBuildParamOrDefault "snapshots" "$false"
+                    if (useSnapshots = "$true") then                                              
+                        lastSnapshotVersionAsset Elasticsearch
+                    else
+                        sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl version.FullVersion
                 | Kibana ->               
                     sprintf "%s/kibana/kibana-%s-windows-x86.zip" ArtifactDownloadsUrl version.FullVersion 
             | Released ->
                 sprintf "%s/%s/%s-%s.msi" ArtifactDownloadsUrl this.Name this.Name version.FullVersion 
             | BuildCandidate hash ->
-                if (version.FullVersion.EndsWith("snapshot", StringComparison.OrdinalIgnoreCase))
-                then SnapshotDownloadsUrl this.Name (sprintf "%i.%i.%i" version.Major version.Minor version.Patch) hash version.FullVersion
+                if (version.FullVersion.EndsWith("snapshot", StringComparison.OrdinalIgnoreCase)) then
+                    SnapshotDownloadsUrl this.Name (sprintf "%i.%i.%i" version.Major version.Minor version.Patch) hash version.FullVersion
                 else StagingDownloadsUrl this.Name hash version.FullVersion
 
         member private this.ZipFile (version:Version) =
@@ -162,6 +175,14 @@ module Products =
                                 if directoryExists original |> not then
                                     Rename (InDir @@ (sprintf "kibana-%s" version.FullVersion)) (InDir @@ original)
                             | _ -> ()
+                        
+                        // Snapshots need renaming as folder inside zip is named differently
+                        let useSnapshots = getBuildParamOrDefault "snapshots" "$false"
+                        if (useSnapshots = "$true") then                                              
+                            let existing = InDir @@ (sprintf "%s-%s" product.Name (Snapshots.GetVersions |> Seq.head))
+                            let target = InDir @@ (sprintf "%s-%s" product.Name version.FullVersion)
+                            Rename target existing
+
                     else tracefn "Extracted directory %s already exists" extractedDirectory   
                 | _ -> ()
             )

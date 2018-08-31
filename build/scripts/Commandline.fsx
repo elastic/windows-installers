@@ -7,6 +7,7 @@
 #r "Fsharp.Text.RegexProvider.dll"
 #r "System.Xml.Linq.dll"
 #load "Products.fsx"
+#load "Snapshots.fsx"
 
 open System
 open System.Collections.Generic
@@ -18,6 +19,7 @@ open FSharp.Data
 open FSharp.Text.RegexProvider
 open Products.Products
 open Products.Paths
+open Snapshots
 
 ServicePointManager.SecurityProtocol <- SecurityProtocolType.Ssl3 ||| SecurityProtocolType.Tls ||| SecurityProtocolType.Tls11 ||| SecurityProtocolType.Tls12;
 ServicePointManager.ServerCertificateValidationCallback <- (fun _ _ _ _ -> true)
@@ -123,6 +125,7 @@ switches:
 ---------
 
 Integration tests against a local vagrant provider support several switches
+    - -snapshots: use snapshot builds instead of staging builds
     - -gui: launch vagrant with a GUI
     - -nodestroy: do not destroy the vagrant box after the test has run
     - -plugins:<comma separated plugins>: a list of plugin zips that exist within
@@ -165,8 +168,30 @@ Integration tests against a local vagrant provider support several switches
           Source = source;
           RawValue = rawValue; }
 
+    let private args = getBuildParamOrDefault "cmdline" "buildinstallers" |> split ' '
+    let private skipTests = args |> List.exists (fun x -> x = "skiptests")
+    let private snapshots = args |> List.exists (fun x -> x = "-snapshots")
+    let private gui = args |> List.exists (fun x -> x = "-gui")
+    let private noDestroy = args |> List.exists (fun x -> x = "-nodestroy")
+    let private plugins = args |> List.exists (startsWith "-plugins:")
+    let private filteredArgs = args |> List.filter (fun x -> match x with
+                                                             | "skiptests"
+                                                             | "-gui"
+                                                             | "-snapshots"
+                                                             | "-nodestroy" -> false
+                                                             | y when startsWith "-plugins:" y -> false
+                                                             | _ -> true)
+
+    let private lastSnapshotVersion (product : Product) =
+        let latestVersion = Snapshots.GetVersions
+                            |> Seq.map (fun x -> Snapshots.GetSnapshotBuilds x)
+                            |> Seq.head
+                            |> Seq.head
+        let version = parseVersion latestVersion
+        tracefn "Extracted %s version %s from '%s'" product.Name version.FullVersion latestVersion
+        [version]
+
     let private lastFeedVersion (product : Product) =
-        // TODO: disallow prereleases for moment. Make build parameter in future?
         let itemIsProduct itemText =
             let m = parseVersion itemText
             m.Product = product.Title && (isNullOrWhiteSpace m.Prerelease)
@@ -176,6 +201,13 @@ Integration tests against a local vagrant provider support several switches
         let version = parseVersion firstLink.Title
         tracefn "Extracted %s version %s from '%s'" product.Name version.FullVersion firstLink.Title
         [version]
+
+    let private lastVersion (product : Product ) =
+        tracefn "Use snapshots: %A" snapshots
+        if snapshots then
+            lastSnapshotVersion product
+        else
+            lastFeedVersion product
 
     let private versionFromInDir (product : Product) =
         let extractVersion (fileInfo:FileInfo) =
@@ -190,19 +222,6 @@ Integration tests against a local vagrant provider support several switches
             tracefn "Extracted %s from %s" version.FullVersion zips.[0].FullName
             [version]
         | _ -> failwithf "Expecting one %s zip file in %s but found %i" product.Name InDir zips.Length
-
-
-    let private args = getBuildParamOrDefault "cmdline" "buildinstallers" |> split ' '
-    let private skipTests = args |> List.exists (fun x -> x = "skiptests")
-    let private gui = args |> List.exists (fun x -> x = "-gui")
-    let private noDestroy = args |> List.exists (fun x -> x = "-nodestroy")
-    let private plugins = args |> List.exists (startsWith "-plugins:")
-    let private filteredArgs = args |> List.filter (fun x -> match x with
-                                                             | "skiptests"
-                                                             | "-gui"
-                                                             | "-nodestroy" -> false
-                                                             | y when startsWith "-plugins:" y -> false
-                                                             | _ -> true)
 
     let private (|IsTarget|_|) (candidate: string) =
         match candidate.ToLowerInvariant() with
@@ -363,15 +382,15 @@ Integration tests against a local vagrant provider support several switches
                        | ["integrate"; IsProductList products; IsVagrantProvider provider; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                           
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)                           
                        | ["integrate"; IsProductList products; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                    
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)                    
                        | ["integrate"; IsProductList products; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion) 
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion) 
                        | ["integrate"; IsProductList products] ->
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)        
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)        
                        | ["integrate"; IsVersionList versions; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
@@ -380,29 +399,29 @@ Integration tests against a local vagrant provider support several switches
                        | ["integrate"; IsVagrantProvider provider; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)      
+                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)      
                        | ["integrate"; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)                
+                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)                
                        | ["integrate"; testTargets] ->
                            setBuildParam "testtargets" testTargets
-                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
+                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)
                        | [IsProductList products; IsVersionList versions] ->
                            products |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsProductList products] ->
-                           products |> List.map(ProductVersions.CreateFromProduct lastFeedVersion)
+                           products |> List.map(ProductVersions.CreateFromProduct lastVersion)
                        | [IsVersionList versions] ->
                            All |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target; IsVersionList versions] ->
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target; IsProductList products] ->
-                           products |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)
                        | [IsTarget target; IsProductList products; IsVersionList versions] ->
                            products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsTarget target] ->
-                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
+                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)
                        | [] ->
-                           All |> List.map (ProductVersions.CreateFromProduct lastFeedVersion)
+                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)
                        | _ ->
                            traceError usage
                            exit 2
@@ -410,6 +429,7 @@ Integration tests against a local vagrant provider support several switches
         setBuildParam "target" target
         if skipTests then setBuildParam "skiptests" "1"
         if gui then setBuildParam "gui" "$true"
+        if snapshots then setBuildParam "snapshots" "$true"
         if noDestroy then setBuildParam "no-destroy" "$false"
         if plugins then
             let pluginPaths = args 
