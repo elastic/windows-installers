@@ -203,7 +203,7 @@ Integration tests against a local vagrant provider support several switches
         [version]
 
     let private lastVersion (product : Product ) =
-        tracefn "Use snapshots: %A" snapshots
+        tracefn "Use snapshots: %b" snapshots
         if snapshots then
             lastSnapshotVersion product
         else
