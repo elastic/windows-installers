@@ -177,6 +177,11 @@ module Products =
                             | _ -> ()
                         
                         // Snapshots need renaming as folder inside zip is named differently
+                        // An example: The hosted zip filename is:
+                        // https://snapshots.elastic.co/7.0.0-alpha1-ea57ee52/downloads/elasticsearch/elasticsearch-7.0.0-alpha1-SNAPSHOT.zip
+                        // This is downloaded locally into the in dir as: elasticsearch-7.0.0-alpha1-ea57ee52.zip
+                        // When extracted it creates a folder called: elasticsearch-7.0.0-alpha1-snapshot
+                        // This is then renamed to elasticsearch-7.0.0-alpha1-ea57ee52
                         let useSnapshots = getBuildParamOrDefault "snapshots" "$false"
                         if (useSnapshots = "$true") then                                              
                             let existing = InDir @@ (sprintf "%s-%s" product.Name (Snapshots.GetVersions |> Seq.head))
