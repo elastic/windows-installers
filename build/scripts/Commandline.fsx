@@ -183,7 +183,7 @@ Integration tests against a local vagrant provider support several switches
                                                              | _ -> true)
 
     let private lastSnapshotVersion (product : Product) =
-        let latestVersion = Snapshots.GetVersions
+        let latestVersion = Snapshots.GetVersions()
                             |> Seq.map (fun x -> Snapshots.GetSnapshotBuilds x)
                             |> Seq.head
                             |> Seq.head
