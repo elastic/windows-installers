@@ -88,8 +88,8 @@ module Products =
     }
         
     let lastSnapshotVersionAsset (product : Product) =
-        let latestAsset = Snapshots.GetVersions
-                            |> Seq.map (fun x -> (x, Snapshots.GetSnapshotBuilds x |> Seq.head))
+        let latestAsset = Snapshots.GetVersions()
+                            |> Seq.map (fun x -> (x, (Snapshots.GetSnapshotBuilds x) |> Seq.head))
                             |> Seq.map (fun xy -> Snapshots.GetSnapshotBuildAssets product.Name (fst xy) (snd xy))
                             |> Seq.head
         latestAsset
@@ -184,7 +184,7 @@ module Products =
                         // This is then renamed to elasticsearch-7.0.0-alpha1-ea57ee52
                         let useSnapshots = getBuildParamOrDefault "snapshots" "$false"
                         if (useSnapshots = "$true") then                                              
-                            let existing = InDir @@ (sprintf "%s-%s" product.Name (Snapshots.GetVersions |> Seq.head))
+                            let existing = InDir @@ (sprintf "%s-%s" product.Name (Snapshots.GetVersions() |> Seq.head))
                             let target = InDir @@ (sprintf "%s-%s" product.Name version.FullVersion)
                             Rename target existing
 

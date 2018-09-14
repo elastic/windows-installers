@@ -17,14 +17,13 @@ module Snapshots =
 
     let private urlBase = "https://artifacts-api.elastic.co/v1/versions"
 
-    let GetVersions = (
+    let GetVersions() =
         use webClient = new System.Net.WebClient()
         let versions = webClient.DownloadString urlBase |> JsonValue.Parse
         let arrayValue = versions.GetProperty "versions"
         arrayValue.AsArray()
         |> Seq.rev
         |> Seq.map (fun x -> x.AsString())
-     )
 
     let GetSnapshotBuilds version = (
        use webClient = new System.Net.WebClient()
