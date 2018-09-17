@@ -7,8 +7,10 @@
 #r "Fsharp.Text.RegexProvider.dll"
 #r "System.Xml.Linq.dll"
 
+open System
 open System.Net
 open FSharp.Data
+open Fake
 
 ServicePointManager.SecurityProtocol <- SecurityProtocolType.Ssl3 ||| SecurityProtocolType.Tls ||| SecurityProtocolType.Tls11 ||| SecurityProtocolType.Tls12;
 ServicePointManager.ServerCertificateValidationCallback <- (fun _ _ _ _ -> true)
@@ -24,6 +26,25 @@ module Snapshots =
         arrayValue.AsArray()
         |> Seq.rev
         |> Seq.map (fun x -> x.AsString())
+
+    let getPrerelease (prerelease:string) =
+        (splitStr "-" prerelease) |> Seq.head
+    
+    let getSnapshotName major minor patch prerelease =
+        if isNullOrWhiteSpace (prerelease) then
+            sprintf "%d.%d.%d-SNAPSHOT" major minor patch
+        else
+            let prerelease = getPrerelease prerelease
+            sprintf "%d.%d.%d-%s-SNAPSHOT" major minor patch prerelease
+
+    let GetVersionsFiltered major minor patch prerelease =
+        use webClient = new System.Net.WebClient()
+        let versions = webClient.DownloadString urlBase |> JsonValue.Parse
+        let arrayValue = versions.GetProperty "versions"
+        arrayValue.AsArray()
+        |> Seq.rev
+        |> Seq.map (fun x -> x.AsString())
+        |> Seq.filter (fun x -> x = getSnapshotName major minor patch prerelease)
 
     let GetSnapshotBuilds version = (
        use webClient = new System.Net.WebClient()

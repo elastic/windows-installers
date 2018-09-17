@@ -86,15 +86,15 @@ module Products =
         Source : Source;
         RawValue: string;
     }
-        
-    let lastSnapshotVersionAsset (product : Product) =
-        let latestAsset = Snapshots.GetVersions()
+
+    let lastSnapshotVersionAsset (product:Product, version:Version) =
+        let latestAsset = Snapshots.GetVersionsFiltered version.Major version.Minor version.Patch version.Prerelease
                             |> Seq.map (fun x -> (x, (Snapshots.GetSnapshotBuilds x) |> Seq.head))
                             |> Seq.map (fun xy -> Snapshots.GetSnapshotBuildAssets product.Name (fst xy) (snd xy))
                             |> Seq.head
         latestAsset
 
-    type ProductVersions(product:Product, versions:Version list) =
+    type ProductVersions (product:Product, versions:Version list) =
         member this.Product = product
         member this.Versions = versions
         member this.Name = product.Name
@@ -106,8 +106,8 @@ module Products =
                 match product with
                 | Elasticsearch ->
                     let useSnapshots = getBuildParamOrDefault "snapshots" "$false"
-                    if (useSnapshots = "$true") then                                              
-                        lastSnapshotVersionAsset Elasticsearch
+                    if (useSnapshots = "$true") then
+                        lastSnapshotVersionAsset(Elasticsearch, version)
                     else
                         sprintf "%s/elasticsearch/elasticsearch-%s.zip" ArtifactDownloadsUrl version.FullVersion
                 | Kibana ->               
@@ -150,7 +150,19 @@ module Products =
         member this.Download () =
             this.Versions
             |> List.iter (fun version ->
-                match (this.DownloadUrl version, this.DownloadPath version) with
+                let useSnapshots = getBuildParamOrDefault "snapshots" "$false"
+                let zipFile = this.DownloadPath version
+                let extractedDirectory = this.ExtractedDirectory version
+                
+                if (useSnapshots = "$true") then
+                    if (File.Exists(zipFile)) then
+                        tracefn "Deleting snapshot zip file: %s" zipFile
+                        File.Delete(zipFile)
+                    if (Directory.Exists(extractedDirectory)) then
+                        tracefn "Deleting snapshot existing directory: %s" extractedDirectory
+                        Directory.Delete(extractedDirectory, true)
+
+                match (this.DownloadUrl version, zipFile) with
                 | (_, file) when fileExists file ->
                     tracefn "Already downloaded %s to %s" this.Name file
                 | (url, file) ->
@@ -163,8 +175,6 @@ module Products =
 
                 match version.Source with
                 | Compile -> 
-                    let extractedDirectory = this.ExtractedDirectory version
-                    let zipFile = this.DownloadPath version
                     if directoryExists extractedDirectory |> not
                     then
                         tracefn "Unzipping %s %s" this.Name zipFile
@@ -182,9 +192,8 @@ module Products =
                         // This is downloaded locally into the in dir as: elasticsearch-7.0.0-alpha1-ea57ee52.zip
                         // When extracted it creates a folder called: elasticsearch-7.0.0-alpha1-snapshot
                         // This is then renamed to elasticsearch-7.0.0-alpha1-ea57ee52
-                        let useSnapshots = getBuildParamOrDefault "snapshots" "$false"
-                        if (useSnapshots = "$true") then                                              
-                            let existing = InDir @@ (sprintf "%s-%s" product.Name (Snapshots.GetVersions() |> Seq.head))
+                        if (useSnapshots = "$true") then
+                            let existing = InDir @@ (sprintf "%s-%s" product.Name (Snapshots.GetVersionsFiltered version.Major version.Minor version.Patch version.Prerelease |> Seq.head))
                             let target = InDir @@ (sprintf "%s-%s" product.Name version.FullVersion)
                             Rename target existing
 
