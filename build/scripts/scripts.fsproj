@@ -49,6 +49,7 @@
     <None Include="config.yaml" />
     <None Include="Build.fsx" />
     <None Include="Products.fsx" />
+    <None Include="Snapshots.fsx" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
