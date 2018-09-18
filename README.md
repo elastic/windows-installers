@@ -117,3 +117,20 @@ To report any problems encountered during installation, or to request features, 
 When installing from the command-line, the log file can be captured by passing the `/l <logfilename>`.  When installing through the UI, a link to the log file will be provided at the end of the installation.
 
 For general questions and comments, please use the Elastic [discussion forum](https://discuss.elastic.co/).
+
+## Known build issues and fixes
+
+### Checking out through WSL
+
+If you check out this repos through WSL (bash on windows) chances are the case sensitive flag will get set on the checkout folder.
+During build WixToolSet uppercases the filenames 
+
+From procmon:
+
+> light.exe    5744    CreateFile    <checkout>\BUILD\IN\ELASTICSEARCH-6.4.0\MODULES\X-PACK-WATCHER\ACTIVATION-1.1.1.JAR  
+
+This will yield a `light.exe : error LGHT0001 : The system cannot find the path specified. (Exception from HRESULT: 0x80070003)` during the `FAKE` build which will then complain it can not find the `msi`.
+
+To fix this run `fsutil.exe file setCaseSensitiveInfo <checkout> disable`
+
+
