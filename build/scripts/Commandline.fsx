@@ -125,10 +125,10 @@ switches:
 ---------
 
 Integration tests against a local vagrant provider support several switches
-    - -snapshots: use snapshot builds instead of staging builds
-    - -gui: launch vagrant with a GUI
-    - -nodestroy: do not destroy the vagrant box after the test has run
-    - -plugins:<comma separated plugins>: a list of plugin zips that exist within
+    * --snapshots: use snapshot builds instead of staging builds
+    * -gui: launch vagrant with a GUI
+    * -nodestroy: do not destroy the vagrant box after the test has run
+    * -plugins:<comma separated plugins>: a list of plugin zips that exist within
                                           the build/in directory, that should be installed
                                           within integration tests instead of downloading. The plugin
                                           zip names must match the installer version.
@@ -170,14 +170,14 @@ Integration tests against a local vagrant provider support several switches
 
     let private args = getBuildParamOrDefault "cmdline" "buildinstallers" |> split ' '
     let private skipTests = args |> List.exists (fun x -> x = "skiptests")
-    let private snapshots = args |> List.exists (fun x -> x = "-snapshots")
+    let private snapshots = args |> List.exists (fun x -> x = "--snapshots")
     let private gui = args |> List.exists (fun x -> x = "-gui")
     let private noDestroy = args |> List.exists (fun x -> x = "-nodestroy")
     let private plugins = args |> List.exists (startsWith "-plugins:")
     let private filteredArgs = args |> List.filter (fun x -> match x with
                                                              | "skiptests"
                                                              | "-gui"
-                                                             | "-snapshots"
+                                                             | "--snapshots"
                                                              | "-nodestroy" -> false
                                                              | y when startsWith "-plugins:" y -> false
                                                              | _ -> true)
