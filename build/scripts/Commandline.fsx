@@ -6,6 +6,7 @@
 #r "Fsharp.Data.dll"
 #r "Fsharp.Text.RegexProvider.dll"
 #r "System.Xml.Linq.dll"
+#load "Paths.fsx"
 #load "Products.fsx"
 #load "Snapshots.fsx"
 
@@ -18,11 +19,10 @@ open Fake
 open FSharp.Data
 open FSharp.Text.RegexProvider
 open Products.Products
-open Products.Paths
+open Paths.Paths
 open Snapshots
 
 ServicePointManager.SecurityProtocol <- SecurityProtocolType.Ssl3 ||| SecurityProtocolType.Tls ||| SecurityProtocolType.Tls11 ||| SecurityProtocolType.Tls12;
-ServicePointManager.ServerCertificateValidationCallback <- (fun _ _ _ _ -> true)
 
 module Commandline =
 
@@ -361,13 +361,20 @@ Integration tests against a local vagrant provider support several switches
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
                            products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
-                       | ["integrate"; IsProductList products; IsVersionList versions; testTargets] ->
-                           setBuildParam "testtargets" testTargets
-                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                            
                        | ["integrate"; IsProductList products; IsVersionList versions; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
                            products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                           
+                       | ["integrate"; IsProductList products; IsVersionList versions; testTargets] ->
+                           setBuildParam "testtargets" testTargets
+                           products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                           
+                       | ["integrate"; IsProductList products; IsVagrantProvider provider; testTargets] ->
+                           setBuildParam "testtargets" testTargets
+                           setBuildParam "vagrantprovider" provider
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)    
+                           
                        | ["integrate"; IsProductList products; IsVersionList versions] ->
                            products |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
                            
@@ -375,37 +382,38 @@ Integration tests against a local vagrant provider support several switches
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
-                       | ["integrate"; IsVersionList versions; testTargets] ->
-                           setBuildParam "testtargets" testTargets
-                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
-                           
-                       | ["integrate"; IsProductList products; IsVagrantProvider provider; testTargets] ->
-                           setBuildParam "testtargets" testTargets
-                           setBuildParam "vagrantprovider" provider
-                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)                           
-                       | ["integrate"; IsProductList products; testTargets] ->
-                           setBuildParam "testtargets" testTargets
-                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)                    
+                                                                                     
                        | ["integrate"; IsProductList products; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
                            products |> List.map (ProductVersions.CreateFromProduct lastVersion) 
-                       | ["integrate"; IsProductList products] ->
-                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)        
+                           
                        | ["integrate"; IsVersionList versions; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
-                       | ["integrate"; IsVersionList versions] ->
-                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)  
+                           
+                       | ["integrate"; IsProductList products; testTargets] ->
+                           setBuildParam "testtargets" testTargets
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)   
+                                                
                        | ["integrate"; IsVagrantProvider provider; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)      
+                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)    
+
+                       | ["integrate"; IsProductList products] ->
+                           products |> List.map (ProductVersions.CreateFromProduct lastVersion)
+                           
+                       | ["integrate"; IsVersionList versions] ->
+                           All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)
+                             
                        | ["integrate"; IsVagrantProvider provider] ->
                            setBuildParam "vagrantprovider" provider
-                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)                
+                           All |> List.map (ProductVersions.CreateFromProduct lastVersion)    
+                                       
                        | ["integrate"; testTargets] ->
                            setBuildParam "testtargets" testTargets
                            All |> List.map (ProductVersions.CreateFromProduct lastVersion)
+                           
                        | [IsProductList products; IsVersionList versions] ->
                            products |> List.map(ProductVersions.CreateFromProduct <| fun _ -> versions)
                        | [IsProductList products] ->
