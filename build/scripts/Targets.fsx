@@ -3,6 +3,7 @@
 
 #r "FakeLib.dll"
 #r "System.Management.Automation.dll"
+#load "Paths.fsx"
 #load "Products.fsx"
 #load "Build.fsx"
 #load "BuildConfig.fsx"
@@ -15,9 +16,8 @@ open Fake
 open Fake.FileHelper
 open Scripts
 open Fake.Testing.XUnit2
-open Products
 open Products.Products
-open Products.Paths
+open Paths.Paths
 open Build.Builder
 open Commandline
 
@@ -107,12 +107,12 @@ Target "Integrate" (fun () ->
         |> List.map(fun v ->  Commandline.parseVersion v)
         |> List.collect(fun s ->
             pluginNames 
-            |> Array.map(fun p -> Paths.InDir </> (sprintf "%s-%s.zip" p s.FullVersion))
+            |> Array.map(fun p -> InDir </> (sprintf "%s-%s.zip" p s.FullVersion))
             |> Array.toList
         )
         |> List.iter(fun p ->
             match fileExists p with
-            | true -> CopyFile Paths.OutDir p
+            | true -> CopyFile OutDir p
             | false -> traceFAKE "%s does not exist. Will install from public url" p 
         )
 
