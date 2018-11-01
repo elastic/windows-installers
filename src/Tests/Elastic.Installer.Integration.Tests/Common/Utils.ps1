@@ -506,17 +506,30 @@ function Invoke-SilentInstall {
 		}
 		$Exeargs = $Newargs
 	}
+	
+	$pluginsStaging = $null
 
 	if ($Version.Source) {
-        if (!$Exeargs) {
-            $Exeargs = @("PLUGINSSTAGING=$($Version.Source)")
-        }
-        elseif (-not ($Exeargs | ?{$_ -like "PLUGINSSTAGING=*" })) {
-            $Exeargs.Add("PLUGINSSTAGING=$($Version.Source)") | Out-Null
-        }
-    }
-
-
+        $pluginsStaging = $Version.Source
+    } 
+	elseif ($Version.Prerelease) {
+		# prelease may be a snapshot with a suffix e.g. 7.0.0-alpha1-ea57ee52
+		$preleaseParts = $Version.Prerelease[0].Split('-', [StringSplitOptions]::RemoveEmptyEntries)
+		if ($preleaseParts.Length -gt 1) {
+			$pluginsStaging = $preleaseParts[1]
+		}
+	}
+	
+	if ($pluginsStaging -ne $null)
+	{
+		if (!$Exeargs) {
+			$Exeargs = @("PLUGINSSTAGING=$pluginsStaging")
+		}
+		elseif (-not($Exeargs | ?{ $_ -like "PLUGINSSTAGING=*" })) {
+			$Exeargs.Add("PLUGINSSTAGING=$pluginsStaging") | Out-Null
+		}
+	}
+	
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
 	if ($Upgrade) {

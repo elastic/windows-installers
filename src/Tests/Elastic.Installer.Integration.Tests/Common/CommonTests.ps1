@@ -93,9 +93,9 @@ function Context-PingNode([switch]$XPackSecurityInstalled) {
             $Response.Success | Should Be $true
         }
 
-        $XPackSecurityIsInstalled = "X-Pack Security is installed"
+        $XPackSecurityIsInstalled = "X-Pack Security is installed/enabled"
         if (! ($XPackSecurityInstalled)) {
-            $XPackSecurityIsInstalled = "X-Pack Security is not installed"
+            $XPackSecurityIsInstalled = "X-Pack Security is not installed/enabled"
         }
 
         It $XPackSecurityIsInstalled {
