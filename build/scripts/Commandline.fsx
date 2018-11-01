@@ -384,7 +384,6 @@ Integration tests against a local vagrant provider support several switches
                            All |> List.map (ProductVersions.CreateFromProduct <| fun _ -> versions)                       
                                                                                      
                        | ["integrate"; IsProductList products; IsVagrantProvider provider] ->
-                           trace "Hit expected pattern"
                            setBuildParam "vagrantprovider" provider
                            products |> List.map (ProductVersions.CreateFromProduct lastVersion) 
                            
