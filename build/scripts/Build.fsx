@@ -1,6 +1,7 @@
 ﻿#I "../../packages/build/FAKE.x64/tools"
 
 #r "FakeLib.dll"
+#load "Paths.fsx"
 #load "Products.fsx"
 #load "BuildConfig.fsx"
 
@@ -16,7 +17,7 @@ open Fake.FileHelper
 open Fake.Git
 open Fake.Testing.XUnit2
 open Products.Products
-open Products.Paths
+open Paths.Paths
 open Products
 
 module Builder =
