@@ -43,13 +43,13 @@ Param(
 	[string] $VagrantProvider="local"
 )
 
+Set-Preferences
+
 $currentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 cd $currentDir
 
 . $currentDir\Common\Utils.ps1
 . $currentDir\Common\SemVer.ps1
-
-Set-DebugMode
 
 $solutionDir = $(Get-Item $currentDir).Parent.Parent.Parent.FullName
 $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"

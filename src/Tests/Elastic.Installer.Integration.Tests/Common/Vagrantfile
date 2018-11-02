@@ -20,7 +20,9 @@ Vagrant.configure("2") do |config|
     
     local.vm.provision "powershellget", type: "shell", inline: configure_powershellget()
     # TODO: use another proxy available on chocolatey
-	#local.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
+	#local.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()
+	# TODO: test with java 9 for versions that support it
+	#local.vm.provision "java9", 		type: "shell", inline: configure_java_9()
 	local.vm.provision "partition", 	type: "shell", inline: create_partition() 
   end
 
@@ -37,6 +39,7 @@ Vagrant.configure("2") do |config|
       azure.subscription_id = ENV['AZURE_SUBSCRIPTION_ID']
 
       azure.vm_name = "msiintegration"
+	  # swapped out for a random DNS name when running the test
       azure.dns_name = "AZURE_DNS_NAME"
       azure.vm_image_urn = 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter-smalldisk:latest'
       azure.vm_password = ENV['AZURE_VM_PASSWORD']
@@ -46,11 +49,12 @@ Vagrant.configure("2") do |config|
 	  azure.instance_ready_timeout = 600
 	  azure.instance_check_interval = 60
 	  azure.wait_for_destroy = true
+	  # swapped out for a random resource group name when running the test
 	  azure.resource_group_name = "AZURE_RESOURCE_GROUP_NAME"
 	  azure.location = "WestEurope"
 
-	  # use winrm in PowerShell to copy files across and back on Azure. Disable automatic syncing
-	  # of vagrant synced folder
+	  # use winrm in PowerShell to copy files across and back on Azure as synced folders do not work.
+	  # Disable automatic syncing of the vagrant synced folder
 	  override.vm.synced_folder ".", "/vagrant", disabled: true
       override.winrm.transport = :ssl
       override.winrm.port = 5986
@@ -58,8 +62,9 @@ Vagrant.configure("2") do |config|
     end
 
     azure.vm.provision "chocolatey", 	type: "shell", inline: configure_chocolatey() 
-    azure.vm.provision "powershellget", type: "shell", inline: configure_powershellget()   
-    azure.vm.provision "java", 			type: "shell", inline: configure_java()  
+    azure.vm.provision "java8", 			type: "shell", inline: configure_java_8()  
+    # TODO: test with java 9 for versions that support it
+	#azure.vm.provision "java9", 			type: "shell", inline: configure_java_9()  
     # TODO: use another proxy available on chocolatey
 	#azure.vm.provision "fiddler", 		type: "shell", inline: configure_fiddler()  
   end
@@ -68,26 +73,55 @@ end
 
 def configure_chocolatey()
   return <<-SHELL
-    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+	$ErrorActionPreference = 'Stop'   
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   SHELL
 end
 
 def configure_powershellget()
   return <<-SHELL
+	$ErrorActionPreference = 'Stop'
     choco install powershell-packagemanagement -y
+    
+	if ($LastExitCode -ne 0) {
+		exit $LastExitCode
+	}
+    
     Install-PackageProvider -Name NuGet -RequiredVersion 2.8.5.201 -Force
   SHELL
 end
 
-def configure_java()
+def configure_java_8()
   return <<-SHELL
+	$ErrorActionPreference = 'Stop'
     choco install jdk8 -y
+    
+	if ($LastExitCode -ne 0) {
+		exit $LastExitCode
+	}   
+  SHELL
+end
+    
+def configure_java_9()
+  return <<-SHELL
+ 	$ErrorActionPreference = 'Stop'
+    choco install jdk9 -y
+    
+    if ($LastExitCode -ne 0) {
+        exit $LastExitCode
+    }    
   SHELL
 end
 
 def configure_fiddler()
   return <<-SHELL
+ 	$ErrorActionPreference = 'Stop'
     choco install fiddler4 -y
+    
+	if ($LastExitCode -ne 0) {
+		exit $LastExitCode
+	}
+    
 	$scriptsDir = "$([Environment]::GetFolderPath("MyDocuments"))\\Fiddler2\\Scripts"
 	if (-not(Test-Path $scriptsDir)) {
 		New-Item $scriptsDir -Type Directory | Out-Null
@@ -101,6 +135,7 @@ end
 
 def create_partition()
   return <<-SHELL
+	$ErrorActionPreference = 'Stop'
 	$partitions = Get-Disk | Get-Partition
 	$driveLetter = 'D'
 	$d = $partitions | Where-Object { $_.DriveLetter -eq $driveLetter }
