@@ -67,18 +67,12 @@ function Write-Log {
 
 Set-Alias -Name log -Value Write-Log -Description "logs a message to console and optionally to file"
 
-function Set-DebugMode() {
+function Set-Preferences() {
     log "setting Debug Mode" -l Debug
     $Global:DebugPreference = "Continue"
     $Global:VerbosePreference = "Continue"
+	$Global:ErrorActionPreference = 'Stop'
     Set-StrictMode -version Latest
-}
-
-function Set-ProductionMode() {
-    log "setting Production Mode" -l Debug
-    $Global:DebugPreference = "SilentlyContinue"
-    $Global:VerbosePreference = "SilentlyContinue"
-    Set-StrictMode -Off
 }
 
 function ReplaceInFile($File, $Replacements) {
