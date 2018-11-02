@@ -74,32 +74,55 @@ end
 
 def configure_chocolatey()
   return <<-SHELL
-    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+	$ErrorActionPreference = 'Stop'   
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   SHELL
 end
 
 def configure_powershellget()
   return <<-SHELL
+ 	$ErrorActionPreference = 'Stop'
     choco install powershell-packagemanagement -y
+    
+	if ($LastExitCode -ne 0) {
+		exit $LastExitCode
+	}
+    
     Install-PackageProvider -Name NuGet -RequiredVersion 2.8.5.201 -Force
   SHELL
 end
 
 def configure_java_8()
   return <<-SHELL
+ 	$ErrorActionPreference = 'Stop'
     choco install jdk8 -y
+    
+	if ($LastExitCode -ne 0) {
+		exit $LastExitCode
+	}
   SHELL
 end
 
 def configure_java_9()
   return <<-SHELL
+ 	$ErrorActionPreference = 'Stop'
     choco install jdk9 -y
+    
+    if ($LastExitCode -ne 0) {
+        exit $LastExitCode
+    }    
   SHELL
 end
 
 def configure_fiddler()
   return <<-SHELL
+ 	$ErrorActionPreference = 'Stop'
     choco install fiddler4 -y
+    
+	if ($LastExitCode -ne 0) {
+		exit $LastExitCode
+	}
+    
 	$scriptsDir = "$([Environment]::GetFolderPath("MyDocuments"))\\Fiddler2\\Scripts"
 	if (-not(Test-Path $scriptsDir)) {
 		New-Item $scriptsDir -Type Directory | Out-Null
@@ -113,6 +136,7 @@ end
 
 def create_partition()
   return <<-SHELL
+	$ErrorActionPreference = 'Stop'
 	$partitions = Get-Disk | Get-Partition
 	$driveLetter = 'D'
 	$d = $partitions | Where-Object { $_.DriveLetter -eq $driveLetter }
