@@ -14,7 +14,7 @@ namespace Elastic.Installer.Msi.Elasticsearch.CustomActions.Install
 		public override int Order => (int)ElasticsearchCustomActionOrder.SetupXPackPasswords;
 		public override Condition Condition => 
 			new Condition($"(NOT Installed) AND {nameof(XPackModel.XPackSecurityEnabled).ToUpperInvariant()}~=\"true\" " +
-			              $"AND {nameof(XPackModel.XPackLicense).ToUpperInvariant()}~=\"Trial\" " +
+			              $"AND {nameof(XPackModel.XPackLicense).ToUpperInvariant()}~=\"{nameof(XPackLicenseMode.Trial)}\" " +
 			              $"AND {nameof(XPackModel.SkipSettingPasswords).ToUpperInvariant()}~=\"false\"");
 		public override Return Return => Return.check;
 		public override Sequence Sequence => Sequence.InstallExecuteSequence;

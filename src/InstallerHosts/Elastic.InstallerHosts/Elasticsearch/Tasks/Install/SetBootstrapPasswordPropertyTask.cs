@@ -24,9 +24,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		protected override bool ExecuteTask()
 		{
-			var xPackModel = this.InstallationModel.XPackModel;
-			if (!xPackModel.IsRelevant) return true;
-
 			const int length = 20;
 			var password = new StringBuilder();
 			var property = nameof(XPackModel.BootstrapPassword).ToUpperInvariant();
