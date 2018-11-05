@@ -61,7 +61,8 @@ Vagrant.configure("2") do |config|
       override.winrm.ssl_peer_verification = false # must be false if using a self signed cert
     end
 
-    azure.vm.provision "chocolatey", 	type: "shell", inline: configure_chocolatey() 
+    azure.vm.provision "chocolatey", 	type: "shell", inline: configure_chocolatey()
+    azure.vm.provision "powershellget", type: "shell", inline: configure_powershellget()  
     azure.vm.provision "java8", 			type: "shell", inline: configure_java_8()  
     # TODO: test with java 9 for versions that support it
 	#azure.vm.provision "java9", 			type: "shell", inline: configure_java_9()  
