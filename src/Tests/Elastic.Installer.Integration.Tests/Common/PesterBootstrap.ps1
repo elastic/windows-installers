@@ -26,8 +26,6 @@ Param(
     [string[]] $PreviousVersions=@()
 )
 
-$ErrorActionPreference = 'Stop'
-
 # Used in tests
 $env:Version = $Version
 $env:PreviousVersions = $PreviousVersions -join ","
