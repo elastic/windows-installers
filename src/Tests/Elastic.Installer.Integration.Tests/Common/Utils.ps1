@@ -71,7 +71,6 @@ function Set-Preferences() {
     log "setting Debug Mode" -l Debug
     $Global:DebugPreference = "Continue"
     $Global:VerbosePreference = "Continue"
-	$Global:ErrorActionPreference = 'Stop'
     Set-StrictMode -version Latest
 }
 
