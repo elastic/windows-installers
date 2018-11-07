@@ -20,9 +20,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			var xPackModel = this.InstallationModel.XPackModel;
 			var locationsModel = this.InstallationModel.LocationsModel;
-			
-			if (!xPackModel.IsRelevant) return true;
-
 			var installationDir = locationsModel.InstallDir;
 			var password = xPackModel.BootstrapPassword;
 			var binary = this.FileSystem.Path.Combine(installationDir, "bin", "elasticsearch-keystore.bat");
