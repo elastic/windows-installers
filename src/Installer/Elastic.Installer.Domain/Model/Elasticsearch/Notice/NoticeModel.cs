@@ -112,7 +112,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(nameof(NoticeModel));
-			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
+			sb.AppendLine($"- {nameof(CurrentVersion)} = {CurrentVersion}");
+			sb.AppendLine($"- {nameof(ExistingVersion)} = {ExistingVersion}");
+			sb.AppendLine($"- {nameof(ExistingVersionInstalled)} = {ExistingVersionInstalled}");
+			sb.AppendLine($"- {nameof(IsValid)} = {IsValid}");
 			return sb.ToString();
 		}
 	}
