@@ -22,9 +22,6 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 
 		protected override bool ExecuteTask()
 		{
-			var xPackModel = this.InstallationModel.XPackModel;
-			if (!xPackModel.IsRelevant || !xPackModel.NeedsPasswords) return true;
-
 			this.Session.SendActionStart(TotalTicks, ActionName, "Setting up X-Pack passwords", "Setting up X-Pack passwords: [1]");
 
 			var password = this.InstallationModel.XPackModel.BootstrapPassword;
