@@ -19,7 +19,7 @@ namespace Elastic.Installer.UI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ViewResources {
@@ -1628,7 +1628,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to password.
+        ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string ServiceView_PasswordLabel {
             get {
@@ -1664,7 +1664,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to user.
+        ///   Looks up a localized string similar to User.
         /// </summary>
         public static string ServiceView_UserLabel {
             get {
@@ -1806,7 +1806,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/x-pack/{0}/setting-up-authentication.html#set-built-in-user-passwords.
+        ///   Looks up a localized string similar to https://www.elastic.co/guide/en/elastic-stack-overview/{0}/built-in-users.html#set-built-in-user-passwords.
         /// </summary>
         public static string XPackView_ManualUserConfiguration {
             get {
@@ -1824,7 +1824,7 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Elasticsearch built-in users need to be setup manually. Either you are not installing as a service that gets started after installation, or you&apos;ve opted to start Elasticsearch manually when needed..
+        ///   Looks up a localized string similar to The Elasticsearch built-in users will need to be setup manually. Take a look at the documentation to understand how to do this:.
         /// </summary>
         public static string XPackView_ManualUserConfigurationNeeded {
             get {
