@@ -808,7 +808,7 @@ Alternatively, you may choose to not install Kibana as a service and run it manu
     <value>Open Kibana in the browser</value>
   </data>
   <data name="XPackView_ManualUserConfiguration" xml:space="preserve">
-    <value>https://www.elastic.co/guide/en/x-pack/{0}/setting-up-authentication.html#set-built-in-user-passwords</value>
+    <value>https://www.elastic.co/guide/en/elastic-stack-overview/{0}/built-in-users.html#set-built-in-user-passwords</value>
     <comment>{0} = major minor version</comment>
   </data>
   <data name="XPackView_OpenLicensesAndSubscriptions" xml:space="preserve">
