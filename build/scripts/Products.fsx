@@ -66,6 +66,7 @@ module Products =
     }
 
     let lastSnapshotVersionAsset (product:Product, version:Version) =
+        tracefn "%O %O" product version
         let latestAsset = Snapshots.GetVersionsFiltered version.Major version.Minor version.Patch version.Prerelease
                             |> Seq.map (fun x -> (x, (Snapshots.GetSnapshotBuilds x) |> Seq.head))
                             |> Seq.map (fun xy -> Snapshots.GetSnapshotBuildAssets product.Name (fst xy) (snd xy))
@@ -139,8 +140,10 @@ module Products =
                     if (Directory.Exists(extractedDirectory)) then
                         tracefn "Deleting snapshot existing directory: %s" extractedDirectory
                         Directory.Delete(extractedDirectory, true)
+                        
+                let url = this.DownloadUrl version
 
-                match (this.DownloadUrl version, zipFile) with
+                match (url, zipFile) with
                 | (_, file) when fileExists file ->
                     tracefn "Already downloaded %s to %s" this.Name file
                 | (url, file) ->
