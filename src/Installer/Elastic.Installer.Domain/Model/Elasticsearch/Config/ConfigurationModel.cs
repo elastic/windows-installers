@@ -42,8 +42,8 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			this._yamlSettings = yamlConfiguration?.Settings;
 			this.Refresh();
 
-			this.AddUnicastNode = ReactiveCommand.CreateAsyncTask(async _ => await this.AddUnicastNodeUITask());
-			this.WhenAnyObservable(vm => vm.AddUnicastNode)
+			this.AddSeedHost = ReactiveCommand.CreateAsyncTask(async _ => await this.AddSeedHostUserInterfaceTask());
+			this.WhenAnyObservable(vm => vm.AddSeedHost)
 				.Subscribe(x =>
 				{
 					if (string.IsNullOrWhiteSpace(x)) return;
@@ -54,7 +54,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 						.Distinct();
 
 					foreach (var n in nodes)
-						this.UnicastNodes.Add(n);
+						this.SeedHosts.Add(n);
 				});
 
 			this.WhenAny(
@@ -64,10 +64,10 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 				.ToProperty(this, vm => vm.MaxSelectedMemory, out maxSelectedMemory);
 
 			var canRemoveNode = this.WhenAny(vm => vm.SelectedUnicastNode, (selected) => !string.IsNullOrWhiteSpace(selected.GetValue()));
-			this.RemoveUnicastNode = ReactiveCommand.Create(canRemoveNode);
-			this.RemoveUnicastNode.Subscribe(x =>
+			this.RemoveSeedHost = ReactiveCommand.Create(canRemoveNode);
+			this.RemoveSeedHost.Subscribe(x =>
 			{
-				this.UnicastNodes.Remove(this.SelectedUnicastNode);
+				this.SeedHosts.Remove(this.SelectedUnicastNode);
 			});
 		}
 
@@ -78,9 +78,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			this.MasterNode = this._yamlSettings?.MasterNode ?? DefaultMasterNode;
 			this.DataNode = this._yamlSettings?.DataNode ?? DefaultDataNode;
 			this.IngestNode = this._yamlSettings?.IngestNode ?? DefaultIngestNode;
-			this.UnicastNodes = this._yamlSettings?.UnicastHosts != null
-				? new ReactiveList<string>(this._yamlSettings?.UnicastHosts)
-				: new ReactiveList<string>();
+			this.SeedHosts = ReadSeedHosts();
 			this.LockMemory = this._yamlSettings?.MemoryLock ?? DefaultMemoryLock;
 			this.TotalPhysicalMemory = DefaultTotalPhysicalMemory;
 			this.SelectedMemory = this._localJvmOptions?.ConfiguredHeapSize ?? DefaultHeapSize;
@@ -88,6 +86,15 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			this.NetworkHost = this._yamlSettings?.NetworkHost;
 			this.HttpPort = this._yamlSettings?.HttpPort ?? HttpPortDefault;
 			this.TransportPort = this._yamlSettings?.TransportTcpPort ?? TransportPortDefault;
+		}
+
+		private ReactiveList<string> ReadSeedHosts()
+		{
+			if (this._yamlSettings?.UnicastHosts != null && this._yamlSettings?.SeedHosts == null)
+				return new ReactiveList<string>(this._yamlSettings.UnicastHosts);
+			return this._yamlSettings?.SeedHosts != null
+				? new ReactiveList<string>(this._yamlSettings?.SeedHosts)
+				: new ReactiveList<string>();
 		}
 
 		private static ulong GetTotalPhysicalMemory()
@@ -98,19 +105,19 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			return memory;
 		}
 
-		public Func<Task<string>> AddUnicastNodeUITask { get; set; }
-		public ReactiveCommand<string> AddUnicastNode { get; }
-		public ReactiveCommand<object> RemoveUnicastNode { get; }
+		public Func<Task<string>> AddSeedHostUserInterfaceTask { get; set; }
+		public ReactiveCommand<string> AddSeedHost { get; }
+		public ReactiveCommand<object> RemoveSeedHost { get; }
 
 		// ReactiveUI conventions do not change
 		// ReSharper disable InconsistentNaming
 		// ReSharper disable ArrangeTypeMemberModifiers
-		private ReactiveList<string> unicastNodes = new ReactiveList<string>();
-		[Argument(nameof(UnicastNodes))]
-		public ReactiveList<string> UnicastNodes
+		private ReactiveList<string> seedHosts = new ReactiveList<string>();
+		[Argument(nameof(SeedHosts))]
+		public ReactiveList<string> SeedHosts
 		{
-			get => unicastNodes;
-			set { this.RaiseAndSetIfChanged(ref unicastNodes, new ReactiveList<string>(value?.Where(n => !string.IsNullOrEmpty(n)).Select(n => n.Trim()).ToList())); }
+			get => seedHosts;
+			set { this.RaiseAndSetIfChanged(ref seedHosts, new ReactiveList<string>(value?.Where(n => !string.IsNullOrEmpty(n)).Select(n => n.Trim()).ToList())); }
 		}
 
 		string selectedUnicastNode;
@@ -224,7 +231,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			var sb = new StringBuilder();
 			sb.AppendLine(nameof(ConfigurationModel));
 			sb.AppendLine($"- {nameof(IsValid)} = " + IsValid);
-			sb.AppendLine($"- {nameof(UnicastNodes)} = " + string.Join(", ", UnicastNodes));
+			sb.AppendLine($"- {nameof(SeedHosts)} = " + string.Join(", ", SeedHosts));
 			sb.AppendLine($"- {nameof(ClusterName)} = " + ClusterName);
 			sb.AppendLine($"- {nameof(NodeName)} = " + NodeName);
 			sb.AppendLine($"- {nameof(MasterNode)} = " + MasterNode);

@@ -53,6 +53,29 @@ xpack.random_setting: something
 			fileContentsAfterSave.Replace("\r", "").Should().Be(yaml.Replace("\r", ""));
 
 		}
+		
+		[Fact] void UnicastHostsAreStillRead()
+		{
+			var folder = @"C:\ProgramData\Elastic\Elasticsearch\";
+			var yaml = $@"discovery.zen.ping.unicast.hosts: [host1, host2]";
+			var fs = FakeElasticsearchYaml(yaml);
+			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
+			var settings = optsFile.Settings;
+			settings.UnicastHosts.Should().NotBeEmpty().And.HaveCount(2);
+			optsFile.Save();
+		}
+		
+		[Fact] void SeedHostsArRead()
+		{
+			var folder = @"C:\ProgramData\Elastic\Elasticsearch\";
+			var yaml = $@"discovery.seed_hosts: [host1, host2]";
+			var fs = FakeElasticsearchYaml(yaml);
+			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
+			var settings = optsFile.Settings;
+			settings.SeedHosts.Should().NotBeEmpty().And.HaveCount(2);
+			optsFile.Save();
+		}
+
 
 		[Fact] void UnknownSettingsAreNotLost()
 		{

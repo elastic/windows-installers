@@ -611,6 +611,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seed Hosts.
+        /// </summary>
+        public static string ConfigurationView_SeedHostsLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_SeedHostsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Certificate.
         /// </summary>
         public static string ConfigurationView_ServerCertLabel {
@@ -661,15 +670,6 @@ namespace Elastic.Installer.UI.Properties {
         public static string ConfigurationView_TransportPortLabel {
             get {
                 return ResourceManager.GetString("ConfigurationView_TransportPortLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unicast Hosts.
-        /// </summary>
-        public static string ConfigurationView_UnicastHostsLabel {
-            get {
-                return ResourceManager.GetString("ConfigurationView_UnicastHostsLabel", resourceCulture);
             }
         }
         

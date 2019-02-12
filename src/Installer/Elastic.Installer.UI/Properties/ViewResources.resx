@@ -177,8 +177,8 @@
   <data name="ConfigurationView_SliderLabel" xml:space="preserve">
     <value>Max</value>
   </data>
-  <data name="ConfigurationView_UnicastHostsLabel" xml:space="preserve">
-    <value>Unicast Hosts</value>
+  <data name="ConfigurationView_SeedHostsLabel" xml:space="preserve">
+    <value>Seed Hosts</value>
   </data>
   <data name="ClosingView_TitleSuccess" xml:space="preserve">
     <value>{0} {1} successfully!</value>

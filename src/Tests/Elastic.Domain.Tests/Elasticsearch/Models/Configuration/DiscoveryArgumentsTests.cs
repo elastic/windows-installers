@@ -6,23 +6,23 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 {
 	public class DiscoveryArgumentsTests : InstallationModelArgumentsTestsBase
 	{
-		[Fact] void UnicastNodesEmpty() => Argument(nameof(ConfigurationModel.UnicastNodes), "", (m, v) =>
+		[Fact] void SeedHostsEmpty() => Argument(nameof(ConfigurationModel.SeedHosts), "", (m, v) =>
 		{
-			m.ConfigurationModel.UnicastNodes.Should().BeEmpty();
+			m.ConfigurationModel.SeedHosts.Should().BeEmpty();
 		});
 
-		[Fact] void UnicastNodesSingle() => Argument(nameof(ConfigurationModel.UnicastNodes), "my-domain:9200", (m, v) =>
+		[Fact] void SeedHostsSingle() => Argument(nameof(ConfigurationModel.SeedHosts), "my-domain:9200", (m, v) =>
 		{
-			m.ConfigurationModel.UnicastNodes.Should().NotBeEmpty().And.HaveCount(1).And.Contain(v);
+			m.ConfigurationModel.SeedHosts.Should().NotBeEmpty().And.HaveCount(1).And.Contain(v);
 		});
 
-		[Fact] void UnicastNodesMultiple() => Argument(
-			nameof(ConfigurationModel.UnicastNodes),
+		[Fact] void SeedHostsMultiple() => Argument(
+			nameof(ConfigurationModel.SeedHosts),
 			"my-domain:9200,,,  192.3.3.1:8080",
 			"my-domain:9200,192.3.3.1:8080",
 			(m, v) =>
 		{
-			m.ConfigurationModel.UnicastNodes.Should().NotBeEmpty().And.HaveCount(2).And.Contain("my-domain:9200");
+			m.ConfigurationModel.SeedHosts.Should().NotBeEmpty().And.HaveCount(2).And.Contain("my-domain:9200");
 		});
 
 		[Fact] void MinimumMasterNodes() => Argument(nameof(ConfigurationModel.MinimumMasterNodes), 2, (m, v) =>

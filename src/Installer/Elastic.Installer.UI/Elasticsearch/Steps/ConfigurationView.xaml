@@ -119,8 +119,8 @@
                                    TextAlignment="Left" IsReadOnly="True"
                                      StringFormat="{x:Static resx:ViewResources.ConfigurationView_MinimumMasterNodesNotSet}"
                                      />
-      <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"  x:Name="UnicastHostsLabel" Content="{x:Static resx:ViewResources.ConfigurationView_UnicastHostsLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-      <ListBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" x:Name="UnicastNodesListBox" 
+      <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"  x:Name="SeedHostsLabel" Content="{x:Static resx:ViewResources.ConfigurationView_SeedHostsLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+      <ListBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" x:Name="SeedHostsListBox" 
                Margin="5, 0, 0, 0"
                VerticalContentAlignment="Stretch" 
                HorizontalContentAlignment="Stretch" BorderBrush="{StaticResource TextBoxBorderBrush}" BorderThickness="2">
@@ -135,14 +135,14 @@
           <ColumnDefinition Width="35"/>
           <ColumnDefinition Width="45"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="AddUnicastNodeButton" Grid.Column="0" Width="36" Height="36" HorizontalAlignment="Left" FontWeight="Normal" VerticalAlignment="Top" Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button x:Name="AddSeedHostButton" Grid.Column="0" Width="36" Height="36" HorizontalAlignment="Left" FontWeight="Normal" VerticalAlignment="Top" Style="{DynamicResource MetroCircleButtonStyle}">
           <Rectangle Width="12" Height="12">
             <Rectangle.Fill>
               <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
             </Rectangle.Fill>
           </Rectangle>
         </Button>
-        <Button x:Name="RemoveUnicastNodeButton" Grid.Column="1" Width="36" Height="36" HorizontalAlignment="Left" FontWeight="Normal" VerticalAlignment="Top" Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button x:Name="RemoveSeedHostButton" Grid.Column="1" Width="36" Height="36" HorizontalAlignment="Left" FontWeight="Normal" VerticalAlignment="Top" Style="{DynamicResource MetroCircleButtonStyle}">
           <Rectangle Width="12" Height="2">
             <Rectangle.Fill>
               <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_minus}" />

@@ -73,6 +73,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					s.HttpPortString.Should().Be("9200");
 					s.TransportTcpPortString.Should().Be("9300");
 					s.UnicastHosts.Should().BeNullOrEmpty();
+					s.SeedHosts.Should().BeNullOrEmpty();
 				}
 			);
 
@@ -123,7 +124,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				s.NetworkHost = "xyz";
 				s.HttpPort = 80;
 				s.TransportPort = 9300;
-				s.UnicastNodes = new ReactiveUI.ReactiveList<string>
+				s.SeedHosts = new ReactiveUI.ReactiveList<string>
 				{
 					"localhost", "192.2.3.1:9301"
 				};
@@ -148,10 +149,92 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					s.HttpPortString.Should().Be("80");
 					s.TransportTcpPort.Should().Be(9300);
 					s.TransportTcpPortString.Should().Be("9300");
-					s.UnicastHosts.Should().BeEquivalentTo(new List<string>
+					s.SeedHosts.Should().BeEquivalentTo(new List<string>
 					{
 						"localhost", "192.2.3.1:9301"
 					});
+				}
+			);
+		
+		[Fact] void WritesSeedHostsFor7() => 
+			DefaultValidModelForTasks(s => s
+				.Elasticsearch(es => es.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory))
+				.FileSystem(fs =>
+				{
+					var yamlLocation = Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml");
+					fs.AddFile(yamlLocation, new MockFileData(@"discovery.zen.ping.unicast.hosts: ['192.2.3.1:9200']"));
+					return fs;
+				})
+			)
+			.OnStep(m => m.ConfigurationModel, s =>
+			{
+				s.ClusterName = "x";
+				s.NodeName = "x";
+				//we read unicast host from previous install into seed hosts
+				s.SeedHosts.Should().NotBeEmpty().And.Contain(h => h.Contains("9200"));
+				//simulate a user change
+				s.SeedHosts = new ReactiveUI.ReactiveList<string> { "localhost", "192.2.3.1:9201" };
+			})
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yaml = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
+					// validate we are writing the yaml file in 7.0 format
+					yamlContents.Should().NotBeEmpty()
+						.And.Contain("discovery.seed_hosts")
+						.And.Contain("192.2.3.1:9201")
+						.And.NotContain("discovery.zen.ping.unicast.hosts")
+						.And.NotContain("192.2.3.1:9200");
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var s = config.Settings;
+					s.ClusterName.Should().Be("x");
+					s.NodeName.Should().Be("x");
+					s.SeedHosts.Should().BeEquivalentTo(new List<string>
+					{
+						"localhost", "192.2.3.1:9201"
+					});
+				}
+			);
+		
+		[Fact] void WritesUnicastHostsFor6() => 
+			DefaultValidModelForTasks(s => s
+				.Wix(current: "6.6.0")
+				.Elasticsearch(es => es.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory))
+				.FileSystem(fs =>
+				{
+					var yamlLocation = Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml");
+					fs.AddFile(yamlLocation, new MockFileData(@"discovery.zen.ping.unicast.hosts: ['192.2.3.1:9201']"));
+					return fs;
+				})
+			)
+			.OnStep(m => m.ConfigurationModel, s =>
+			{
+				s.ClusterName = "x";
+				s.NodeName = "x";
+				//we read unicast host from previous install into seed hosts
+				s.SeedHosts.Should().NotBeEmpty().And.Contain(h => h.Contains("9201"));
+			})
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yamlPath = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yamlPath);
+					// validate we are writing the yaml file in 7.0 format
+					yamlContents.Should().NotBeEmpty()
+						.And.NotContain("discovery.seed_hosts")
+						.And.Contain("192.2.3.1:9201")
+						.And.Contain("discovery.zen.ping.unicast.hosts");
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var yaml = config.Settings;
+					yaml.ClusterName.Should().Be("x");
+					yaml.NodeName.Should().Be("x");
+					yaml.UnicastHosts.Should().BeEquivalentTo(new List<string> { "192.2.3.1:9201" });
+					yaml.SeedHosts.Should().BeNull();
 				}
 			);
 

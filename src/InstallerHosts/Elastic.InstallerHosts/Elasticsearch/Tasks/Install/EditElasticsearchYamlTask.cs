@@ -78,8 +78,16 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				settings.HttpPortString = config.HttpPort.Value.ToString(CultureInfo.InvariantCulture);
 			if (config.TransportPort.HasValue)
 				settings.TransportTcpPortString = config.TransportPort.Value.ToString(CultureInfo.InvariantCulture);
-			var hosts = config.UnicastNodes;
-			settings.UnicastHosts = hosts.Any() ? hosts.ToList() : null;
+			var hosts = config.SeedHosts;
+
+			var version = this.InstallationModel.NoticeModel.CurrentVersion;
+			var hostsList = hosts.Any() ? hosts.ToList() : null;
+			if (version.Major >= 7)
+			{
+				settings.SeedHosts = hostsList;
+				settings.UnicastHosts = null;
+			}
+			else settings.UnicastHosts = hostsList;
 		}
 	}
 }

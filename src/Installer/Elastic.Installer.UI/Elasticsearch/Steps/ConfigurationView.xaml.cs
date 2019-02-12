@@ -37,7 +37,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 
 		protected override void InitializeBindings()
 		{
-			this.ViewModel.AddUnicastNodeUITask = () =>
+			this.ViewModel.AddSeedHostUserInterfaceTask = () =>
 			{
 				var metroWindow = (Application.Current.MainWindow as MetroWindow);
 				return metroWindow.ShowInputAsync(
@@ -45,16 +45,16 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 					ViewResources.ConfigurationView_AddUnicastNode_Message);
 			};
 
-			this.AddUnicastNodeButton.Command = this.ViewModel.AddUnicastNode;
-			this.RemoveUnicastNodeButton.Command = this.ViewModel.RemoveUnicastNode;
+			this.AddSeedHostButton.Command = this.ViewModel.AddSeedHost;
+			this.RemoveSeedHostButton.Command = this.ViewModel.RemoveSeedHost;
 
 			this.HttpPortTextBox.Minimum = ConfigurationModel.HttpPortMinimum;
 			this.HttpPortTextBox.Maximum = ConfigurationModel.PortMaximum;
 			this.TransportPortTextBox.Minimum = ConfigurationModel.TransportPortMinimum;
 			this.TransportPortTextBox.Maximum = ConfigurationModel.PortMaximum;
 
-			this.OneWayBind(ViewModel, vm => vm.UnicastNodes, v => v.UnicastNodesListBox.ItemsSource);
-			this.Bind(ViewModel, vm => vm.SelectedUnicastNode, v => v.UnicastNodesListBox.SelectedItem);
+			this.OneWayBind(ViewModel, vm => vm.SeedHosts, v => v.SeedHostsListBox.ItemsSource);
+			this.Bind(ViewModel, vm => vm.SelectedUnicastNode, v => v.SeedHostsListBox.SelectedItem);
 			this.Bind(ViewModel, vm => vm.ClusterName, v => v.ClusterNameTextBox.Text);
 			this.Bind(ViewModel, vm => vm.NodeName, v => v.NodeNameTextBox.Text);
 			this.Bind(ViewModel, vm => vm.NetworkHost, v => v.NetworkHostTextBox.Text);

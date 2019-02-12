@@ -38,9 +38,14 @@ namespace Elastic.Configuration.FileBased.Yaml
 		[DefaultValue(null)]
 		public string LogsPath { get; set; }
 
+		// deprecated in 7.0 we will fallback to reading from this but never write it out on version >= 7.0
 		[YamlMember("discovery.zen.ping.unicast.hosts")]
 		[DefaultValue(null)]
 		public List<string> UnicastHosts { get; set; }
+
+		[YamlMember("discovery.seed_hosts")]
+		[DefaultValue(null)]
+		public List<string> SeedHosts { get; set; }
 
 		[YamlMember("node.max_local_storage_nodes")]
 		[DefaultValue(null)]
