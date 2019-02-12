@@ -342,18 +342,18 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Each value is either in the form of host or host:port. Invalid values will be ignored. Multiple values separated by a comma can be specified..
         /// </summary>
-        public static string ConfigurationView_AddUnicastNode_Message {
+        public static string ConfigurationView_AddSeedHost_Message {
             get {
-                return ResourceManager.GetString("ConfigurationView_AddUnicastNode_Message", resourceCulture);
+                return ResourceManager.GetString("ConfigurationView_AddSeedHost_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add unicast node.
+        ///   Looks up a localized string similar to Add seed host.
         /// </summary>
-        public static string ConfigurationView_AddUnicastNode_Title {
+        public static string ConfigurationView_AddSeedHost_Title {
             get {
-                return ResourceManager.GetString("ConfigurationView_AddUnicastNode_Title", resourceCulture);
+                return ResourceManager.GetString("ConfigurationView_AddSeedHost_Title", resourceCulture);
             }
         }
         

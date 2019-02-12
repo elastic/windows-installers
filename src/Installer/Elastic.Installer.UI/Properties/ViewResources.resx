@@ -117,11 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ConfigurationView_AddUnicastNode_Message" xml:space="preserve">
+  <data name="ConfigurationView_AddSeedHost_Message" xml:space="preserve">
     <value>Each value is either in the form of host or host:port. Invalid values will be ignored. Multiple values separated by a comma can be specified.</value>
   </data>
-  <data name="ConfigurationView_AddUnicastNode_Title" xml:space="preserve">
-    <value>Add unicast node</value>
+  <data name="ConfigurationView_AddSeedHost_Title" xml:space="preserve">
+    <value>Add seed host</value>
   </data>
   <data name="ConfigurationView_ClusterLabel" xml:space="preserve">
     <value>Identifiers</value>

@@ -63,11 +63,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 				)
 				.ToProperty(this, vm => vm.MaxSelectedMemory, out maxSelectedMemory);
 
-			var canRemoveNode = this.WhenAny(vm => vm.SelectedUnicastNode, (selected) => !string.IsNullOrWhiteSpace(selected.GetValue()));
+			var canRemoveNode = this.WhenAny(vm => vm.SelectedSeedHost, (selected) => !string.IsNullOrWhiteSpace(selected.GetValue()));
 			this.RemoveSeedHost = ReactiveCommand.Create(canRemoveNode);
 			this.RemoveSeedHost.Subscribe(x =>
 			{
-				this.SeedHosts.Remove(this.SelectedUnicastNode);
+				this.SeedHosts.Remove(this.SelectedSeedHost);
 			});
 		}
 
@@ -120,11 +120,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			set { this.RaiseAndSetIfChanged(ref seedHosts, new ReactiveList<string>(value?.Where(n => !string.IsNullOrEmpty(n)).Select(n => n.Trim()).ToList())); }
 		}
 
-		string selectedUnicastNode;
-		public string SelectedUnicastNode
+		string selectedSeedHost;
+		public string SelectedSeedHost
 		{
-			get => this.selectedUnicastNode;
-			set => this.RaiseAndSetIfChanged(ref this.selectedUnicastNode, value);
+			get => this.selectedSeedHost;
+			set => this.RaiseAndSetIfChanged(ref this.selectedSeedHost, value);
 		}
 
 		string clusterName;

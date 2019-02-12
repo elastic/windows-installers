@@ -25,14 +25,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 			))
 			.CanClickNext(false);
 
-		[Fact] void WhenNoUnicastAreSelectedCanNotClickRemove() => this._model
+		[Fact] void WhenNoSeedHostsAreSelectedCanNotClickRemove() => this._model
 			.OnStep(m => m.ConfigurationModel, step =>
 			{
 				step.SeedHosts.IsEmpty.Should().BeTrue();
 				step.RemoveSeedHost.CanExecute(null).Should().BeFalse();
 			});
 
-		[Fact] void WhenNoUnicastAreSelectedCanClickAdd() => this._model
+		[Fact] void WhenNoSeedHostsAreSelectedCanClickAdd() => this._model
 			.OnStep(m => m.ConfigurationModel, step =>
 			{
 				step.SeedHosts.IsEmpty.Should().BeTrue();
@@ -65,7 +65,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 					step.SeedHosts.Should().Contain(n.Trim());
 			});
 
-		[Fact] void CanRemoveSelectedUnicastNode() => this._model
+		[Fact] void CanRemoveSelectedSeedHostsNode() => this._model
 			.OnStep(m => m.ConfigurationModel, step =>
 			{
 				step.SeedHosts.IsEmpty.Should().BeTrue();
@@ -73,14 +73,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 				step.AddSeedHostUserInterfaceTask = () => Task.FromResult(node);
 				step.AddSeedHost.Execute(null);
 				step.SeedHosts.IsEmpty.Should().BeFalse();
-				step.SelectedUnicastNode = node;
+				step.SelectedSeedHost = node;
 				step.RemoveSeedHost.Execute(null);
 				step.SeedHosts.IsEmpty.Should().BeTrue();
 			});
 
 		private string _unicastHosts = @"[""127.0.0.2"", ""[::1]"", ""192.168.1.2:9301""]";
 		private string _seedHosts = @"[""127.0.0.1"", ""[::1]"", ""192.168.1.2:9301""]";
-		[Fact] void UnicastHostsInYamlAreReadAsSeedHosts() => WithExistingElasticsearchYaml($@"discovery.zen.ping.unicast.hosts: {_unicastHosts}
+		[Fact] void SeedHostsHostsInYamlAreReadAsSeedHosts() => WithExistingElasticsearchYaml($@"discovery.zen.ping.unicast.hosts: {_unicastHosts}
 discovery.zen.minimum_master_nodes: 20
 "
 				)
