@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Abstractions;
 using System.Linq;
@@ -85,7 +86,14 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			if (version.Major >= 7)
 			{
 				settings.SeedHosts = hostsList;
+				if ((settings.InitialMasterNodes == null || !settings.InitialMasterNodes.Any())
+				    && !string.IsNullOrEmpty(settings.NodeName)
+				    && config.InitialMaster)
+					settings.InitialMasterNodes = new List<string>{ settings.NodeName };
+				
+				// never carry over old zen configuration
 				settings.UnicastHosts = null;
+				settings.MinimumMasterNodes = null;
 			}
 			else settings.UnicastHosts = hostsList;
 		}

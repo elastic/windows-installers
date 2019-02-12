@@ -35,11 +35,13 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 		public const int HttpPortDefault = 9200;
 		public const int TransportPortDefault = 9300;
 		
-		public ConfigurationModel(ElasticsearchYamlConfiguration yamlConfiguration, LocalJvmOptionsConfiguration localJvmOptions)
+		public ConfigurationModel(ElasticsearchYamlConfiguration yamlConfiguration,
+			LocalJvmOptionsConfiguration localJvmOptions, IObservable<bool> upgradingFrom6OrNewInstallation)
 		{
 			this.Header = "Configuration";
 			this._localJvmOptions = localJvmOptions;
 			this._yamlSettings = yamlConfiguration?.Settings;
+			upgradingFrom6OrNewInstallation.Subscribe(b => this.UpgradingFrom6OrNewInstallation = b);
 			this.Refresh();
 
 			this.AddSeedHost = ReactiveCommand.CreateAsyncTask(async _ => await this.AddSeedHostUserInterfaceTask());
@@ -82,7 +84,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			this.LockMemory = this._yamlSettings?.MemoryLock ?? DefaultMemoryLock;
 			this.TotalPhysicalMemory = DefaultTotalPhysicalMemory;
 			this.SelectedMemory = this._localJvmOptions?.ConfiguredHeapSize ?? DefaultHeapSize;
-			this.MinimumMasterNodes = this._yamlSettings?.MinimumMasterNodes ?? 0;
 			this.NetworkHost = this._yamlSettings?.NetworkHost;
 			this.HttpPort = this._yamlSettings?.HttpPort ?? HttpPortDefault;
 			this.TransportPort = this._yamlSettings?.TransportTcpPort ?? TransportPortDefault;
@@ -194,12 +195,19 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			set => this.RaiseAndSetIfChanged(ref this.lockMemory, value);
 		}
 
-		int minimumMasterNodes;
-		[Argument(nameof(MinimumMasterNodes))]
-		public int MinimumMasterNodes
+		bool initialMaster;
+		[StaticArgument(nameof(InitialMaster))]
+		public bool InitialMaster
 		{
-			get => this.minimumMasterNodes;
-			set => this.RaiseAndSetIfChanged(ref this.minimumMasterNodes, value);
+			get => this.initialMaster;
+			set => this.RaiseAndSetIfChanged(ref this.initialMaster, value);
+		}
+
+		bool upgradingFrom6OrNewInstallation;
+		public bool UpgradingFrom6OrNewInstallation
+		{
+			get => this.upgradingFrom6OrNewInstallation;
+			set => this.RaiseAndSetIfChanged(ref this.upgradingFrom6OrNewInstallation, value);
 		}
 
 		string networkHost;
@@ -239,7 +247,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			sb.AppendLine($"- {nameof(IngestNode)} = " + IngestNode);
 			sb.AppendLine($"- {nameof(TotalPhysicalMemory)} = " + TotalPhysicalMemory.ToString(CultureInfo.InvariantCulture));
 			sb.AppendLine($"- {nameof(SelectedMemory)} = " + SelectedMemory.ToString(CultureInfo.InvariantCulture));
-			sb.AppendLine($"- {nameof(MinimumMasterNodes)} = " + MinimumMasterNodes.ToString(CultureInfo.InvariantCulture));
+			sb.AppendLine($"- {nameof(InitialMaster)} = " + InitialMaster);
 			sb.AppendLine($"- {nameof(LockMemory)} = " + LockMemory);
 			sb.AppendLine($"- {nameof(NetworkHost)} = " + NetworkHost);
 			sb.AppendLine($"- {nameof(HttpPort)} = " + HttpPort);

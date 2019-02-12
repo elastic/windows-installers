@@ -237,6 +237,81 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					yaml.SeedHosts.Should().BeNull();
 				}
 			);
+		
+		[Fact] void InitialMaster7SetsInitialMasterNodesIfNotSetPrior() => 
+			DefaultValidModelForTasks(s => s
+				.Elasticsearch(es => es.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory))
+				.FileSystem(fs =>
+				{
+					var yamlLocation = Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml");
+					fs.AddFile(yamlLocation, new MockFileData(@"discovery.zen.minimum_master_nodes: 20"));
+					return fs;
+				})
+			)
+			.OnStep(m => m.ConfigurationModel, s =>
+			{
+				s.ClusterName = "x";
+				s.NodeName = "nodex";
+				s.InitialMaster.Should().BeFalse();
+				s.InitialMaster = true;
+			})
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yaml = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
+					// validate we are writing the yaml file in 7.0 format
+					yamlContents.Should().NotBeEmpty()
+						// don't carry over minimum_master_nodes
+						.And.NotContain("discovery.zen.minimum_master_nodes")
+						.And.Contain("cluster.initial_master_nodes");
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var s = config.Settings;
+					s.ClusterName.Should().Be("x");
+					s.NodeName.Should().Be("nodex");
+					s.InitialMasterNodes.Should().BeEquivalentTo(new List<string> { "nodex" });
+				}
+			);
+		
+		[Fact] void InitialMaster7WontOverrideAlreadySetInitialMasterNodes() => 
+			DefaultValidModelForTasks(s => s
+				.Elasticsearch(es => es.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory))
+				.FileSystem(fs =>
+				{
+					var yamlLocation = Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml");
+					fs.AddFile(yamlLocation, new MockFileData(@"cluster.initial_master_nodes: [nodey]"));
+					return fs;
+				})
+			)
+			.OnStep(m => m.ConfigurationModel, s =>
+			{
+				s.ClusterName = "x";
+				s.NodeName = "nodex";
+				s.InitialMaster.Should().BeFalse();
+				s.InitialMaster = true;
+			})
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yaml = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
+					// validate we are writing the yaml file in 7.0 format
+					yamlContents.Should().NotBeEmpty()
+						// don't carry over minimum_master_nodes
+						.And.NotContain("discovery.zen.minimum_master_nodes")
+						.And.Contain("cluster.initial_master_nodes");
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var s = config.Settings;
+					s.ClusterName.Should().Be("x");
+					s.NodeName.Should().Be("nodex");
+					s.InitialMasterNodes.Should().BeEquivalentTo(new List<string> { "nodey" });
+				}
+			);
+		
 
 	}
 }

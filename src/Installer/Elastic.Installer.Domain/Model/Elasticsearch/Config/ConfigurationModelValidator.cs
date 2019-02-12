@@ -10,7 +10,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 		public static readonly string SelectedMemoryGreaterThanOrEqual250Mb = TextResources.ConfigurationModelValidator_SelectedMemory_GreaterThanOrEqual250MB; 
 		public static readonly string SelectedMemoryLessThan32Gb = TextResources.ConfigurationModelValidator_SelectedMemory_LessThan32GB; 
 		public static readonly string MaxMemory50Percent = TextResources.ConfigurationModelValidator_MaxMemory_50Percent; 
-		public static readonly string NegativeMinimumMasterNodes = TextResources.ConfigurationModelValidator_NegativeMinimumMasterNodes; 
 		public static readonly string HttpPortMinimum = TextResources.ConfigurationModelValidator_HttpPortMinimum; 
 		public static readonly string TransportPortMinimum = TextResources.ConfigurationModelValidator_TransportPortMinimum; 
 		public static readonly string PortMaximum = TextResources.ConfigurationModelValidator_PortMaximum; 
@@ -28,9 +27,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 				.Must((m,s)=> s < ConfigurationModel.CompressedOrdinaryPointersThreshold).WithMessage(SelectedMemoryLessThan32Gb);
 			RuleFor(c => c.SelectedMemory)
 				.Must((m,s)=> s <= (m.TotalPhysicalMemory / 2)).WithMessage(MaxMemory50Percent);
-
-			RuleFor(c => c.MinimumMasterNodes)
-				.Must((m,s)=> s >= 0).WithMessage(NegativeMinimumMasterNodes);
 
 			RuleFor(c => c.HttpPort)
 				.Must((m, s) => (s.HasValue && s >= ConfigurationModel.HttpPortMinimum) || !s.HasValue)

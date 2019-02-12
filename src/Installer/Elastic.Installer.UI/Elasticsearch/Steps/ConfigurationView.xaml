@@ -88,7 +88,7 @@
         <RowDefinition Height="45"/>
         <RowDefinition Height="45"/>
         <RowDefinition Height="45" />
-        <RowDefinition Height="45" />
+        <RowDefinition Height="Auto" />
         <RowDefinition Height="35" />
         <RowDefinition Height="*" />
         <RowDefinition Height="Auto" />
@@ -101,6 +101,7 @@
       
       <Label Grid.Row="1" Grid.Column="0" x:Name="NetworkHostLabel" Content="{x:Static resx:ViewResources.ConfigurationView_NetworkHostLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
       <TextBox Grid.Row="1" Grid.Column="1" x:Name="NetworkHostTextBox" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Height="30"  VerticalAlignment="Center" />
+
       <Label Grid.Row="2" Grid.Column="0" x:Name="HttpPortLabel" Content="{x:Static resx:ViewResources.ConfigurationView_HttpPortLabel}" HorizontalAlignment="Left" VerticalAlignment="Center" />
       <mahapps:NumericUpDown  Grid.Row="2" Grid.Column="1" x:Name="HttpPortTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center" 
          StringFormat="{}{0:0}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -113,12 +114,7 @@
       
       <Label Grid.Row="3" Grid.Column="0" x:Name="DiscoveryLabel" Content="{x:Static resx:ViewResources.ConfigurationView_DiscoveryLabel}" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{DynamicResource DescriptionHeaderStyle}" />
       <Label Grid.Row="3" Grid.Column="3" Content="{x:Static resx:ViewResources.ConfigurationView_OptionalLabel}" HorizontalAlignment="Right" Margin="0,5,0,0" VerticalAlignment="Center" Style="{DynamicResource DescriptionHeaderDisabledStyle}" />
-      <mahapps:NumericUpDown Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" x:Name="MinimumMasterTextBox" HorizontalAlignment="Stretch" Height="30" VerticalAlignment="Center"
-                                   Value="0"  Minimum="0" Foreground="{DynamicResource AccentColorBrush}" FontWeight="Bold" 
-                                   Margin="5, 0,0,0"
-                                   TextAlignment="Left" IsReadOnly="True"
-                                     StringFormat="{x:Static resx:ViewResources.ConfigurationView_MinimumMasterNodesNotSet}"
-                                     />
+      <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" x:Name="InitialMasterNodeCheckBox" Content="{x:Static resx:ViewResources.ConfigurationView_FirstInitialMasterLabel}" HorizontalAlignment="Left" Margin="7,5,0,0" VerticalAlignment="Top"/>
       <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"  x:Name="SeedHostsLabel" Content="{x:Static resx:ViewResources.ConfigurationView_SeedHostsLabel}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
       <ListBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" x:Name="SeedHostsListBox" 
                Margin="5, 0, 0, 0"

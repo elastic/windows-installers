@@ -451,6 +451,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is the first master in a new cluster.
+        /// </summary>
+        public static string ConfigurationView_FirstInitialMasterLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_FirstInitialMasterLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Host.
         /// </summary>
         public static string ConfigurationView_HostNameLabel {
@@ -517,33 +526,6 @@ namespace Elastic.Installer.UI.Properties {
         public static string ConfigurationView_MemoryLabel {
             get {
                 return ResourceManager.GetString("ConfigurationView_MemoryLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Min master nodes.
-        /// </summary>
-        public static string ConfigurationView_MinimumMasterLabel {
-            get {
-                return ResourceManager.GetString("ConfigurationView_MinimumMasterLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to  Minimum master nodes not set.
-        /// </summary>
-        public static string ConfigurationView_MinimumMasterNodesNotSet {
-            get {
-                return ResourceManager.GetString("ConfigurationView_MinimumMasterNodesNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to  {0} minimum master-eligible nodes.
-        /// </summary>
-        public static string ConfigurationView_MinimumMasterNodesSet {
-            get {
-                return ResourceManager.GetString("ConfigurationView_MinimumMasterNodesSet", resourceCulture);
             }
         }
         

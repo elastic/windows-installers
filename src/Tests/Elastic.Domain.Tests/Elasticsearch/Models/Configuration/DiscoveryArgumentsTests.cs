@@ -25,16 +25,16 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 			m.ConfigurationModel.SeedHosts.Should().NotBeEmpty().And.HaveCount(2).And.Contain("my-domain:9200");
 		});
 
-		[Fact] void MinimumMasterNodes() => Argument(nameof(ConfigurationModel.MinimumMasterNodes), 2, (m, v) =>
+		[Fact] void SetInitialMasterTrue() => Argument(nameof(ConfigurationModel.InitialMaster), "TRUE", (m, v) =>
 		{
-			m.ConfigurationModel.MinimumMasterNodes.Should().Be(2);
+			m.ConfigurationModel.InitialMaster.Should().BeTrue();
 			m.ConfigurationModel.IsValid.Should().BeTrue();
 		});
 
-		[Fact] void MinimumMasterNodesNegative() => Argument(nameof(ConfigurationModel.MinimumMasterNodes), -1, (m, v) =>
+		[Fact] void SetInitialMasterFalse() => Argument(nameof(ConfigurationModel.InitialMaster), "false", (m, v) =>
 		{
-			m.ConfigurationModel.MinimumMasterNodes.Should().Be(-1);
-			m.ConfigurationModel.IsValid.Should().BeFalse();
+			m.ConfigurationModel.InitialMaster.Should().BeFalse();
+			m.ConfigurationModel.IsValid.Should().BeTrue();
 		});
 
 	}

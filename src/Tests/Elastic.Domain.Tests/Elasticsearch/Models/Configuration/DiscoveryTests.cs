@@ -18,13 +18,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 				.IsValidOnStep(m => m.ConfigurationModel);
 		}
 
-		[Fact] void CanNotSelectNegativeMinimumMasterNodes() => this._model
-			.OnStep(m => m.ConfigurationModel, step => { step.MinimumMasterNodes = -1; })
-			.IsInvalidOnStep(m => m.ConfigurationModel, errors => errors.ShouldHaveErrors(
-				ConfigurationModelValidator.NegativeMinimumMasterNodes
-			))
-			.CanClickNext(false);
-
 		[Fact] void WhenNoSeedHostsAreSelectedCanNotClickRemove() => this._model
 			.OnStep(m => m.ConfigurationModel, step =>
 			{
@@ -87,7 +80,6 @@ discovery.zen.minimum_master_nodes: 20
 				.OnStep(m => m.ConfigurationModel, step =>
 				{
 					step.SeedHosts.Should().NotBeEmpty().And.HaveCount(3).And.BeEquivalentTo("127.0.0.2", "[::1]", "192.168.1.2:9301");
-					step.MinimumMasterNodes.Should().Be(20);
 				});
 
 		[Fact] void SeedHostsAreReadFromYaml() => WithExistingElasticsearchYaml($@"discovery.seed_hosts: {_seedHosts}
@@ -97,7 +89,6 @@ discovery.zen.minimum_master_nodes: 20
 				.OnStep(m => m.ConfigurationModel, step =>
 				{
 					step.SeedHosts.Should().NotBeEmpty().And.HaveCount(3).And.BeEquivalentTo("127.0.0.1", "[::1]", "192.168.1.2:9301");
-					step.MinimumMasterNodes.Should().Be(20);
 				});
 		
 		[Fact] void SeedHostsTakePrecedenceInYaml() => WithExistingElasticsearchYaml($@"discovery.zen.ping.unicast.hosts: {_unicastHosts}
@@ -108,7 +99,6 @@ discovery.zen.minimum_master_nodes: 20
 				.OnStep(m => m.ConfigurationModel, step =>
 				{
 					step.SeedHosts.Should().NotBeEmpty().And.HaveCount(3).And.BeEquivalentTo("127.0.0.1", "[::1]", "192.168.1.2:9301");
-					step.MinimumMasterNodes.Should().Be(20);
 				});
 	}
 }
