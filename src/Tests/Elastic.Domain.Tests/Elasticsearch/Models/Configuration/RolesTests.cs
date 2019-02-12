@@ -35,6 +35,17 @@ node.ingest: false
 					step.IngestNode.Should().BeFalse();
 					step.MasterNode.Should().BeFalse();
 				});
+		
+		[Fact] void UncheckInitialMasterNodeWhenUncheckingMasterNode() => this._model
+			.OnStep(m => m.ConfigurationModel, step =>
+			{
+				step.InitialMaster.Should().BeFalse();
+				step.InitialMaster = true;
+				step.MasterNode = false;
+				step.InitialMaster.Should().BeFalse();
+			})
+			.CanClickNext();
+
 			
 	}
 }

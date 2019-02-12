@@ -71,6 +71,11 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 			{
 				this.SeedHosts.Remove(this.SelectedSeedHost);
 			});
+			this.WhenAnyValue(vm => vm.MasterNode).Subscribe(b =>
+			{
+				// if we unset master node make sure InitialMaster is not set either.
+				if (!b) this.InitialMaster = false;
+			});
 		}
 
 		public sealed override void Refresh()

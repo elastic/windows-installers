@@ -25,7 +25,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 			m.ConfigurationModel.SeedHosts.Should().NotBeEmpty().And.HaveCount(2).And.Contain("my-domain:9200");
 		});
 
-		[Fact] void SetInitialMasterTrue() => Argument(nameof(ConfigurationModel.InitialMaster), "TRUE", (m, v) =>
+		[Fact] void SetInitialMasterTrue() => Argument(nameof(ConfigurationModel.InitialMaster), "TRUE", "true", (m, v) =>
 		{
 			m.ConfigurationModel.InitialMaster.Should().BeTrue();
 			m.ConfigurationModel.IsValid.Should().BeTrue();
