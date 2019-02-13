@@ -87,9 +87,9 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			{
 				settings.SeedHosts = hostsList;
 				if ((settings.InitialMasterNodes == null || !settings.InitialMasterNodes.Any())
-				    && !string.IsNullOrEmpty(settings.NodeName)
+				    && !string.IsNullOrEmpty(config.NodeName)
 				    && config.InitialMaster)
-					settings.InitialMasterNodes = new List<string>{ settings.NodeName };
+					settings.InitialMasterNodes = new List<string>{ config.NodeName };
 				
 				// never carry over old zen configuration
 				settings.UnicastHosts = null;
