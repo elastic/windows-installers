@@ -51,7 +51,7 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.TransportPortTextBox.Minimum = ConfigurationModel.TransportPortMinimum;
 			this.TransportPortTextBox.Maximum = ConfigurationModel.PortMaximum;
 
-			this.Bind(ViewModel, vm => vm.InitialMaster, v => v.LockMemoryCheckBox.IsChecked);
+			this.Bind(ViewModel, vm => vm.InitialMaster, v => v.InitialMasterNodeCheckBox.IsChecked);
 			this.OneWayBind(ViewModel, vm => vm.SeedHosts, v => v.SeedHostsListBox.ItemsSource);
 			this.Bind(ViewModel, vm => vm.SelectedSeedHost, v => v.SeedHostsListBox.SelectedItem);
 			this.Bind(ViewModel, vm => vm.ClusterName, v => v.ClusterNameTextBox.Text);

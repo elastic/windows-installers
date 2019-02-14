@@ -254,9 +254,16 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				s.NodeName = "nodex";
 				s.InitialMaster.Should().BeFalse();
 				s.InitialMaster = true;
+				
 			})
 			.AssertTask(
-				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, s, fs) =>
+				{
+					m.ToMsiParamsString().Should()
+						.Contain($"{nameof(ConfigurationModel.InitialMaster).ToUpperInvariant()}=\"true\"");
+					return new EditElasticsearchYamlTask(m, s, fs);
+				},
+				
 				(m, t) =>
 				{
 					var dir = m.LocationsModel.ConfigDirectory;

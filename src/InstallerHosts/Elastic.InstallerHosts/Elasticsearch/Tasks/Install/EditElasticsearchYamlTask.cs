@@ -68,6 +68,9 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			this.Session.SendProgress(1000, "updating elasticsearch.yml with values from configuration model");
 			var config = this.InstallationModel.ConfigurationModel;
+			var version = this.InstallationModel.NoticeModel.CurrentVersion;
+			this.Session.Log($"Persisting configuration to elasticsearch.yml for version: {version}");
+			
 			settings.ClusterName = config.ClusterName;
 			settings.NodeName = config.NodeName;
 			settings.MasterNode = config.MasterNode;
@@ -81,17 +84,19 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				settings.TransportTcpPortString = config.TransportPort.Value.ToString(CultureInfo.InvariantCulture);
 			var hosts = config.SeedHosts;
 
-			var version = this.InstallationModel.NoticeModel.CurrentVersion;
 			var hostsList = hosts.Any() ? hosts.ToList() : null;
 			if (version.Major >= 7)
 			{
 				settings.SeedHosts = hostsList;
-				if ((settings.InitialMasterNodes == null || !settings.InitialMasterNodes.Any())
-				    && !string.IsNullOrEmpty(config.NodeName)
-				    && config.InitialMaster)
+				var doesNotHaveInitialMasterNodesInYaml = settings.InitialMasterNodes == null || !settings.InitialMasterNodes.Any() ;
+				this.Session.Log($"Yaml does not already have cluster.initial_master_nodes: {doesNotHaveInitialMasterNodesInYaml}");
+				if (doesNotHaveInitialMasterNodesInYaml && !string.IsNullOrEmpty(config.NodeName) && config.InitialMaster)
+				{
+					this.Session.Log($"Initial Master flag set defaulting to current node name: {config.NodeName}");
 					settings.InitialMasterNodes = new List<string>{ config.NodeName };
-				
-				// never carry over old zen configuration
+					
+				}
+				this.Session.Log($"Making sure we are not carrying over unicast host or minimum master nodes configuration into >= 7.x of Elasticsearch");
 				settings.UnicastHosts = null;
 				settings.MinimumMasterNodes = null;
 			}
