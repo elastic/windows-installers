@@ -54,7 +54,13 @@ module Snapshots =
        |> Seq.map (fun x -> x.AsString())
 
     let GetSnapshotBuildAssets product version build =
+       
+       let major = version |> split '.' |> List.head |> int
+       
        let versions = ArtifactVersionBuildUrl version build |> downloadJson
        let assets = ((((versions.GetProperty "build").GetProperty "projects").GetProperty product).GetProperty "packages")
-       let asset = sprintf "%s-%s.zip" product version
+       let asset =
+           match major with
+           | v when v >= 7 -> sprintf "%s-%s-windows-x86_64.zip" product version
+           | _ -> sprintf "%s-%s.zip" product version
        ((assets.GetProperty asset).GetProperty "url").InnerText()
