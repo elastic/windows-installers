@@ -143,10 +143,14 @@ elasticsearch:
       guid: 0b5a3943-37c7-47f3-af9d-16e7c93b5060
     - version: 7.0.0-alpha1
       guid: 303b8268-6caa-4b82-aa3a-2b3e7197a0a3
-    - version: 7.0.0-f9710adc
-      guid: a422e744-a745-4cc4-9cd7-51cd61f7ee28
+    - version: 7.0.0-beta1
+      guid: 2c9ca927-b54d-4185-9731-43c93b666dba
+    - version: 7.0.0-rc1
+      guid: f125ba75-35e8-4e96-b12a-5cfb9f86fd48
+    - version: 7.0.0-rc2
+      guid: bc013d65-3437-4df2-bd35-cf6e8e730f1f
     - version: 7.0.0
-      guid: e801e31b-ecf2-40c5-a79c-05e26bdcc83a
+      guid: be260f25-175a-4a0d-8602-43ba869890ff
 kibana:
   upgrade_code: 6a2e6f51-5145-4c1a-8d05-2190ae213367
   known_versions:

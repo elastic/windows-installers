@@ -217,7 +217,7 @@ Integration tests against a local vagrant provider support several switches
 
     let private versionFromInDir (product : Product) =
         let extractVersion (fileInfo:FileInfo) =
-            Regex.Replace(fileInfo.Name, "^" + product.Name + "\-(.*)\.zip$", "$1")
+            Regex.Replace(fileInfo.Name, "^" + product.Name + "\-(.*?)(?:\-windows\-x86_64)?\.zip$", "$1")
         let zips = InDir
                    |> directoryInfo
                    |> filesInDirMatching (product.Name + "*.zip")
