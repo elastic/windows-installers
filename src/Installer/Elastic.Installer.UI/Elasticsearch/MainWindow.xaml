@@ -58,13 +58,13 @@
               <ColumnDefinition Width="390" />
               <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Viewbox Grid.Column="0" Width="375" Height="96" Stretch="Uniform" VerticalAlignment="Top" Margin="14, 10, 0, -10">
+            <Viewbox Grid.Column="0" Width="375" Height="96" Stretch="Uniform" VerticalAlignment="Top" Margin="14, 0, 0, -10">
               <Image Source="{StaticResource ElasticsearchLogo}"/>
             </Viewbox>
             <TextBlock Grid.Column="1" 
                            Text="{DynamicResource InstallerTitle}" 
-                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center" 
-                           HorizontalAlignment="Left" Margin="10 28 0 0" Foreground="{DynamicResource VersionColorBrush}" FontSize="43"
+                           TextTrimming="CharacterEllipsis" VerticalAlignment="Top" 
+                           HorizontalAlignment="Left" Margin="10, 16, -20, 0" Foreground="{DynamicResource VersionColorBrush}" FontSize="32"
                                FontFamily="{DynamicResource OpenSans}" FontWeight="Normal"
                                />
 
