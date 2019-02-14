@@ -142,32 +142,6 @@ Integration tests against a local vagrant provider support several switches
     
     type DownloadFeed = XmlProvider< feedExample >
 
-    type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?((?<Source>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)", noMethodPrefix=true >
-
-    let private parseSource = function
-        | "r" -> Released
-        | hash when isNotNullOrEmpty hash -> BuildCandidate hash
-        | _ -> Compile
-
-    let parseVersion version =
-        let m = VersionRegex().Match version
-        if m.Success |> not then failwithf "Could not parse version from %s" version
-        let source = parseSource m.Source.Value
-
-        let rawValue =
-            match source with
-            | Compile -> m.Version.Value
-            | _ -> sprintf "%s:%s" m.Source.Value m.Version.Value
-
-        { Product = m.Product.Value;
-          FullVersion = m.Version.Value;
-          Major = m.Major.Value |> int;
-          Minor = m.Minor.Value |> int;
-          Patch = m.Patch.Value |> int;
-          Prerelease = m.Prerelease.Value; 
-          Source = source;
-          RawValue = rawValue; }
-
     let private args = getBuildParamOrDefault "cmdline" "buildinstallers" |> split ' '
     let private skipTests = args |> List.exists (fun x -> x = "skiptests")
     let private snapshots = args |> List.exists (fun x -> x = "--snapshots")
@@ -181,6 +155,38 @@ Integration tests against a local vagrant provider support several switches
                                                              | "-nodestroy" -> false
                                                              | y when startsWith "-plugins:" y -> false
                                                              | _ -> true)
+    type VersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?((?<Source>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)", noMethodPrefix=true >
+
+    let private parseSource = function
+        | "r" -> Released
+        | hash when isNotNullOrEmpty hash -> BuildCandidate hash
+        | _ -> Compile
+
+    let parseVersion version =
+        let m = VersionRegex().Match version
+        if m.Success |> not then failwithf "Could not parse version from %s" version
+        let source = parseSource m.Source.Value
+        //snapshot builds for alphas come back with alpha1-a5c7fbb2
+        let prerelease =
+            match (snapshots, m.Prerelease.Value) with
+            | (false, p) -> p
+            | (true, p) when p.Contains("-") -> (p.Split([|'-'|]).[0])
+            | (true, p) -> ""
+
+        let rawValue =
+            match source with
+            | Compile -> m.Version.Value
+            | _ -> sprintf "%s:%s" m.Source.Value m.Version.Value
+
+        { Product = m.Product.Value;
+          FullVersion = m.Version.Value;
+          Major = m.Major.Value |> int;
+          Minor = m.Minor.Value |> int;
+          Patch = m.Patch.Value |> int;
+          Prerelease = prerelease; 
+          Source = source;
+          RawValue = rawValue; }
+
 
     let private lastSnapshotVersion (product : Product) =
         let latestVersion = Snapshots.GetVersions()
