@@ -15,8 +15,10 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			this.Session.SendActionStart(1000, ActionName, "Updating Elasticsearch JVM options", "Elasticsearch JVM options: [1]");
 			var selectedMemory = this.InstallationModel.ConfigurationModel.SelectedMemory;
+
 			var heapSize = $"{selectedMemory}m";
 			var configDirectory = this.InstallationModel.LocationsModel.ConfigDirectory;
+			var logsDirectory = this.InstallationModel.LocationsModel.LogsDirectory;
 			var options = LocalJvmOptionsConfiguration.FromFolder(configDirectory, this.FileSystem);
 			options.Xmx = heapSize;
 			options.Xms = heapSize;

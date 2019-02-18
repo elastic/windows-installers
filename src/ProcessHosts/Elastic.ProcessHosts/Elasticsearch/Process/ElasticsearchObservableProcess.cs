@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Elastic.Configuration.EnvironmentBased;
 using Elastic.ProcessHosts.Process;
@@ -29,6 +28,27 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			esTemp = new DirectoryInfo(Path.GetFullPath(esTemp)).FullName; //convert short to long directory name
 			dict["ES_TMPDIR"] = esTemp;
 			dict["HOSTNAME"] = Environment.MachineName;
+
+			var esPathLogs = env.GetEnvironmentVariable("ES_PATH_LOGS");
+			if (string.IsNullOrEmpty(esPathLogs))
+			{
+				Console.WriteLine("ES_PATH_LOGS environment variable is null or empty, reading yaml file and setting value");
+				var yaml = Path.Combine(env.ConfigDirectory, "elasticsearch.yml");
+				if (File.Exists(yaml))
+				{ 
+					foreach (var line in File.ReadAllLines(yaml))
+					{
+						var logsPrefix = "path.logs:";
+						if (line.Contains(logsPrefix))
+						{
+							esPathLogs = line.Replace(logsPrefix, string.Empty).Trim();
+							break;
+						}
+					}
+				}
+			}
+			dict["ES_PATH_LOGS"] = esPathLogs;
+			Console.WriteLine($"Setting environment variable ES_PATH_LOGS to {esPathLogs}");
 
 			const string javaToolOptionsKey = "JAVA_TOOL_OPTIONS";
 			if (env.TryGetEnv(javaToolOptionsKey, out var toolOptions))

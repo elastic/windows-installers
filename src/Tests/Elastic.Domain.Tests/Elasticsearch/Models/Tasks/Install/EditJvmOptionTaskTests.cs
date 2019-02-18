@@ -94,5 +94,80 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install
 					jvmOptions.ConfiguredHeapSize.Should().Be((ulong) 1024);
 				}
 			);
+
+		[Fact]
+		void WritesConfiguredGCLogPath() => DefaultValidModelForTasks(s => s
+				.Elasticsearch(es => es
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
+				)
+				.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "jvm.options"),
+						new MockFileData(@"9-:-Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m"));
+					return fs;
+				})
+			)
+			.AssertTask(
+				(m, s, fs) => new EditJvmOptionsTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var jvmOptionsFile = Path.Combine(dir, "jvm.options");
+					var jvmOptionsFileContents = t.FileSystem.File.ReadAllText(jvmOptionsFile);
+					jvmOptionsFileContents.Should()
+						.NotBeEmpty()
+						.And.Contain(@"9-:-Xlog:gc*,gc+age=trace,safepoint:file=""${ES_PATH_LOGS}/gc.log"":utctime,pid,tags:filecount=32,filesize=64m");
+				}
+			);
+
+		[Fact]
+		void DoesNotOverwriteConfiguredGCLogPathIfAlreadyExists() => DefaultValidModelForTasks(s => s
+				.Elasticsearch(es => es
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
+				)
+				.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "jvm.options"),
+						new MockFileData(@"9-:-Xlog:gc*,gc+age=trace,safepoint:file=""${ES_PATH_LOGS}/gc.log"":utctime,pid,tags:filecount=32,filesize=64m"));
+					return fs;
+				})
+			)
+			.AssertTask(
+				(m, s, fs) => new EditJvmOptionsTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var jvmOptionsFile = Path.Combine(dir, "jvm.options");
+					var jvmOptionsFileContents = t.FileSystem.File.ReadAllText(jvmOptionsFile);
+					jvmOptionsFileContents.Should()
+						.NotBeEmpty()
+						.And.Contain(@"9-:-Xlog:gc*,gc+age=trace,safepoint:file=""${ES_PATH_LOGS}/gc.log"":utctime,pid,tags:filecount=32,filesize=64m");
+				}
+			);
+
+		[Fact]
+		void DoesNotOverwriteConfiguredGCLogPathIfCustom() => DefaultValidModelForTasks(s => s
+				.Elasticsearch(es => es
+					.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
+				)
+				.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "jvm.options"),
+						new MockFileData(@"9-:-Xlog:gc*,gc+age=trace,safepoint:file=/ProgramData/Elastic/gc.log:utctime,pid,tags:filecount=32,filesize=64m"));
+					return fs;
+				})
+			)
+			.AssertTask(
+				(m, s, fs) => new EditJvmOptionsTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var jvmOptionsFile = Path.Combine(dir, "jvm.options");
+					var jvmOptionsFileContents = t.FileSystem.File.ReadAllText(jvmOptionsFile);
+					jvmOptionsFileContents.Should()
+						.NotBeEmpty()
+						.And.Contain(@"9-:-Xlog:gc*,gc+age=trace,safepoint:file=/ProgramData/Elastic/gc.log:utctime,pid,tags:filecount=32,filesize=64m");
+				}
+			);
 	}
 }
