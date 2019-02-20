@@ -5,49 +5,92 @@
 #r "System.Management.Automation.dll"
 #load "Paths.fsx"
 #load "Products.fsx"
-#load "Build.fsx"
+#load "Artifacts.fsx"
 #load "BuildConfig.fsx"
 #load "Commandline.fsx"
+#load "Build.fsx"
 
 open System
+open System.Collections.Generic
 open System.IO
 open System.Management.Automation
 open Fake
-open Fake.FileHelper
 open Scripts
 open Fake.Testing.XUnit2
-open Products.Products
 open Paths.Paths
 open Build.Builder
 open Commandline
+open Artifacts
+open Feeds
 
-let productsToBuild = Commandline.parse()
+let requestedArtifacts = Commandline.parse()
 
-let productDescriptions = productsToBuild
-                          |> List.map(fun p ->
-                                 p.Versions 
-                                 |> List.map(fun v -> sprintf "%s %s (%s)" p.Title v.FullVersion v.Source.Description)
-                             )
-                          |> List.concat
+// Get the resolved artifacts for those requested and cache them. This is performed here
+// as opposed to the result of Commandline.parse() to allow Resolve Target to work
+let artifacts =
+  let cache = new List<ResolvedArtifact>()
+  (fun () ->
+    match cache.Count with
+    | n when n > 0 -> cache |> Seq.toList 
+    | _ ->
+        let assetsToBuild =
+            requestedArtifacts
+            |> List.map findInFeeds
+            |> List.choose id
+        cache.AddRange(assetsToBuild)
+        cache |> Seq.toList
+  )
+  
+let productDescriptions = requestedArtifacts
+                          |> List.map(fun p -> sprintf "%s %s (%s)" p.Product.Title (p.Version.ToString()) p.Source.Display)
                           |> String.concat Environment.NewLine
 
 if (getBuildParam "target" |> toLower <> "help") then 
     traceHeader (sprintf "Products:%s%s%s" Environment.NewLine Environment.NewLine productDescriptions)
 
 Target "Clean" (fun _ ->
-    CleanDirs [MsiBuildDir; OutDir; ResultsDir]
-    productsToBuild
-    |> List.iter(fun p -> CleanDirs [OutDir @@ p.Name; p.ServiceBinDir])
+    CleanDirs [ MsiBuildDir; OutDir; ResultsDir ]
+    artifacts ()
+    |> List.filter ResolvedArtifact.IsZip
+    |> List.groupBy (fun p -> p.Product)
+    |> List.iter(fun (key, artifacts) -> CleanDirs [ OutDir @@ key.Name; artifacts.Head.ServiceBinDir ])
+)
+
+Target "ListArtifacts" (fun () ->
+    ArtifactsFeed.GetVersions()
+    |> Seq.map ArtifactsFeed.GetBuilds
+    |> Seq.concat
+    |> Seq.iter (fun v -> printfn "%s: %s" v.FullVersion v.BuildId)
+)
+
+Target "Resolve" (fun () ->
+    let candidates = Commandline.arguments |> List.last |> split ','
+    requestedArtifacts
+    |> List.map findInFeeds
+    |> List.mapi (fun i asset ->
+        let c = candidates.[i]  
+        match asset with
+        | Some a -> 
+            sprintf "\nRequested:\n\t%s -> %s %s %s (%s)\nResolved: \n\t%s %s %s\n\t%s\n\n--------\n"
+                c a.Product.Name (a.Version.ToString())
+                a.Distribution.Extension a.Source.Display
+                a.Product.Name a.Version.FullVersion a.Version.BuildId a.DownloadUrl 
+        | None -> sprintf "\nRequested:\n\t%s -> Not a known or valid version" c          
+    )
+    |> String.concat Environment.NewLine
+    |> printf "Resolved versions:\n------------------\n%s"
 )
 
 Target "DownloadProducts" (fun () ->
-    productsToBuild
+    artifacts ()
     |> List.iter (fun p -> p.Download())
 )
 
 Target "PatchGuids" (fun () ->
     tracefn "Making sure guids exist for %s %s" Environment.NewLine productDescriptions
-    BuildConfig.versionGuid productsToBuild
+    artifacts ()
+    |> List.filter ResolvedArtifact.IsZip
+    |> BuildConfig.versionGuid 
 )
 
 Target "UnitTest" (fun () ->
@@ -71,16 +114,22 @@ Target "PruneFiles" (fun () ->
                         name = "elasticsearch.bat")                    
         |> Seq.iter File.Delete
         
-    productsToBuild
-    |> List.iter(fun p -> p.BinDirs |> List.iter prune)
+    artifacts ()
+    |> List.filter ResolvedArtifact.IsZip
+    |> List.map (fun a -> a.BinDir)
+    |> List.iter prune
 )
 
 Target "BuildServices" (fun () ->
-    productsToBuild |> List.iter (fun p -> BuildService p)
+    artifacts ()
+    |> List.filter ResolvedArtifact.IsZip
+    |> List.iter BuildService
 )
 
 Target "BuildInstallers" (fun () ->
-    productsToBuild |> List.iter (fun p -> BuildMsi p)
+    artifacts ()
+    |> List.filter ResolvedArtifact.IsZip
+    |> List.iter BuildMsi
 )
 
 Target "Release" (fun () ->
@@ -89,8 +138,7 @@ Target "Release" (fun () ->
 
 Target "Integrate" (fun () ->
     // TODO: Get the version for each different project
-    let versions = productsToBuild.Head.Versions 
-                  |> List.map(fun v -> v.RawValue)
+    let versions = artifacts () |> List.map(fun a -> a.Version.FullVersion)
     
     // last version in the list is the _target_ version    
     let version = versions |> List.last    
@@ -103,11 +151,10 @@ Target "Integrate" (fun () ->
     // copy any plugins specified to build/out
     if isNotNullOrEmpty plugins then
         let pluginNames = plugins.Split([|',';';'|], StringSplitOptions.RemoveEmptyEntries)
-        versions
-        |> List.map(fun v ->  Commandline.parseVersion v)
+        artifacts ()
         |> List.collect(fun s ->
             pluginNames 
-            |> Array.map(fun p -> InDir </> (sprintf "%s-%s.zip" p s.FullVersion))
+            |> Array.map(fun p -> InDir </> (sprintf "%s-%s.zip" p s.Version.FullVersion))
             |> Array.toList
         )
         |> List.iter(fun p ->
@@ -116,6 +163,7 @@ Target "Integrate" (fun () ->
             | false -> traceFAKE "%s does not exist. Will install from public url" p 
         )
 
+    // construct PowerShell array of previous versions
     let previousVersions = 
         match versions.Length with
         | 1 -> "@()"
@@ -142,16 +190,17 @@ Target "Integrate" (fun () ->
     p.Streams.Progress.DataAdded.Add(fun data -> trace (sprintf "%O" p.Streams.Progress.[data.Index]))
     p.Streams.Warning.DataAdded.Add(fun data -> traceError (sprintf "%O" p.Streams.Warning.[data.Index]))
     p.Streams.Error.DataAdded.Add(fun data -> traceError (sprintf "%O" p.Streams.Error.[data.Index]))
+    
+    // run PowerShell script
     let async =
         p.AddScript(script).BeginInvoke(null, output)
               |> Async.AwaitIAsyncResult
               |> Async.Ignore
     Async.RunSynchronously async
 
-    if (p.InvocationStateInfo.State = PSInvocationState.Failed) then
-        failwith "PowerShell completed abnormally due to an error"
+    if (p.InvocationStateInfo.State = PSInvocationState.Failed) then  
+        failwithf "PowerShell completed abnormally due to an error: %A" p.InvocationStateInfo.Reason
 )
-
 
 Target "Help" (fun () -> trace Commandline.usage)
 

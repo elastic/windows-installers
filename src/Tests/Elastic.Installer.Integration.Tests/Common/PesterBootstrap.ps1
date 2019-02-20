@@ -54,9 +54,15 @@ if(-not(Get-Module -Name $pester)) {
 	}
 }
 
+$excludeTags = @("Proxy")
+
 if ($PreviousVersions) {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag "Proxy" -PassThru | Out-Null
+	$excludeTags += "PreviousVersions"
 }
-else {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag @("PreviousVersions","Proxy") -PassThru | Out-Null
+
+if ($Version.Contains("-")) {
+	
 }
+
+
+Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag $excludeTags -PassThru | Out-Null

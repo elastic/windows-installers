@@ -1,28 +1,27 @@
 ﻿#I "../../packages/build/FAKE.x64/tools"
 
 #r "FakeLib.dll"
+
 #load "Paths.fsx"
 #load "Products.fsx"
+#load "Versions.fsx"
 #load "BuildConfig.fsx"
+#load "Artifacts.fsx"
 
 open System
 open System.Diagnostics
 open System.Text
-open System.IO
-open System.Text.RegularExpressions
-open Microsoft.FSharp.Reflection
 open Fake
 open Fake.AssemblyInfoFile
-open Fake.FileHelper
 open Fake.Git
-open Fake.Testing.XUnit2
-open Products.Products
-open Paths.Paths
 open Products
+open Paths.Paths
+open Versions
+open Artifacts
 
 module Builder =
 
-    let Sign file (product : ProductVersions) =
+    let Sign file productTitle =
         let release = getBuildParam "release" = "1"
         if release then
             let certificate = getBuildParam "certificate"
@@ -32,7 +31,7 @@ module Builder =
 
             let sign () =
                 let signToolExe = ToolsDir @@ "signtool/signtool.exe"
-                let args = ["sign"; "/f"; certificate; "/p"; password; "/t"; timestampServer; "/d"; product.Title; "/v"; file] |> String.concat " "
+                let args = ["sign"; "/f"; certificate; "/p"; password; "/t"; timestampServer; "/d"; productTitle; "/v"; file] |> String.concat " "
                 let redactedArgs = args.Replace(password, "<redacted>")
 
                 use proc = new Process()
@@ -65,65 +64,63 @@ module Builder =
                 proc.ExitCode
 
             let exitCode = sign()
-            if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" product.Title exitCode
+            if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" productTitle exitCode
     
-    let patchAssemblyInformation (product: ProductVersions) (version:Version) = 
-        let version = version.FullVersion
+    let patchAssemblyInformation (resolvedArtifact: ResolvedArtifact) = 
+        let version = resolvedArtifact.Version.FullVersion
         let commitHash = Information.getCurrentHash()
-        let file = product.ServiceDir @@ "Properties" @@ "AssemblyInfo.cs"
+        let file = resolvedArtifact.ServiceDir @@ "Properties" @@ "AssemblyInfo.cs"
         CreateCSharpAssemblyInfo file
-            [Attribute.Title product.Product.AssemblyTitle
-             Attribute.Description product.Product.AssemblyDescription
-             Attribute.Guid product.Product.AssemblyGuid
-             Attribute.Product product.Product.Title
+            [Attribute.Title resolvedArtifact.Product.AssemblyTitle
+             Attribute.Description resolvedArtifact.Product.AssemblyDescription
+             Attribute.Guid resolvedArtifact.Product.AssemblyGuid
+             Attribute.Product resolvedArtifact.Product.Title
              Attribute.Metadata("GitBuildHash", commitHash)
              Attribute.Company  "Elasticsearch BV"
              Attribute.Copyright "Apache License, version 2 (ALv2). Copyright Elasticsearch."
-             Attribute.Trademark (sprintf "%s is a trademark of Elasticsearch BV, registered in the U.S. and in other countries." product.Product.Title)
+             Attribute.Trademark (sprintf "%s is a trademark of Elasticsearch BV, registered in the U.S. and in other countries." resolvedArtifact.Product.Title)
              Attribute.Version  version
              Attribute.FileVersion version
              Attribute.InformationalVersion version // Attribute.Version and Attribute.FileVersion normalize the version number, so retain the prelease suffix
             ]
     
-    let BuildService (product : ProductVersions) =
-        List.zip (product.Versions |> List.filter(fun v-> v.Source = Compile)) product.BinDirs
-        |> List.iter(fun (version, binDir) ->
-            patchAssemblyInformation product version 
-            
-            !! (product.ServiceDir @@ "*.csproj")
-            |> MSBuildRelease product.ServiceBinDir "Build"
-            |> ignore
-            
-            let serviceAssembly = product.ServiceBinDir @@ (sprintf "%s.exe" product.Name)
-            let service = binDir @@ (sprintf "%s.exe" product.Name)
-            CopyFile service serviceAssembly
-            Sign service product
-        )
+    let BuildService (resolvedArtifact : ResolvedArtifact) =
+        patchAssemblyInformation resolvedArtifact
+        
+        !! (resolvedArtifact.ServiceDir @@ "*.csproj")
+        |> MSBuildRelease resolvedArtifact.ServiceBinDir "Build"
+        |> ignore
+        
+        let serviceAssembly = resolvedArtifact.ServiceBinDir @@ (sprintf "%s.exe" resolvedArtifact.Product.Name)
+        let service = resolvedArtifact.BinDir @@ (sprintf "%s.exe" resolvedArtifact.Product.Name)
+        CopyFile service serviceAssembly
+        Sign service resolvedArtifact.Product.Title
+        
 
-    let BuildMsi (product : ProductVersions) =
-        if (product.Versions |> List.exists (fun v -> v.Source = Compile)) then
-            !! (MsiDir @@ "*.csproj")
-            |> MSBuildRelease MsiBuildDir "Build"
-            |> ignore
-
-        let outMsiPath (product:ProductVersions) (version:Version) = 
-            OutDir @@ product.Name @@ (sprintf "%s-%s.msi" product.Name version.FullVersion)
-
-        product.Versions
-        |> List.iter(fun version -> 
-           match version.Source with
-           | Compile ->
-               let exitCode = ExecProcess (fun info ->
-                                info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir
-                                info.WorkingDirectory <- MsiDir
-                                info.Arguments <- [product.Name; version.FullVersion; Path.GetFullPath(InDir)] |> String.concat " "
-                               ) <| TimeSpan.FromMinutes 20.
-    
-               if exitCode <> 0 then failwithf "Error building MSI for %s" product.Name
-               let finalMsi = outMsiPath product version
-               CopyFile finalMsi (MsiDir @@ (sprintf "%s.msi" product.Name))
-               Sign finalMsi product
-           | _ ->
-               if not <| fileExists (product.DownloadPath version) then failwithf "No file found at %s" (product.DownloadPath version)
-               CopyFile (outMsiPath product version) (product.DownloadPath version)
-        )
+    let BuildMsi (resolvedArtifact : ResolvedArtifact) =
+        // Compile the MSI project once
+        !! (MsiDir @@ "*.csproj")
+        |> MSBuildRelease MsiBuildDir "Build"
+        |> ignore
+        
+        if not <| directoryExists resolvedArtifact.OutMsiDir then CreateDir resolvedArtifact.OutMsiDir   
+        
+        match resolvedArtifact.Distribution with
+        | Zip ->
+           let exitCode = ExecProcess (fun info ->
+                            info.FileName <- sprintf "%sElastic.Installer.Msi" MsiBuildDir
+                            info.WorkingDirectory <- MsiDir
+                            info.Arguments <- [ resolvedArtifact.Product.Name;
+                                                resolvedArtifact.Version.FullVersion;
+                                                resolvedArtifact.ExtractedDirectory ]
+                                              |> String.concat " "
+                           ) <| TimeSpan.FromMinutes 20.
+        
+           if exitCode <> 0 then failwithf "Error building MSI for %s %s" resolvedArtifact.Product.Name (resolvedArtifact.Version.ToString())            
+           CopyFile resolvedArtifact.OutMsiPath (MsiDir @@ (sprintf "%s.msi" resolvedArtifact.Product.Name))
+           Sign resolvedArtifact.OutMsiPath resolvedArtifact.Product.Title
+        | _ ->
+           // just copy the distribution
+           if not <| fileExists resolvedArtifact.DownloadPath then failwithf "No file found at %s" resolvedArtifact.DownloadPath
+           CopyFile resolvedArtifact.OutMsiPath (resolvedArtifact.DownloadPath)
+        
