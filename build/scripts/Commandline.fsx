@@ -24,8 +24,6 @@ ServicePointManager.SecurityProtocol <- SecurityProtocolType.Ssl3 |||
                                         SecurityProtocolType.Tls12
 
 module Commandline =
-    open Paths
-
     let usage = """
 USAGE:
 
@@ -250,7 +248,7 @@ switches:
 
     let parse () =
         setEnvironVar "FAKEBUILD" "1"
-        let requestedAssets =
+        let requestedArtifacts =
             match arguments with
             | [ "release"; IsProduct p ] ->
                setBuildParam "release" "1"
@@ -297,6 +295,7 @@ switches:
                requestedArtifacts  
                                     
             | [ IsTarget target; IsRequestedArtifactList requestedArtifacts ] -> requestedArtifacts
+            | [ "listartifacts" ] -> []
             | _ ->
                traceError usage
                exit 2
@@ -311,4 +310,5 @@ switches:
                               |> split ':'
                               |> List.last
             setBuildParam "plugins" pluginPaths
-        requestedAssets
+        
+        requestedArtifacts

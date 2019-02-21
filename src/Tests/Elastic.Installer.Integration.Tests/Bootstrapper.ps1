@@ -35,11 +35,11 @@ Param(
     [string] $Tests="*",
 
     [Parameter(Mandatory=$true)]
-	[ValidatePattern("^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$")]
+	[ValidatePattern("^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$")]
     [string] $Version,    
     
     [Parameter(Mandatory=$false)]
-	[ValidateScript({ $_ | ForEach-Object { $_ -match "^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$" } })]
+	[ValidateScript({ $_ | ForEach-Object { $_ -match "^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$" } })]
     [string[]] $PreviousVersions=@(),
 
 	[Parameter(Mandatory=$false)]

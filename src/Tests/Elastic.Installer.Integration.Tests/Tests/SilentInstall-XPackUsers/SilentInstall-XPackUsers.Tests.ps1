@@ -9,7 +9,9 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe -Name "Silent Install with setting up x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
+$tags = @('XPack')
+
+Describe -Name "Silent Install with setting up x-pack users $(($Global:Version).Description)" -Tags $tags {
 
 	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
 	$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
@@ -39,7 +41,7 @@ Describe -Name "Silent Install with setting up x-pack users $(($Global:Version).
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Name "Silent Uninstall with setting up x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
+Describe -Name "Silent Uninstall with setting up x-pack users $(($Global:Version).Description)" -Tags $tags {
 
 	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
 	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"

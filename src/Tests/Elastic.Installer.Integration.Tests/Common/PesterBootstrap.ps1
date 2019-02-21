@@ -18,11 +18,11 @@ Param(
     [string] $TestDirName,
 
     [Parameter(Mandatory=$true)]
-	[ValidatePattern("^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$")]
+	[ValidatePattern("^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$")]
     [string] $Version,    
     
     [Parameter(Mandatory=$false)]
-	[ValidateScript({ $_ | ForEach-Object { $_ -match "^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$" } })]
+	[ValidateScript({ $_ | ForEach-Object { $_ -match "^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$" } })]
     [string[]] $PreviousVersions=@()
 )
 
@@ -56,13 +56,14 @@ if(-not(Get-Module -Name $pester)) {
 
 $excludeTags = @("Proxy")
 
-if ($PreviousVersions) {
+# Don't run tests that perform upgrades if there are no previous versions
+if (!($PreviousVersions)) {
 	$excludeTags += "PreviousVersions"
 }
 
-if ($Version.Contains("-")) {
-	
+# Don't run tests that install plugins for Snapshot builds
+if ($Version.Source -eq "Staging") {
+	$excludeTags += "Plugins"
 }
-
 
 Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag $excludeTags -PassThru | Out-Null

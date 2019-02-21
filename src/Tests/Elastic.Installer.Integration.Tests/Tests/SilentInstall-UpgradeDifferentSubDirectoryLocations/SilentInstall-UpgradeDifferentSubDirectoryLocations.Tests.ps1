@@ -24,7 +24,7 @@ $UpgradedDataDir = "C:\Data"
 $UpgradedConfigDir = "C:\Config"
 $UpgradedLogsDir = "C:\Logs"
 
-$tags = @('PreviousVersions') 
+$tags = @('PreviousVersions', 'Plugins') 
 
 Describe -Name "Silent Install upgrade different sub directory locations install $($previousVersion.Description)" -Tags $tags {
 

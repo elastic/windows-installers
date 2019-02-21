@@ -138,7 +138,7 @@ function Test-HyperV() {
     $HyperV = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All | Out-Null
 
     if ($HyperV -and ($HyperV.State -eq "Enabled")) {
-        log "Hyper-V is enabled. If VirtualBox cannot start a VM, you _may_ need to disable this (Turn off in Windows features then restart) to allow VirtualBox to work" -l Warn
+        log "Hyper-V is enabled. If VirtualBox cannot start a VM, you may need to disable this (Turn off in Windows features then restart) to allow VirtualBox to work" -l Warn
     }
     log "finished Hyper-V check" -l Debug
 }
@@ -399,8 +399,13 @@ function Invoke-IntegrationTests($CurrentDir, $TestDirs, $VagrantProvider, $Vers
 	}
 }
 
+# TODO remove Product as now contained in $Version (which will be renamed to Artifact
 function Get-Installer([string] $Location = ".\..\out", $Product = "elasticsearch", $Version = $Global:Version) {
-	$exePath = "$Location\$Product\$Product-$($Version.FullVersion).msi"
+	if ($Version.BuildId) {
+		$buildId = "-$($Version.BuildId)"
+	}
+	
+	$exePath = "$Location\$Product\$($Version.FullVersion)$buildId\$Product-$($Version.FullVersion).msi"
 	log "get windows installer from $exePath" -l Debug   
 
     if (!(Test-Path $exePath)) {
@@ -500,28 +505,14 @@ function Invoke-SilentInstall {
 		$Exeargs = $Newargs
 	}
 	
-	$pluginsStaging = $null
-
-	if ($Version.Source) {
-        $pluginsStaging = $Version.Source
-    } 
-	elseif ($Version.Prerelease) {
-		# prelease may be a snapshot with a suffix e.g. 7.0.0-alpha1-ea57ee52
-		$preleaseParts = $Version.Prerelease[0].Split('-', [StringSplitOptions]::RemoveEmptyEntries)
-		if ($preleaseParts.Length -gt 1) {
-			$pluginsStaging = $preleaseParts[1]
-		}
-	}
-	
-	if ($pluginsStaging -ne $null)
-	{
+	if ($Version.Source -eq 'Staging') {
 		if (!$Exeargs) {
-			$Exeargs = @("PLUGINSSTAGING=$pluginsStaging")
+			$Exeargs = @("PLUGINSSTAGING=$($Version.BuildId)")
 		}
 		elseif (-not($Exeargs | ?{ $_ -like "PLUGINSSTAGING=*" })) {
-			$Exeargs.Add("PLUGINSSTAGING=$pluginsStaging") | Out-Null
+			$Exeargs.Add("PLUGINSSTAGING=$($Version.BuildId)") | Out-Null
 		}
-	}
+    } 
 	
     $QuotedArgs = Add-Quotes $Exeargs
     $Exe = Get-Installer -Version $Version
@@ -575,8 +566,8 @@ function Get-ConfigEnvironmentVariableForVersion($Version) {
 		$Version = $Global:Version
 	}
 
-	# Compiled versions *always* use ES_PATH_CONF
-	if ($Version.Major -eq 5 -and $Version.SourceType -ne "Compile") {
+	# Official release MSI versions prior to 6 used ES_CONFIG
+	if ($Version.Major -eq 5 -and $Version.Distribution -eq "Msi") {
 		return "ES_CONFIG"
 	}
 	else {
@@ -672,8 +663,8 @@ function Get-ExpectedServiceStatus($Version, $PreviousVersion) {
 	$552Release = ConvertTo-SemanticVersion "5.5.2"
 	$600Release = ConvertTo-SemanticVersion "6.0.0"
 
-	if ((Compare-SemanticVersion $PreviousVersion $552Release) -le 0 -and $PreviousVersion.SourceType -eq "Released" `
-	    -and (Compare-SemanticVersion $Version $600Release) -le 0 -and $Version.SourceType -ne "Compile") {
+	if ((Compare-SemanticVersion $PreviousVersion $552Release) -le 0 -and $PreviousVersion.Distribution -eq "Msi" `
+	    -and (Compare-SemanticVersion $Version $600Release) -le 0 -and $Version.Distribution -eq "Msi") {
 
 		Write-Output "Previous version is $($PreviousVersion.Description) and version is $($Version.Description). Expected status is Stopped."
 		$expectedStatus = "Stopped"
@@ -708,7 +699,7 @@ function Get-ChildPath {
 	# any release or build candidate before 6.0.0 won't include version in INSTALLDIR
 	$600Release = ConvertTo-SemanticVersion "6.0.0"
 
-	if ((Compare-SemanticVersion $Version $600Release) -ge 0 -or $Version.SourceType -eq "Compile") {
+	if ((Compare-SemanticVersion $Version $600Release) -ge 0 -or $Version.Distribution -eq "Zip") {
 		$ChildPath = "Elastic\Elasticsearch\$($Version.FullVersion)\"		
 	}
 	else {

@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-$tags = @('XPack')
+$tags = @('XPack', 'Plugins')
 
 # don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
 $630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"

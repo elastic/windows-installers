@@ -9,7 +9,9 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Failed Install with X-Pack $(($Global:Version).Description)" {
+$tags = @('Plugins')
+
+Describe "Silent Failed Install with X-Pack $(($Global:Version).Description)" -Tags $tags {
 
 	$version = $Global:Version.FullVersion
 

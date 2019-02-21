@@ -9,7 +9,7 @@ Set-Location $currentDir
 Get-Version
 Get-PreviousVersions
 
-$tags = @('PreviousVersions', 'XPack', 'Proxy') 
+$tags = @('PreviousVersions', 'XPack', 'Proxy', 'Plugins') 
 
 Describe -Name "Silent Install x-pack through HTTPS proxy $(($Global:Version).Description)" -Tags $tags {
 	$port = 8888

@@ -23,15 +23,17 @@ ServicePointManager.SecurityProtocol <- SecurityProtocolType.Ssl3 |||
                                         SecurityProtocolType.Tls11 |||
                                         SecurityProtocolType.Tls12
 
+let WindowsDistributionSuffixFor7AndAbove = "-windows-x86_64"
+
 let DownloadSuffix (product:Product) (version:Version) =
     match product with
     | Elasticsearch ->
         match version.Major with
-            | v when v >= 7 -> "-windows-x86_64"
+            | v when v >= 7 -> WindowsDistributionSuffixFor7AndAbove
             | _ -> ""
     | _ -> ""
 
-/// An artifact from a feed with which to build an MSI or run integration tests
+/// An artifact from the Past Releases Feed or Artifacts API with which to build an MSI or run integration tests
 type Artifact =
     { Title: string
       Product: Product
@@ -44,17 +46,15 @@ type Artifact =
                                         
 /// Artifacts API for retrieving Staging and Snapshot builds                                 
 module ArtifactsFeed =
-   
+    
     let private artifactsUrl = "https://artifacts-api.elastic.co/v1"
     let private artifactVersionsUrl = sprintf "%s/versions" artifactsUrl  
     let private artifactVersionBuildsUrl version = sprintf "%s/%s/builds" artifactVersionsUrl version    
     let private artifactVersionBuildUrl version build = sprintf "%s/%s/builds/%s" artifactVersionsUrl version build
     let private artifactSearchUrl branchOrVersion filters = sprintf "%s/search/%s/%s" artifactsUrl branchOrVersion filters
-
-    let private downloadJson (url:string) =
-        use webClient = new WebClient()
-        webClient.DownloadString url |> JsonValue.Parse
-     
+    
+    let private webClient = new WebClient()
+    let private downloadJson (url:string) = webClient.DownloadString url |> JsonValue.Parse    
     let private props (jsonValue:JsonValue) = jsonValue.Properties()      
     let private prop name (jsonValue:JsonValue) = jsonValue.GetProperty name
     let private tryProp name (jsonValue:JsonValue) = jsonValue.TryGetProperty name
@@ -88,16 +88,18 @@ module ArtifactsFeed =
         |> Seq.map (fun v ->
             let buildVersion = toVersion v
             // copy over the build id from this build version, and retain details of the input version.
-            // For example, 7.0.0-SNAPSHOT might resolve to build 7.0.0-c178cc88, so we want to retain the -SNAPSHOT suffix
+            // For example, 7.0.0-SNAPSHOT might resolve to build 7.0.0-c178cc88, so we want
+            // to retain the -SNAPSHOT suffix and include the build id
             { version with BuildId = buildVersion.BuildId })
           
     type Package =
-        { // cannot use Product type as Artifacts API contains products that are not modelled
+        { // don't use Product type as Artifacts API contains products that are not modelled
           Product: string
           Version: Version
           Distribution: Distribution }
         
-    type private PackageRegex = Regex< @"^(?<Product>.*?)?-(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+?))?)\.(?<Distribution>.*)$", noMethodPrefix=true >
+    // don't include -windows-x86_64 suffix in the prerelease value
+    type private PackageRegex = Regex< @"^(?<Product>.*?)?-(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+?))?)(?:\-windows\-x86_64)?\.(?<Distribution>.*)$", noMethodPrefix=true >
     let private packageRegex = new PackageRegex()
         
     let parsePackage name =
@@ -110,12 +112,18 @@ module ArtifactsFeed =
         }
         
     /// Gets the artifact for a given product version and distribution
-    let GetArtifact (product:Product) (distribution:Distribution) version =
+    let GetArtifact (product:Product) (distribution:Distribution) (version:Version) =
         let artifactName (product:Product) (version:Version) (distribution:Distribution) =
             let suffix = DownloadSuffix product version
             sprintf "%s-%s%s.%s" product.Name version.FullVersion suffix distribution.Extension
       
-        let buildProp = artifactVersionBuildUrl version.FullVersion version.BuildId
+        // builds values never contain -SNAPSHOT suffix, even when the version might
+        // For example, version = 7.1.0-SNAPSHOT -> build = 7.1.0-32c8ecbd
+        let buildName =
+            if version.IsSnapshot then sprintf "%i.%i.%i-%s" version.Major version.Minor version.Patch version.BuildId
+            else version.ToString()
+        
+        let buildProp = artifactVersionBuildUrl version.FullVersion buildName
                         |> downloadJson
                         |> prop "build"
         
@@ -139,7 +147,7 @@ module ArtifactsFeed =
           DownloadPath = None }
         
     /// Searches for artifacts for a particular branch or version.
-    /// Searching by latest
+    /// For example, 6.x, 6.5, 6.5.1, 6.5.1-SNAPSHOT
     let Search (product:Product) (requested:RequestedVersion) (distribution:Distribution) =
         match requested with
         | BuildId id -> None
@@ -164,8 +172,10 @@ module ArtifactsFeed =
                         |> Array.filter (fun (package, url) -> package.Product = product.Name)
                         |> Array.head
                         
+                    // url of the form from which the build id should be retrieved
+                    // https://snapshots.elastic.co/7.0.0-7b93ebe9/downloads/elasticsearch/elasticsearch-7.0.0-SNAPSHOT-windows-x86_64.zip
                     let BuildVersion = (new Uri(url)).Segments.[1].TrimEnd('/') |> Version.parse
-                
+                    
                     Some { Title = product.Title
                            Product = product
                            Version = { package.Version with BuildId = BuildVersion.BuildId }
@@ -190,7 +200,7 @@ module ArtifactsFeed =
             | None -> None
         | _ -> None
                        
-    /// Gets the latest artifact for a given product and distribution filtered by version
+    /// Gets the latest artifact for a given product and distribution, filtered by version
     let GetLatest (product:Product) (distribution:Distribution) versionFilter =
         GetVersions()
         |> Seq.filter versionFilter
@@ -203,14 +213,10 @@ module ArtifactsFeed =
     let GetLatestStaging (product:Product) (distribution:Distribution) =
         GetLatest product distribution (fun v -> v.IsSnapshot = false)
         
-    /// Gets the latest staging artifact for a given product and distribution
+    /// Gets the latest snapshot artifact for a given product and distribution
     let GetLatestSnapshot (product:Product) (distribution:Distribution) =
         GetLatest product distribution (fun v -> v.IsSnapshot = true)
-    
-    /// Gets the latest artifact for a major version of a given product and distribution
-    let GetLatestInMajor (product:Product) (distribution:Distribution) major =
-        GetLatest product distribution (fun v -> v.Major = major)
-          
+       
 /// Past official releases feed   
 module ReleasesFeed =
     
@@ -246,9 +252,10 @@ module ReleasesFeed =
               DownloadPath = None }
         
     type private ProductVersionRegex = Regex< @"^(?:\s*(?<Product>.*?)\s*)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)", noMethodPrefix=true >
+    let productVersionRegex = new ProductVersionRegex()
     
     let private parseProductAndVersion title =
-        match ProductVersionRegex().Match title with
+        match productVersionRegex.Match title with
         | m when m.Success = true ->
             // This effectively filters out products not in Product
             match Product.tryParse m.Product.Value with
@@ -256,7 +263,7 @@ module ReleasesFeed =
             | None -> None
         | _ -> None
     
-    /// Gets the past releases from the Releases feed
+    /// Gets the past official releases
     let GetReleases () =      
         let feed = ReleasesFeedXml.Load feedUrl
         feed.Channel.Items
@@ -272,9 +279,11 @@ module ReleasesFeed =
             | None -> None)
         |> Array.choose id
         
-    /// Gets the latest release
+    /// Gets the latest official release
     let GetLatest (product:Product) =
         GetReleases()
         |> Array.filter (fun p -> p.Product = product)
-        |> Array.sortByDescending (fun p -> p.Version)
+        // sorting is required as earlier versions may be released after higher versions
+        // For example, 5.6.14 released after 6.0.0.
+        |> Array.sortWith (fun r1 r2 -> (r2.Version :> IComparable<Version>).CompareTo(r1.Version))
         |> Array.head

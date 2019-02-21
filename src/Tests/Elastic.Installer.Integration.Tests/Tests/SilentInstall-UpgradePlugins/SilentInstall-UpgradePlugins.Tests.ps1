@@ -12,7 +12,7 @@ Get-PreviousVersions
 $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
-$tags = @('PreviousVersions', 'XPack') 
+$tags = @('PreviousVersions', 'XPack', 'Plugins') 
 $630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
 
 Describe -Name "Silent Install upgrade with plugins install $($previousVersion.Description)" -Tags $tags {

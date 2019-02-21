@@ -17,8 +17,8 @@ open System.Management.Automation
 open Fake
 open Scripts
 open Fake.Testing.XUnit2
-open Paths.Paths
-open Build.Builder
+open Paths
+open Build
 open Commandline
 open Artifacts
 open Feeds
@@ -26,7 +26,7 @@ open Feeds
 let requestedArtifacts = Commandline.parse()
 
 // Get the resolved artifacts for those requested and cache them. This is performed here
-// as opposed to the result of Commandline.parse() to allow Resolve Target to work
+// as opposed to the result of Commandline.parse(), to allow Resolve Target to work for potentially unknown values
 let artifacts =
   let cache = new List<ResolvedArtifact>()
   (fun () ->
@@ -40,12 +40,12 @@ let artifacts =
         cache.AddRange(assetsToBuild)
         cache |> Seq.toList
   )
-  
+
 let productDescriptions = requestedArtifacts
                           |> List.map(fun p -> sprintf "%s %s (%s)" p.Product.Title (p.Version.ToString()) p.Source.Display)
                           |> String.concat Environment.NewLine
-
-if (getBuildParam "target" |> toLower <> "help") then 
+ 
+if (getBuildParam "target" |> toLower <> "help") then
     traceHeader (sprintf "Products:%s%s%s" Environment.NewLine Environment.NewLine productDescriptions)
 
 Target "Clean" (fun _ ->
@@ -71,12 +71,11 @@ Target "Resolve" (fun () ->
         let c = candidates.[i]  
         match asset with
         | Some a -> 
-            sprintf "\nRequested:\n\t%s -> %s %s %s (%s)\nResolved: \n\t%s %s %s\n\t%s\n\n--------\n"
-                c a.Product.Name (a.Version.ToString())
+            sprintf "\nRequested:\n\t%s -> %s %s %s %s (%s)\nResolved: \n\t%s %s %s\n\t%s\n\n--------\n"
+                c a.Product.Name a.Version.FullVersion a.Version.BuildId
                 a.Distribution.Extension a.Source.Display
                 a.Product.Name a.Version.FullVersion a.Version.BuildId a.DownloadUrl 
-        | None -> sprintf "\nRequested:\n\t%s -> Not a known or valid version" c          
-    )
+        | None -> sprintf "\nRequested:\n\t%s -> Not a known or valid version" c )
     |> String.concat Environment.NewLine
     |> printf "Resolved versions:\n------------------\n%s"
 )
@@ -123,13 +122,13 @@ Target "PruneFiles" (fun () ->
 Target "BuildServices" (fun () ->
     artifacts ()
     |> List.filter ResolvedArtifact.IsZip
-    |> List.iter BuildService
+    |> List.iter buildService
 )
 
 Target "BuildInstallers" (fun () ->
     artifacts ()
     |> List.filter ResolvedArtifact.IsZip
-    |> List.iter BuildMsi
+    |> List.iter buildMsi
 )
 
 Target "Release" (fun () ->
@@ -138,10 +137,11 @@ Target "Release" (fun () ->
 
 Target "Integrate" (fun () ->
     // TODO: Get the version for each different project
-    let versions = artifacts () |> List.map(fun a -> a.Version.FullVersion)
+    // prefix versions with build ids, if applicable
+    let requestedArtifactStrings = artifacts () |> List.map(fun a -> a.RequestedArtifactInput)
     
     // last version in the list is the _target_ version    
-    let version = versions |> List.last    
+    let version = requestedArtifactStrings |> List.last    
     let integrationTestsTargets = getBuildParamOrDefault "testtargets" "*"
     let vagrantProvider = getBuildParamOrDefault "vagrantprovider" "local"
     let gui = getBuildParamOrDefault "gui" "$false"
@@ -165,9 +165,9 @@ Target "Integrate" (fun () ->
 
     // construct PowerShell array of previous versions
     let previousVersions = 
-        match versions.Length with
+        match requestedArtifactStrings.Length with
         | 1 -> "@()"
-        | _ -> versions.[0..versions.Length - 2]
+        | _ -> requestedArtifactStrings.[0..requestedArtifactStrings.Length - 2]
                |> List.map(fun v -> sprintf "'%s'" v)
                |> String.concat ","
                |> sprintf "@(%s)"

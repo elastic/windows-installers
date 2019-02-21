@@ -23,54 +23,49 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 #>
 
-Add-Type -TypeDefinition @"
-   public enum Source {
-      Compile,
-	  Released,
-	  BuildCandidate
-   }
-"@
-
-function ConvertTo-SemanticVersion($version){
-	$version -match "^((?<Source>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?(\+(?<Build>[0-9A-Za-z\-\.]+))?)$" | Out-Null
-    $major = [int]$matches['Major']
+# TODO: Rename to Artifact
+function ConvertTo-SemanticVersion ($version) {
+	$version -match "^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$" | Out-Null
+    $product = $matches['Product']
+	$major = [int]$matches['Major']
     $minor = [int]$matches['Minor']
     $patch = [int]$matches['Patch']
-    
-    if($matches['Prerelease'] -eq $null) {
-		$pre = @()
-	}
-    else {
-		$pre = $matches['Prerelease'].Split(".")
-	}
-
-	$build = $matches['Build']
+	$pre = $matches['Prerelease']
 	$source = $matches['Source']
+	$distribution = $matches['Distribution']
+	$buildId = $matches['BuildId']
 	$fullVersion = $matches['Version']
-
-	if (!($source)) {
-		$sourceType = [Source]::Compile
-		$description = "$fullVersion (compiled from source)"
-	} 
-	elseif ($source -eq "r") {
-		$sourceType = [Source]::Released
-		$description = "$fullVersion (official release)"
-		# remove source value
-		$source = $null
+	
+	switch ($source) {
+		('Official') {
+			$description = "Official release"
+		}
+		('Staging') {
+			$description = "Staging Build candidate for official release"
+		}
+		('Snapshot') {
+			$description = "Snapshot On demand or nightly build"
+		}	
 	}
-	else {
-		$sourceType = [Source]::BuildCandidate
-		$description = "$fullVersion (build candidate $source)"
+	
+	switch ($distribution) {
+		('Zip') {
+			$description += " from zip"
+		}
+		('Msi') {
+			$description += " from msi"
+		}
 	}
-
+	
     New-Object PSObject -Property @{ 
+		Product = $product
         Major = $major
         Minor = $minor
         Patch = $patch
         Prerelease = $pre
-		Build = $build
+		BuildId = $buildId
 		Source = $source
-		SourceType = $sourceType
+		Distribution = $distribution
         FullVersion = $fullVersion
 		Description = $description
     }
@@ -92,48 +87,16 @@ function Compare-SemanticVersion($a, $b){
     if($result -ne 0) {
 		return $result
 	}
+	
+	if ($a.Prerelease -eq "" -and $b.Prerelease -ne "") {
+		return 1
+	}
 
-    $ap = $a.Prerelease
-    $bp = $b.Prerelease
-    if($ap.Length  -eq 0 -and $bp.Length -eq 0) {return 0}
-    if($ap.Length  -eq 0){return 1}
-    if($bp.Length  -eq 0){return -1}
-    
-    $minLength = [Math]::Min($ap.Length, $bp.Length)
-    for($i = 0; $i -lt $minLength; $i++) {
-        $ac = $ap[$i]
-        $bc = $bp[$i]
+	if ($a.Prerelease -ne "" -and $b.Prerelease -eq "") {
+		return -1
+	}
 
-        $anum = 0 
-        $bnum = 0
-        $aIsNum = [Int]::TryParse($ac, [ref] $anum)
-        $bIsNum = [Int]::TryParse($bc, [ref] $bnum)
-
-        if($aIsNum -and $bIsNum) { 
-            # Write-Host "2" $a.FullVersion $b.FullVersion $anum $bnum $anum.CompareTo($bnum)
-            $result = $anum.CompareTo($bnum) 
-            if($result -ne 0) {
-                return $result
-            }
-        }
-
-        if($aIsNum) {
-            # Write-Host "3" $a.FullVersion $b.FullVersion
-            return -1
-        }
-
-        if($bIsNum) {
-           # Write-Host "4" $a.FullVersion $b.FullVersion $bIsNum $aIsNum $ac $bc $ap.Length $bp.Length $i
-			return 1
-		}
-        
-        $result = [string]::CompareOrdinal($ac, $bc)
-        if($result -ne 0) {      
-			return $result
-        }
-    }
-    # Write-Host "comparing lengths" $ap.Length $bp.Length $ap.Length.CompareTo($bp.Length) $a.FullVersion $b.FullVersion
-    return $ap.Length.CompareTo($bp.Length)
+    return $a.Prerelease.CompareTo($b.Prerelease)
 }
 
 function Add-RankToSemanticVersion($versions){

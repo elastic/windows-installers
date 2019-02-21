@@ -16,7 +16,7 @@ $InstallDir = "D:\Elastic"
 $DataDir = "D:\Data"
 $ConfigDir = "D:\Config"
 $LogsDir = "D:\Logs"
-$tags = @('PreviousVersions') 
+$tags = @('PreviousVersions', 'Plugins') 
 
 Describe -Name "Silent Install upgrade different volume install $($previousVersion.Description)" -Tags $tags {
 

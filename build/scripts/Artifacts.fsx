@@ -19,7 +19,7 @@ open Fake.FileHelper
 open Fake
 open Feeds
 open Products
-open Paths.Paths
+open Paths
 open Versions
 
 
@@ -145,6 +145,11 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
     member this.Distribution = resolved.Distribution
     
     member this.Source = requested.Source
+    
+    member this.RequestedArtifactInput =
+        match this.Version.BuildId with
+        | "" ->  sprintf "%s:%s:%s:%s" this.Product.Name this.Version.FullVersion this.Source.Name this.Distribution.Name
+        | buildId ->  sprintf "%s:%s:%s:%s:%s" this.Product.Name this.Version.FullVersion this.Source.Name this.Distribution.Name buildId
     
     member this.DownloadUrl =
         match resolved.Url with

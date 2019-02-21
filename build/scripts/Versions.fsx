@@ -27,7 +27,7 @@ override this.ToString () =
     
 end
    
-type private VersionRegex = Regex< @"^(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>(?![0-9a-f]{8,8})\w*?))?)(?:\-(?<BuildId>[0-9a-f]{8,8}))?$", noMethodPrefix=true >  
+type private VersionRegex = Regex< @"^(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>(?![0-9a-f]{8,8})[\w\-]*?))?)(?:\-(?<BuildId>[0-9a-f]{8,8}))?$", noMethodPrefix=true >  
 let private versionRegex = new VersionRegex()
 
 /// A version

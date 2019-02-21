@@ -236,7 +236,7 @@ function Context-EmptyEventLog($StartDate = $Global:InstallStartDate, $Version =
         $ElasticsearchEventLogs = Get-EventLog -LogName Application -Source Elastic*
 
 		if ((Compare-SemanticVersion $Version $(ConvertTo-SemanticVersion "6.0.0") -le 0) `
-			-and $Version.SourceType -ne "Compile") {
+			-and $Version.Distribution -eq "Msi") {
 
 			$failedMessage = "ElasticsearchCleanupAction.cs"
 			# event log may contain events similar to:
@@ -614,7 +614,7 @@ function Context-DataDirectories($Version=$Global:Version, [string[]]$Path, [swi
 	$620Release = ConvertTo-SemanticVersion "6.2.0"
 
     # Expect the directories to exist for any official release from 6.2.0+, or compiled from source
-	if ((Compare-SemanticVersion $Version $620Release) -lt 0 -and $Version.SourceType -ne "Compile") {
+	if ((Compare-SemanticVersion $Version $620Release) -lt 0 -and $Version.Distribution -eq "Msi") {
 		foreach($p in $Path) {
 			Context-DirectoryNotExist -Path $p -DeleteAfter:$DeleteAfter
 		}
