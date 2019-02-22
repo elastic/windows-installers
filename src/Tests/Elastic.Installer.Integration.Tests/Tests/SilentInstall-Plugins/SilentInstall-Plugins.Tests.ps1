@@ -4,7 +4,7 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
@@ -12,8 +12,8 @@ Get-PreviousVersions
 $tags = @('XPack', 'Plugins')
 
 # don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
-$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
-if ((Compare-SemanticVersion $Global:Version $630SnapshotRelease) -ge 0) {
+$630SnapshotRelease = ConvertTo-Artifact "6.3.0-SNAPSHOT"
+if ((Compare-Artifact $Global:Version $630SnapshotRelease) -ge 0) {
 	$plugins = "ingest-geoip,ingest-attachment"
 } else {
 	$plugins = "x-pack,ingest-geoip,ingest-attachment"

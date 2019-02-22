@@ -52,6 +52,7 @@
     <None Include="Products.fsx" />
     <None Include="Feeds.fsx" />
     <None Include="Artifacts.fsx" />
+    <None Include="Tests.fsx" />
     <None Include="Versions.fsx" />
   </ItemGroup>
   <PropertyGroup>

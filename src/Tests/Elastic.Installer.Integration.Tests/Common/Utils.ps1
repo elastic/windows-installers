@@ -1,4 +1,4 @@
-. "$(Split-Path -parent $MyInvocation.MyCommand.Path)\SemVer.ps1"
+. "$(Split-Path -parent $MyInvocation.MyCommand.Path)\Artifact.ps1"
 
 function Write-Log {
     [CmdletBinding()]
@@ -660,11 +660,11 @@ function Merge-Hashtables {
 
 function Get-ExpectedServiceStatus($Version, $PreviousVersion) {	
 	$expectedStatus = "Running"
-	$552Release = ConvertTo-SemanticVersion "5.5.2"
-	$600Release = ConvertTo-SemanticVersion "6.0.0"
+	$552Release = ConvertTo-Artifact "5.5.2"
+	$600Release = ConvertTo-Artifact "6.0.0"
 
-	if ((Compare-SemanticVersion $PreviousVersion $552Release) -le 0 -and $PreviousVersion.Distribution -eq "Msi" `
-	    -and (Compare-SemanticVersion $Version $600Release) -le 0 -and $Version.Distribution -eq "Msi") {
+	if ((Compare-Artifact $PreviousVersion $552Release) -le 0 -and $PreviousVersion.Distribution -eq "Msi" `
+	    -and (Compare-Artifact $Version $600Release) -le 0 -and $Version.Distribution -eq "Msi") {
 
 		Write-Output "Previous version is $($PreviousVersion.Description) and version is $($Version.Description). Expected status is Stopped."
 		$expectedStatus = "Stopped"
@@ -674,12 +674,12 @@ function Get-ExpectedServiceStatus($Version, $PreviousVersion) {
 }
 
 function Get-Version() {
-	$Global:Version = ConvertTo-SemanticVersion $env:Version
+	$Global:Version = ConvertTo-Artifact $env:Version
 }
 
 function Get-PreviousVersions() {
 	if ($env:PreviousVersions) {
-		$Global:PreviousVersions = $($env:PreviousVersions).Split(",") | ForEach-Object { ConvertTo-SemanticVersion $_ }
+		$Global:PreviousVersions = $($env:PreviousVersions).Split(",") | ForEach-Object { ConvertTo-Artifact $_ }
 	}
 	else {
 		$Global:PreviousVersions = @()
@@ -697,9 +697,9 @@ function Get-ChildPath {
 	)
 
 	# any release or build candidate before 6.0.0 won't include version in INSTALLDIR
-	$600Release = ConvertTo-SemanticVersion "6.0.0"
+	$600Release = ConvertTo-Artifact "6.0.0"
 
-	if ((Compare-SemanticVersion $Version $600Release) -ge 0 -or $Version.Distribution -eq "Zip") {
+	if ((Compare-Artifact $Version $600Release) -ge 0 -or $Version.Distribution -eq "Zip") {
 		$ChildPath = "Elastic\Elasticsearch\$($Version.FullVersion)\"		
 	}
 	else {

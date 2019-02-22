@@ -37,6 +37,8 @@ $env:PreviousVersions = $PreviousVersions -join ","
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 cd $currentDir
 
+. $currentDir\Artifact.ps1
+
 $drive = $PWD.Drive.Root
 $pester = "Pester"
 $date = Get-Date -format "yyyy-MM-ddT-HHmmssfff"
@@ -61,9 +63,13 @@ if (!($PreviousVersions)) {
 	$excludeTags += "PreviousVersions"
 }
 
+$artifact = ConvertTo-Artifact $Version
+
 # Don't run tests that install plugins for Snapshot builds because snapshot builds do not build plugins
-if ($Version.Source -eq "Snapshot") {
+if ($artifact.Source -eq "Snapshot") {
 	$excludeTags += "Plugins"
 }
+
+Write-Output "Exclude tags $excludeTags"
 
 Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag $excludeTags -PassThru | Out-Null

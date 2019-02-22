@@ -26,18 +26,21 @@ open Versions
 
 /// An artifact requested by input
 type RequestedArtifact =
-        { Product : Product
-          Version : RequestedVersion
-          Distribution : Distribution
-          Source : Source } with
+        { Product: Product
+          Version: RequestedVersion
+          Distribution: Distribution
+          Source: Source
+          /// The original input for the requested artifact
+          Input: string } with
         
-    static member create product version distribution source =
+    static member create product version distribution source rawInput =
         { Product = product;
           Version = version;
           Distribution = distribution;
-          Source = source }
+          Source = source
+          Input = rawInput }
         
-    static member LatestElasticsearch = RequestedArtifact.create Elasticsearch Latest Zip Official
+    static member LatestElasticsearch = RequestedArtifact.create Elasticsearch Latest Zip Official ""
     
     /// Tries to parse a requested artifact from a string of the form
     /// <product>:[version, branch, buildid, x]:[distribution]:[source]
@@ -55,14 +58,14 @@ type RequestedArtifact =
     /// es:msi:snapshot       = Latest snapshot release of Elasticsearch MSI
     static member tryParse candidate =
         match candidate |> split ':' with
-        | [ IsProduct p; IsRequestedVersion v; IsDistribution d; IsSource s ] -> Some (RequestedArtifact.create p v d s)
-        | [ IsProduct p; IsRequestedVersion v; IsDistribution d; ] -> Some (RequestedArtifact.create p v d Official)
-        | [ IsProduct p; IsRequestedVersion v; IsSource s; ] -> Some (RequestedArtifact.create p v Zip s)
-        | [ IsProduct p; IsRequestedVersion v; ] -> Some (RequestedArtifact.create p v Zip Official)
-        | [ IsProduct p; IsDistribution d; IsSource s; ] -> Some (RequestedArtifact.create p Latest d s)
-        | [ IsProduct p; IsSource s; ] -> Some (RequestedArtifact.create p Latest Zip s)
-        | [ IsProduct p; IsDistribution d; ] -> Some (RequestedArtifact.create p Latest d Official)
-        | [ IsProduct p; ] -> Some (RequestedArtifact.create p Latest Zip Official)
+        | [ IsProduct p; IsRequestedVersion v; IsDistribution d; IsSource s ] -> Some (RequestedArtifact.create p v d s candidate)
+        | [ IsProduct p; IsRequestedVersion v; IsDistribution d; ] -> Some (RequestedArtifact.create p v d Official candidate)
+        | [ IsProduct p; IsRequestedVersion v; IsSource s; ] -> Some (RequestedArtifact.create p v Zip s candidate)
+        | [ IsProduct p; IsRequestedVersion v; ] -> Some (RequestedArtifact.create p v Zip Official candidate)
+        | [ IsProduct p; IsDistribution d; IsSource s; ] -> Some (RequestedArtifact.create p Latest d s candidate)
+        | [ IsProduct p; IsSource s; ] -> Some (RequestedArtifact.create p Latest Zip s candidate)
+        | [ IsProduct p; IsDistribution d; ] -> Some (RequestedArtifact.create p Latest d Official candidate)
+        | [ IsProduct p; ] -> Some (RequestedArtifact.create p Latest Zip Official candidate)
         | _ -> None
     
     /// Creates a requested artifact from a single zip file found by recursively searching a directory
@@ -80,7 +83,8 @@ type RequestedArtifact =
                     let version = dirName |> Version.parse
                     if version.IsSnapshot then version.BuildId, Snapshot
                     else version.BuildId, Staging
-                    
+            
+            // augment the version from the zip file with the build id from the parent directory        
             let version =
                 let package = zipFile.Name |> ArtifactsFeed.parsePackage
                 { package.Version with BuildId = buildId }
@@ -89,7 +93,8 @@ type RequestedArtifact =
             { Product = product
               Version = Version version
               Distribution = Zip
-              Source = source }
+              Source = source
+              Input = "" }
         | _ -> failwithf "Expecting one %s zip file in %s but found %i" product.Name dir zips.Length
           
     /// Attempts to find an already downloaded artifact matching the requested version
@@ -160,6 +165,8 @@ let (|IsRequestedArtifactList|_|) str =
 /// A resolved artifact
 type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
 
+    member this.RequestedInput = requested.Input
+    
     member this.Product = resolved.Product
     
     member this.Version = resolved.Version
@@ -168,8 +175,8 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
     
     member this.Source = requested.Source
     
-    /// Gets the input string for this resolved artifact
-    member this.RequestedArtifactInput =
+    /// Gets the identifier for this resolved artifact
+    member this.Identifier =
         match this.Version.BuildId with
         | "" ->  sprintf "%s:%s:%s:%s" this.Product.Name this.Version.FullVersion this.Source.Name this.Distribution.Name
         | buildId ->  sprintf "%s:%s:%s:%s:%s" this.Product.Name this.Version.FullVersion this.Source.Name this.Distribution.Name buildId
@@ -209,7 +216,7 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
                 tracefn "Unzipping %s to %s" this.Product.Name extractedTargetDirectory
                 Unzip extractedTargetDirectory this.DownloadPath
                 
-                // TODO: This may no longer be needed...
+                // TODO: This may no longer be needed. Check once Kibana MSIs are built
                 // Rename kibana unzip
                 match this.Product with
                     | Kibana ->
@@ -290,8 +297,9 @@ let private findInArtifactsFeed (requested : RequestedArtifact) =
         | Version v -> ArtifactsFeed.Search requested.Product requested.Version requested.Distribution
         | BuildId buildId -> ArtifactsFeed.GetByBuildId requested.Product requested.Distribution buildId
 
-let findInFeeds (requested:RequestedArtifact) =
-    // skip even looking in the feed if we've already downloaded
+/// Attempts to find the requested artifact in the build/in directory. If it cannot be found,
+/// then it will attempt to be downloaded from the Official releases feed or Artifacts API
+let findDownloadedOrInFeeds (requested:RequestedArtifact) =
     match requested.tryFindDownloadedArtifact with
     | Some a -> Some (new ResolvedArtifact(requested, a))
     | None ->

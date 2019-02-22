@@ -4,14 +4,14 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
 
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
-$640Release = ConvertTo-SemanticVersion "6.4.0"
+$640Release = ConvertTo-Artifact "6.4.0"
 
 # install data, config and logs as sub directories
 $InstallDir = "D:\Elastic"
@@ -26,8 +26,9 @@ $UpgradedLogsDir = "C:\Logs"
 
 $tags = @('PreviousVersions', 'Plugins') 
 
+# TODO: These tests are only valid when the previous release is less than 6.4.0, because installation will fail
 Describe -Name "Silent Install upgrade different sub directory locations install $($previousVersion.Description)" -Tags $tags {
-
+	
 	$v = $previousVersion.FullVersion
 	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
 
@@ -77,7 +78,7 @@ Describe -Name "Silent Install upgrade different sub directory locations from $(
 	# compiled MSI will fail when trying to upgrade from 
 	# an installation that has config, logs, data in a sub
 	# directory of a previous installation
-	if ($version.SourceType -eq "Compile" -or (Compare-SemanticVersion $version $640Release) -ge 0) {
+	if ($version.Distribution -eq "Zip" -or (Compare-Artifact $version $640Release) -ge 0) {
 		Context "Failed installation" {
 			$exitCode = Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
@@ -137,7 +138,7 @@ Describe -Name "Silent Uninstall upgrade different sub directory locations unins
 	# compiled MSI will fail when trying to upgrade from 
 	# an installation that has config, logs, data in a sub
 	# directory of a previous installation
-	if ($version.SourceType -eq 'Compile') {
+	if ($version.Distribution -eq 'Zip') {
 		Invoke-SilentUninstall -Version $previousVersion
 
 		Context-NodeNotRunning
