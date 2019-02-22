@@ -31,7 +31,7 @@ type private VersionRegex = Regex< @"^(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(
 let private versionRegex = new VersionRegex()
 
 /// A version
-/// Examples: 6.6.0, 6.6.0-alpha1, 6.6.0-SNAPSHOT, 6.6.0-aab6bcd8
+/// Examples: 6.6.0, 6.6.0-alpha1, 6.6.0-SNAPSHOT, 6.6.0-SNAPSHOT-aab6bcd8, 6.6.0-aab6bcd8
 [<CustomEquality; CustomComparison>]
 type Version =
     { FullVersion: string

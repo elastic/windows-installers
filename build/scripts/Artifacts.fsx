@@ -18,6 +18,7 @@ open System.Text.RegularExpressions
 open Fake.FileHelper
 open Fake
 open Feeds
+open Feeds
 open Products
 open Paths
 open Versions
@@ -39,7 +40,7 @@ type RequestedArtifact =
     static member LatestElasticsearch = RequestedArtifact.create Elasticsearch Latest Zip Official
     
     /// Tries to parse a requested artifact from a string of the form
-    /// <product>:[version, branch, buildid]:[distribution]:[source]
+    /// <product>:[version, branch, buildid, x]:[distribution]:[source]
     ///
     /// Examples
     /// es:6.6.0:zip:official = Official release of Elasticsearch 6.6.0 zip
@@ -47,12 +48,16 @@ type RequestedArtifact =
     /// es:6:zip              = Latest official release of Elasticsearch 6.x zip
     /// es:6:snapshot         = Latest snapshot release of Elasticsearch 6.x zip 
     /// es:6                  = Latest official release of Elasticsearch 6.x zip
+    /// es:x:staging          = Latest staging release of Elasticsearch zip
     /// es                    = Latest official release of Elasticsearch zip
+    /// es:msi                = Latest official release of Elasticsearch MSI
+    /// es:snapshot           = Latest snapshot release of Elasticsearch zip
+    /// es:msi:snapshot       = Latest snapshot release of Elasticsearch MSI
     static member tryParse candidate =
         match candidate |> split ':' with
         | [ IsProduct p; IsRequestedVersion v; IsDistribution d; IsSource s ] -> Some (RequestedArtifact.create p v d s)
-        | [ IsProduct p; IsRequestedVersion v; IsSource s; ] -> Some (RequestedArtifact.create p v Zip s)
         | [ IsProduct p; IsRequestedVersion v; IsDistribution d; ] -> Some (RequestedArtifact.create p v d Official)
+        | [ IsProduct p; IsRequestedVersion v; IsSource s; ] -> Some (RequestedArtifact.create p v Zip s)
         | [ IsProduct p; IsRequestedVersion v; ] -> Some (RequestedArtifact.create p v Zip Official)
         | [ IsProduct p; IsDistribution d; IsSource s; ] -> Some (RequestedArtifact.create p Latest d s)
         | [ IsProduct p; IsSource s; ] -> Some (RequestedArtifact.create p Latest Zip s)
@@ -60,23 +65,34 @@ type RequestedArtifact =
         | [ IsProduct p; ] -> Some (RequestedArtifact.create p Latest Zip Official)
         | _ -> None
     
-    /// Creates a requested artifact from a single zip file in a directory
+    /// Creates a requested artifact from a single zip file found by recursively searching a directory
     static member fromDir (product:Product) dir =
-        let extractVersion (fileInfo:FileInfo) =
-            Regex.Replace(fileInfo.Name, "^" + product.Name + "\-(.*?)(?:\-windows\-x86_64)?\.zip$", "$1")
-        
-        let zips = InDir |> directoryInfo |> filesInDirMatching (product.Name + "*.zip")
-        match zips.Length with
-        | 0 -> failwithf "No %s zip file found in %s" product.Name InDir
-        | 1 ->
-            let version = zips.[0] |> extractVersion |> Version.parse
-            tracefn "Extracted %s from %s" version.FullVersion zips.[0].FullName          
+        let pattern = sprintf "%s*.zip" product.Name       
+        let zips = dir |> directoryInfo |> filesInDirMatchingRecursive pattern
+        match zips with
+        | [| |] -> failwithf "No %s zip file found in %s matching %s" product.Name dir pattern
+        | [| zipFile |] ->
+            // infer the build id and source from the parent directory
+            let (buildId, source) =
+                match zipFile.Directory.Name |> toLower with
+                | "in" -> "", Official
+                | dirName ->
+                    let version = dirName |> Version.parse
+                    if version.IsSnapshot then version.BuildId, Snapshot
+                    else version.BuildId, Staging
+                    
+            let version =
+                let package = zipFile.Name |> ArtifactsFeed.parsePackage
+                { package.Version with BuildId = buildId }
+                    
+            tracefn "Extracted %s %s from %s" version.FullVersion version.BuildId zips.[0].FullName          
             { Product = product
               Version = Version version
               Distribution = Zip
-              Source = Official }
-        | _ -> failwithf "Expecting one %s zip file in %s but found %i" product.Name InDir zips.Length
+              Source = source }
+        | _ -> failwithf "Expecting one %s zip file in %s but found %i" product.Name dir zips.Length
           
+    /// Attempts to find an already downloaded artifact matching the requested version
     member this.tryFindDownloadedArtifact =
         match this.Source with
         | Official ->
@@ -96,25 +112,31 @@ type RequestedArtifact =
                 | false -> None
             | _ -> None
         | Snapshot
-        | Staging ->
-            // Can only be certain that one staging or snapshot build is the same as another when there is a build id
-            let tryFindDownloadArtifact versionOrBuildId =
-                match Directory.GetFiles(InDir, sprintf "%s*%s.%s" this.Product.Name versionOrBuildId this.Distribution.Extension) with
-                 | [| path |] ->
-                    let package = ArtifactsFeed.parsePackage <| Path.GetFileName path                
-                    Some { Title = this.Product.Title
-                           Product = this.Product
-                           Version = package.Version
-                           Distribution = this.Distribution
-                           Description = None
-                           PubDate = None
-                           Url = None
-                           DownloadPath = Some path }
-                 | _ -> None 
-                    
+        | Staging ->           
+            let tryFindDownloadArtifactInDir pattern buildId =
+                match Directory.GetDirectories(InDir, pattern) with
+                | [| versionDir |] ->
+                    match Directory.GetFiles(versionDir, sprintf "%s*.%s" this.Product.Name this.Distribution.Extension) with
+                    | [| path |] ->
+                       let package = ArtifactsFeed.parsePackage <| Path.GetFileName path                
+                       Some { Title = this.Product.Title
+                              Product = this.Product
+                              Version = { package.Version with BuildId = buildId }
+                              Distribution = this.Distribution
+                              Description = None
+                              PubDate = None
+                              Url = None
+                              DownloadPath = Some path }
+                    | _ -> None
+                | _ -> None
+                
+            // Can only be certain that one staging or snapshot build is the same as another when there is a build id present   
             match this.Version with            
-            | BuildId buildId -> tryFindDownloadArtifact buildId             
-            | Version v -> tryFindDownloadArtifact <| v.ToString()   
+            | BuildId buildId -> tryFindDownloadArtifactInDir (sprintf "*%s" buildId) buildId                        
+            | Version v ->           
+                match v.BuildId with
+                | "" -> None
+                | buildId -> tryFindDownloadArtifactInDir (v.ToString()) buildId
             | _ -> None
             
 /// Determines if str is a requested artifact                                         
@@ -146,6 +168,7 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
     
     member this.Source = requested.Source
     
+    /// Gets the input string for this resolved artifact
     member this.RequestedArtifactInput =
         match this.Version.BuildId with
         | "" ->  sprintf "%s:%s:%s:%s" this.Product.Name this.Version.FullVersion this.Source.Name this.Distribution.Name
@@ -179,9 +202,7 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
             
         match resolved.Distribution with
         | Zip ->
-            
             let extractedTargetDirectory = this.ExtractedDirectory |> Path.GetDirectoryName
-
             tracefn "extracted directory: %s" this.ExtractedDirectory
             
             if not <| directoryExists this.ExtractedDirectory then
@@ -232,7 +253,7 @@ let private findInOfficialFeed (requested: RequestedArtifact) =
         | Branch b ->
             let maybeRelease filter =
                ReleasesFeed.GetReleases ()
-               |> Array.filter (fun r -> (filter r) && r.Product = requested.Product)
+               |> Array.filter (fun r -> r.Product = requested.Product && filter r)
                |> Array.tryHead 
             
             match b.Minor with

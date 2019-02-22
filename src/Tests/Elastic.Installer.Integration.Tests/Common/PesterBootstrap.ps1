@@ -61,8 +61,8 @@ if (!($PreviousVersions)) {
 	$excludeTags += "PreviousVersions"
 }
 
-# Don't run tests that install plugins for Snapshot builds
-if ($Version.Source -eq "Staging") {
+# Don't run tests that install plugins for Snapshot builds because snapshot builds do not build plugins
+if ($Version.Source -eq "Snapshot") {
 	$excludeTags += "Plugins"
 }
 

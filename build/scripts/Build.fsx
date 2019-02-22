@@ -9,6 +9,7 @@
 #load "Artifacts.fsx"
 
 open System
+open System.Collections.Generic
 open System.Diagnostics
 open System.Text
 open Fake
@@ -65,8 +66,8 @@ let sign file productTitle =
         let exitCode = sign()
         if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" productTitle exitCode
 
-/// Patches the assembly information for a resolved artifact
-let patchAssemblyInformation (resolvedArtifact: ResolvedArtifact) = 
+/// Patches the assembly information of the service executable for a resolved artifact
+let patchServiceAssemblyInformation (resolvedArtifact: ResolvedArtifact) = 
     let version = resolvedArtifact.Version.FullVersion
     let commitHash = Information.getCurrentHash()
     let file = resolvedArtifact.ServiceDir @@ "Properties" @@ "AssemblyInfo.cs"
@@ -83,9 +84,9 @@ let patchAssemblyInformation (resolvedArtifact: ResolvedArtifact) =
           Attribute.FileVersion version
           Attribute.InformationalVersion version ] // Attribute.Version and Attribute.FileVersion normalize the version number, so retain the prelease suffix
 
-// Builds a service executable for a resolved artifact
+// Builds a service executable for a resolved artifact zip
 let buildService (resolvedArtifact: ResolvedArtifact) =
-    patchAssemblyInformation resolvedArtifact
+    patchServiceAssemblyInformation resolvedArtifact
     
     !! (resolvedArtifact.ServiceDir @@ "*.csproj")
     |> MSBuildRelease resolvedArtifact.ServiceBinDir "Build"
@@ -96,12 +97,19 @@ let buildService (resolvedArtifact: ResolvedArtifact) =
     CopyFile service serviceAssembly
     sign service resolvedArtifact.Product.Title
     
-// Builds an MSI from the files located in a resolved artifact
-let buildMsi (resolvedArtifact: ResolvedArtifact) =
-    // Compile the MSI project once
-    !! (MsiDir @@ "*.csproj")
-    |> MSBuildRelease MsiBuildDir "Build"
-    |> ignore
+let mutable private builtMsi = false
+    
+// Builds an MSI from the files located in a resolved artifact zip and copies to the output directory.
+// If the resolved artifact is an MSI, simply copies to the output directory
+let buildAndCopyMsi (resolvedArtifact: ResolvedArtifact) =
+
+    // Compile the MSI project only once
+    if builtMsi = false then       
+        !! (MsiDir @@ "*.csproj")
+        |> MSBuildRelease MsiBuildDir "Build"
+        |> ignore
+        
+        builtMsi <- true
     
     if not <| directoryExists resolvedArtifact.OutMsiDir then CreateDir resolvedArtifact.OutMsiDir   
     
@@ -122,5 +130,6 @@ let buildMsi (resolvedArtifact: ResolvedArtifact) =
     | _ ->
        // just copy the distribution
        if not <| fileExists resolvedArtifact.DownloadPath then failwithf "No file found at %s" resolvedArtifact.DownloadPath
+       tracef "Copying MSI from %s to %s" resolvedArtifact.DownloadPath resolvedArtifact.OutMsiPath     
        CopyFile resolvedArtifact.OutMsiPath (resolvedArtifact.DownloadPath)
         

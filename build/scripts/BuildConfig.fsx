@@ -27,7 +27,7 @@ module BuildConfig =
     type TypedConfig = YamlConfig< "config.yaml" >
     let private sourceYaml = __SOURCE_DIRECTORY__  </> "config.yaml"
 
-    //ugly :)
+    // ugly, but works for now :)
     let private writeProductGuids = fun(config: TypedConfig) ->
         let file = __SOURCE_DIRECTORY__ </> "../../src/Installer/Elastic.Installer.Domain" </> "ProductGuids.cs"
         WriteStringToFile false file """using System;

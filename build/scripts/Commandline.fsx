@@ -29,56 +29,102 @@ USAGE:
 
 build.bat [Target] [RequestedArtifacts] [Target specific params] [skiptests]
 
+-------
 Target:
 -------
 
+The following build targets are supported:
+
 * listartifacts
+  -------------
+  
   - lists all available staging and snapshot artifacts
       
 * resolve [RequestedArtifacts]
+  ----------------------------
+
   - output results of resolving requested artifacts
   
   Example: build.bat resolve es:6:zip:staging
 
 * buildinstallers
-  - default target if none provided. Builds installers for products
+  ---------------
+
+  - default target if none provided. Builds installers for requested artifacts
 
 * buildservices
+  -------------
+
   - Builds services for products
 
 * clean
+  -----
+
   - cleans build output folders
 
 * patchguids
+  ----------
+
   - ensures a product GUID exists for the specified products and versions
 
 * unittest
+  --------
+
   - build and unit test
 
 * downloadproducts
+  ----------------
+
   - downloads the products if not already downloaded, and unzips them
     if not already unzipped
 
 * release [Product|RequestedArtifacts] [CertFile] [PasswordFile]
-  - create a release versions of each MSI by building and then signing the service executable and installer for each.
-  - when CertFile and PasswordFile are specified, these will be used for signing otherwise the values in ELASTIC_CERT_FILE
-    and ELASTIC_CERT_PASSWORD environment variables will be used
+  --------------------------------------------------------------
+
+  - create a release MSI(s)
+    
+    If a product is passed _without_ a version, a single zip file will be searched for within the build/in directory
+    and version information extracted from that.
+    
+    If a list of requested artifacts is passed, a release version of an MSI will be created for each zip artifact
+    by building and then signing the service executable and installer for each
+  
+    when CertFile and PasswordFile are specified, these will be used for signing,
+    otherwise the values in ELASTIC_CERT_FILE and ELASTIC_CERT_PASSWORD environment variables will be used
 
   Examples:
   
-  build.bat release es
+  Creates an Elasticsearch MSI from a single zip file found in build/in
   
-  build.bat release es 5.5.3 C:/path_to_cert_file C:/path_to_password_file
+        build.bat release es
+        
+  Creates an Elasticsearch MSI from the official Elasticsearch 5.5.3 zip release 
   
-* integrate [RequestedArtifacts] [VagrantProvider] [TestTargets] [switches] [skiptests]  -
-  - run integration tests. Can filter tests by wildcard [TestTargets], 
-    which match against the directory names of tests
+        build.bat release es:5.5.3 C:/path_to_cert_file C:/path_to_password_file
+  
+* integrate [RequestedArtifacts] [VagrantProvider] [TestTargets] [switches] [skiptests]
+  -------------------------------------------------------------------------------------
+  
+  - run integration tests for requested artifacts. The last requested artifact of a product is the target version for integration tests.
+    Can filter tests by wildcard [TestTargets] which match against the directory names of tests
 
-  Example: build.bat integrate es 5.5.1,5.5.2 local * skiptests
+  Examples:
+  
+  Runs integration tests on Azure using a single VM, including upgrade tests, for the latest staging release of Elasticsearch 6.x MSI.
+  The MSI to upgrade from is the latest official Elasticsearch 5.x MSI release.
+  
+        build.bat integrate es:5:msi,es:6:msi:staging quick-azure * skiptests
+        
+  Runs integration tests locally for an MSI compiled from the latest snapshot zip release of Elasticsearch.
 
-* help or ?
+        build.bat integrate es:x:snapshot local * skiptests
+
+* help
+  ----
+  
   - show this usage summary
 
+-------------------
 RequestedArtifacts:
 -------------------
 
@@ -90,7 +136,7 @@ RequestedArtifacts:
         
         build.bat resolve [RequestedArtifacts]
     
-    This will output the resolved asset.
+    Which will output the resolved artifact.
     
     The version string format is explained below:
     
@@ -101,34 +147,35 @@ RequestedArtifacts:
     
     [RequestedVersion]
     
-        Can refer to a complete version (Major.Minor.Patch-Prerelease) or can use wildcards (*) to
-        denote latest versions. If no prerelease part is specified, then stable versions are only considered.
+        Can refer to a complete version (Major.Minor.Patch-Prerelease) or can use wildcard (x) to
+        denote latest versions.
+        
         Examples:
-        7 / 7.* / 7.*.* = Latest stable (not alpha1, beta1, beta2, rc1...) 7 version
-        7-*             = Latest 7 version (including prereleases)
-        7-beta1         = Latest 7 version with beta1 prerelease moniker
-        7.5-rc1         = Latest 7.5 minor version with rc1 prerelease moniker
-        6.5 / 6.5.*     = Latest stable (not alpha1, beta1, beta2, rc1...) patch release in the 6.5 minor version
-        * / *.*.*       = Latest stable version (not alpha1, beta1, beta2, rc1...)
-        *-* / *.*.*-*   = Latest version (including prereleases)
+        x                       = Latest version
+        7 / 7.x                 = Latest 7.x version
+        7.0.0                   = Latest 7.0.0 version
+        7.0.0-beta1             = Latest 7.0.0 version beta1 prerelease
+        7.0-SNAPSHOT            = Latest 7.0.x snapshot
+        7.0.0-SNAPSHOT-3e96d60c = Specific 7.0.0 snapshot with build id 3e96d60c
+        3e96d60c                = Snapshot or staging build with id 3e96d60c
+        
+    [Source]
+    
+        zip = Bundled ZIP version from which to compile an MSI
+        msi = Already Compiled MSI, typically used for integration tests
+
     
     [Distribution]
     
         official = Official releases for general public download
-        staging  = Build candidates for official release
-        snapshot = On-demand and nightly builds
-    
-    [Source]
-    
-        zip = Bundled ZIP version
-        msi = Compiled MSI from bundled ZIP version (typically used for integration tests)
-    
+        staging  = Staging Build candidates for official release
+        snapshot = Snapshot On-demand and nightly builds
+     
     Complete examples
     -----------------
     
     Examples of complete requested artifacts:
     
-        es:7-alpha1:zip:staging = Latest Elasticsearch 7 alpha1 prerelease from staging
         es:6.4.1:zip:official   = Elasticsearch ZIP 6.4.1 from official
         es:6.4:msi:official     = Latest patch version of Elasticsearch 6.4.* MSI from official
         es:6.4:msi:official     = Latest patch version of Elasticsearch 6.4.* MSI from official
@@ -142,6 +189,7 @@ RequestedArtifacts:
     When specified, for build targets other than release, the product version zip files will
     be downloaded and extracted to build/in directory if they don't already exist.
 
+------------
 TestTargets:
 ------------
 
@@ -150,6 +198,7 @@ TestTargets:
 
     When not specified, defaults to *
 
+----------------
 VagrantProvider:
 ----------------
 
@@ -158,22 +207,28 @@ VagrantProvider:
         - azure: use Azure provider to provision a machine on Azure for each integration test scenario
         - quick-azure: use Azure provider to provision a single machine on Azure on which to run all integration tests sequentially
 
+----------
 skiptests:
 ----------
 
     Whether to skip unit tests.
 
+---------
 switches:
 ---------
 
     Integration tests against a local vagrant provider support several switches
+    
         -gui: launch vagrant with a GUI
-        -nodestroy: do not destroy the vagrant box after the test has run
+        
+        -nodestroy: do not destroy the vagrant box after the test has run. Useful when running
+                    integration tests locally, and wish to inspect the state of the vagrant box after
+                    the test has finished, successfully or not.
+        
         -plugins:<comma separated plugins>: a list of plugin zips that exist within
                                           the build/in directory, that should be installed
                                           within integration tests instead of downloading. The plugin
                                           zip names must match the installer version.
-
 """
 
     let private args = getBuildParamOrDefault "cmdline" "buildinstallers" |> split ' '
@@ -188,9 +243,8 @@ switches:
                                                              | y when startsWith "-plugins:" y -> false
                                                              | _ -> true)
 
-
-    let private (|IsTarget|_|) (candidate: string) =
-        match candidate.ToLowerInvariant() with
+    let private (|IsTarget|_|) candidate =
+        match candidate |> toLower with
         | "resolve"
         | "listartifacts"
         | "buildservices"
@@ -202,7 +256,8 @@ switches:
         | "unittest"
         | "prunefiles"
         | "release"
-        | "integrate" -> Some candidate
+        | "integrate"
+        | "help" -> Some candidate
         | _ -> None
 
     let target =
@@ -210,8 +265,6 @@ switches:
         | Some t -> 
             match toLower t with
             | IsTarget t -> t
-            | "help" 
-            | "?" -> "help"
             | _ -> "buildinstallers"
         | _ -> "buildinstallers"
 
@@ -295,7 +348,8 @@ switches:
                requestedArtifacts  
                                     
             | [ IsTarget target; IsRequestedArtifactList requestedArtifacts ] -> requestedArtifacts
-            | [ "listartifacts" ] -> []
+            | [ "listartifacts" ]
+            | [ "help" ] -> []
             | _ ->
                traceError usage
                exit 2
