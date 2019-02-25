@@ -6,7 +6,6 @@
 #load "Products.fsx"
 #load "Versions.fsx"
 #load "Artifacts.fsx"
-#load "BuildConfig.fsx"
 
 open System
 open System.Diagnostics

@@ -75,7 +75,11 @@ Target "Resolve" (fun () ->
                 a.RequestedInput a.Product.Name a.Version.FullVersion a.Version.BuildId
                 a.Distribution.Extension a.Source.Display
                 a.Product.Name a.Version.FullVersion a.Version.BuildId a.DownloadUrl 
-        | None -> sprintf "\nRequested:\n\t%s -> Not a known or valid version" requestedArtifacts.[i].Input )
+        | None ->
+            match requestedArtifacts.[i].Input with
+            | Path p -> sprintf "file at %s" p
+            | Value v -> v
+            |> sprintf "\nRequested:\n\t%s -> Not a known or valid version")
     |> String.concat Environment.NewLine
     |> printf "Resolved versions:\n------------------\n%s"
 )
