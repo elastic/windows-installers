@@ -15,11 +15,11 @@ open System.IO
 open Fake
 open Scripts
 open Fake.Testing.XUnit2
-open Paths
+open Artifacts
 open Build
 open Commandline
-open Artifacts
 open Feeds
+open Paths
 open Tests
 
 let requestedArtifacts = Commandline.parse()

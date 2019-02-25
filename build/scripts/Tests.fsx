@@ -17,8 +17,8 @@ open System.Management.Automation
 open System.Text
 open Fake
 open FSharp.Data
-open Paths
 open Artifacts
+open Paths
 
 type private NUnitXml = XmlProvider< "nunit-example.xml" >
 
@@ -134,8 +134,8 @@ let printTestResults () =
             if r.Failed > 0 then sprintf "%i %s\n" r.Failed r.Name |> builder.Append
             else builder) (new StringBuilder())
         |> fun builder ->
-            if builder.Length > 0 then sprintf "Failures in files\n%s" (builder.ToString())
-            else builder.ToString()
+            if builder.Length > 0 then sprintf "\nFailures in files\n%s" (builder.ToString())
+            else "\n"
  
     tracefn """"
 ---------------------------------------------------------------------
@@ -148,7 +148,6 @@ Failed:          %i
 Skipped:         %i
 Inconclusive:    %i
 Pending:         %i
-
 %s
 ---------------------------------------------------------------------
     """ total.Total total.Passed total.Failed total.Skipped total.Inconclusive total.Pending failures

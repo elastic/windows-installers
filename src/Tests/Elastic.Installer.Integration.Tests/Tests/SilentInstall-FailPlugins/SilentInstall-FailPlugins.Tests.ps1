@@ -16,7 +16,7 @@ Describe "Silent Failed Install with X-Pack $(($Global:Version).Description)" -T
 	$version = $Global:Version.FullVersion
 
 	Context "Failed installation" {
-		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1","PLUGINS=ingest-geoip")
+		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1","PLUGINS=mapper-murmur3")
 
 		It "Exit code is 1603" {
 			$exitCode | Should Be 1603

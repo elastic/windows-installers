@@ -14,15 +14,12 @@
 
 open System.Collections.Generic
 open System.IO
-open System.Text.RegularExpressions
 open Fake.FileHelper
 open Fake
 open Feeds
-open Feeds
-open Products
 open Paths
+open Products
 open Versions
-
 
 /// An artifact requested by input
 type RequestedArtifact =

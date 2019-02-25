@@ -14,9 +14,9 @@ $tags = @('XPack', 'Plugins')
 # don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
 $630SnapshotRelease = ConvertTo-Artifact "6.3.0-SNAPSHOT"
 if ((Compare-Artifact $Global:Version $630SnapshotRelease) -ge 0) {
-	$plugins = "ingest-geoip,ingest-attachment"
+	$plugins = "mapper-murmur3,ingest-attachment"
 } else {
-	$plugins = "x-pack,ingest-geoip,ingest-attachment"
+	$plugins = "x-pack,mapper-murmur3,ingest-attachment"
 }
 
 Describe -Name "Silent Install with $plugins plugins $(($Global:Version).Description)" -Tags $tags {

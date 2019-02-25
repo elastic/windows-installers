@@ -5,20 +5,19 @@
 #load "Paths.fsx"
 #load "Products.fsx"
 #load "Versions.fsx"
-#load "BuildConfig.fsx"
 #load "Artifacts.fsx"
+#load "BuildConfig.fsx"
 
 open System
-open System.Collections.Generic
 open System.Diagnostics
 open System.Text
 open Fake
 open Fake.AssemblyInfoFile
 open Fake.Git
-open Products
-open Paths
-open Versions
 open Artifacts
+open Paths
+open Products
+open Versions
 
 /// Signs a file using a certificate
 let sign file productTitle =
@@ -84,7 +83,7 @@ let patchServiceAssemblyInformation (resolvedArtifact: ResolvedArtifact) =
           Attribute.FileVersion version
           Attribute.InformationalVersion version ] // Attribute.Version and Attribute.FileVersion normalize the version number, so retain the prelease suffix
 
-// Builds a service executable for a resolved artifact zip
+/// Builds a service executable for a resolved artifact zip
 let buildService (resolvedArtifact: ResolvedArtifact) =
     patchServiceAssemblyInformation resolvedArtifact
     
@@ -99,8 +98,8 @@ let buildService (resolvedArtifact: ResolvedArtifact) =
     
 let mutable private builtMsi = false
     
-// Builds an MSI from the files located in a resolved artifact zip and copies to the output directory.
-// If the resolved artifact is an MSI, simply copies to the output directory
+/// Builds an MSI from the files located in a resolved artifact zip and copies to the output directory.
+/// If the resolved artifact is an MSI, simply copies to the output directory
 let buildAndCopyMsi (resolvedArtifact: ResolvedArtifact) =
 
     // Compile the MSI project only once

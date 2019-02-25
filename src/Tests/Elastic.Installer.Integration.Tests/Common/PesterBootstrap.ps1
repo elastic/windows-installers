@@ -56,11 +56,22 @@ if(-not(Get-Module -Name $pester)) {
 	}
 }
 
+# ------------
+# Test filters
+# ------------
+
 $excludeTags = @("Proxy")
 
 # Don't run tests that perform upgrades if there are no previous versions
 if (!($PreviousVersions)) {
 	$excludeTags += "PreviousVersions"
+} else {
+	$640Release = ConvertTo-Artifact "6.4.0"
+	$previousArtifact = ConvertTo-Artifact $PreviousVersions[0]
+	# Don't run test that installs config, logs, data to a sub directory
+	if ((Compare-Artifact $previousArtifact $640Release) -ge 0) {
+		$excludeTags += "SubDirectories"	
+	}
 }
 
 $artifact = ConvertTo-Artifact $Version
@@ -70,6 +81,8 @@ if ($artifact.Source -eq "Snapshot") {
 	$excludeTags += "Plugins"
 }
 
-Write-Output "Exclude tags $excludeTags"
+# -------------
+# Invoke pester 
+# -------------
 
 Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag $excludeTags -PassThru | Out-Null

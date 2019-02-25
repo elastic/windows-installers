@@ -24,13 +24,12 @@ $UpgradedDataDir = "C:\Data"
 $UpgradedConfigDir = "C:\Config"
 $UpgradedLogsDir = "C:\Logs"
 
-$tags = @('PreviousVersions', 'Plugins') 
+$tags = @('PreviousVersions', 'Plugins', 'SubDirectories') 
 
-# TODO: These tests are only valid when the previous release is less than 6.4.0, because installation will fail
 Describe -Name "Silent Install upgrade different sub directory locations install $($previousVersion.Description)" -Tags $tags {
 	
 	$v = $previousVersion.FullVersion
-	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=mapper-murmur3"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
 
@@ -45,7 +44,7 @@ Describe -Name "Silent Install upgrade different sub directory locations install
 		Path = $ConfigDir
 	}
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
+    Context-PluginsInstalled -Expected @{ Plugins=@("mapper-murmur3") }
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
@@ -73,7 +72,7 @@ Describe -Name "Silent Install upgrade different sub directory locations install
 Describe -Name "Silent Install upgrade different sub directory locations from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
-	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$UpgradedDataDir","CONFIGDIRECTORY=$UpgradedConfigDir","LOGSDIRECTORY=$UpgradedLogsDir","PLUGINS=ingest-geoip"
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$UpgradedDataDir","CONFIGDIRECTORY=$UpgradedConfigDir","LOGSDIRECTORY=$UpgradedLogsDir","PLUGINS=mapper-murmur3"
 
 	# compiled MSI will fail when trying to upgrade from 
 	# an installation that has config, logs, data in a sub
@@ -109,7 +108,7 @@ Describe -Name "Silent Install upgrade different sub directory locations from $(
 
 		Context-PingNode
 
-		Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
+		Context-PluginsInstalled -Expected @{ Plugins=@("mapper-murmur3") }
 
 		Context-MsiRegistered
 

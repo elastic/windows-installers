@@ -21,9 +21,9 @@ Describe -Name "Silent Install upgrade with plugins install $($previousVersion.D
 
 	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases	
 	if ((Compare-Artifact $previousVersion $630SnapshotRelease) -ge 0) {
-		$plugins = "ingest-geoip,ingest-attachment"
+		$plugins = "mapper-murmur3,ingest-attachment"
 	} else {
-		$plugins = "x-pack,ingest-geoip,ingest-attachment"
+		$plugins = "x-pack,mapper-murmur3,ingest-attachment"
 	}
 
 	$ExeArgs = @("PLUGINS=$plugins")
@@ -89,9 +89,9 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 
 	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
 	if ((Compare-Artifact $version $630SnapshotRelease) -ge 0) {
-		$plugins = "ingest-geoip,ingest-attachment"
+		$plugins = "mapper-murmur3,ingest-attachment"
 	} else {
-		$plugins = "x-pack,ingest-geoip,ingest-attachment"
+		$plugins = "x-pack,mapper-murmur3,ingest-attachment"
 	}
 
 	$ExeArgs = @("PLUGINS=$plugins")
