@@ -35,11 +35,11 @@ Param(
     [string] $Tests="*",
 
     [Parameter(Mandatory=$true)]
-	[ValidatePattern("^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$")]
+	[ValidatePattern("^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$")]
     [string] $Version,    
     
     [Parameter(Mandatory=$false)]
-	[ValidateScript({ $_ | ForEach-Object { $_ -match "^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$" } })]
+	[ValidateScript({ $_ | ForEach-Object { $_ -match "^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$" } })]
     [string[]] $PreviousVersions=@(),
 
 	[Parameter(Mandatory=$false)]
@@ -55,7 +55,7 @@ $currentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 cd $currentDir
 
 . $currentDir\Common\Utils.ps1
-. $currentDir\Common\SemVer.ps1
+. $currentDir\Common\Artifact.ps1
 
 Set-Preferences
 
@@ -66,19 +66,19 @@ $buildOutDir = Join-Path -Path $solutionDir -ChildPath "build\out"
 # Preconditions
 ###############
 
-$semanticVersion = ConvertTo-SemanticVersion $Version
+$artifact = ConvertTo-Artifact $Version
 
-$installer = Get-Installer -location $buildOutDir -Version $semanticVersion
+$installer = Get-Installer -location $buildOutDir -Version $artifact
 if ($installer -eq $null) {
-    log "No $($semanticVersion.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
+    log "No $($artifact.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
     Exit 1
 }
 
 foreach($previousVersion in $PreviousVersions) {
-	$semanticVersion = ConvertTo-SemanticVersion $previousVersion
-	$installer = Get-Installer -location $buildOutDir -Version $semanticVersion
+	$artifact = ConvertTo-Artifact $previousVersion
+	$installer = Get-Installer -location $buildOutDir -Version $artifact
 	if ($installer -eq $null) {
-		log "No $($semanticVersion.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
+		log "No $($artifact.FullVersion) installer found in $buildOutDir. Build the installer by running build.bat in the solution root" -l Error
 		Exit 1
 	}
 }

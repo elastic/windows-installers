@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="89" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2019-02-22" time="10:41:40">
+  <environment user="vagrant" machine-name="machinename" cwd="C:\vagrant" user-domain="VAGRANT-2012-R2" platform="Platform" nunit-version="2.5.8.0" os-version="6.3.9600" clr-version="4.0.30319.42000" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Success" success="True" time="142.6782" asserts="0" description="Pester">
+    <results>
+      <test-suite type="TestFixture" name="file name" executed="True" result="Success" success="True" time="142.6782" asserts="0" description="file name">
+        <results>
+          <test-suite type="TestFixture" name="name" executed="True" result="Success" success="True" time="65.5047" asserts="0" description="description">
+            <results>
+              <test-suite type="TestFixture" name="name" executed="True" result="Success" success="True" time="0.1449" asserts="0" description="description">
+                <results>
+                    <test-case description="description" name="name" time="0.0032" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="description" name="name" time="0.0035" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="name" executed="False" result="Failure" success="False" time="0.1327" asserts="0" description="description">
+                <results>
+                  <test-case description="description" name="name" time="0.0032" asserts="0" success="True" result="Success" executed="True" />
+                  <test-case description="description" name="name" time="0.0035" asserts="0" success="True" result="Success" executed="True" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
