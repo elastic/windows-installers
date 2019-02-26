@@ -46,7 +46,7 @@ type Artifact =
                                         
 /// Artifacts API for retrieving Staging and Snapshot builds                                 
 module ArtifactsFeed =
-    
+
     let private artifactsUrl = "https://artifacts-api.elastic.co/v1"
     let private artifactVersionsUrl = sprintf "%s/versions" artifactsUrl  
     let private artifactVersionBuildsUrl version = sprintf "%s/%s/builds" artifactVersionsUrl version    
@@ -149,12 +149,8 @@ module ArtifactsFeed =
     /// Searches for artifacts for a particular branch or version.
     /// For example, 6.x, 6.5, 6.5.1, 6.5.1-SNAPSHOT
     let Search (product:Product) (requested:RequestedVersion) (distribution:Distribution) =
-        match requested with
-        | BuildId id -> None
-        | Latest -> None
-        | _ ->      
+        let search branchOrVersion =
             let filters = sprintf "%s,%s" product.Name distribution.Extension
-            let branchOrVersion = requested.ToString ()
             let json = artifactSearchUrl branchOrVersion filters |> downloadJson
     
             match json |> tryProp "error-message" with
@@ -184,6 +180,31 @@ module ArtifactsFeed =
                            PubDate = None
                            Url = Some url
                            DownloadPath = None }
+        
+        match requested with
+        | BuildId id -> None
+        | Latest -> None
+        | Branch b -> b.ToString() |> search
+        | Version v ->
+            // Search does not handle version including a build id
+            if v.BuildId = "" then (v.ToString()) |> search
+            else None
+            
+    let GetByVersion (product:Product) (distribution:Distribution) (version:Version) =
+        let version = GetVersions ()
+                      |> Seq.filter (fun v -> v.Major = version.Major &&
+                                              v.Minor = version.Minor &&
+                                              v.Patch = version.Patch &&
+                                              v.Prerelease = version.Prerelease)
+                      |> Seq.map GetBuilds
+                      |> Seq.concat
+                      |> Seq.filter (fun v -> v = version)
+                      |> Seq.tryHead
+         
+        match version with
+        | Some v ->
+            Some (GetArtifact product distribution v)
+        | None -> None
     
     let GetByBuildId (product:Product) (distribution:Distribution) buildId =
         match buildId with

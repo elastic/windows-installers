@@ -351,7 +351,7 @@ switches:
             | [ "listartifacts" ]
             | [ "help" ] -> []
             | _ ->
-               traceError usage
+               sprintf "Could not parse target and arguments from %A" args |> traceError 
                exit 2
 
         setBuildParam "target" target

@@ -149,25 +149,19 @@ type RequestedVersion =
         | Latest -> "latest"
 
     static member tryParse (candidate:string) =
-        let parts = candidate |> trim |> split '.'
-        match parts with
-        | [ IsInt major ] -> Some (Branch { Major = major; Minor = X })
-        | [ IsBuildId buildId ] -> Some (BuildId buildId)
-        | [ "x" ]
-        | [ "X" ] -> Some Latest
-        | [ IsInt major; "x" ]
-        | [ IsInt major; "X" ] -> Some (Branch { Major = major; Minor = X })
-        | [ IsInt major; IsInt minor ] -> Some (Branch { Major = major; Minor = Number minor; })
-        | [ IsInt major; IsInt minor; IsInt patch; ] -> Some (Version (Version.create major minor patch "" ""))
-        | [ IsInt major; IsInt minor; IsInt patch; prerelease; ] ->
-            match prerelease |> split '-' with
-            | [ ""; pre; IsBuildId buildId ] -> Some (Version (Version.create major minor patch pre buildId))
-            | [ ""; IsBuildId buildId ] -> Some (Version (Version.create major minor patch "" buildId))
-            | [ ""; pre; "SNAPSHOT" ]
-            | [ ""; pre; "snapshot" ] -> Some (Version (Version.create major minor patch prerelease ""))
-            | [ ""; pre; ] -> Some (Version (Version.create major minor patch pre ""))
+        match Version.tryParse candidate with
+        | Some v -> Some (Version v)
+        | None ->     
+            let parts = candidate |> trim |> split '.'
+            match parts with
+            | [ IsInt major ] -> Some (Branch { Major = major; Minor = X })
+            | [ IsBuildId buildId ] -> Some (BuildId buildId)
+            | [ "x" ]
+            | [ "X" ] -> Some Latest
+            | [ IsInt major; "x" ]
+            | [ IsInt major; "X" ] -> Some (Branch { Major = major; Minor = X })
+            | [ IsInt major; IsInt minor ] -> Some (Branch { Major = major; Minor = Number minor; })
             | _ -> None
-        | _ -> None
 
 /// Determines if str represents a requested version      
 let (|IsRequestedVersion|_|) str = RequestedVersion.tryParse str

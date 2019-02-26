@@ -63,9 +63,29 @@ type RequestedArtifact =
     static member tryParse candidate =
         match candidate |> split ':' with
         | [ IsProduct p; IsRequestedVersion v; IsDistribution d; IsSource s ] -> Some (RequestedArtifact.create p v d s (Value candidate))
-        | [ IsProduct p; IsRequestedVersion v; IsDistribution d; ] -> Some (RequestedArtifact.create p v d Official (Value candidate))
+        | [ IsProduct p; IsRequestedVersion v; IsDistribution d; ] ->
+            match v with
+            | Version vv ->
+                match (vv.BuildId, vv.IsSnapshot) with
+                | ("", false) -> Some (RequestedArtifact.create p v d Official (Value candidate))
+                | ("", true) -> Some (RequestedArtifact.create p v d Snapshot (Value candidate))
+                | (_, false) -> Some (RequestedArtifact.create p v d Staging (Value candidate))
+                | (_, true) -> Some (RequestedArtifact.create p v d Snapshot (Value candidate))
+            | BuildId buildId -> Some (RequestedArtifact.create p v d Snapshot (Value candidate))
+            | Latest -> Some (RequestedArtifact.create p v d Official (Value candidate))
+            | Branch _ -> Some (RequestedArtifact.create p v d Official (Value candidate))
         | [ IsProduct p; IsRequestedVersion v; IsSource s; ] -> Some (RequestedArtifact.create p v Zip s (Value candidate))
-        | [ IsProduct p; IsRequestedVersion v; ] -> Some (RequestedArtifact.create p v Zip Official (Value candidate))
+        | [ IsProduct p; IsRequestedVersion v; ] ->
+            match v with
+            | Version vv ->
+                match (vv.BuildId, vv.IsSnapshot) with
+                | ("", false) -> Some (RequestedArtifact.create p v Zip Official (Value candidate))
+                | ("", true) -> Some (RequestedArtifact.create p v Zip Snapshot (Value candidate))
+                | (_, false) -> Some (RequestedArtifact.create p v Zip Staging (Value candidate))
+                | (_, true) -> Some (RequestedArtifact.create p v Zip Snapshot (Value candidate))
+            | BuildId buildId -> Some (RequestedArtifact.create p v Zip Snapshot (Value candidate))
+            | Latest -> Some (RequestedArtifact.create p v Zip Official (Value candidate))
+            | Branch _ -> Some (RequestedArtifact.create p v Zip Official (Value candidate))
         | [ IsProduct p; IsDistribution d; IsSource s; ] -> Some (RequestedArtifact.create p Latest d s (Value candidate))
         | [ IsProduct p; IsSource s; ] -> Some (RequestedArtifact.create p Latest Zip s (Value candidate))
         | [ IsProduct p; IsDistribution d; ] -> Some (RequestedArtifact.create p Latest d Official (Value candidate))
@@ -327,7 +347,10 @@ let private findInArtifactsFeed (requested : RequestedArtifact) =
                        else ArtifactsFeed.GetLatestStaging           
             Some (feed requested.Product requested.Distribution)
         | Branch b -> ArtifactsFeed.Search requested.Product requested.Version requested.Distribution
-        | Version v -> ArtifactsFeed.Search requested.Product requested.Version requested.Distribution
+        | Version v ->
+            // without a build id, get the latest build for the requested version
+            if v.BuildId = "" then ArtifactsFeed.Search requested.Product requested.Version requested.Distribution
+            else ArtifactsFeed.GetByVersion requested.Product requested.Distribution v
         | BuildId buildId -> ArtifactsFeed.GetByBuildId requested.Product requested.Distribution buildId
 
 /// Attempts to find the requested artifact in the build/in directory. If it cannot be found,
