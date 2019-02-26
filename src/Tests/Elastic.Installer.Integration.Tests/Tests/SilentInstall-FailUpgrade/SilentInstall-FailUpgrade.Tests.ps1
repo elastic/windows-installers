@@ -4,7 +4,7 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 $credentials = "elastic:changeme"
 
