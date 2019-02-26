@@ -4,17 +4,19 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
 
-Describe "Silent Failed Install with X-Pack $(($Global:Version).Description)" {
+$tags = @('Plugins')
+
+Describe "Silent Failed Install with X-Pack $(($Global:Version).Description)" -Tags $tags {
 
 	$version = $Global:Version.FullVersion
 
 	Context "Failed installation" {
-		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1","PLUGINS=ingest-geoip")
+		$exitCode = Invoke-SilentInstall -Exeargs @("WIXFAILWHENDEFERRED=1","PLUGINS=mapper-murmur3")
 
 		It "Exit code is 1603" {
 			$exitCode | Should Be 1603

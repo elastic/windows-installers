@@ -4,7 +4,7 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
@@ -12,18 +12,18 @@ Get-PreviousVersions
 $credentials = "elastic:changeme"
 $version = $Global:Version
 $previousVersion = $Global:PreviousVersions[0]
-$tags = @('PreviousVersions', 'XPack') 
-$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
+$tags = @('PreviousVersions', 'XPack', 'Plugins') 
+$630SnapshotRelease = ConvertTo-Artifact "6.3.0-SNAPSHOT"
 
 Describe -Name "Silent Install upgrade with plugins install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
 
 	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases	
-	if ((Compare-SemanticVersion $previousVersion $630SnapshotRelease) -ge 0) {
-		$plugins = "ingest-geoip,ingest-attachment"
+	if ((Compare-Artifact $previousVersion $630SnapshotRelease) -ge 0) {
+		$plugins = "mapper-murmur3,ingest-attachment"
 	} else {
-		$plugins = "x-pack,ingest-geoip,ingest-attachment"
+		$plugins = "x-pack,mapper-murmur3,ingest-attachment"
 	}
 
 	$ExeArgs = @("PLUGINS=$plugins")
@@ -88,10 +88,10 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 	$v = $version.FullVersion
 
 	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
-	if ((Compare-SemanticVersion $version $630SnapshotRelease) -ge 0) {
-		$plugins = "ingest-geoip,ingest-attachment"
+	if ((Compare-Artifact $version $630SnapshotRelease) -ge 0) {
+		$plugins = "mapper-murmur3,ingest-attachment"
 	} else {
-		$plugins = "x-pack,ingest-geoip,ingest-attachment"
+		$plugins = "x-pack,mapper-murmur3,ingest-attachment"
 	}
 
 	$ExeArgs = @("PLUGINS=$plugins")
@@ -153,7 +153,7 @@ Describe -Name "Silent Install upgrade with plugins from $($previousVersion.Desc
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Tag 'PreviousVersions' "Silent Uninstall upgrade with plugins uninstall $($version.Description)" {
+Describe -Name "Silent Uninstall upgrade with plugins uninstall $($version.Description)" -Tags $tags {
 
 	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
 	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"
