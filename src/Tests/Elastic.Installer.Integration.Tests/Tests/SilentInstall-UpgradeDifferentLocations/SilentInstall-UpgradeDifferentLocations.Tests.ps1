@@ -4,7 +4,7 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
@@ -22,12 +22,12 @@ $UpgradedDataDir = "C:\Data"
 $UpgradedConfigDir = "C:\Config"
 $UpgradedLogsDir = "C:\Logs"
 
-$tags = @('PreviousVersions') 
+$tags = @('PreviousVersions', 'Plugins') 
 
 Describe -Name "Silent Install upgrade different locations install $($previousVersion.Description)" -Tags $tags {
 
 	$v = $previousVersion.FullVersion
-	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=ingest-geoip"
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$DataDir","CONFIGDIRECTORY=$ConfigDir","LOGSDIRECTORY=$LogsDir","PLUGINS=mapper-murmur3"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $previousVersion
 
@@ -42,7 +42,7 @@ Describe -Name "Silent Install upgrade different locations install $($previousVe
 		Path = $ConfigDir
 	}
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
+    Context-PluginsInstalled -Expected @{ Plugins=@("mapper-murmur3") }
 
     Context-MsiRegistered -Expected @{
 		Name = "Elasticsearch $v"
@@ -70,7 +70,7 @@ Describe -Name "Silent Install upgrade different locations install $($previousVe
 Describe -Name "Silent Install upgrade different locations from $($previousVersion.Description) to $($version.Description)" -Tags $tags {
 
 	$v = $version.FullVersion
-	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$UpgradedDataDir","CONFIGDIRECTORY=$UpgradedConfigDir","LOGSDIRECTORY=$UpgradedLogsDir","PLUGINS=ingest-geoip"
+	$ExeArgs = "INSTALLDIR=$InstallDir\$v","DATADIRECTORY=$UpgradedDataDir","CONFIGDIRECTORY=$UpgradedConfigDir","LOGSDIRECTORY=$UpgradedLogsDir","PLUGINS=mapper-murmur3"
 
     Invoke-SilentInstall -Exeargs $ExeArgs -Version $version -Upgrade
 
@@ -89,7 +89,7 @@ Describe -Name "Silent Install upgrade different locations from $($previousVersi
 
 	Context-PingNode
 
-    Context-PluginsInstalled -Expected @{ Plugins=@("ingest-geoip") }
+    Context-PluginsInstalled -Expected @{ Plugins=@("mapper-murmur3") }
 
     Context-MsiRegistered
 

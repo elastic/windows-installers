@@ -50,7 +50,10 @@
     <None Include="config.yaml" />
     <None Include="Build.fsx" />
     <None Include="Products.fsx" />
-    <None Include="Snapshots.fsx" />
+    <None Include="Feeds.fsx" />
+    <None Include="Artifacts.fsx" />
+    <None Include="Tests.fsx" />
+    <None Include="Versions.fsx" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

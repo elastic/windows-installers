@@ -18,11 +18,11 @@ Param(
     [string] $TestDirName,
 
     [Parameter(Mandatory=$true)]
-	[ValidatePattern("^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$")]
+	[ValidatePattern("^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$")]
     [string] $Version,    
     
     [Parameter(Mandatory=$false)]
-	[ValidateScript({ $_ | ForEach-Object { $_ -match "^((\w*)\:)?((\d+)\.(\d+)\.(\d+)(?:\-([\w\-]+))?)$" } })]
+	[ValidateScript({ $_ | ForEach-Object { $_ -match "^(?:(?<Product>\w*)\:)?(?<Version>(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)(?:\-(?<Prerelease>[\w\-]+))?)(?:\:(?<Source>\w*))?(?:\:(?<Distribution>\w*))?(?:\:(?<BuildId>\w*))?$" } })]
     [string[]] $PreviousVersions=@()
 )
 
@@ -36,6 +36,8 @@ $env:PreviousVersions = $PreviousVersions -join ","
 
 $currentDir = Split-Path -parent $MyInvocation.MyCommand.Path
 cd $currentDir
+
+. $currentDir\Artifact.ps1
 
 $drive = $PWD.Drive.Root
 $pester = "Pester"
@@ -54,9 +56,33 @@ if(-not(Get-Module -Name $pester)) {
 	}
 }
 
-if ($PreviousVersions) {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag "Proxy" -PassThru | Out-Null
+# ------------
+# Test filters
+# ------------
+
+$excludeTags = @("Proxy")
+
+# Don't run tests that perform upgrades if there are no previous versions
+if (!($PreviousVersions)) {
+	$excludeTags += "PreviousVersions"
+} else {
+	$640Release = ConvertTo-Artifact "6.4.0"
+	$previousArtifact = ConvertTo-Artifact $PreviousVersions[0]
+	# Don't run test that installs config, logs, data to a sub directory
+	if ((Compare-Artifact $previousArtifact $640Release) -ge 0) {
+		$excludeTags += "SubDirectories"	
+	}
 }
-else {
-	Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag @("PreviousVersions","Proxy") -PassThru | Out-Null
+
+$artifact = ConvertTo-Artifact $Version
+
+# Don't run tests that install plugins for Snapshot builds because snapshot builds do not build plugins
+if ($artifact.Source -eq "Snapshot") {
+	$excludeTags += "Plugins"
 }
+
+# -------------
+# Invoke pester 
+# -------------
+
+Invoke-Pester -Path "$($drive)vagrant\*" -OutputFile "$path" -OutputFormat "NUnitXml" -ExcludeTag $excludeTags -PassThru | Out-Null

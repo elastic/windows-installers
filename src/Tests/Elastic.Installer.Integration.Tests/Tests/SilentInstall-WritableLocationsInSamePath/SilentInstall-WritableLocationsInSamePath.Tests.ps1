@@ -4,7 +4,7 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
@@ -15,7 +15,7 @@ $ConfigDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\config
 $LogsDir = "C:\temp dir\Elasticsearch\$($($Global:Version).FullVersion)\logs_logs"
 
 $version = $Global:Version
-$640Release = ConvertTo-SemanticVersion "6.4.0"
+$640Release = ConvertTo-Artifact "6.4.0"
 
 Describe "Silent Install with same install locations $(($Global:Version).Description)" {
 
@@ -26,7 +26,7 @@ Describe "Silent Install with same install locations $(($Global:Version).Descrip
 		"LOGSDIRECTORY=$LogsDir"
 		"PLACEWRITABLELOCATIONSINSAMEPATH=true")
 
-	if ($version.SourceType -eq "Compile" -or (Compare-SemanticVersion $Version $640Release) -ge 0) {
+	if ($version.Distribution -eq "Zip" -or (Compare-Artifact $Version $640Release) -ge 0) {
 		Context "Failed installation" {
 			$exitCode = Invoke-SilentInstall -Exeargs $ExeArgs
 
@@ -94,7 +94,7 @@ Describe "Silent Install with same install locations $(($Global:Version).Descrip
 	}
 }
 
-if ($version.SourceType -ne "Compile" -and (Compare-SemanticVersion $Version $640Release) -lt 0) {
+if ($version.Distribution -eq "Msi" -and (Compare-Artifact $Version $640Release) -lt 0) {
 	Describe "Silent Uninstall with same install locations $(($Global:Version).Description)" {
 
 		Invoke-SilentUninstall

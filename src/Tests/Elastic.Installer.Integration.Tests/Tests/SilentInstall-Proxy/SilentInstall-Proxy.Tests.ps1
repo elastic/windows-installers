@@ -4,12 +4,12 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
 
-$tags = @('PreviousVersions', 'XPack', 'Proxy') 
+$tags = @('PreviousVersions', 'XPack', 'Proxy', 'Plugins') 
 
 Describe -Name "Silent Install x-pack through HTTPS proxy $(($Global:Version).Description)" -Tags $tags {
 	$port = 8888
