@@ -4,16 +4,18 @@ Set-Location $currentDir
 # mapped sync folder for common scripts
 . $currentDir\..\common\Utils.ps1
 . $currentDir\..\common\CommonTests.ps1
-. $currentDir\..\common\SemVer.ps1
+. $currentDir\..\common\Artifact.ps1
 
 Get-Version
 Get-PreviousVersions
 
-Describe -Name "Silent Install with setting up x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
+$tags = @('XPack')
+
+Describe -Name "Silent Install with setting up x-pack users $(($Global:Version).Description)" -Tags $tags {
 
 	# don't try to install X-Pack for 6.3.0-SNAPSHOT+ releases
-	$630SnapshotRelease = ConvertTo-SemanticVersion "6.3.0-SNAPSHOT"
-	if ((Compare-SemanticVersion $Global:Version $630SnapshotRelease) -ge 0) {
+	$630SnapshotRelease = ConvertTo-Artifact "6.3.0-SNAPSHOT"
+	if ((Compare-Artifact $Global:Version $630SnapshotRelease) -ge 0) {
 		$plugins = ""
 	} else {
 		$plugins = "x-pack"
@@ -39,7 +41,7 @@ Describe -Name "Silent Install with setting up x-pack users $(($Global:Version).
 	Copy-ElasticsearchLogToOut
 }
 
-Describe -Name "Silent Uninstall with setting up x-pack users $(($Global:Version).Description)" -Tags @('XPack') {
+Describe -Name "Silent Uninstall with setting up x-pack users $(($Global:Version).Description)" -Tags $tags {
 
 	$configDirectory = Get-ConfigEnvironmentVariableForVersion | Get-MachineEnvironmentVariable
 	$dataDirectory = $configDirectory | Split-Path | Join-Path -ChildPath "data"

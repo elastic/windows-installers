@@ -23,7 +23,7 @@ namespace Elastic.Installer.Msi
 
 			var version = args[1];
 			var product = GetProduct(_productName);
-			var distributionRoot = Path.Combine(args[2], $"{_productName}-{version}");
+			var distributionRoot = args[2];
 
 			// set properties with default values in the MSI so that they 
 			// don't have to be set on the command line.
