@@ -263,7 +263,7 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
         match resolved.Distribution with
         | Zip ->
             let extractedTargetDirectory = this.ExtractedDirectory |> Path.GetDirectoryName
-            tracefn "extracted directory: %s" this.ExtractedDirectory
+            tracefn "Extracted directory: %s" this.ExtractedDirectory
             
             if not <| directoryExists this.ExtractedDirectory then
                 tracefn "Unzipping %s to %s" this.Product.Name extractedTargetDirectory
@@ -284,7 +284,7 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
         let fileName =
             let suffix = DownloadSuffix this.Product this.Version
             let name = this.DownloadPath |> Path.GetFileNameWithoutExtension
-            if suffix.Length > 0 then name.Substring(0, name.Length - suffix.Length)
+            if suffix.Length > 0 && name.EndsWith(suffix) then name.Substring(0, name.Length - suffix.Length)
             else name
             
         (this.DownloadPath |> Path.GetDirectoryName) @@ fileName
