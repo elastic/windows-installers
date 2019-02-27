@@ -119,12 +119,12 @@ type RequestedArtifact =
                     // for a release build, it may be in build/in directly. We can only differentiate between
                     // snapshot and not snapshot here, since there is no other distinguishing identifer available
                     // to distringuish staging from official. In reality, the artifact has been resolved from disk,
-                    // so this difference only affects the outputted Source in the build output. 
+                    // so this difference only affects the outputted Source string in the build output. 
                     if version.IsSnapshot = true  then Snapshot
                     else sourceFromInDir
                 | _ -> sourceFromInDir
                     
-            tracefn "Extracted %s %s from %s" version.FullVersion version.BuildId zipFile.FullName          
+            tracefn "Extracted version %s %s from %s" version.FullVersion version.BuildId zipFile.FullName          
             { Product = product
               Version = Version version
               Distribution = Zip
