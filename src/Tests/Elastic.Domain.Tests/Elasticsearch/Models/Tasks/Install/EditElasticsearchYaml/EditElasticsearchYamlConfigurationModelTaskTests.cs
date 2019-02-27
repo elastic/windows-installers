@@ -37,6 +37,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				{
 					"localhost", "192.2.3.1:9301"
 				};
+				s.MinimumMasterNodes = 3;
 			})
 			.AssertTask(
 				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
@@ -62,6 +63,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					{
 						"localhost", "192.2.3.1:9301"
 					});
+					s.MinimumMasterNodes.Should().Be(3);
 				}
 			);
 
