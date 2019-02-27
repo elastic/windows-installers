@@ -282,7 +282,7 @@ switches:
         | _ -> None
 
     let private certAndPasswordFromEnvVariables () =
-        trace "getting signing cert and password from environment variables"
+        trace "Getting signing cert and password from environment variables"
         [("ELASTIC_CERT_FILE", "certificate");("ELASTIC_CERT_PASSWORD", "password")]
         |> List.iter(fun (v, b) ->
                 let ev = Environment.GetEnvironmentVariable(v, EnvironmentVariableTarget.Machine)
@@ -291,7 +291,7 @@ switches:
            )
 
     let private certAndPasswordFromFile certFile passwordFile =
-        trace "getting signing cert and password from file arguments"
+        trace "Getting signing cert and password from file arguments"
         match (fileExists certFile, fileExists passwordFile) with
         | (true, true) ->
             setBuildParam "certificate" certFile
@@ -308,6 +308,11 @@ switches:
                certAndPasswordFromEnvVariables ()
                [ RequestedArtifact.fromDir p InDir ]
                
+            | [ "release"; IsProduct p; certFile; passwordFile ] ->
+               setBuildParam "release" "1"
+               certAndPasswordFromFile certFile passwordFile
+               [ RequestedArtifact.fromDir p InDir ]
+               
             | [ "release"; IsRequestedArtifactList requestedArtifacts ] ->
                setBuildParam "release" "1"
                certAndPasswordFromEnvVariables ()
@@ -317,11 +322,6 @@ switches:
                setBuildParam "release" "1"
                certAndPasswordFromFile certFile passwordFile
                requestedArtifacts
-            
-            | [ "release"; IsProduct p; certFile; passwordFile ] ->
-               setBuildParam "release" "1"
-               certAndPasswordFromFile certFile passwordFile
-               [ RequestedArtifact.fromDir p InDir ]
             
             | [ "integrate"; IsRequestedArtifactList requestedArtifacts; IsVagrantProvider provider; testTargets] ->
                setBuildParam "vagrantprovider" provider
