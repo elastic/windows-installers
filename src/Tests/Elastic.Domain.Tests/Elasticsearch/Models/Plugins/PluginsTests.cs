@@ -33,6 +33,20 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Plugins
 
 			})
 			.CanClickNext();
+		
+		[Fact] void IngestGeoIpAvailableBefore670() => DefaultValidModel(s=>s.Wix(current: "6.6.0"))
+			.OnStep(m => m.PluginsModel, step => 
+			{
+				step.AvailablePlugins.Should().Contain(a => a.Url == "ingest-geoip");
+			})
+			.CanClickNext();
+		
+		[Fact] void IngestGeoIpNotAvailableAfter670() => DefaultValidModel(s=>s.Wix(current: "6.7.0"))
+			.OnStep(m => m.PluginsModel, step => 
+			{
+				step.AvailablePlugins.Should().NotContain(a => a.Url == "ingest-geoip");
+			})
+			.CanClickNext();
 
 		[Fact] void IngestPluginsNotSelectedByDefault() => this._model
 			.OnStep(m => m.PluginsModel, step =>

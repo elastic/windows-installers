@@ -33,7 +33,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		protected string PreviousInstallDirectory { get; set; }
 		protected string ConfigDirectory { get; set; }
 
-		protected abstract IEnumerable<Plugin> GetPlugins();
+		protected abstract IEnumerable<Plugin> GetPlugins(SemVersion version);
 
 		protected virtual Dictionary<string,string> EnvironmentVariables { get; set; } = new Dictionary<string, string>();
 
@@ -94,7 +94,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 		{
 			this.AvailablePlugins.Clear();
 			this.InstalledPlugins.Clear();
-			this.AvailablePlugins.AddRange(this.GetPlugins());
+			this.AvailablePlugins.AddRange(this.GetPlugins(this._version));
 
 			var installedPlugins = !this.AlreadyInstalled || string.IsNullOrEmpty(this.PreviousInstallDirectory)
 				? null

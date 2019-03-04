@@ -36,9 +36,9 @@ namespace Elastic.InstallerHosts.Elasticsearch
 			);
 			
 			var state = InstallationModelTester.ValidPreflightChecks(s => s
-				.Wix(current: "6.3.1")
+				.Wix(current: "6.7.0")
 			);
-			var model = upgradeState.InstallationModel;
+			var model = state.InstallationModel;
 
 			var window = new MainWindow(model, new ManualResetEvent(false));
 			model.InstallUITask = async () =>
