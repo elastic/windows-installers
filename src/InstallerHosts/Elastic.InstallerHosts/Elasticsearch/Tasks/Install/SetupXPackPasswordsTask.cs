@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,18 +20,25 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			: base(model, session, fileSystem) { }
 
 		private const int TotalTicks = 1200;
+		private const int DefaultHttpPort = 9200;
+
+		// https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html#network-interface-values
+		private const string LocalhostPlaceholder = "_local_";
+		private const string LocalhostV4Placeholder = "_local:ipv4_";
+		private const string LocalhostV6Placeholder = "_local:ipv6_";
+		private const string SiteAddressPlaceholder = "_site_";
+		private const string SiteAddressV4Placeholder = "_site:ipv4_";
+		private const string SiteAddressV6Placeholder = "_site:ipv6_";
+		private const string GlobalAddressPlaceholder = "_global_";
+		private const string GlobalAddressV4Placeholder = "_global:ipv4_";
+		private const string GlobalAddressV6Placeholder = "_global:ipv6_";
 
 		protected override bool ExecuteTask()
 		{
 			this.Session.SendActionStart(TotalTicks, ActionName, "Setting up X-Pack passwords", "Setting up X-Pack passwords: [1]");
 
 			var password = this.InstallationModel.XPackModel.BootstrapPassword;
-			var host = !string.IsNullOrEmpty(this.InstallationModel.ConfigurationModel.NetworkHost)
-				? this.InstallationModel.ConfigurationModel.NetworkHost
-				: "localhost";
-			var port = this.InstallationModel.ConfigurationModel.HttpPort;
-			// do not remove trailing slash. Base address *must* have it
-			var baseAddress = $"http://{host}:{port}/";
+			var baseAddress = GetBaseAddress(this.InstallationModel.ConfigurationModel.NetworkHost, this.InstallationModel.ConfigurationModel.HttpPort);
 
 			using (var client = new HttpClient { BaseAddress = new Uri(baseAddress) })
 			{
@@ -110,6 +118,64 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				response.EnsureSuccessStatusCode();
 			}
 			this.Session.SendProgress(200, $"Changed password for user '{user}'");
+		}
+
+		// TODO: Might be moved and refactored when is needed for other tasks
+		public static string GetBaseAddress(string networkHost, int? httpPort)
+		{
+			var port = httpPort ?? DefaultHttpPort;
+
+			if (string.IsNullOrEmpty(networkHost))
+				return $"http://localhost:{port}/";
+
+			var host = networkHost;
+			if (networkHost.IndexOf(',') >= 0) // Uri host must not contain comma, but elasticsearch.yml supports it
+			{
+				var hosts = networkHost.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(h => h.Trim());
+				host = hosts.FirstOrDefault(h => h == "localhost" || h == "127.0.0.1"
+					|| h == LocalhostPlaceholder || h == LocalhostV4Placeholder || h == LocalhostV6Placeholder) // prefer local interface
+					?? hosts.First();
+			}
+
+			switch (host)
+			{
+				case LocalhostPlaceholder:
+					host = "localhost";
+					break;
+				case LocalhostV4Placeholder:
+					host = "127.0.0.1";
+					break;
+				case LocalhostV6Placeholder:
+					host = "[::1]";
+					break;
+				//TODO: differentiate between _site_ and _global_
+				case SiteAddressPlaceholder:
+				case GlobalAddressPlaceholder:
+				case SiteAddressV4Placeholder:
+				case GlobalAddressV4Placeholder:
+				case SiteAddressV6Placeholder:
+				case GlobalAddressV6Placeholder:
+					IPHostEntry ipHostEntry = Dns.GetHostEntry(Dns.GetHostName());
+					var ipAddresses = ipHostEntry.AddressList
+						.Where(a => !IPAddress.IsLoopback(a) && (a.AddressFamily == AddressFamily.InterNetwork || a.AddressFamily == AddressFamily.InterNetworkV6));
+					if (host == SiteAddressV4Placeholder || host == GlobalAddressV4Placeholder)
+						ipAddresses = ipAddresses.Where(a => a.AddressFamily == AddressFamily.InterNetwork);
+					if (host == SiteAddressV6Placeholder || host == GlobalAddressV6Placeholder)
+						ipAddresses = ipAddresses.Where(a => a.AddressFamily == AddressFamily.InterNetworkV6);
+					var ipAddress = ipAddresses.First();
+					host = ipAddress.AddressFamily == AddressFamily.InterNetworkV6 ? $"[{ipAddress}]" : ipAddress.ToString();
+					break;
+			}
+
+			// do not remove trailing slash. Base address *must* have it
+			var baseAddress = $"http://{host}:{port}/";
+			if (!Uri.IsWellFormedUriString(baseAddress, UriKind.Absolute))
+			{
+				// uri is not right, as installation is always local it's better to try localhost anyway
+				baseAddress = $"http://localhost:{port}/";
+			}
+
+			return baseAddress;
 		}
 	}
 }
