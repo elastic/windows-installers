@@ -80,6 +80,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				settings.TransportTcpPortString = config.TransportPort.Value.ToString(CultureInfo.InvariantCulture);
 			var hosts = config.UnicastNodes;
 			settings.UnicastHosts = hosts.Any() ? hosts.ToList() : null;
+			if (config.MinimumMasterNodes != 0)
+				settings.MinimumMasterNodes = config.MinimumMasterNodes;
 		}
 	}
 }
