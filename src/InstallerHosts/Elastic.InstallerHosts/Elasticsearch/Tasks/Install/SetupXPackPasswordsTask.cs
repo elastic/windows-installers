@@ -120,7 +120,7 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 			this.Session.SendProgress(200, $"Changed password for user '{user}'");
 		}
 
-		// Might be moved and refactored when is needed for other tasks
+		// TODO: Might be moved and refactored when is needed for other tasks
 		public static string GetBaseAddress(string networkHost, int? httpPort)
 		{
 			var port = httpPort ?? DefaultHttpPort;
