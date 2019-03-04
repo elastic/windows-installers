@@ -108,6 +108,7 @@
     <Content Include="Resources\Entypo-license.txt">
       <Paket>True</Paket>
     </Content>
+    <Resource Include="Resources\logo-elasticsearch.png" />
     <Content Include="Resources\WindowsIcons-license.txt">
       <Paket>True</Paket>
     </Content>
@@ -344,7 +345,7 @@
     </FluentValidationExcludedCultures>
   </ItemGroup>
   <Target Name="RemoveTranslationsAfterBuild" AfterTargets="AfterBuild">
-    <RemoveDir Directories="@(FluentValidationExcludedCultures-&gt;'$(OutputPath)%(Filename)')" />
+    <RemoveDir Directories="@(FluentValidationExcludedCultures->'$(OutputPath)%(Filename)')" />
   </Target>
   <Import Project="..\..\..\.paket\paket.targets" />
   <Choose>
