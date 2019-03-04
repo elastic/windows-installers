@@ -15,7 +15,7 @@
     <ResourceDictionary Source="pack://application:,,,/Elastic.Installer.UI;component/Resources/Icons.xaml" />
   </ResourceDictionary.MergedDictionaries>
 
-  <BitmapImage x:Key="ElasticsearchLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/Elasticsearchlogo.png" />
+  <BitmapImage x:Key="ElasticsearchLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/logo-elasticsearch.png" />
   <BitmapImage x:Key="KibanaLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/Kibanalogo.png" />
   <BitmapImage x:Key="XPackLogo" UriSource="pack://application:,,,/Elastic.Installer.UI;component/Resources/x-pack.png" />
 
