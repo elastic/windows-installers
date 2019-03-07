@@ -124,9 +124,6 @@
     <value>We generally advise allocating 50% of the total available memory
 leaving the other half for the file system.</value>
   </data>
-  <data name="ConfigurationModelValidator_NegativeMinimumMasterNodes" xml:space="preserve">
-    <value>min_master_nodes can not be less then 0</value>
-  </data>
   <data name="ConfigurationModelValidator_HttpPortMinimum" xml:space="preserve">
     <value>HTTP port must be empty or a value greater than {0}</value>
   </data>

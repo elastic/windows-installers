@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Abstractions;
 using System.Linq;
@@ -67,6 +68,9 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		{
 			this.Session.SendProgress(1000, "updating elasticsearch.yml with values from configuration model");
 			var config = this.InstallationModel.ConfigurationModel;
+			var version = this.InstallationModel.NoticeModel.CurrentVersion;
+			this.Session.Log($"Persisting configuration to elasticsearch.yml for version: {version}");
+			
 			settings.ClusterName = config.ClusterName;
 			settings.NodeName = config.NodeName;
 			settings.MasterNode = config.MasterNode;
@@ -78,8 +82,25 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 				settings.HttpPortString = config.HttpPort.Value.ToString(CultureInfo.InvariantCulture);
 			if (config.TransportPort.HasValue)
 				settings.TransportTcpPortString = config.TransportPort.Value.ToString(CultureInfo.InvariantCulture);
-			var hosts = config.UnicastNodes;
-			settings.UnicastHosts = hosts.Any() ? hosts.ToList() : null;
+			var hosts = config.SeedHosts;
+
+			var hostsList = hosts.Any() ? hosts.ToList() : null;
+			if (version.Major >= 7)
+			{
+				settings.SeedHosts = hostsList;
+				var doesNotHaveInitialMasterNodesInYaml = settings.InitialMasterNodes == null || !settings.InitialMasterNodes.Any() ;
+				this.Session.Log($"Yaml does not already have cluster.initial_master_nodes: {doesNotHaveInitialMasterNodesInYaml}");
+				if (doesNotHaveInitialMasterNodesInYaml && !string.IsNullOrEmpty(config.NodeName) && config.InitialMaster)
+				{
+					this.Session.Log($"Initial Master flag set defaulting to current node name: {config.NodeName}");
+					settings.InitialMasterNodes = new List<string>{ config.NodeName };
+					
+				}
+				this.Session.Log($"Making sure we are not carrying over unicast host or minimum master nodes configuration into >= 7.x of Elasticsearch");
+				settings.UnicastHosts = null;
+				settings.MinimumMasterNodes = null;
+			}
+			else settings.UnicastHosts = hostsList;
 		}
 	}
 }

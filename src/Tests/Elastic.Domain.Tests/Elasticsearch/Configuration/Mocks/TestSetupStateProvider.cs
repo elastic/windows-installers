@@ -13,7 +13,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 
 	public class TestSetupStateProvider
 	{
-		public static readonly string DefaultTestVersion = "6.3.0";
+		public static readonly string DefaultTestVersion = "7.0.0";
 
 		public TestSetupStateProvider Java(Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> setter)
 		{

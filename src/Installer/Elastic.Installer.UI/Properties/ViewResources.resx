@@ -117,11 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ConfigurationView_AddUnicastNode_Message" xml:space="preserve">
+  <data name="ConfigurationView_AddSeedHost_Message" xml:space="preserve">
     <value>Each value is either in the form of host or host:port. Invalid values will be ignored. Multiple values separated by a comma can be specified.</value>
   </data>
-  <data name="ConfigurationView_AddUnicastNode_Title" xml:space="preserve">
-    <value>Add unicast node</value>
+  <data name="ConfigurationView_AddSeedHost_Title" xml:space="preserve">
+    <value>Add seed host</value>
   </data>
   <data name="ConfigurationView_ClusterLabel" xml:space="preserve">
     <value>Identifiers</value>
@@ -144,12 +144,6 @@
   <data name="ConfigurationView_DiscoveryLabel" xml:space="preserve">
     <value>Discovery</value>
   </data>
-  <data name="ConfigurationView_MinimumMasterNodesSet" xml:space="preserve">
-    <value> {0} minimum master-eligible nodes</value>
-  </data>
-  <data name="ConfigurationView_MinimumMasterNodesNotSet" xml:space="preserve">
-    <value> Minimum master nodes not set</value>
-  </data>
   <data name="ConfigurationView_LockMemoryCheckBox" xml:space="preserve">
     <value>Lock JVM memory</value>
   </data>
@@ -171,14 +165,14 @@
   <data name="ConfigurationView_NodeNameLabel" xml:space="preserve">
     <value>Node name</value>
   </data>
-  <data name="ConfigurationView_MinimumMasterLabel" xml:space="preserve">
-    <value>Min master nodes</value>
+  <data name="ConfigurationView_FirstInitialMasterLabel" xml:space="preserve">
+    <value>This is the first master in a new cluster</value>
   </data>
   <data name="ConfigurationView_SliderLabel" xml:space="preserve">
     <value>Max</value>
   </data>
-  <data name="ConfigurationView_UnicastHostsLabel" xml:space="preserve">
-    <value>Unicast Hosts</value>
+  <data name="ConfigurationView_SeedHostsLabel" xml:space="preserve">
+    <value>Seed Hosts</value>
   </data>
   <data name="ClosingView_TitleSuccess" xml:space="preserve">
     <value>{0} {1} successfully!</value>
@@ -465,7 +459,9 @@
 
 [b]Transport port[/b]: The port to use for node-to-node communication over the Elasticsearch transport protocol.
 
-[b]Unicast Hosts[/b]: A collection of hosts (with optional ports) to use for unicast discovery, a process for discovering nodes within a cluster, as well as electing a master node.</value>
+[b]First Master Node[/b]: If you are installing a brand new cluster or are upgrading from 6.x and doing a full cluster restart upgrade this will also write a [i]cluster.initial_master_nodes[/i] setting with the current node as its value. Read more about this on the documentation about bootstrapping a cluster.
+
+[b]Seed Hosts[/b]: Try to discover the cluster through these nodes, typically seeded with the master eligable nodes.</value>
   </data>
   <data name="LocationsView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Locations Help</value>

@@ -58,7 +58,8 @@ start /wait msiexec.exe /i elasticsearch-5.5.0.msi /qn /l elastic-install.log NO
 | LOGSDIRECTORY                    | Logs directory path              | `%ALLUSERSPROFILE%`\Elastic\Elasticsearch\logs |
 | CLUSTERNAME                      | Cluster name                     | elasticsearch |
 | NODENAME                         | Node name                        | `%COMPUTERNAME%` |
-| UNICASTHOSTS                     | Comma-delimited list of unicast nodes ||
+| UNICASTHOSTS                     | (6.x) Comma-delimited list of unicast nodes ||
+| SEEDHOSTS                        | (7.x) Comma-delimited list of `discovery.seed_hosts` ||
 | HTTPPORT                         | Port to use for HTTP communication | 9200 |
 | TRANSPORTPORT                    | Port to use for transport (node-to-node communication) | 9300 |
 | MINIMUMMASTERNODES               | Minimum number of master eligible nodes | 1 |
