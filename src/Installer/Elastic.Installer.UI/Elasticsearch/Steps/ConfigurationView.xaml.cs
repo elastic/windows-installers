@@ -27,34 +27,33 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 		}
 
 		private readonly Brush _defaultBrush;
-		private readonly Brush _defaultUpDownBrush;
 		public ConfigurationView()
 		{
 			InitializeComponent();
 			this._defaultBrush = this.NodeNameTextBox.BorderBrush;
-			this._defaultUpDownBrush = this.MinimumMasterTextBox.Foreground;
 		}
 
 		protected override void InitializeBindings()
 		{
-			this.ViewModel.AddUnicastNodeUITask = () =>
+			this.ViewModel.AddSeedHostUserInterfaceTask = () =>
 			{
 				var metroWindow = (Application.Current.MainWindow as MetroWindow);
 				return metroWindow.ShowInputAsync(
-					ViewResources.ConfigurationView_AddUnicastNode_Title,
-					ViewResources.ConfigurationView_AddUnicastNode_Message);
+					ViewResources.ConfigurationView_AddSeedHost_Title,
+					ViewResources.ConfigurationView_AddSeedHost_Message);
 			};
 
-			this.AddUnicastNodeButton.Command = this.ViewModel.AddUnicastNode;
-			this.RemoveUnicastNodeButton.Command = this.ViewModel.RemoveUnicastNode;
+			this.AddSeedHostButton.Command = this.ViewModel.AddSeedHost;
+			this.RemoveSeedHostButton.Command = this.ViewModel.RemoveSeedHost;
 
 			this.HttpPortTextBox.Minimum = ConfigurationModel.HttpPortMinimum;
 			this.HttpPortTextBox.Maximum = ConfigurationModel.PortMaximum;
 			this.TransportPortTextBox.Minimum = ConfigurationModel.TransportPortMinimum;
 			this.TransportPortTextBox.Maximum = ConfigurationModel.PortMaximum;
 
-			this.OneWayBind(ViewModel, vm => vm.UnicastNodes, v => v.UnicastNodesListBox.ItemsSource);
-			this.Bind(ViewModel, vm => vm.SelectedUnicastNode, v => v.UnicastNodesListBox.SelectedItem);
+			this.Bind(ViewModel, vm => vm.InitialMaster, v => v.InitialMasterNodeCheckBox.IsChecked);
+			this.OneWayBind(ViewModel, vm => vm.SeedHosts, v => v.SeedHostsListBox.ItemsSource);
+			this.Bind(ViewModel, vm => vm.SelectedSeedHost, v => v.SeedHostsListBox.SelectedItem);
 			this.Bind(ViewModel, vm => vm.ClusterName, v => v.ClusterNameTextBox.Text);
 			this.Bind(ViewModel, vm => vm.NodeName, v => v.NodeNameTextBox.Text);
 			this.Bind(ViewModel, vm => vm.NetworkHost, v => v.NetworkHostTextBox.Text);
@@ -67,11 +66,18 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 			this.OneWayBind(ViewModel, vm => vm.MinSelectedMemory, v => v.MemorySlider.Minimum);
 			this.Bind(ViewModel, vm => vm.SelectedMemory, v => v.MemorySlider.Value);
 			this.Bind(ViewModel, vm => vm.LockMemory, v => v.LockMemoryCheckBox.IsChecked);
-			this.Bind(ViewModel, vm => vm.MinimumMasterNodes, v => v.MinimumMasterTextBox.Value, null, new IntToDoubleConverter(), new NullableDoubleToIntConverter());
 			this.Bind(ViewModel, vm => vm.HttpPort, v => v.HttpPortTextBox.Value, null, new NullableIntToNullableDoubleConverter(), new NullableDoubleToNullableIntConverter());
 			this.Bind(ViewModel, vm => vm.TransportPort, v => v.TransportPortTextBox.Value, null, new NullableIntToNullableDoubleConverter(), new NullableDoubleToNullableIntConverter());
 
-			this.WhenAnyValue(v => v.ViewModel.MinimumMasterNodes).Subscribe(OnMinimumMasterNodesChange);
+			this.WhenAnyValue(v => v.ViewModel.MasterNode, v => v.ViewModel.UpgradingFrom6OrNewInstallation).Subscribe(
+				t =>
+				{
+					bool masterEligable = t.Item1, newOrUpgradeFrom6 = t.Item2;
+					this.InitialMasterNodeCheckBox.Visibility = (masterEligable && newOrUpgradeFrom6)
+						? Visibility.Visible
+						: Visibility.Collapsed;
+				});
+
 		}
 
 
@@ -109,22 +115,6 @@ namespace Elastic.Installer.UI.Elasticsearch.Steps
 				max /= scale;
 			}
 			return "0Mb";
-		}
-
-		private void OnMinimumMasterNodesChange(int i)
-		{
-			if (i == 0)
-			{
-				this.MinimumMasterTextBox.StringFormat = ViewResources.ConfigurationView_MinimumMasterNodesNotSet;
-				this.MinimumMasterTextBox.FontWeight = FontWeights.Normal;
-				this.MinimumMasterTextBox.Foreground = this._defaultBrush;
-			}
-			else
-			{
-				this.MinimumMasterTextBox.StringFormat = ViewResources.ConfigurationView_MinimumMasterNodesSet;
-				this.MinimumMasterTextBox.FontWeight = FontWeights.Bold;
-				this.MinimumMasterTextBox.Foreground = this._defaultUpDownBrush;
-			}
 		}
 	}
 }

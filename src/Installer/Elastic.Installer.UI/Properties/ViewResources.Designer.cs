@@ -342,18 +342,18 @@ namespace Elastic.Installer.UI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Each value is either in the form of host or host:port. Invalid values will be ignored. Multiple values separated by a comma can be specified..
         /// </summary>
-        public static string ConfigurationView_AddUnicastNode_Message {
+        public static string ConfigurationView_AddSeedHost_Message {
             get {
-                return ResourceManager.GetString("ConfigurationView_AddUnicastNode_Message", resourceCulture);
+                return ResourceManager.GetString("ConfigurationView_AddSeedHost_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add unicast node.
+        ///   Looks up a localized string similar to Add seed host.
         /// </summary>
-        public static string ConfigurationView_AddUnicastNode_Title {
+        public static string ConfigurationView_AddSeedHost_Title {
             get {
-                return ResourceManager.GetString("ConfigurationView_AddUnicastNode_Title", resourceCulture);
+                return ResourceManager.GetString("ConfigurationView_AddSeedHost_Title", resourceCulture);
             }
         }
         
@@ -451,6 +451,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is the first master in a new cluster.
+        /// </summary>
+        public static string ConfigurationView_FirstInitialMasterLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_FirstInitialMasterLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Host.
         /// </summary>
         public static string ConfigurationView_HostNameLabel {
@@ -521,33 +530,6 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Min master nodes.
-        /// </summary>
-        public static string ConfigurationView_MinimumMasterLabel {
-            get {
-                return ResourceManager.GetString("ConfigurationView_MinimumMasterLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to  Minimum master nodes not set.
-        /// </summary>
-        public static string ConfigurationView_MinimumMasterNodesNotSet {
-            get {
-                return ResourceManager.GetString("ConfigurationView_MinimumMasterNodesNotSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to  {0} minimum master-eligible nodes.
-        /// </summary>
-        public static string ConfigurationView_MinimumMasterNodesSet {
-            get {
-                return ResourceManager.GetString("ConfigurationView_MinimumMasterNodesSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Network host.
         /// </summary>
         public static string ConfigurationView_NetworkHostLabel {
@@ -611,6 +593,15 @@ namespace Elastic.Installer.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seed Hosts.
+        /// </summary>
+        public static string ConfigurationView_SeedHostsLabel {
+            get {
+                return ResourceManager.GetString("ConfigurationView_SeedHostsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Certificate.
         /// </summary>
         public static string ConfigurationView_ServerCertLabel {
@@ -661,15 +652,6 @@ namespace Elastic.Installer.UI.Properties {
         public static string ConfigurationView_TransportPortLabel {
             get {
                 return ResourceManager.GetString("ConfigurationView_TransportPortLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unicast Hosts.
-        /// </summary>
-        public static string ConfigurationView_UnicastHostsLabel {
-            get {
-                return ResourceManager.GetString("ConfigurationView_UnicastHostsLabel", resourceCulture);
             }
         }
         
