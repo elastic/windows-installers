@@ -125,15 +125,6 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to min_master_nodes can not be less then 0.
-        /// </summary>
-        public static string ConfigurationModelValidator_NegativeMinimumMasterNodes {
-            get {
-                return ResourceManager.GetString("ConfigurationModelValidator_NegativeMinimumMasterNodes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Node name must be set..
         /// </summary>
         public static string ConfigurationModelValidator_NodeName_NotEmpty {

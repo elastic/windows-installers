@@ -70,6 +70,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			this.ShowUpgradeDocumentationLink = versionConfig.VersionChange == VersionChange.Major || versionConfig.VersionChange == VersionChange.Minor;
 			
 			this.ExistingVersionInstalled = versionConfig.ExistingVersionInstalled;
+
+			if (!ExistingVersionInstalled) this.UpgradingFrom6OrNewInstallation = true;
+			else this.UpgradingFrom6OrNewInstallation = versionConfig.UpgradeFromVersion.Major < 7;
 		}
 		
 		bool showUpgradeDocumentationLink;
@@ -92,6 +95,14 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Notice
 			get => existingVersionInstalled.GetValueOrDefault();
 			private set => this.RaiseAndSetIfChanged(ref existingVersionInstalled, value);
 		}
+		
+		bool? upgradingFrom6OrNewInstallation;
+		public bool UpgradingFrom6OrNewInstallation
+		{
+			get => upgradingFrom6OrNewInstallation.GetValueOrDefault();
+			private set => this.RaiseAndSetIfChanged(ref upgradingFrom6OrNewInstallation, value);
+		}
+
 
 		public sealed override void Refresh()
 		{

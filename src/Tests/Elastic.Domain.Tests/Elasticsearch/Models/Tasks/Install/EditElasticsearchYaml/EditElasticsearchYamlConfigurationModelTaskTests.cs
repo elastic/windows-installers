@@ -33,7 +33,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 				s.NetworkHost = "xyz";
 				s.HttpPort = 80;
 				s.TransportPort = 9300;
-				s.UnicastNodes = new ReactiveUI.ReactiveList<string>
+				s.SeedHosts = new ReactiveUI.ReactiveList<string>
 				{
 					"localhost", "192.2.3.1:9301"
 				};
@@ -58,7 +58,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					s.HttpPortString.Should().Be("80");
 					s.TransportTcpPort.Should().Be(9300);
 					s.TransportTcpPortString.Should().Be("9300");
-					s.UnicastHosts.Should().BeEquivalentTo(new List<string>
+					s.UnicastHosts.Should().BeNullOrEmpty();
+					s.SeedHosts.Should().BeEquivalentTo(new List<string>
 					{
 						"localhost", "192.2.3.1:9301"
 					});
