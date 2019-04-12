@@ -1,0 +1,23 @@
+@startuml
+package "process hosts" {
+	[Elastic.ProcessHosts] -> [Elastic.ProcessHosts.Elasticsearch]
+	note right
+		complete implementation
+	end note
+
+	[Elastic.ProcessHosts] -> [Elastic.ProcessHosts.Kibana]
+	note right
+		partial implementation
+	end note
+
+	[Elastic.ProcessHosts] -> [Elastic.ProcessHosts.Beats]
+	note right
+		future implementation
+	end note
+
+	[Elastic.ProcessHosts] -> [Elastic.ProcessHosts.Logstash]
+	note right
+		future implementation
+	end note
+}
+@enduml

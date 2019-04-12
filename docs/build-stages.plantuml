@@ -1,0 +1,68 @@
+@startuml
+start
+note left
+	Run "build.bat help" to see all of the possibilities
+end note
+partition build.bat {
+	:parse command line arguments;
+	note right
+		./build/scripts/Commandline.fsx: module CommandLine
+	end note
+
+	partition compilation-stage {
+		if (has developer has specified a product version?) then
+		-> YES;
+			:query https://artifacts-api.elastic.co/v1 to determine existence;
+			note right
+				./build/scripts/Feeds.fsx: module ArtifactsFeed
+			end note
+			:download and extract specified artifact to ./build/in;
+		else
+		-> NO;
+			:use single zip file found in ./build/in;
+		endif
+		:generate ./src/Installer/Elastic.Installer.Domain/ProductGuids.cs;
+		note right
+			./build/scripts/BuildConfig.fsx: module BuildConfig
+		end note
+		:compile ./src/Elastic.Installer.sln;
+		:execute test suite;
+	}
+
+	partition generate-installer-stage {
+		:invoke Elastic.Installer.Msi.exe with args[];
+		note right
+			var productName = args[0];
+			var version = args[1];
+			var distributionRoot = args[2];
+		end note
+		:generate windows installer xml for product;
+		note right
+			DirFiles(distributionRoot + @"\*.*")
+		end note
+		:compile windows installer xml into msi;
+	}
+	partition code-signing-phase {
+		if (did the command line arguments request code signing?) then (yes)
+			:sign the build;
+		else (no)
+		endif
+	}
+	partition vertification-stage {
+		if (did the command line arguments request verification?) then (yes)
+			:execute the installer and verify;
+			note right
+			option: use virtualbox on the local machine
+			option: provision a machine on Azure for each integration test scenario
+			option: provision a single machine on Azure on which to run all integration tests
+			end note
+		else (no)
+		endif
+
+
+
+	}
+}
+
+stop
+@enduml

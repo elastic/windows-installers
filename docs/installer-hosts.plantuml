@@ -1,0 +1,23 @@
+@startuml
+package "installer hosts" {
+	[Elastic.InstallerHosts] -> [Elastic.InstallerHosts.Elasticsearch]
+	note right
+		complete implementation
+	end note
+
+	[Elastic.InstallerHosts] -> [Elastic.InstallerHosts.Kibana]
+	note right
+		partial implementation
+	end note
+
+	[Elastic.InstallerHosts] -> [Elastic.InstallerHosts.Beats]
+	note right
+		future implementation
+	end note
+
+	[Elastic.InstallerHosts] -> [Elastic.InstallerHosts.Logstash]
+	note right
+		future implementation
+	end note
+}
+@enduml
