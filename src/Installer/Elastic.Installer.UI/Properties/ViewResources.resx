@@ -461,7 +461,7 @@
 
 [b]First Master Node[/b]: If you are installing a brand new cluster or are upgrading from 6.x and doing a full cluster restart upgrade this will also write a [i]cluster.initial_master_nodes[/i] setting with the current node as its value. Read more about this on the documentation about bootstrapping a cluster.
 
-[b]Seed Hosts[/b]: Try to discover the cluster through these nodes, typically seeded with the master eligable nodes.</value>
+[b]Seed Hosts[/b]: Try to discover the cluster through these nodes, typically seeded with the master-eligible nodes.</value>
   </data>
   <data name="LocationsView_Elasticsearch_Help_Header" xml:space="preserve">
     <value>Locations Help</value>
