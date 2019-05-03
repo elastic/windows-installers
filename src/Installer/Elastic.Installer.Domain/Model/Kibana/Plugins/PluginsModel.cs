@@ -24,6 +24,6 @@ namespace Elastic.Installer.Domain.Model.Kibana.Plugins
 			});
 		}
 
-		protected override IEnumerable<Plugin> GetPlugins() => new List<Plugin>();
+		protected override IEnumerable<Plugin> GetPlugins(SemVersion version) => new List<Plugin>();
 	}
 }
