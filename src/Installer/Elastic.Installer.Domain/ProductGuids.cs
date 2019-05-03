@@ -48,6 +48,11 @@ namespace Elastic.Installer.Domain
 			{ "5.6.9", new Guid("a3ad5bbc-30ee-4b91-ab1e-c75ca5f7f599") },
 			{ "5.6.10", new Guid("4ed6485c-1b3e-4bc9-8462-4da714630511") },
 			{ "5.6.11", new Guid("6aa47f6c-e8f1-4ae7-9df0-b07a90b2447f") },
+			{ "5.6.12", new Guid("054a0edf-430c-4efe-b91b-23791055308b") },
+			{ "5.6.13", new Guid("84c4f20e-1d75-456d-bd1f-7c1879d116fa") },
+			{ "5.6.14", new Guid("505fea88-d704-4661-8b47-1331a62f9aa0") },
+			{ "5.6.15", new Guid("8bca08df-c394-422f-a350-c355b883b141") },
+			{ "5.6.16", new Guid("94acd334-7306-4a02-bdda-4f4389d6858f") },
 			{ "6.0.0-beta1", new Guid("f234f31d-f25c-4e64-8d3e-868f7b7ece97") },
 			{ "6.0.0-beta2", new Guid("50f217e3-97b7-47ba-95f7-685f7db0c8aa") },
 			{ "6.0.0-rc1", new Guid("23c31d4d-6990-4c2e-92c5-4dd3348d3e07") },
@@ -71,9 +76,12 @@ namespace Elastic.Installer.Domain
 			{ "6.4.0", new Guid("3c08c055-faa4-4ab3-8adf-cef89a95fd5d") },
 			{ "6.4.1", new Guid("57c3993a-ecd0-4f3f-bd52-51541591c78e") },
 			{ "6.4.2", new Guid("8def2aae-cbe7-4db6-87d9-f95d5334dbf1") },
+			{ "6.4.3", new Guid("acdf1627-55b8-45be-aa5e-e34f76a0a022") },
 			{ "6.5.0", new Guid("bb1e8abb-36ba-4c27-9c7d-813a1d79bfd3") },
 			{ "6.5.1", new Guid("2a3b25d6-d38b-4b34-b861-e5983f9a4f1b") },
 			{ "6.5.2", new Guid("ab616add-f96b-4be9-af81-22ddb889e556") },
+			{ "6.5.3", new Guid("b37f18ed-e0f9-4be1-b713-914e49fa548e") },
+			{ "6.5.4", new Guid("eaf31eb8-42cd-429f-871f-08134f77014a") },
 			{ "6.6.0", new Guid("7590b87f-1147-4c0b-b565-7dafc518ae7b") },
 			{ "6.6.1", new Guid("d72b04b3-82ab-4819-8281-a56e30048df3") },
 			{ "6.6.2", new Guid("b4053321-48a8-4112-8fcd-047d25c96962") },
@@ -85,7 +93,8 @@ namespace Elastic.Installer.Domain
 			{ "7.0.0-beta1", new Guid("2c9ca927-b54d-4185-9731-43c93b666dba") },
 			{ "7.0.0-rc1", new Guid("f125ba75-35e8-4e96-b12a-5cfb9f86fd48") },
 			{ "7.0.0-rc2", new Guid("bc013d65-3437-4df2-bd35-cf6e8e730f1f") },
-			{ "7.0.0", new Guid("be260f25-175a-4a0d-8602-43ba869890ff") }
+			{ "7.0.0", new Guid("be260f25-175a-4a0d-8602-43ba869890ff") },
+			{ "7.0.1", new Guid("a38c8371-c2e5-4b93-a5ae-6b6115bc776e") }
 		};
 
 		public static Dictionary<string, Guid> KibanaProductCodes => new Dictionary<string, Guid>
