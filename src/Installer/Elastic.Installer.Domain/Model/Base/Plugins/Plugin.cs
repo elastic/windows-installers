@@ -39,7 +39,7 @@ namespace Elastic.Installer.Domain.Model.Base.Plugins
 			get => _selected;
 			set => this.RaiseAndSetIfChanged(ref _selected, value);
 		}
-
+		
 		/// <summary>
 		/// The type of plugin
 		/// </summary>

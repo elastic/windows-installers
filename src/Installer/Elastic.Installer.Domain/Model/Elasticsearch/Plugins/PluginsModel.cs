@@ -161,7 +161,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 			set => this.RaiseAndSetIfChanged(ref this.pluginsStaging, value);
 		}
 
-		protected override IEnumerable<Plugin> GetPlugins()
+		protected override IEnumerable<Plugin> GetPlugins(SemVersion version)
 		{
 			yield return new Plugin
 			{
@@ -170,14 +170,15 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Plugins
 				DisplayName = "Ingest Attachment Processor",
 				Description = TextResources.PluginsModel_IngestAttachment,
 			};
-
-			yield return new Plugin
-			{
-				PluginType = PluginType.Ingest,
-				Url = "ingest-geoip",
-				DisplayName = "Ingest GeoIP Processor",
-				Description = TextResources.PluginsModel_IngestGeoIP,
-			};
+			
+			if (version < "6.7.0")
+                yield return new Plugin
+                {
+                    PluginType = PluginType.Ingest,
+                    Url = "ingest-geoip",
+                    DisplayName = "Ingest GeoIP Processor",
+                    Description = TextResources.PluginsModel_IngestGeoIP,
+                };
 
 			yield return new Plugin
 			{
