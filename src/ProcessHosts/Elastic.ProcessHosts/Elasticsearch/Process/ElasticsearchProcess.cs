@@ -191,9 +191,6 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			if (!this.FileSystem.Directory.Exists(this.PrivateTempDirectory))
 				this.FileSystem.Directory.CreateDirectory(this.PrivateTempDirectory);
 
-			if (!this.FileSystem.Directory.Exists(this.GCLogsDirectory))
-				this.FileSystem.Directory.CreateDirectory(this.GCLogsDirectory);
-
 			base.Start();
 		}
 	}
