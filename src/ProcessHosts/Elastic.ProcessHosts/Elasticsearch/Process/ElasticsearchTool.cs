@@ -33,6 +33,8 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			                    ?? throw new StartupException(
 				                    $"No {ElasticsearchEnvironmentStateProvider.EsHome} variable set and no home directory could be inferred from the executable location");
 
+			this.WorkingDirectory = homeDirectory;
+
 			var javaHome = java.JavaHomeCanonical;
 			if (javaHome == null)
 				throw new StartupException("JAVA_HOME is not set and no Java installation could be found in the windows registry!");
@@ -66,6 +68,8 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 
 		private string ProcessExe { get; }
 
+		private string WorkingDirectory { get; }
+
 		public bool Start(string[] arguments, out string output) => this.Start(arguments, TimeSpan.FromMinutes(1), out output);
 
 		public bool Start(string[] arguments, TimeSpan timeout, out string output)
@@ -80,6 +84,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 				StartInfo =
 				{
 					FileName = this.ProcessExe,
+					WorkingDirectory = this.WorkingDirectory,
 					Arguments = args,
 					CreateNoWindow = true,
 					ErrorDialog = false,
