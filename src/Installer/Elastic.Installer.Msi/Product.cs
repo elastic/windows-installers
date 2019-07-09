@@ -33,9 +33,14 @@ namespace Elastic.Installer.Msi
 
 		public List<Dir> Files(string path) =>
 			Directory.GetDirectories(path)
-				.Where(directory => Directory.EnumerateFileSystemEntries(directory).Any())
-				.Select(Path.GetFileName)
-				.Select(directoryName => new Dir(directoryName, new Files(path + $@"\{directoryName}\*.*")))
+				.Select(Path.GetFullPath)
+				.Select(fullPath =>
+				{
+					var name = Path.GetFileName(fullPath);
+					return Directory.EnumerateFileSystemEntries(fullPath).Any()
+						? new Dir(name, new Files(path + $@"\{name}\*"))
+						: new Dir(name);
+				})
 				.ToList();
 
 		public virtual void PatchWixSource(XDocument document) { }
