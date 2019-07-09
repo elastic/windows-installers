@@ -159,6 +159,10 @@ elasticsearch:
       guid: 73e22e50-daff-4a3d-bf31-829fd8c05694
     - version: 6.7.2
       guid: 0b5a3943-37c7-47f3-af9d-16e7c93b5060
+    - version: 6.8.0
+      guid: 3528481d-d0cf-4850-affa-eb8e710a706d
+    - version: 6.8.1
+      guid: ae6a44f2-bcc3-4f42-b6f6-72866bdab499
     - version: 7.0.0-alpha1
       guid: 303b8268-6caa-4b82-aa3a-2b3e7197a0a3
     - version: 7.0.0-beta1
@@ -171,6 +175,12 @@ elasticsearch:
       guid: be260f25-175a-4a0d-8602-43ba869890ff
     - version: 7.0.1
       guid: a38c8371-c2e5-4b93-a5ae-6b6115bc776e
+    - version: 7.1.0
+      guid: 3c03bc45-102d-449e-ae96-595af10b7ea0
+    - version: 7.1.1
+      guid: 3bd04fa8-c5d0-4358-9f11-46c0b668d550
+    - version: 7.2.0
+      guid: a207850c-c336-4833-a398-09d65e4a10e1
 kibana:
   upgrade_code: 6a2e6f51-5145-4c1a-8d05-2190ae213367
   known_versions:
