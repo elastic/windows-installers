@@ -184,52 +184,21 @@ namespace Elastic.Installer.Msi.Elasticsearch
 
 					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentInstalldirBinXpack)));
 				}
-				// Add an empty plugins directory
-				else if (directoryId == InstallDirProperty)
-				{
-					var installdirPlugins = "INSTALLDIR.plugins";
-					var componentInstalldirPlugins = $"Component.{installdirPlugins}";
 
-					// Add elements to remove the plugins folder
-					directory.AddFirst(new XElement(ns + "Directory",
-						new XAttribute("Id", installdirPlugins),
-						new XAttribute("Name", "plugins"),
-						new XElement(ns + "Component",
-							new XAttribute("Id", componentInstalldirPlugins),
-							new XAttribute("Guid", WixGuid.NewGuid(componentInstalldirPlugins)),
-							new XAttribute("Win64", "yes"),
-							new XElement(ns + "RemoveFile",
-								new XAttribute("Id", installdirPlugins),
-								new XAttribute("Name", "*"), // remove all top level files in plugins dir
-								new XAttribute("On", "both")
-							),
-							new XElement(ns + "RemoveFolder",
-								new XAttribute("Id", installdirPlugins + ".dir"), // remove (now empty) plugins dir
-								new XAttribute("On", "both")
-							)
-						)
-					));
-
-					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentInstalldirPlugins)));
-
-					var componentEmptyInstalldirPlugins = $"Component.{installdirPlugins}.empty";
-
-					// Add element to create empty plugins folder
-					product.Add(new XElement(ns + "DirectoryRef",
-						new XAttribute("Id", installdirPlugins),
-						new XElement(ns + "Component",
-							new XAttribute("Id", componentEmptyInstalldirPlugins),
-							new XAttribute("Guid", WixGuid.NewGuid(componentEmptyInstalldirPlugins)),
-							new XAttribute("Win64", "yes"),
-							new XAttribute("KeyPath", "yes"),
-							new XElement(ns + "CreateFolder")
-						)
-					));
-
-					feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentEmptyInstalldirPlugins)));
-				}
-				
 				feature.Add(new XElement(ns + "ComponentRef", new XAttribute("Id", componentId)));			
+			}
+
+			// WixSharp erroneously adds a CreateFolder elements for Component elements not containing any File elements:
+			// https://github.com/oleg-shilo/wixsharp/blob/ea7c7cb00b1b07148f4a0ab9ea44ffcee762cb4c/Source/src/WixSharp/AutoElements.cs#L558-L583
+			// This includes for Components containing Environment or RegistryKey element. Remove these.
+			foreach (var element in documentRoot.Descendants(ns + "RegistryKey")
+				.Concat(documentRoot.Descendants(ns + "Environment")))
+			{
+				var parentComponent = element.Parent;
+				foreach (var createRemoveFolder in parentComponent.Elements(ns + "CreateFolder").Concat(parentComponent.Elements(ns + "RemoveFolder")))
+				{
+					createRemoveFolder.Remove();
+				}
 			}
 
 			// include WixFailWhenDeferred Custom Action
