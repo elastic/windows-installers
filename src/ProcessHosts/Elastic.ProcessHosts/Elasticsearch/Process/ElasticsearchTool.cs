@@ -45,7 +45,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 
 			var libFolder = Path.Combine(homeDirectory, "lib");
 			if (!fileSystem.Directory.Exists(libFolder)) throw new StartupException($"Expected a 'lib' directory inside: {homeDirectory}");
-			var classPath = $"{Path.Combine(libFolder, "*")}";
+			var classPath = Path.Combine(libFolder, "*");
 
 			this.ProcessVariables = new Dictionary<string, string>
 			{
