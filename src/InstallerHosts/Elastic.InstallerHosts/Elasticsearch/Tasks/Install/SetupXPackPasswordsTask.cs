@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Net;
@@ -108,14 +109,28 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		private void SetPassword(HttpClient client, string elasticUserPassword, string user, string password)
 		{
 			this.Session.SendProgress(100, $"Changing password for '{user}'");
-			using (var message = new HttpRequestMessage(HttpMethod.Put, $"_xpack/security/user/{user}/_password"))
+			using (var message = new HttpRequestMessage(HttpMethod.Put, $"_security/user/{user}/_password"))
 			{
 				var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"elastic:{elasticUserPassword}"));
 
 				message.Headers.Authorization = new AuthenticationHeaderValue("Basic", credentials);
 				message.Content = new StringContent($"{{\"password\":\"{password}\"}}", Encoding.UTF8, "application/json");
 				var response = client.SendAsync(message).Result;
-				response.EnsureSuccessStatusCode();
+				if (!response.IsSuccessStatusCode)
+				{
+					string content = null;
+					if (response.Content != null)
+					{
+						content = response.Content.ReadAsStringAsync().Result;
+						response.Dispose();
+					}
+
+					throw new HttpRequestException(string.Format(CultureInfo.InvariantCulture, "Response status code does not indicate success: {0} ({1}). {2}",
+						(int)response.StatusCode,
+						response.ReasonPhrase,
+						content
+					));
+				}
 			}
 			this.Session.SendProgress(200, $"Changed password for user '{user}'");
 		}
