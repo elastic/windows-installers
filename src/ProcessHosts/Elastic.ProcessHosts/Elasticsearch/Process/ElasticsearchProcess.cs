@@ -21,7 +21,6 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 		private IElasticsearchTool JavaVersionChecker { get;  }
 		
 		private string PrivateTempDirectory { get; }
-		private string GCLogsDirectory { get; set; }
 
 		public ElasticsearchProcess(ManualResetEvent completedHandle, IEnumerable<string> args)
 			: this(
@@ -62,7 +61,6 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			this.HomeDirectory = homeDirectory;
 			this.ConfigDirectory = configDirectory;
 			this.PrivateTempDirectory = env.PrivateTempDirectory;
-			this.GCLogsDirectory = Path.Combine(homeDirectory, "logs");
 
 			var parsedArguments = this.ParseArguments(args);
 
@@ -126,7 +124,7 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 		{
 			var libFolder = Path.Combine(this.HomeDirectory, "lib");
 			if (!FileSystem.Directory.Exists(libFolder)) throw new StartupException($"Expected a 'lib' directory inside: {this.HomeDirectory}");
-			var classPath = $"{Path.Combine(libFolder, "*")}";
+			var classPath = Path.Combine(libFolder, "*");
 			
 			if (!this.JavaVersionChecker.Start(null, out var javaVersionOut)) throw new StartupException($"Invalid Java version reported: {javaVersionOut}");
 
@@ -190,9 +188,6 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 		{
 			if (!this.FileSystem.Directory.Exists(this.PrivateTempDirectory))
 				this.FileSystem.Directory.CreateDirectory(this.PrivateTempDirectory);
-
-			if (!this.FileSystem.Directory.Exists(this.GCLogsDirectory))
-				this.FileSystem.Directory.CreateDirectory(this.GCLogsDirectory);
 
 			base.Start();
 		}
