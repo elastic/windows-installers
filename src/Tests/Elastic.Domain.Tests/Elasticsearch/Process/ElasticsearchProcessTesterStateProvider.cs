@@ -20,16 +20,16 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 		public ElasticsearchProcessTesterStateProvider()
 		{
 			this.JavaState = new MockJavaEnvironmentStateProvider();
-			this.JavaConfigState = new JavaConfiguration(this.JavaState);
-
 			this.ElasticsearchState = new MockElasticsearchEnvironmentStateProvider();
+
+			this.JavaConfigState = new JavaConfiguration(this.JavaState, this.ElasticsearchState);
 			this.ElasticsearchConfigState = new ElasticsearchEnvironmentConfiguration(this.ElasticsearchState);
 		}
 
 		public ElasticsearchProcessTesterStateProvider Java(Func<MockJavaEnvironmentStateProvider, MockJavaEnvironmentStateProvider> setter)
 		{
 			this.JavaState = setter(new MockJavaEnvironmentStateProvider());
-			this.JavaConfigState = new JavaConfiguration(this.JavaState);
+			this.JavaConfigState = new JavaConfiguration(this.JavaState, this.ElasticsearchState);
 			return this;
 		}
 
@@ -51,8 +51,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 		public MockFileSystem AddJavaExe(MockFileSystem fs)
 		{
-			var java = new JavaConfiguration(this.JavaState);
-			fs.AddFile(java.JavaExecutable, new MockFileData(""));
+			fs.AddFile(JavaConfigState.JavaExecutable, new MockFileData(""));
 			return fs;
 		}
 

@@ -56,7 +56,6 @@ xpack.random_setting: something
 		
 		[Fact] void UnicastHostsAreStillRead()
 		{
-			var folder = @"C:\ProgramData\Elastic\Elasticsearch\";
 			var yaml = $@"discovery.zen.ping.unicast.hosts: [host1, host2]";
 			var fs = FakeElasticsearchYaml(yaml);
 			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
@@ -65,9 +64,8 @@ xpack.random_setting: something
 			optsFile.Save();
 		}
 		
-		[Fact] void SeedHostsArRead()
+		[Fact] void SeedHostsAreRead()
 		{
-			var folder = @"C:\ProgramData\Elastic\Elasticsearch\";
 			var yaml = $@"discovery.seed_hosts: [host1, host2]";
 			var fs = FakeElasticsearchYaml(yaml);
 			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);

@@ -355,9 +355,6 @@ in this cluster are empty. To migrate this data back into the downgraded cluster
     <value>JAVA_HOME is set for both this user and the system.  Please choose the desired Java installation 
 by removing one of these environment variables.</value>
   </data>
-  <data name="NoticeModelValidator_Using32BitJava" xml:space="preserve">
-    <value>Found a 32 bit java installation as the default in the registry, elasticsearch requires a 64bit JVM</value>
-  </data>
   <data name="ServiceModelValidator_User_Or_Password_Incorrect" xml:space="preserve">
     <value>User or Password is incorrect</value>
   </data>

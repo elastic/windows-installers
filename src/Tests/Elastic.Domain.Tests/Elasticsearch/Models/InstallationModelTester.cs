@@ -69,7 +69,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			this.JavaState = javaState ?? throw new ArgumentNullException(nameof(javaState));
 			this.EsState = esState ?? throw new ArgumentNullException(nameof(esState));
 			this.PluginState = pluginState;
-			this.JavaConfig = new JavaConfiguration(javaState);
+			this.JavaConfig = new JavaConfiguration(javaState, esState);
 			var elasticsearchConfiguration = new ElasticsearchEnvironmentConfiguration(esState);
 			this.EsConfig = ElasticsearchYamlConfiguration.FromFolder(elasticsearchConfiguration.ConfigDirectory, fileSystem);
 			this.JvmConfig = LocalJvmOptionsConfiguration.FromFolder(elasticsearchConfiguration.ConfigDirectory, fileSystem);

@@ -46,7 +46,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			{
 				nameof(JavaInstalled),
 				nameof(JavaMisconfigured),
-				nameof(Using32BitJava),
 				nameof(BadElasticsearchYamlFile),
 				nameof(HasEsHomeVariableButNoPreviousInstallation),
 				nameof(ConfigDirectoryIsSpecifiedAndSubPathOfEsHome)
@@ -262,13 +261,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			set => this.RaiseAndSetIfChanged(ref hasEsHomeVariableButNoPreviousInstallation, value);
 		}
 		
-		bool using32BitJava;
-		public bool Using32BitJava
-		{
-			get => using32BitJava;
-			set => this.RaiseAndSetIfChanged(ref using32BitJava, value);
-		}
-
 		bool upgrading;
 		public bool Upgrading
 		{
@@ -292,7 +284,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			}
 
 			this.JavaMisconfigured = JavaConfiguration.JavaMisconfigured;
-			this.Using32BitJava = JavaConfiguration.Using32BitJava;
 			this.BadElasticsearchYamlFile = _yamlConfiguration.FoundButNotValid;
 			this.MsiLogFileLocation = this.Session.Get<string>("MsiLogFileLocation");
 		}
@@ -308,7 +299,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 			sb.AppendLine($"- {nameof(JavaInstalled)} = " + JavaInstalled);
 			sb.AppendLine($"- {nameof(JavaMisconfigured)} = " + JavaMisconfigured);
 			sb.AppendLine($"- {nameof(ConfigDirectoryIsSpecifiedAndSubPathOfEsHome)} = " + ConfigDirectoryIsSpecifiedAndSubPathOfEsHome);
-			sb.AppendLine($"- {nameof(Using32BitJava)} = " + Using32BitJava);
 			sb.AppendLine($"- {nameof(BadElasticsearchYamlFile)} = " + BadElasticsearchYamlFile);
 			sb.AppendLine(this.NoticeModel.ToString());
 			sb.AppendLine(this.LocationsModel.ToString());

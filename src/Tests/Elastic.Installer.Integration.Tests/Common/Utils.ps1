@@ -592,6 +592,7 @@ function Ping-Node([System.Timespan]$Timeout = (New-Timespan -Seconds 3), $Domai
         catch {
             $Code = $_.Exception.Response.StatusCode.value__
             $Description = $_.Exception.Response.StatusDescription
+			$Message = $_.Exception.Message
 
             try {
                 $Response = $_ | ConvertFrom-Json
@@ -604,7 +605,7 @@ function Ping-Node([System.Timespan]$Timeout = (New-Timespan -Seconds 3), $Domai
                 }
             }
             catch {
-                log "code: $Code, description: $Description" -l Warn
+                log "$Message. code: $Code, description: $Description" -l Warn
             }
         }
     } until ($StopWatch.Elapsed -gt $Timeout)

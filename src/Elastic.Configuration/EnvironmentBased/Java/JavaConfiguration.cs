@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.ServiceProcess;
 using System.Text;
 
 namespace Elastic.Configuration.EnvironmentBased.Java
 {
 	public class JavaConfiguration 
 	{
-		public static JavaConfiguration Default { get; } = new JavaConfiguration(new JavaEnvironmentStateProvider());
+		public static JavaConfiguration Default { get; } = 
+			new JavaConfiguration(new JavaEnvironmentStateProvider(), new ElasticsearchEnvironmentStateProvider());
 
-		private readonly IJavaEnvironmentStateProvider _stateProvider;
+		private readonly IJavaEnvironmentStateProvider _javaStateProvider;
+		private readonly IElasticsearchEnvironmentStateProvider _elasticsearchStateProvider;
 
-		public JavaConfiguration(IJavaEnvironmentStateProvider stateProvider)
+		public JavaConfiguration(IJavaEnvironmentStateProvider javaStateProvider, IElasticsearchEnvironmentStateProvider elasticsearchStateProvider)
 		{
-			_stateProvider = stateProvider ?? new JavaEnvironmentStateProvider();
+			_javaStateProvider = javaStateProvider ?? new JavaEnvironmentStateProvider();
+			_elasticsearchStateProvider = elasticsearchStateProvider ?? new ElasticsearchEnvironmentStateProvider();
 		}
 
 		public string JavaExecutable
@@ -28,7 +30,6 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 				}
 				catch (Exception e)
 				{
-					
 					throw new Exception(
 						$"There was a problem constructing a path from the detected java home directory '{this.JavaHomeCanonical}'", e);
 				}
@@ -38,28 +39,36 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 		public string JavaHomeCanonical => JavaHomeCandidates.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
 
 		private List<string> JavaHomeCandidates => new List<string> {
-			_stateProvider.JavaHomeProcessVariable,
-			_stateProvider.JavaHomeUserVariable,
-			_stateProvider.JavaHomeMachineVariable,
-			_stateProvider.JdkRegistry64,
-			_stateProvider.JreRegistry64,
-			_stateProvider.JdkRegistry32,
-			_stateProvider.JreRegistry32
+			_javaStateProvider.JavaHomeProcessVariable,
+			_javaStateProvider.JavaHomeUserVariable,
+			_javaStateProvider.JavaHomeMachineVariable,
+			JavaFromEsHomeDirectory
 		};
 
-		public bool JavaInstalled => !string.IsNullOrEmpty(this.JavaHomeCanonical);
+		private string JavaFromEsHomeDirectory
+		{
+			get
+			{
+				var esHome = _elasticsearchStateProvider.GetEnvironmentVariable(ElasticsearchEnvironmentStateProvider.EsHome)
+					?? _elasticsearchStateProvider.RunningExecutableLocation;
 
-		public bool Using32BitJava => JavaHomeCandidates.FindIndex(c => !string.IsNullOrWhiteSpace(c)) >= JavaHomeCandidates.Count - 2;
+				return esHome != null
+					? Path.Combine(esHome, "jdk")
+					: null;
+			}
+		}
+
+		public bool JavaInstalled => !string.IsNullOrEmpty(this.JavaHomeCanonical);
 
 		public bool JavaMisconfigured 
 		{
 			get
 			{
 				if (!JavaInstalled) return false;
-				if (string.IsNullOrEmpty(_stateProvider.JavaHomeMachineVariable) && string.IsNullOrWhiteSpace(_stateProvider.JavaHomeUserVariable)) return false;
-				if (string.IsNullOrWhiteSpace(_stateProvider.JavaHomeUserVariable)) return false;
-				if (string.IsNullOrWhiteSpace(_stateProvider.JavaHomeMachineVariable)) return false;
-				return _stateProvider.JavaHomeMachineVariable != _stateProvider.JavaHomeUserVariable;
+				if (string.IsNullOrEmpty(_javaStateProvider.JavaHomeMachineVariable) && string.IsNullOrWhiteSpace(_javaStateProvider.JavaHomeUserVariable)) return false;
+				if (string.IsNullOrWhiteSpace(_javaStateProvider.JavaHomeUserVariable)) return false;
+				if (string.IsNullOrWhiteSpace(_javaStateProvider.JavaHomeMachineVariable)) return false;
+				return _javaStateProvider.JavaHomeMachineVariable != _javaStateProvider.JavaHomeUserVariable;
 			}
 		}
 			
@@ -68,15 +77,11 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 				.AppendLine($"Java paths")
 				.AppendLine($"- current = {JavaExecutable}")
 				.AppendLine($"Java Candidates (in order of precedence)")
-				.AppendLine($"- {nameof(_stateProvider.JavaHomeProcessVariable)} = {_stateProvider.JavaHomeProcessVariable}")
-				.AppendLine($"- {nameof(_stateProvider.JavaHomeUserVariable)} = {_stateProvider.JavaHomeUserVariable}")
-				.AppendLine($"- {nameof(_stateProvider.JavaHomeMachineVariable)} = {_stateProvider.JavaHomeProcessVariable}")
-				.AppendLine($"- {nameof(_stateProvider.JdkRegistry64)} = {_stateProvider.JdkRegistry64}")
-				.AppendLine($"- {nameof(_stateProvider.JreRegistry64)} = {_stateProvider.JreRegistry64}")
-				.AppendLine($"- {nameof(_stateProvider.JdkRegistry32)} = {_stateProvider.JdkRegistry32}")
-				.AppendLine($"- {nameof(_stateProvider.JreRegistry32)} = {_stateProvider.JreRegistry32}")
+				.AppendLine($"- {nameof(_javaStateProvider.JavaHomeProcessVariable)} = {_javaStateProvider.JavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.JavaHomeUserVariable)} = {_javaStateProvider.JavaHomeUserVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.JavaHomeMachineVariable)} = {_javaStateProvider.JavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(JavaFromEsHomeDirectory)} = {JavaFromEsHomeDirectory}")
 				.AppendLine($"Java checks")
-				.AppendLine($"- {nameof(Using32BitJava)} = {Using32BitJava}")
 				.AppendLine($"- JAVA_HOME as machine and user variable = {JavaMisconfigured}")
 				.ToString();
 

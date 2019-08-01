@@ -1,45 +1,60 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Runtime.CompilerServices;
 using Elastic.Configuration.EnvironmentBased;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 {
 	public class MockElasticsearchEnvironmentStateProvider : IElasticsearchEnvironmentStateProvider
 	{
-		private Dictionary<string, string> _mockVariables = new Dictionary<string, string>();
-
+		public MockElasticsearchEnvironmentStateProvider()
+		{
+			_systemVariables["TEMP"] = @"C:\Temp";
+			_systemVariables["ES_TMPDIR"] = @"C:\Temp\elasticsearch";
+		}
+		
+		private Dictionary<string, string> _systemVariables = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+		private readonly Dictionary<string, string> _userVariables = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+		private readonly Dictionary<string, string> _processVariables = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+		
 		public string LastSetEsHome { get; set; }
-		public string LastSetEsConfig { get; set; }
-		public string LastSetOldEsConfig { get; set; }
+		
+		public string GetEnvironmentVariable(string variable)
+		{
+			if (_processVariables.TryGetValue(variable, out var v))
+				return v;
 
-		public string GetEnvironmentVariable(string variable) => _mockVariables.TryGetValue(variable, out string v) ? v : null;
+			if (_userVariables.TryGetValue(variable, out v))
+				return v;
+
+			return _systemVariables.TryGetValue(variable, out v) ? v : null;
+		}
+
 		public bool TryGetEnv(string variable, out string value)
 		{
 			value = GetEnvironmentVariable(variable);
 			return value != null;
 		}
-
 		
 		public MockElasticsearchEnvironmentStateProvider EnvironmentVariables(Dictionary<string, string> variables)
 		{
-			this._mockVariables = variables;
+			foreach (var variable in variables)
+				this._systemVariables[variable.Key] = variable.Value;
+
 			return this;
 		}
 		public MockElasticsearchEnvironmentStateProvider EsHomeMachineVariable(string esHome)
 		{
-			this.HomeDirectoryMachineVariable = esHome;
+			this._systemVariables[ElasticsearchEnvironmentStateProvider.EsHome] = esHome;
 			return this;
 		}
 		public MockElasticsearchEnvironmentStateProvider EsHomeUserVariable(string esHome)
 		{
-			this.HomeDirectoryUserVariable = esHome;
+			this._userVariables[ElasticsearchEnvironmentStateProvider.EsHome] = esHome;
 			return this;
 		}
 		public MockElasticsearchEnvironmentStateProvider EsHomeProcessVariable(string esHome)
 		{
-			this.HomeDirectoryProcessVariable = esHome;
+			this._processVariables[ElasticsearchEnvironmentStateProvider.EsHome] = esHome;
 			return this;
 		}
 		
@@ -51,13 +66,13 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		
 		public MockElasticsearchEnvironmentStateProvider TempDirectory(string tempDirectory)
 		{
-			this.TempDirectoryVariable = tempDirectory;
+			this._systemVariables["TEMP"] = tempDirectory;
 			return this;
 		}
 		
 		public MockElasticsearchEnvironmentStateProvider PrivateTempDirectory(string privateTempDirectory)
 		{
-			this.PrivateTempDirectoryVariable = privateTempDirectory;
+			this._systemVariables["ES_TMPDIR"] = privateTempDirectory;
 			return this;
 		}
 
@@ -68,12 +83,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		}
 		public MockElasticsearchEnvironmentStateProvider EsConfigUserVariable(string esConfig)
 		{
-			this._esConfigUser = esConfig;
+			this._userVariables[ElasticsearchEnvironmentStateProvider.ConfDir] = esConfig;
 			return this;
 		}
 		public MockElasticsearchEnvironmentStateProvider EsConfigProcessVariable(string esConfig)
 		{
-			this._esConfigProcess = esConfig;
+			this._processVariables[ElasticsearchEnvironmentStateProvider.ConfDir] = esConfig;
 			return this;
 		}
 		
@@ -84,41 +99,53 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration.Mocks
 		}
 		public MockElasticsearchEnvironmentStateProvider EsConfigUserVariableOld(string esConfig)
 		{
-			this._esConfigUserOld = esConfig;
+			this._userVariables[ElasticsearchEnvironmentStateProvider.ConfDirOld] = esConfig;
 			return this;
 		}
 		public MockElasticsearchEnvironmentStateProvider EsConfigProcessVariableOld(string esConfig)
 		{
-			this._esConfigProcessOld = esConfig;
+			this._processVariables[ElasticsearchEnvironmentStateProvider.ConfDirOld] = esConfig;
 			return this;
 		}
 
 		private string RunningExecutableLocation { get; set; }
 		string IElasticsearchEnvironmentStateProvider.RunningExecutableLocation => this.RunningExecutableLocation;
 
-		private string TempDirectoryVariable { get; set; } = @"C:\Temp";
-		string IElasticsearchEnvironmentStateProvider.TempDirectoryVariable => this.TempDirectoryVariable;
+		string IElasticsearchEnvironmentStateProvider.TempDirectoryVariable => 
+			this._systemVariables.TryGetValue("TEMP", out var v) ? v : null;
+
+		string IElasticsearchEnvironmentStateProvider.PrivateTempDirectoryVariable => 
+			this._systemVariables.TryGetValue("ES_TMPDIR", out var v) ? v : null;
+
+		string IElasticsearchEnvironmentStateProvider.HomeDirectoryMachineVariable => 
+			this._systemVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.EsHome, out var v) ? v : null;
+
+		string IElasticsearchEnvironmentStateProvider.HomeDirectoryUserVariable => 
+			this._userVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.EsHome, out var v) ? v : null;
+
+		string IElasticsearchEnvironmentStateProvider.HomeDirectoryProcessVariable => 
+			this._processVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.EsHome, out var v) ? v : null;
+
+		public string OldConfigDirectoryMachineVariable
+		{
+			get => _systemVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.ConfDirOld, out var v) ? v : null;
+			set => _systemVariables[ElasticsearchEnvironmentStateProvider.ConfDirOld] = value;
+		}
 		
-		private string PrivateTempDirectoryVariable { get; set; } = @"C:\Temp\elasticsearch";
-		string IElasticsearchEnvironmentStateProvider.PrivateTempDirectoryVariable => this.PrivateTempDirectoryVariable;
-
-		private string HomeDirectoryMachineVariable { get; set; }
-		string IElasticsearchEnvironmentStateProvider.HomeDirectoryMachineVariable => this.HomeDirectoryMachineVariable;
-
-		private string HomeDirectoryUserVariable { get; set; }
-		string IElasticsearchEnvironmentStateProvider.HomeDirectoryUserVariable => this.HomeDirectoryUserVariable;
-
-		private string HomeDirectoryProcessVariable { get; set; }
-		string IElasticsearchEnvironmentStateProvider.HomeDirectoryProcessVariable => this.HomeDirectoryProcessVariable;
-
-		public string OldConfigDirectoryMachineVariable { get; private set; }
-		public string NewConfigDirectoryMachineVariable { get; private set; }
+		public string NewConfigDirectoryMachineVariable
+		{
+			get => _systemVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.ConfDir, out var v) ? v : null;
+			set => _systemVariables[ElasticsearchEnvironmentStateProvider.ConfDir] = value;
+		}
+		
 		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryMachineVariable => this.NewConfigDirectoryMachineVariable ?? this.OldConfigDirectoryMachineVariable;
-		private string _esConfigUser;
-		private string _esConfigUserOld;
-		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryUserVariable => this._esConfigUser ?? this._esConfigUserOld;
-		private string _esConfigProcess;
-		private string _esConfigProcessOld;
-		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryProcessVariable => this._esConfigProcess ?? this._esConfigProcessOld;
+
+		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryUserVariable => 
+			(this._userVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.ConfDir, out var v) ? v : null) ??
+			(this._userVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.ConfDirOld, out var v1) ? v1 : null);
+
+		string IElasticsearchEnvironmentStateProvider.ConfigDirectoryProcessVariable => 
+			(this._processVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.ConfDir, out var v) ? v : null) ?? 
+			(this._processVariables.TryGetValue(ElasticsearchEnvironmentStateProvider.ConfDirOld, out var v1) ? v1 : null);
 	}
 }
