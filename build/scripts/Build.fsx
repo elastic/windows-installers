@@ -20,16 +20,14 @@ open Versions
 
 // use vswhere to set MSBuild location, if it exists. 
 // Allows FAKE MsBuildHelper.MsBuildRelease to work with Visual Studio 2019
-let vsWhere = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") </> @"Microsoft Visual Studio\Installer\vswhere.exe"
+let private vsWhere = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") </> @"Microsoft Visual Studio\Installer\vswhere.exe"
 if fileExists vsWhere then
     let result = ExecProcessAndReturnMessages (fun p -> 
                     p.FileName <- vsWhere
-                    p.Arguments <- @"-latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe"
+                    p.Arguments <- @"-latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe"
                  ) (TimeSpan.FromSeconds 5.)
 
-    if result.ExitCode = 0 then 
-        setEnvironVar "MSBuild" result.Messages.[0]
-
+    if result.ExitCode = 0 then setEnvironVar "MSBuild" result.Messages.[0]
 
 /// Signs a file using a certificate
 let sign file productTitle =
