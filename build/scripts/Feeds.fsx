@@ -25,12 +25,12 @@ ServicePointManager.SecurityProtocol <- SecurityProtocolType.Ssl3 |||
 
 let WindowsDistributionSuffixFor7AndAbove = "-windows-x86_64"
 
-let DownloadSuffix (product:Product) (version:Version) =
+let DownloadSuffix (product:Product) (version:Version) (distribution:Distribution)=
     match product with
     | Elasticsearch ->
-        match version.Major with
-            | v when v >= 7 -> WindowsDistributionSuffixFor7AndAbove
-            | _ -> ""
+        match (version.Major, distribution) with
+        | (v, Zip) when v >= 7 -> WindowsDistributionSuffixFor7AndAbove
+        | _ -> ""
     | _ -> ""
 
 /// An artifact from the Past Releases Feed or Artifacts API with which to build an MSI or run integration tests
@@ -114,7 +114,7 @@ module ArtifactsFeed =
     /// Gets the artifact for a given product version and distribution
     let GetArtifact (product:Product) (distribution:Distribution) (version:Version) =
         let artifactName (product:Product) (version:Version) (distribution:Distribution) =
-            let suffix = DownloadSuffix product version
+            let suffix = DownloadSuffix product version distribution
             sprintf "%s-%s%s.%s" product.Name version.FullVersion suffix distribution.Extension
       
         // builds values never contain -SNAPSHOT suffix, even when the version might
@@ -249,7 +249,7 @@ module ReleasesFeed =
     type private ReleasesFeedXml = XmlProvider< "feed-example.xml" >
     
     let buildDownloadUrl (product:Product) (version:Version) (distribution:Distribution) =
-        let suffix = DownloadSuffix product version
+        let suffix = DownloadSuffix product version distribution
         sprintf "%s/%s/%s-%s%s.%s" pastReleasesDownloadUrl product.Name
             product.Name version.FullVersion suffix distribution.Extension
     

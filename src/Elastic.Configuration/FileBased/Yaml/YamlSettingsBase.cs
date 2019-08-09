@@ -29,7 +29,7 @@ namespace Elastic.Configuration.FileBased.Yaml
 
 				this.YamlSettings = this._serializer.Deserialize<TSettings>(flattenedYaml) ?? new TSettings();
 			}
-			catch (Exception e)
+			catch
 			{
 				this.FoundButNotValid = true;
 				this.YamlSettings = new TSettings();

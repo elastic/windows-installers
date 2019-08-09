@@ -25,45 +25,16 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 		[Fact] public void UserHomeTakesPrecedenceOverAll() => JavaChangesOnly(j => j
 			.JavaHomeUserVariable(JavaHomeUser)
 			.JavaHomeMachineVariable(JavaHomeMachine)
-			.JdkRegistry64(RegistryJdk64)
 			)
 			.Start(p =>
 			{
 				p.ObservableProcess.BinaryCalled.Should().Be(JavaExe(JavaHomeUser));
 			});
 
-		[Fact] public void UserHomeTakesPrecedenceOverRegistry() => JavaChangesOnly(j => j
-			.JavaHomeMachineVariable(JavaHomeMachine)
-			.JdkRegistry64(RegistryJdk64)
-			)
+		[Fact] public void JavaHomeUsesBundledJdk() => JavaChangesOnly(s => s)
 			.Start(p =>
 			{
-				p.ObservableProcess.BinaryCalled.Should().Be(JavaExe(JavaHomeMachine));
-			});
-
-		[Fact] public void UserHomeFallsBackToRegistryScan() => JavaChangesOnly(j => j
-			.JdkRegistry64(RegistryJdk64)
-			)
-			.Start(p =>
-			{
-				p.ObservableProcess.BinaryCalled.Should().Be(JavaExe(RegistryJdk64));
-			});
-		
-		[Fact] public void Jre64InRegistryIsPickedUp() => JavaChangesOnly(j => j
-			.JreRegistry64(RegistryJre64)
-			)
-			.Start(p =>
-			{
-				p.ObservableProcess.BinaryCalled.Should().Be(JavaExe(RegistryJre64));
-			});
-
-		[Fact] public void NoJavaHomeShouldThrowException() => CreateThrows(s => s
-			.Elasticsearch(e=>e.EsHomeMachineVariable(DefaultEsHome))
-			.ConsoleSession(ConsoleSession.StartedSession)
-			.Java(j=>j)
-			, e =>
-			{
-				e.Message.Should().Contain("no Java installation could be found");
+				p.ObservableProcess.BinaryCalled.Should().Be(JavaExe(Path.Combine(DefaultEsHome, "jdk")));
 			});
 
 		[Fact] public void JavaHomeSetButExecutableNotFoundThrows() => CreateThrows(s => s
@@ -73,7 +44,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 			.FileSystem(s.AddElasticsearchLibs)
 			, e =>
 			{
-				e.Message.Should().Contain("Java executable not found");
+				e.Message.Should().Contain("java.exe does not exist at");
 			});
 	}
 }
