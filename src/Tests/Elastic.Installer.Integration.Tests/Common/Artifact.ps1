@@ -55,14 +55,18 @@ function Compare-Artifact($a, $b){
     if($result -ne 0) {
 		return $result
 	}
+
+	if ($a.Prerelease -eq $null -and $b.Prerelease -eq $null) {
+		return 0
+	}
 	
-	if ($a.Prerelease -eq "" -and $b.Prerelease -ne "") {
+	if ($a.Prerelease -eq $null -and $b.Prerelease -ne $null) {
 		return 1
 	}
 
-	if ($a.Prerelease -ne "" -and $b.Prerelease -eq "") {
+	if ($a.Prerelease -ne $null -and $b.Prerelease -eq $null) {
 		return -1
 	}
 
-    return $a.Prerelease.CompareTo($b.Prerelease)
+	return $a.Prerelease.CompareTo($b.Prerelease)
 }

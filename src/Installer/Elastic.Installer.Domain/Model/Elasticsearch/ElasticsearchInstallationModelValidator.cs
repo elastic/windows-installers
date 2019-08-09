@@ -12,7 +12,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 		public static readonly string HasEsHomeVariableButNoPreviousInstallation = TextResources.NoticeModelValidator_HasEsHomeVariableButNoPreviousInstallation;
 		public static readonly string JavaInstalled = TextResources.NoticeModelValidator_JavaInstalled;
 		public static readonly string JavaMisconfigured = TextResources.NoticeModelValidator_JavaMisconfigured;
-		public static readonly string Using32BitJava = TextResources.NoticeModelValidator_Using32BitJava;
 		public static readonly string BadElasticsearchYamlFile = TextResources.NoticeModelValidator_BadElasticsearchYamlFile;
 		public static readonly string NotAllModelsAreValid = TextResources.InstallationModelValidator_NotAllModelsAreValid;
 
@@ -22,8 +21,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 
 			RuleFor(vm => vm.JavaMisconfigured).Must(b => !b).WithMessage(JavaMisconfigured);
 
-			RuleFor(vm => vm.Using32BitJava).Must(b => !b).WithMessage(Using32BitJava);
-			
 			RuleFor(vm => vm.BadElasticsearchYamlFile).Must(b => !b).WithMessage(BadElasticsearchYamlFile);
 			
 			RuleFor(vm => vm.ConfigDirectoryIsSpecifiedAndSubPathOfEsHome).Must(b => !b).WithMessage(ConfigDirectoryIsSpecifiedAndSubPathOfEsHome);
@@ -46,7 +43,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch
 					vm.Steps != null
 					&& !vm.JavaInstalled
 					&& !vm.JavaMisconfigured
-					&& !vm.Using32BitJava
 					&& !vm.SameVersionAlreadyInstalled
 					&& !vm.HigherVersionAlreadyInstalled
 					&& !vm.BadElasticsearchYamlFile)

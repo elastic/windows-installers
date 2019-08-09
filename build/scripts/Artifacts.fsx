@@ -282,7 +282,7 @@ type ResolvedArtifact(requested:RequestedArtifact, resolved:Artifact) =
         
     member this.ExtractedDirectory =       
         let fileName =
-            let suffix = DownloadSuffix this.Product this.Version
+            let suffix = DownloadSuffix this.Product this.Version this.Distribution
             let name = this.DownloadPath |> Path.GetFileNameWithoutExtension
             if suffix.Length > 0 && name.EndsWith(suffix) then name.Substring(0, name.Length - suffix.Length)
             else name

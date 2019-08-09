@@ -64,13 +64,9 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 
 			var parsedArguments = this.ParseArguments(args);
 
-			var javaHome = java.JavaHomeCanonical;
-			if (javaHome == null)
-				throw new StartupException("JAVA_HOME is not set and no Java installation could be found in the windows registry!");
-
 			this.ProcessExe = java.JavaExecutable;
 			if (!this.FileSystem.File.Exists(this.ProcessExe))
-				throw new StartupException($"Java executable not found, this could be because of a faulty JAVA_HOME variable: {this.ProcessExe}");
+				throw new StartupException($"java.exe does not exist at {this.ProcessExe}");
 			
 			this.JvmOptionsParser = jvmOptionsParser;		
 			this.JavaVersionChecker = javaVersionChecker;		
@@ -126,7 +122,8 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			if (!FileSystem.Directory.Exists(libFolder)) throw new StartupException($"Expected a 'lib' directory inside: {this.HomeDirectory}");
 			var classPath = Path.Combine(libFolder, "*");
 			
-			if (!this.JavaVersionChecker.Start(null, out var javaVersionOut)) throw new StartupException($"Invalid Java version reported: {javaVersionOut}");
+			if (!this.JavaVersionChecker.Start(null, out var javaVersionOut))
+				throw new StartupException($"Invalid Java version reported: {javaVersionOut}");
 
 			var jvmOptionsFile = Path.Combine(this.ConfigDirectory, "jvm.options");
 			if (!this.JvmOptionsParser.Start(new [] { $"\"{jvmOptionsFile}\"" }, out var jvmOptionsLine) || string.IsNullOrWhiteSpace(jvmOptionsLine)) 
