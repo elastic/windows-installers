@@ -25,11 +25,10 @@ namespace Elastic.InstallerHosts.Elasticsearch
 	{
 		public void Application_Startup(object sender, StartupEventArgs e)
 		{
-
 			var previousVersion = "6.2.3";
 			var currentVersion = "7.0.0";
 			var upgradeState = InstallationModelTester.ValidPreflightChecks(s => s
-				.Wix(current: "7.0.0", upgradeFrom: previousVersion)
+				.Wix(current: currentVersion, upgradeFrom: previousVersion)
 				.Elasticsearch(es=>es
 					.EsHomeMachineVariable($@"C:\elasticsearch\{previousVersion}")
 					.EsConfigMachineVariable($@"C:\ProgramData\{previousVersion}\config")
@@ -38,7 +37,7 @@ namespace Elastic.InstallerHosts.Elasticsearch
 			);
 			
 			var state = InstallationModelTester.ValidPreflightChecks(s => s
-				.Wix(current: "7.0.0")
+				.Wix(current: currentVersion)
 			);
 			var model = state.InstallationModel;
 
