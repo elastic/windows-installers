@@ -46,7 +46,6 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 				return new List<string>();
 			
 			var command = "list";
-			
 			var process = PluginProcess(pluginScript, command, environmentVariables);
 			var sb = new StringBuilder();
 
@@ -57,15 +56,11 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 				sb.AppendLine(message);
 			}
 
-			var invokeResult = InvokeProcess(process, ProcessOnOutputDataReceived);
-			var exitCode = invokeResult.Item1;
-			var errors = invokeResult.Item2;
-			var errorOut = invokeResult.Item3;
-			var data = sb.ToString();
-			if (exitCode != 0 || errors)
-				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode} ErrorCheck: {errors} ErrorOut: {errorOut}");
+			var exitCode = InvokeProcess(process, ProcessOnOutputDataReceived);
+			if (exitCode != 0)
+				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode}");
 
-			var plugins = data.Split(SplitListing, StringSplitOptions.RemoveEmptyEntries)
+			var plugins = sb.ToString().Split(SplitListing, StringSplitOptions.RemoveEmptyEntries)
 					.Select(p => p.Split('@').FirstOrDefault())
 					.Where(p => !string.IsNullOrWhiteSpace(p))
 					.ToList();
@@ -86,13 +81,11 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			var pluginScript = this.PluginScript(installDirectory);
 			var process = PluginProcess(pluginScript, command, environmentVariables);
 			var processOnOutputDataReceived = CreateInstallHandler(perDownloadIncrement, plugin);
-			var invokeResult = InvokeProcess(process, processOnOutputDataReceived);
-			var exitCode = invokeResult.Item1;
-			var errors = invokeResult.Item2;
-			var errorOut = invokeResult.Item3;
+			var exitCode = InvokeProcess(process, processOnOutputDataReceived);
+
 			Session.SendProgress(installingTicks, $"installing {plugin}");
-			if (exitCode != 0 || errors)
-				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode} ErrorCheck: {errors} ErrorOut:{errorOut}");
+			if (exitCode != 0)
+				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode}");
 		}
 
 		public void Remove(int pluginTicks, string installDirectory, string configDirectory, 
@@ -109,28 +102,20 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 				Session.Log(message);
 			}
 
-			var invokeResult = InvokeProcess(process, ProcessOnOutputDataReceived);
-			var exitCode = invokeResult.Item1;
-			var errors = invokeResult.Item2;
-			var errorOut = invokeResult.Item3;
+			var exitCode = InvokeProcess(process, ProcessOnOutputDataReceived);
 
 			Session.SendProgress(pluginTicks, $"removing {plugin}");
-			if (exitCode != 0 || errors)
-				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode} ErrorCheck: {errors} ErrorOut:{errorOut}");
+			if (exitCode != 0)
+				throw new Exception($"Execution failed ({pluginScript} {command}). ExitCode: {exitCode}");
 		}
 
-		private static Tuple<int, bool, string> InvokeProcess(Process process, DataReceivedEventHandler processOnOutputDataReceived)
+		private static int InvokeProcess(Process process, DataReceivedEventHandler processOnOutputDataReceived)
 		{
 			process.OutputDataReceived += processOnOutputDataReceived;
 
-			var errorsBuilder = new StringBuilder();
-			var errors = false;
-			
 			process.ErrorDataReceived += (s, a) =>
 			{
 				if (string.IsNullOrEmpty(a.Data)) return;
-				errorsBuilder.AppendLine(a.Data);
-				errors = true;
 				processOnOutputDataReceived(s, a);
 			};
 
@@ -144,7 +129,8 @@ namespace Elastic.Installer.Domain.Configuration.Plugin
 			process.OutputDataReceived -= processOnOutputDataReceived;
 			process.ErrorDataReceived -= processOnOutputDataReceived;
 			process.Close();
-			return Tuple.Create(exitCode, errors, errorsBuilder.ToString());
+
+			return exitCode;
 		}
 
 		private static Process PluginProcess(string pluginScript, 
