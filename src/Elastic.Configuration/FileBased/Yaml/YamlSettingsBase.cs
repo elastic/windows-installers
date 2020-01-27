@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using SharpYaml.Serialization;
 
 namespace Elastic.Configuration.FileBased.Yaml
@@ -21,10 +22,30 @@ namespace Elastic.Configuration.FileBased.Yaml
 
 			try
 			{
-				var raw = this.FileSystem.File.ReadAllText(Path);
+				var rawText = this.FileSystem.File.ReadAllText(Path);
 
-				//we flatten because neither yamldotnet nor sharpyaml can bind nested.props in all variants
-				var dict = Flatten(this._serializer.Deserialize<Dictionary<string, object>>(raw));
+				// we flatten because neither yamldotnet nor sharpyaml can bind nested.props in all variants
+				var rawYaml = this._serializer.Deserialize<Dictionary<string, object>>(rawText);
+				var dict = Flatten(rawYaml);
+
+				// these might be lists disguised as strings, fix them
+				var maybeLists = new[]
+				{
+					"discovery.seed_hosts",
+					"cluster.initial_master_nodes"
+				};
+
+				foreach (var item in maybeLists)
+				{
+					if (dict[item] is string value)
+					{
+						dict[item] = value
+							.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+							.Select(v => v.Trim())
+							.ToList();
+					}
+				}
+
 				var flattenedYaml = this._serializer.Serialize(dict);
 
 				this.YamlSettings = this._serializer.Deserialize<TSettings>(flattenedYaml) ?? new TSettings();
