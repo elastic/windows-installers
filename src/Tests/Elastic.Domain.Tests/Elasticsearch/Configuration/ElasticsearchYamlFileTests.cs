@@ -63,7 +63,7 @@ xpack.random_setting: something
 			settings.UnicastHosts.Should().NotBeEmpty().And.HaveCount(2);
 			optsFile.Save();
 		}
-		
+
 		[Fact] void SeedHostsAreRead()
 		{
 			var yaml = $@"discovery.seed_hosts: [host1, host2]";
@@ -74,6 +74,55 @@ xpack.random_setting: something
 			optsFile.Save();
 		}
 
+		[Fact] void SeedHostsAreReadFromStringSingle()
+		{
+			var yaml = $@"discovery.seed_hosts: host1";
+			var fs = FakeElasticsearchYaml(yaml);
+			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
+			var settings = optsFile.Settings;
+			settings.SeedHosts.Should().NotBeEmpty().And.HaveCount(1);
+			optsFile.Save();
+		}
+
+		[Fact] void SeedHostsAreReadFromStringCommaSeparated()
+		{
+			var yaml = $@"discovery.seed_hosts: host1, host2";
+			var fs = FakeElasticsearchYaml(yaml);
+			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
+			var settings = optsFile.Settings;
+			settings.SeedHosts.Should().NotBeEmpty().And.HaveCount(2);
+			optsFile.Save();
+		}
+
+		[Fact] void InitialMasterNodeAreRead()
+		{
+			var yaml = $@"InitialMasterNode: [host1, host2]";
+			var fs = FakeElasticsearchYaml(yaml);
+			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
+			var settings = optsFile.Settings;
+			settings.InitialMasterNodes.Should().NotBeEmpty().And.HaveCount(2);
+			optsFile.Save();
+		}
+
+		[Fact] void InitialMasterNodesAreReadFromStringSingle()
+		{
+			var yaml = $@"cluster.initial_master_nodes: host1";
+			var fs = FakeElasticsearchYaml(yaml);
+			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
+			var settings = optsFile.Settings;
+			settings.InitialMasterNodes.Should().NotBeEmpty().And.HaveCount(1);
+			optsFile.Save();
+		}
+
+		[Fact] void InitialMasterNodesAreReadFromStringCommaSeparated()
+		{
+			var yaml = $@"cluster.initial_master_nodes: host1, host2";
+			var fs = FakeElasticsearchYaml(yaml);
+			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
+			var settings = optsFile.Settings;
+			settings.InitialMasterNodes.Should().NotBeEmpty().And.HaveCount(2);
+			optsFile.Save();
+		}
 
 		[Fact] void UnknownSettingsAreNotLost()
 		{
