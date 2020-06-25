@@ -98,7 +98,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 					if (this.FileSystem.File.Exists(to)) continue;
 
 					this.Session.Log($"moving file: {file} to {to}");
-					this.FileSystem.File.Move(file, to);
+					this.FileSystem.File.Copy(file, to);
+					this.FileSystem.File.Delete(file);
 				}
 				foreach (var dir in this.FileSystem.Directory.EnumerateDirectories(installConfigDirectory))
 				{
@@ -108,7 +109,8 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 					if (this.FileSystem.Directory.Exists(to)) continue;
 
 					this.Session.Log($"moving directory: {dir} to {to}");
-					this.FileSystem.Directory.Move(dir, to);
+					CopyDirectory(dir, to);
+					this.FileSystem.Directory.Delete(dir, true);
 				}
 				this.Session.Log($"removing ES_HOME config dir: {installConfigDirectory}");
 				this.FileSystem.Directory.Delete(installConfigDirectory, true);
