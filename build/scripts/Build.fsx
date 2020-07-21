@@ -46,7 +46,7 @@ let sign file productTitle =
             let signToolExe = ToolsDir @@ "signtool/signtool.exe"
             let args =
                 [ "sign"; "/debug"; "/f"; certificate; "/p"; password
-                  "/t"; timestampServer; "/td"; "SHA256";
+                  "/tr"; timestampServer; "/td"; "SHA256";
                   "/d"; productTitle; "/v"; file
                 ] |> String.concat " "
             let redactedArgs = args.Replace(password, "<redacted>")
