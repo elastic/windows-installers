@@ -35,12 +35,20 @@ let sign file productTitle =
     if release then
         let certificate = getBuildParam "certificate"
         let password = getBuildParam "password"
-        let timestampServer = "http://timestamp.comodoca.com"
+        let timestampServers =
+            [ "http://timestamp.digicert.com" ; "http://timestamp.comodoca.com" ;
+              "http://timestamp.globalsign.com/scripts/timestamp.dll" ; "http://tsa.starfieldtech.com" ;
+              "http://zeitstempel.dfn.de"
+            ]
         let timeout = TimeSpan.FromMinutes 1.
 
-        let sign () =
+        let sign timestampServer =
             let signToolExe = ToolsDir @@ "signtool/signtool.exe"
-            let args = ["sign"; "/f"; certificate; "/p"; password; "/t"; timestampServer; "/d"; productTitle; "/v"; file] |> String.concat " "
+            let args =
+                [ "sign"; "/debug"; "/f"; certificate; "/p"; password
+                  "/tr"; timestampServer; "/td"; "SHA256";
+                  "/d"; productTitle; "/v"; file
+                ] |> String.concat " "
             let redactedArgs = args.Replace(password, "<redacted>")
 
             use proc = new Process()
@@ -70,10 +78,17 @@ let sign file productTitle =
                     <| sprintf "Could not kill process %s  %s after timeout." proc.StartInfo.FileName redactedArgs
                 failwithf "Process %s %s timed out." proc.StartInfo.FileName redactedArgs
             proc.WaitForExit()
-            proc.ExitCode
-
-        let exitCode = sign()
-        if exitCode <> 0 then failwithf "Signing %s returned error exit code: %i" productTitle exitCode
+            (timestampServer, proc.ExitCode)
+        
+        let validExitCode =
+            timestampServers
+            |> Seq.map sign
+            |> Seq.takeWhile (fun (server, exitCode) -> exitCode <> 0)
+            |> Seq.tryFind (fun (server, exitCode) -> exitCode = 0)
+        
+        match validExitCode with
+        | Some (server, exitCode) ->  failwithf "Signing with a timestamp from %s failed with code: %i" server exitCode
+        | None -> tracefn "signing succeeded" 
 
 /// Patches the assembly information of the service executable for a resolved artifact
 let patchServiceAssemblyInformation (resolvedArtifact: ResolvedArtifact) = 
