@@ -124,9 +124,21 @@ namespace Elastic.ProcessHosts.Elasticsearch.Process
 			
 			if (!this.JavaVersionChecker.Start(null, out var javaVersionOut))
 				throw new StartupException($"Invalid Java version reported: {javaVersionOut}");
-			
-			if (!this.JvmOptionsParser.Start(new [] { $"\"{this.ConfigDirectory}\"" }, out var jvmOptionsLine) || string.IsNullOrWhiteSpace(jvmOptionsLine)) 
+
+			var pluginsDir = Path.Combine(this.HomeDirectory, "plugins");
+
+			if (!Directory.Exists(pluginsDir))
+				Directory.CreateDirectory(pluginsDir);
+
+			var requiredArgs = new[]
+			{
+				$"\"{this.ConfigDirectory}\"",
+				$"\"{pluginsDir}\"",
+			};
+
+			if (!this.JvmOptionsParser.Start(requiredArgs, out var jvmOptionsLine) || string.IsNullOrWhiteSpace(jvmOptionsLine))
 				throw new StartupException($"Could not evaluate jvm.options file. result: {jvmOptionsLine}");
+
 			jvmOptionsLine = jvmOptionsLine.Replace("${ES_TMPDIR}", this.PrivateTempDirectory).Replace("\n", "").Replace("\r", "");
 
 			return new []
