@@ -1,0 +1,42 @@
+---
+
+##### GLOBAL METADATA
+
+- meta:
+    cluster: devops-ci
+
+##### JOB DEFAULTS
+
+- job:
+    project-type: freestyle
+    logrotate:
+      daysToKeep: 30
+      numToKeep: 100
+    parameters:
+      - string:
+          name: branch_specifier
+          default: refs/heads/master
+          description: Git branch to build
+    properties:
+      - github: 
+          url: https://github.com/elastic/windows-installers/
+      - inject:
+          properties-content: HOME=$JENKINS_HOME
+    concurrent: false
+    node: "immutable-windows-2019-msi"
+    scm:
+      - git:
+          name: origin
+          credentials-id: f6c7695a-671e-4f4f-a331-acdce44ff9ba
+          reference-repo: /var/lib/jenkins/.git-references/windows-installers.git
+          branches:
+              - ${branch_specifier}
+          url: git@github.com:elastic/windows-installers.git
+    wrappers:
+      - ansicolor
+      - timeout:
+          type: absolute
+          timeout: 120
+          fail: true
+      - timestamps
+      - workspace-cleanup
