@@ -96,7 +96,7 @@ xpack.random_setting: something
 
 		[Fact] void InitialMasterNodeAreRead()
 		{
-			var yaml = $@"InitialMasterNode: [host1, host2]";
+			var yaml = $@"cluster.initial_master_nodes: [host1, host2]";
 			var fs = FakeElasticsearchYaml(yaml);
 			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
 			var settings = optsFile.Settings;
@@ -147,11 +147,7 @@ some.plugin.setting: true
 		[Fact] void UnderstandsObjectNotation()
 		{
 			var clusterName = "my-cluster";
-			var yaml = $@"cluster:
-    name: {clusterName}
-    blocks:
-        read_only: true
-";
+			var yaml = $"cluster:\r\n  name: {clusterName}\r\n  blocks:\r\n    read_only: true";
 			var fs = FakeElasticsearchYaml(yaml);
 			var optsFile = new ElasticsearchYamlConfiguration(_path, fs);
 			optsFile.Settings.ClusterName.Should().Be(clusterName);
@@ -160,10 +156,8 @@ some.plugin.setting: true
 			optsFile.Save();
 
 			var fileContentsAfterSave = fs.File.ReadAllText(_path);
-			var updatedYaml = $@"cluster.name: x
-cluster.blocks.read_only: false
-";
-			fileContentsAfterSave.Replace("\r", "").Should().Be(updatedYaml.Replace("\r", ""));
+			var updatedYaml = $"cluster.name: x\r\ncluster.blocks.read_only: false\r\n";
+			fileContentsAfterSave.Replace("\r\n", "").Should().Be(updatedYaml.Replace("\r\n", ""));
 		}
 
 		[Fact] void ReflectsChanges()
