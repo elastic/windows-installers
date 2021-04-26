@@ -48,5 +48,3 @@ HINT: wrapper process accepts `--debug-env` command line argument which might he
 ![image](https://user-images.githubusercontent.com/51912343/107683221-f05ca700-6c66-11eb-8692-18f85cdbe1c3.png)
 
 On Windows we run Elasticsearch using a wrapper service process. This process reports its errors to Windows Event Log. Please take note of `Error` entries, They usually contain vital clues: `Service cannot be started. Elastic.ProcessHosts.Process.StartupException: Could not evaluate jvm.options file. `
-
-

@@ -22,5 +22,5 @@
     builders:
       - powershell: |
           echo "-- PULL REQUEST 8< ----------------------------"
-          ./build help
+          ./build unittest es
           echo "-- PULL REQUEST 8< ----------------------------"

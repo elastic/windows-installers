@@ -25,9 +25,12 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 		public static ulong DefaultTotalPhysicalMemory { get; } = GetTotalPhysicalMemory();
 		public const ulong DefaultHeapSizeThreshold = 4096;
 		public const ulong DefaultDistributionHeapSize = 2048;
-		public static ulong DefaultHeapSize => DefaultTotalPhysicalMemory <= DefaultHeapSizeThreshold 
-			? DefaultTotalPhysicalMemory / 2 
-			: DefaultDistributionHeapSize;
+
+		public static ulong DefaultHeapSize => 
+			DefaultTotalPhysicalMemory <= DefaultHeapSizeThreshold
+				? Math.Min(DefaultTotalPhysicalMemory / 2, CompressedOrdinaryPointersThreshold)
+				: DefaultDistributionHeapSize;
+
 		public const ulong CompressedOrdinaryPointersThreshold = 30500;
 		public const int HttpPortMinimum = 80;
 		public const int TransportPortMinimum = 1024;
@@ -105,6 +108,7 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 
 		private static ulong GetTotalPhysicalMemory()
 		{
+			return 48 * 1024;
 			var total = new ComputerInfo().TotalPhysicalMemory;
 			var totalMb = total / (1024.0 * 1024.0);
 			var memory = Convert.ToUInt64(totalMb);
