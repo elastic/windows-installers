@@ -32,6 +32,8 @@
           branches:
               - ${branch_specifier}
           url: git@github.com:elastic/windows-installers.git
+    vault:
+      role_id: cff5d4e0-61bf-2497-645f-fcf019d10c13
     wrappers:
       - ansicolor
       - timeout:
