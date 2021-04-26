@@ -38,7 +38,6 @@ From procmon:
 This will yield a `light.exe : error LGHT0001 : The system cannot find the path specified. (Exception from HRESULT: 0x80070003)` during the `FAKE` build which will then complain it can not find the `msi`.
 
 
-
 To fix this run `fsutil.exe file setCaseSensitiveInfo <checkout> disable`
 
 ## Where to look for information that helps us troubleshoot:
@@ -48,5 +47,3 @@ HINT: wrapper process accepts `--debug-env` command line argument which might he
 ![image](https://user-images.githubusercontent.com/51912343/107683221-f05ca700-6c66-11eb-8692-18f85cdbe1c3.png)
 
 On Windows we run Elasticsearch using a wrapper service process. This process reports its errors to Windows Event Log. Please take note of `Error` entries, They usually contain vital clues: `Service cannot be started. Elastic.ProcessHosts.Process.StartupException: Could not evaluate jvm.options file. `
-
-

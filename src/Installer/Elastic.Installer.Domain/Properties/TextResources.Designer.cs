@@ -115,12 +115,12 @@ namespace Elastic.Installer.Domain.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We generally advise allocating 50% of the total available memory
+        ///   Looks up a localized string similar to We generally advise allocating up to 50% (30GB maximum) of the total available memory
         ///leaving the other half for the file system..
         /// </summary>
-        public static string ConfigurationModelValidator_MaxMemory_50Percent {
+        public static string ConfigurationModelValidator_MaxMemory_UpTo50Percent {
             get {
-                return ResourceManager.GetString("ConfigurationModelValidator_MaxMemory_50Percent", resourceCulture);
+                return ResourceManager.GetString("ConfigurationModelValidator_MaxMemory_UpTo50Percent", resourceCulture);
             }
         }
         

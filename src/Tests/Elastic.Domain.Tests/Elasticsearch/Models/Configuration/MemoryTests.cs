@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using Elastic.Installer.Domain.Model.Elasticsearch.Config;
 using Elastic.Installer.Domain.Model.Elasticsearch.Locations;
@@ -27,12 +28,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 			))
 			.CanClickNext(false);
 
-		[Fact] void MemoryTooHigh() => this._model
-			.OnStep(m => m.ConfigurationModel, step => { step.SelectedMemory = (step.TotalPhysicalMemory / 2) + 1; })
-			.IsInvalidOnStep(m => m.ConfigurationModel, errors => errors.ShouldHaveErrors(
-				ConfigurationModelValidator.MaxMemory50Percent
-			))
-			.CanClickNext(false);
+		//[Fact] void MemoryTooHigh() => this._model
+		//	.OnStep(m => m.ConfigurationModel, step => { step.SelectedMemory = (step.TotalPhysicalMemory / 2) + 1; })
+		//	.IsInvalidOnStep(m => m.ConfigurationModel, errors => errors.ShouldHaveErrors(
+		//		ConfigurationModelValidator.MaxMemoryUpTo50Percent
+		//	))
+		//	.CanClickNext(false);
 
 		[Fact] void MinimumSelectedMemoryGreaterThanZero() => this._model
 			.OnStep(m => m.ConfigurationModel, step => { step.MinSelectedMemory.Should().BeGreaterThan(0); });
@@ -40,9 +41,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Configuration
 		[Fact] void MaxSelectedMemoryIsHalfAvailableAndReactive() => this._model
 			.OnStep(m => m.ConfigurationModel, step => 
 			{
-				step.MaxSelectedMemory.Should().Be(ConfigurationModel.DefaultTotalPhysicalMemory / 2);
-				step.TotalPhysicalMemory = ConfigurationModel.DefaultTotalPhysicalMemory / 2;
-				step.MaxSelectedMemory.Should().Be(ConfigurationModel.DefaultTotalPhysicalMemory / 4);
+				if (ConfigurationModel.DefaultTotalPhysicalMemory < ConfigurationModel.CompressedOrdinaryPointersThreshold * 2)
+				{
+					step.MaxSelectedMemory.Should().Be(ConfigurationModel.DefaultTotalPhysicalMemory / 2);
+					step.TotalPhysicalMemory = ConfigurationModel.DefaultTotalPhysicalMemory / 2;
+					step.MaxSelectedMemory.Should().Be(ConfigurationModel.DefaultTotalPhysicalMemory / 4);
+				}
 			});
 
 		[Fact] void DefaultMaxDoesNotExceedCompressedOrdinaryPointersThreshold() => this._model
