@@ -14,5 +14,5 @@
     builders:
       - powershell: |
           echo "-- COMMIT 8< ----------------------------"
-          ./build help
+          ./build unittest es
           echo "-- COMMIT 8< ----------------------------"
