@@ -9,8 +9,8 @@
           branches:
             - $ghprbActualCommit
           refspec: +refs/pull/*:refs/remotes/origin/pr/*
-          basedir: pr
-          wipe-workspace: 'False'
+#          basedir: pr
+#          wipe-workspace: 'False'
     triggers:
       - github-pull-request:
           github-hooks: true
