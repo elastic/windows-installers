@@ -120,8 +120,8 @@
   <data name="ConfigurationModelValidator_ClusterName_NotEmpty" xml:space="preserve">
     <value>Cluster name must be set.</value>
   </data>
-  <data name="ConfigurationModelValidator_MaxMemory_50Percent" xml:space="preserve">
-    <value>We generally advise allocating 50% of the total available memory
+  <data name="ConfigurationModelValidator_MaxMemory_UpTo50Percent" xml:space="preserve">
+    <value>We generally advise allocating up to 50% (30GB maximum) of the total available memory
 leaving the other half for the file system.</value>
   </data>
   <data name="ConfigurationModelValidator_HttpPortMinimum" xml:space="preserve">
