@@ -10,9 +10,19 @@
             - refs/heads/master
     triggers:
       - github
-      #- timed: H H(02-04) * * *
+      - timed: "@daily"
     builders:
       - powershell: |
           echo "-- COMMIT 8< ----------------------------"
           ./build unittest es
           echo "-- COMMIT 8< ----------------------------"
+    publishers:
+      - email:
+          recipients: infra-root+build@elastic.co
+      - slack:
+          notify-back-to-normal: True
+          notify-every-failure: True
+          room: github-stack-installers
+          team-domain: elastic
+          auth-token-id: release-slack-integration-token
+          auth-token-credential-id: release-slack-integration-token
