@@ -183,6 +183,8 @@ elasticsearch:
       guid: a207850c-c336-4833-a398-09d65e4a10e1
     - version: 7.12.0
       guid: 7f7a5387-df19-4051-ad2b-155ce8891eb9
+    - version: 7.12.1
+      guid: f556e913-61e7-496c-9972-e4054c6474ed
 kibana:
   upgrade_code: 6a2e6f51-5145-4c1a-8d05-2190ae213367
   known_versions:

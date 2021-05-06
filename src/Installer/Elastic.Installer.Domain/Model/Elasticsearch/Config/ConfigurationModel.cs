@@ -108,7 +108,6 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 
 		private static ulong GetTotalPhysicalMemory()
 		{
-			return 48 * 1024;
 			var total = new ComputerInfo().TotalPhysicalMemory;
 			var totalMb = total / (1024.0 * 1024.0);
 			var memory = Convert.ToUInt64(totalMb);
