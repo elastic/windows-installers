@@ -1,0 +1,18 @@
+---
+
+- job:
+    name: elastic+windows-installers+%BRANCH%
+    display-name: 'elastic / windows-installers # %BRANCH%'
+    description: Testing the windows-installers %BRANCH% branch.
+    scm:
+      - git:
+          branches:
+            - refs/heads/master
+    triggers:
+      - github
+      #- timed: H H(02-04) * * *
+    builders:
+      - powershell: |
+          echo "-- COMMIT 8< ----------------------------"
+          ./build unittest es
+          echo "-- COMMIT 8< ----------------------------"

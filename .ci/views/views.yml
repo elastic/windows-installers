@@ -1,0 +1,6 @@
+---
+
+- view:
+    name: 'MSI'
+    regex: '^elastic[-+]windows-installers.*$'
+    view-type: list
