@@ -2,5 +2,5 @@
 
 - view:
     name: 'MSI'
-    regex: '^elastic[-+]windows-installers.*$'
+    regex: '^elastic[-+](?:windows|elastic-stack)-installers.*$'
     view-type: list
