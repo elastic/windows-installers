@@ -8,48 +8,113 @@ using Xunit;
 
 namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration
 {
-	public class JavaConfigurationTests
+	public class EsJavaHomeConfigurationTests
 	{
-		private readonly string _machineVariable = @"C:\Java\Machine";
-		private readonly string _userVariable = @"C:\Java\User";
-		private readonly string _processVariable = @"C:\Java\Process";
-		private readonly string _esHome = @"C:\Java\EsHome";
+		private readonly string _machineVariable = @"C:\LegacyJavaHome\Machine";
+		private readonly string _userVariable = @"C:\LegacyJavaHome\User";
+		private readonly string _processVariable = @"C:\LegacyJavaHome\Process";
+		private readonly string _esHome = @"C:\LegacyJavaHome\EsHome";
 
-		private void AssertJavaHome(string expect, 
+		private void AssertJavaHome(string expect,
 			Func<MockJavaEnvironmentStateProvider, IJavaEnvironmentStateProvider> javaStateSetup = null,
 			Func<MockElasticsearchEnvironmentStateProvider, IElasticsearchEnvironmentStateProvider> esStateSetup = null)
 		{
 			var javaConfiguration = new JavaConfiguration(
-				javaStateSetup != null 
-				? javaStateSetup(new MockJavaEnvironmentStateProvider()) 
-				: new MockJavaEnvironmentStateProvider(), 
-				esStateSetup != null 
-				? esStateSetup(new MockElasticsearchEnvironmentStateProvider())
-				: new MockElasticsearchEnvironmentStateProvider());
+				javaStateSetup != null
+					? javaStateSetup(new MockJavaEnvironmentStateProvider())
+					: new MockJavaEnvironmentStateProvider(),
+				esStateSetup != null
+					? esStateSetup(new MockElasticsearchEnvironmentStateProvider())
+					: new MockElasticsearchEnvironmentStateProvider());
+
 			javaConfiguration.JavaHomeCanonical.Should().Be(expect);
 		}
 
-		[Fact] void MachineHomeIsSeen() => AssertJavaHome(_machineVariable, m=> m.JavaHomeMachineVariable(_machineVariable));
+		[Fact] void MachineHomeIsSeen() => AssertJavaHome(_machineVariable,
+			m => m.EsJavaHomeMachineVariable(_machineVariable));
 
-		[Fact] void UserHomeIsSeen()=> AssertJavaHome(_userVariable, m=> m.JavaHomeUserVariable(_userVariable));
+		[Fact] void UserHomeIsSeen() => AssertJavaHome(_userVariable,
+			m => m.EsJavaHomeUserVariable(_userVariable));
 
-		[Fact] void ProcessHomeIsSeen()=> AssertJavaHome(_processVariable, m=> m.JavaHomeProcessVariable(_processVariable));
+		[Fact] void ProcessHomeIsSeen() => AssertJavaHome(_processVariable, 
+			m => m.EsJavaHomeProcessVariable(_processVariable));
 
-		[Fact] void JavaFromEsHomeIsSeen() => AssertJavaHome(Path.Combine(_esHome, "jdk"), esStateSetup: m => m.EsHomeMachineVariable(_esHome));
+		[Fact] void JavaFromEsHomeIsSeen() => AssertJavaHome(Path.Combine(_esHome, "jdk"), 
+			esStateSetup: m => m.EsHomeMachineVariable(_esHome));
 
-		[Fact] void ProcessBeatsUser() => AssertJavaHome(_processVariable, m => m
-			.JavaHomeProcessVariable(_processVariable)
-			.JavaHomeUserVariable(_userVariable)
+		[Fact]
+		void ProcessBeatsUser() => AssertJavaHome(_processVariable, m => m
+			.EsJavaHomeProcessVariable(_processVariable)
+			.EsJavaHomeUserVariable(_userVariable)
 		);
 
-		[Fact] void UserBeatsMachine() => AssertJavaHome(_userVariable, m => m
-			.JavaHomeUserVariable(_userVariable)
-			.JavaHomeMachineVariable(_machineVariable)
+		[Fact]
+		void UserBeatsMachine() => AssertJavaHome(_userVariable, m => m
+			.EsJavaHomeUserVariable(_userVariable)
+			.EsJavaHomeMachineVariable(_machineVariable)
 		);
-		
-		[Fact] void MachineBeatsEsHome() => AssertJavaHome(_machineVariable, 
-			m => m.JavaHomeMachineVariable(_machineVariable),
-            m => m.EsHomeMachineVariable(_esHome)
+
+		[Fact]
+		void MachineBeatsEsHome() => AssertJavaHome(_machineVariable,
+			m => m.EsJavaHomeMachineVariable(_machineVariable),
+			m => m.EsHomeMachineVariable(_esHome)
+		);
+	}
+
+	public class LegacyJavaHomeConfigurationTests
+	{
+		private readonly string _machineVariable = @"C:\EsJavaHome\Machine";
+		private readonly string _userVariable = @"C:\EsJavaHome\User";
+		private readonly string _processVariable = @"C:\EsJavaHome\Process";
+		private readonly string _esHome = @"C:\EsJavaHome\EsHome";
+
+		private void AssertJavaHome(string expect,
+			Func<MockJavaEnvironmentStateProvider, IJavaEnvironmentStateProvider> javaStateSetup = null,
+			Func<MockElasticsearchEnvironmentStateProvider, IElasticsearchEnvironmentStateProvider> esStateSetup = null)
+		{
+			var javaConfiguration = new JavaConfiguration(
+				javaStateSetup != null
+					? javaStateSetup(new MockJavaEnvironmentStateProvider())
+					: new MockJavaEnvironmentStateProvider(),
+				esStateSetup != null
+					? esStateSetup(new MockElasticsearchEnvironmentStateProvider())
+					: new MockElasticsearchEnvironmentStateProvider());
+
+			javaConfiguration.JavaHomeCanonical.Should().Be(expect);
+		}
+
+		[Fact]
+		void MachineHomeIsSeen() => AssertJavaHome(_machineVariable,
+			m => m.LegacyJavaHomeMachineVariable(_machineVariable));
+
+		[Fact]
+		void UserHomeIsSeen() => AssertJavaHome(_userVariable,
+			m => m.LegacyJavaHomeUserVariable(_userVariable));
+
+		[Fact]
+		void ProcessHomeIsSeen() => AssertJavaHome(_processVariable,
+			m => m.LegacyJavaHomeProcessVariable(_processVariable));
+
+		[Fact]
+		void JavaFromEsHomeIsSeen() => AssertJavaHome(Path.Combine(_esHome, "jdk"),
+			esStateSetup: m => m.EsHomeMachineVariable(_esHome));
+
+		[Fact]
+		void ProcessBeatsUser() => AssertJavaHome(_processVariable, m => m
+			.LegacyJavaHomeProcessVariable(_processVariable)
+			.LegacyJavaHomeUserVariable(_userVariable)
+		);
+
+		[Fact]
+		void UserBeatsMachine() => AssertJavaHome(_userVariable, m => m
+			.LegacyJavaHomeUserVariable(_userVariable)
+			.LegacyJavaHomeMachineVariable(_machineVariable)
+		);
+
+		[Fact]
+		void MachineBeatsEsHome() => AssertJavaHome(_machineVariable,
+			m => m.LegacyJavaHomeMachineVariable(_machineVariable),
+			m => m.EsHomeMachineVariable(_esHome)
 		);
 	}
 }

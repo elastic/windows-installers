@@ -11,47 +11,57 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 {
 	public class ProcessVariablesTests
 	{
-		private static kv Start(string var, string value) => Start(e=>e.EnvironmentVariables(new kv {{var, value}}));
+		private static kv Start(string var, string value) => Start(e => e.EnvironmentVariables(new kv { { var, value } }));
 
 		private static kv Start(Func<MockElasticsearchEnvironmentStateProvider, MockElasticsearchEnvironmentStateProvider> setter = null)
 		{
 			setter = setter ?? (e => e);
 			var elasticsearchProcessTester = new ElasticsearchProcessTester(s => s
 				.Elasticsearch(e => setter(e.EsHomeMachineVariable(DefaultEsHome)))
-				.Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
+				.Java(j => j.LegacyJavaHomeMachineVariable(DefaultJavaHome).EsJavaHomeMachineVariable(DefaultJavaHome))
 				.ConsoleSession(ConsoleSession.StartedSession)
 				.FileSystem(fs => s.AddJavaExe(s.AddElasticsearchLibs(fs, null)))
 			);
+
 			elasticsearchProcessTester.Process.Start();
 			return elasticsearchProcessTester.ObservableProcess.ProcessVariables;
 		}
-		[Fact] public void HostNameIsNotNull()
+
+		[Fact]
+		public void HostNameIsNotNull()
 		{
 			var processVariables = Start();
 			processVariables.Should().ContainKey("HOSTNAME");
 			processVariables["HOSTNAME"].Should().NotBeNullOrWhiteSpace();
 		}
-		[Fact] public void EsTmpDirIsSetWhenNotDefined()
+
+		[Fact]
+		public void EsTmpDirIsSetWhenNotDefined()
 		{
 			var processVariables = Start();
 			processVariables.Should().ContainKey("ES_TMPDIR");
 			processVariables["ES_TMPDIR"].Should().NotBeNullOrWhiteSpace();
 			processVariables["ES_TMPDIR"].Should().Be(Path.Combine(DefaultTempDirectory, "elasticsearch"));
 		}
-		[Fact] public void EsTmpDirIsNotSetWhenAlreadyDefined()
+
+		[Fact]
+		public void EsTmpDirIsNotSetWhenAlreadyDefined()
 		{
 			var processVariables = Start("ES_TMPDIR", "value");
 			processVariables.Should().ContainKey("ES_TMPDIR");
 			processVariables["ES_TMPDIR"].Should().EndWith(@"\value");
 		}
 
-		[Fact] public void JavaOptsDoesNotMakeItToProcessVariables()
+		[Fact]
+		public void JavaOptsDoesNotMakeItToProcessVariables()
 		{
 			var processVariables = Start("JAVA_OPTS", "x");
 			processVariables.Should().ContainKey("JAVA_OPTS");
 			processVariables["JAVA_OPTS"].Should().BeNull();
 		}
-		[Fact] public void JavaToolOptionsDoesNotMakeItToProcessVariables()
+
+		[Fact]
+		public void JavaToolOptionsDoesNotMakeItToProcessVariables()
 		{
 			var processVariables = Start("JAVA_TOOL_OPTIONS", "x");
 			processVariables.Should().ContainKey("JAVA_TOOL_OPTIONS");

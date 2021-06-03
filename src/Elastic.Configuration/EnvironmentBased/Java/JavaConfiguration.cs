@@ -6,15 +6,17 @@ using System.Text;
 
 namespace Elastic.Configuration.EnvironmentBased.Java
 {
-	public class JavaConfiguration 
+	public class JavaConfiguration
 	{
-		public static JavaConfiguration Default { get; } = 
+		public static JavaConfiguration Default { get; } =
 			new JavaConfiguration(new JavaEnvironmentStateProvider(), new ElasticsearchEnvironmentStateProvider());
 
 		private readonly IJavaEnvironmentStateProvider _javaStateProvider;
 		private readonly IElasticsearchEnvironmentStateProvider _elasticsearchStateProvider;
 
-		public JavaConfiguration(IJavaEnvironmentStateProvider javaStateProvider, IElasticsearchEnvironmentStateProvider elasticsearchStateProvider)
+		public JavaConfiguration(
+			IJavaEnvironmentStateProvider javaStateProvider,
+			IElasticsearchEnvironmentStateProvider elasticsearchStateProvider)
 		{
 			_javaStateProvider = javaStateProvider ?? new JavaEnvironmentStateProvider();
 			_elasticsearchStateProvider = elasticsearchStateProvider ?? new ElasticsearchEnvironmentStateProvider();
@@ -36,12 +38,15 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 			}
 		}
 
-		public string JavaHomeCanonical => JavaHomeCandidates.FirstOrDefault(j=>!string.IsNullOrWhiteSpace(j));
+		public string JavaHomeCanonical => JavaHomeCandidates.FirstOrDefault(j => !string.IsNullOrWhiteSpace(j));
 
 		private List<string> JavaHomeCandidates => new List<string> {
-			_javaStateProvider.JavaHomeProcessVariable,
-			_javaStateProvider.JavaHomeUserVariable,
-			_javaStateProvider.JavaHomeMachineVariable,
+			_javaStateProvider.EsJavaHomeProcessVariable,
+			_javaStateProvider.EsJavaHomeUserVariable,
+			_javaStateProvider.EsJavaHomeMachineVariable,
+			_javaStateProvider.LegacyJavaHomeProcessVariable,
+			_javaStateProvider.LegacyJavaHomeUserVariable,
+			_javaStateProvider.LegacyJavaHomeMachineVariable,
 			JavaFromEsHomeDirectory
 		};
 
@@ -53,36 +58,79 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 					?? _elasticsearchStateProvider.RunningExecutableLocation;
 
 				return esHome != null
-					? Path.Combine(esHome, "jdk")
+					? Path.Combine(esHome, "jdk").Trim()
 					: null;
 			}
 		}
 
 		public bool JavaInstalled => !string.IsNullOrEmpty(this.JavaHomeCanonical);
 
-		public bool JavaMisconfigured 
+		public bool JavaMisconfigured
 		{
 			get
 			{
-				if (!JavaInstalled) return false;
-				if (string.IsNullOrEmpty(_javaStateProvider.JavaHomeMachineVariable) && string.IsNullOrWhiteSpace(_javaStateProvider.JavaHomeUserVariable)) return false;
-				if (string.IsNullOrWhiteSpace(_javaStateProvider.JavaHomeUserVariable)) return false;
-				if (string.IsNullOrWhiteSpace(_javaStateProvider.JavaHomeMachineVariable)) return false;
-				return _javaStateProvider.JavaHomeMachineVariable != _javaStateProvider.JavaHomeUserVariable;
+				if (!JavaInstalled)
+					return false;
+
+				// All empty
+				if (string.IsNullOrEmpty(_javaStateProvider.EsJavaHomeMachineVariable)
+					&& string.IsNullOrEmpty(_javaStateProvider.EsJavaHomeUserVariable)
+					&& string.IsNullOrEmpty(_javaStateProvider.LegacyJavaHomeMachineVariable)
+					&& string.IsNullOrEmpty(_javaStateProvider.LegacyJavaHomeUserVariable))
+				{
+					return false;
+				}
+
+				// ES_JAVA_HOME
+				if (string.IsNullOrEmpty(_javaStateProvider.EsJavaHomeUserVariable)
+					&& string.IsNullOrEmpty(_javaStateProvider.LegacyJavaHomeUserVariable))
+				{
+					return false;
+				}
+
+				if (string.IsNullOrEmpty(_javaStateProvider.EsJavaHomeMachineVariable)
+					&& string.IsNullOrEmpty(_javaStateProvider.LegacyJavaHomeMachineVariable))
+				{
+					return false;
+				}
+
+				if (string.Compare(
+					_javaStateProvider.EsJavaHomeMachineVariable,
+					_javaStateProvider.EsJavaHomeUserVariable,
+					StringComparison.OrdinalIgnoreCase) == 0
+					&& !string.IsNullOrEmpty(_javaStateProvider.EsJavaHomeMachineVariable))
+				{ 
+					return false; 
+				}
+
+				if (string.Compare(
+						_javaStateProvider.LegacyJavaHomeUserVariable,
+						_javaStateProvider.LegacyJavaHomeMachineVariable,
+						StringComparison.OrdinalIgnoreCase) == 0
+					&& !string.IsNullOrEmpty(_javaStateProvider.LegacyJavaHomeUserVariable))
+				{
+					return false;
+				}
+
+				// Misconfiguration
+				return true;
 			}
 		}
-			
+
 		public override string ToString() =>
 			new StringBuilder()
 				.AppendLine($"Java paths")
 				.AppendLine($"- current = {JavaExecutable}")
 				.AppendLine($"Java Candidates (in order of precedence)")
-				.AppendLine($"- {nameof(_javaStateProvider.JavaHomeProcessVariable)} = {_javaStateProvider.JavaHomeProcessVariable}")
-				.AppendLine($"- {nameof(_javaStateProvider.JavaHomeUserVariable)} = {_javaStateProvider.JavaHomeUserVariable}")
-				.AppendLine($"- {nameof(_javaStateProvider.JavaHomeMachineVariable)} = {_javaStateProvider.JavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.EsJavaHomeProcessVariable)} = {_javaStateProvider.EsJavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.EsJavaHomeUserVariable)} = {_javaStateProvider.EsJavaHomeUserVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.EsJavaHomeMachineVariable)} = {_javaStateProvider.EsJavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.LegacyJavaHomeProcessVariable)} = {_javaStateProvider.LegacyJavaHomeProcessVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.LegacyJavaHomeUserVariable)} = {_javaStateProvider.LegacyJavaHomeUserVariable}")
+				.AppendLine($"- {nameof(_javaStateProvider.LegacyJavaHomeMachineVariable)} = {_javaStateProvider.LegacyJavaHomeProcessVariable}")
 				.AppendLine($"- {nameof(JavaFromEsHomeDirectory)} = {JavaFromEsHomeDirectory}")
 				.AppendLine($"Java checks")
-				.AppendLine($"- JAVA_HOME as machine and user variable = {JavaMisconfigured}")
+				.AppendLine($"- ES_JAVA_HOME/JAVA_HOME as machine and user variable = {JavaMisconfigured}")
 				.ToString();
 
 	}
