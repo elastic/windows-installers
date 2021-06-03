@@ -24,7 +24,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 			this.ObservableProcess = new TestableElasticsearchObservableProcess(
 				state.ElasticsearchConfigState,
-				state.ConsoleSessionState, 
+				state.ConsoleSessionState,
 				state.InteractiveEnvironment
 			);
 			this.OutHandler = state.OutHandler;
@@ -34,16 +34,17 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 				this.OutHandler,
 				state.FileSystemState,
 				state.ElasticsearchConfigState,
-				state.JavaConfigState, 
-				state.OptsParserTool, 
+				state.JavaConfigState,
+				state.OptsParserTool,
 				state.JavaVersionCheckerTool, state.CompletionHandle, state.ProcessArgs);
 		}
-		private static MockElasticsearchEnvironmentStateProvider DefaultEsStateSelector(MockElasticsearchEnvironmentStateProvider e) => 
+
+		private static MockElasticsearchEnvironmentStateProvider DefaultEsStateSelector(MockElasticsearchEnvironmentStateProvider e) =>
 			e.EsHomeMachineVariable(DefaultEsHome).TempDirectory(DefaultTempDirectory);
 
 		public static ElasticsearchProcessTester AllDefaults(params string[] args) => new ElasticsearchProcessTester(s => s
 			.Elasticsearch(DefaultEsStateSelector)
-			.Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
+			.Java(j => j.EsJavaHomeMachineVariable(DefaultJavaHome).LegacyJavaHomeMachineVariable(DefaultJavaHome))
 			.ConsoleSession(ConsoleSession.StartedSession)
 			.FileSystem(s.FileSystemDefaults)
 			.ProcessArguments(args)
@@ -51,7 +52,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 
 		public static ElasticsearchProcessTester AllDefaults(ConsoleSession session, bool interactive = true) => new ElasticsearchProcessTester(s => s
 			.Elasticsearch(DefaultEsStateSelector)
-			.Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
+			.Java(j => j.EsJavaHomeMachineVariable(DefaultJavaHome).LegacyJavaHomeMachineVariable(DefaultJavaHome))
 			.ConsoleSession(session)
 			.FileSystem(s.FileSystemDefaults)
 			.Interactive(interactive)
@@ -75,9 +76,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			params string[] args) =>
 			new ElasticsearchProcessTester(s => s
 				.Elasticsearch(e => esState(new MockElasticsearchEnvironmentStateProvider().TempDirectory(DefaultTempDirectory)))
-				.Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
+				.Java(j => j.EsJavaHomeMachineVariable(DefaultJavaHome).LegacyJavaHomeMachineVariable(DefaultJavaHome))
 				.ConsoleSession(ConsoleSession.StartedSession)
-				.FileSystem(fs=> s.AddJavaExe(s.AddElasticsearchLibs(fs, homeDirectoryForFileSystem)))
+				.FileSystem(fs => s.AddJavaExe(s.AddElasticsearchLibs(fs, homeDirectoryForFileSystem)))
 				.ProcessArguments(args)
 			);
 
@@ -98,7 +99,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process
 			if (created)
 				throw new Exception("Process tester expected elasticsearch.exe to throw an exception");
 		}
-		
+
 		public void Start(Action<ElasticsearchProcessTester> assert)
 		{
 			this.Process.Start();

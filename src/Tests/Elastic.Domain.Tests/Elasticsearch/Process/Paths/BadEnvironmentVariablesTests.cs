@@ -16,19 +16,20 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 			try
 			{
 				var elasticsearchProcessTester = new ElasticsearchProcessTester(s => s
-                    .Elasticsearch(e => e
+					.Elasticsearch(e => e
 						.EsHomeMachineVariable(DefaultEsHome)
 						.EnvironmentVariables(new kv { { key, value } }))
-                    .Java(j => j.JavaHomeMachineVariable(DefaultJavaHome))
-                    .ConsoleSession(ConsoleSession.StartedSession)
-                    .FileSystem(fs=> s.AddJavaExe(s.AddElasticsearchLibs(fs, null)))
-                );
+					.Java(j => j.LegacyJavaHomeMachineVariable(DefaultJavaHome))
+					.ConsoleSession(ConsoleSession.StartedSession)
+					.FileSystem(fs => s.AddJavaExe(s.AddElasticsearchLibs(fs, null)))
+				);
 				created = true;
 			}
 			catch (Exception e)
 			{
 				var se = e as StartupException;
-				if (se == null) throw new Exception("Exception was thrown but not of type StartupException see InnerException", e);
+				if (se == null)
+					throw new Exception("Exception was thrown but not of type StartupException see InnerException", e);
 				assert(se);
 			}
 			if (created)
@@ -50,6 +51,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 				"ES_GC_OPTS",
 				"ES_GC_LOG_FILE"
 			};
+
 			foreach (var v in badVariables)
 				ExpectStartupException(v, "some value", (e) =>
 				{

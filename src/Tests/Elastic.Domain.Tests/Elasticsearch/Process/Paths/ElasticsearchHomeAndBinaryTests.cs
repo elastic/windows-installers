@@ -9,7 +9,8 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 {
 	public class ElasticsearchHomeAndBinaryTests
 	{
-		private const string JavaHomeUser = @"c:\Java\User";
+		private const string LegacyJavaHomeUser = @"c:\LegacyJavaHome\User";
+		private const string EsJavaHomeUser = @"c:\EsJavaHome\User";
 
 		private readonly string _executableParentFolder = @"C:\Alternative\Elasticsearch (x86)\weird location";
 		private string Executable => Path.Combine(_executableParentFolder, @"bin\elasticsearch.exe");
@@ -20,25 +21,36 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 
 		private static string EsHomeArg(string home) => $"-Des.path.home=\"{home}\"";
 
-		[Fact] public void DefaultEsHomeIsPassedAsArgumentToJava() => AllDefaults()
+		[Fact]
+		public void DefaultEsHomeIsPassedAsArgumentToJava() => AllDefaults()
 			.Start(p =>
 			{
 				p.ObservableProcess.ArgsCalled.Should().NotBeNullOrEmpty()
 					.And.Contain(EsHomeArg(DefaultEsHome));
 			});
 
-		[Fact] public void MissingElasticsearchLibFolderThrows() => CreateThrows(s => s
-				.Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
-				.ConsoleSession(ConsoleSession.StartedSession)
-				.Java(j => j.JavaHomeUserVariable(JavaHomeUser))
-				.FileSystem(s.AddJavaExe)
+		[Fact]
+		public void LegacyJavaHomeMissingElasticsearchLibFolderThrows() => CreateThrows(s => s
+		 .Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
+		 .ConsoleSession(ConsoleSession.StartedSession)
+		 .Java(j => j.LegacyJavaHomeUserVariable(LegacyJavaHomeUser))
+		 .FileSystem(s.AddJavaExe)
 			, e => { e.Message.Should().Contain("Expected a 'lib' directory inside:"); });
 
-		[Fact] public void ProcessVariableWinsFromUserVariable() => ElasticsearchChangesOnly(e => e
-				.EsHomeProcessVariable(EsHomeProcess)
-				.EsHomeUserVariable(EsHomeUser)
-				.EsHomeMachineVariable(EsHomeMachine)
-				.ElasticsearchExecutable(Executable)
+		[Fact]
+		public void EsJavaHomeMissingElasticsearchLibFolderThrows() => CreateThrows(s => s
+		 .Elasticsearch(e => e.EsHomeMachineVariable(DefaultEsHome))
+		 .ConsoleSession(ConsoleSession.StartedSession)
+		 .Java(j => j.EsJavaHomeUserVariable(EsJavaHomeUser))
+		 .FileSystem(s.AddJavaExe)
+			, e => { e.Message.Should().Contain("Expected a 'lib' directory inside:"); });
+
+		[Fact]
+		public void ProcessVariableWinsFromUserVariable() => ElasticsearchChangesOnly(e => e
+		 .EsHomeProcessVariable(EsHomeProcess)
+		 .EsHomeUserVariable(EsHomeUser)
+		 .EsHomeMachineVariable(EsHomeMachine)
+		 .ElasticsearchExecutable(Executable)
 			)
 			.Start(p =>
 			{
@@ -46,10 +58,11 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 					.And.Contain(EsHomeArg(EsHomeProcess));
 			});
 
-		[Fact] public void UserVariableWinsFromMachineVariable() => ElasticsearchChangesOnly(e => e
-				.EsHomeUserVariable(EsHomeUser)
-				.EsHomeMachineVariable(EsHomeMachine)
-				.ElasticsearchExecutable(Executable)
+		[Fact]
+		public void UserVariableWinsFromMachineVariable() => ElasticsearchChangesOnly(e => e
+		 .EsHomeUserVariable(EsHomeUser)
+		 .EsHomeMachineVariable(EsHomeMachine)
+		 .ElasticsearchExecutable(Executable)
 			)
 			.Start(p =>
 			{
@@ -57,9 +70,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 					.And.Contain(EsHomeArg(EsHomeUser));
 			});
 
-		[Fact] public void MachineVariableWinsFromInferredExecutableLocation() => ElasticsearchChangesOnly(e => e
-				.EsHomeMachineVariable(EsHomeMachine)
-				.ElasticsearchExecutable(Executable)
+		[Fact]
+		public void MachineVariableWinsFromInferredExecutableLocation() => ElasticsearchChangesOnly(e => e
+		 .EsHomeMachineVariable(EsHomeMachine)
+		 .ElasticsearchExecutable(Executable)
 			)
 			.Start(p =>
 			{
@@ -67,8 +81,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 					.And.Contain(EsHomeArg(EsHomeMachine));
 			});
 
-		[Fact] public void DefaultsEsHomeToExecutableParentLocation() => ElasticsearchChangesOnly(e => e
-				.ElasticsearchExecutable(Executable)
+		[Fact]
+		public void DefaultsEsHomeToExecutableParentLocation() => ElasticsearchChangesOnly(e => e
+		 .ElasticsearchExecutable(Executable)
 			)
 			.Start(p =>
 			{
@@ -76,16 +91,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 					.And.Contain(EsHomeArg(_executableParentFolder));
 			});
 
-		[Fact] public void ArgumentPassedOnCommandLineWins() =>
+		[Fact]
+		public void ArgumentPassedOnCommandLineWins() =>
 			InstantiateThrows(() =>
-                ElasticsearchChangesOnly(
-                    EsHomeCommandLine,
-                    e => e.ElasticsearchExecutable(Executable)
-                    , "-E", $"path.home={EsHomeCommandLine}"
-                )
-		    );
+				ElasticsearchChangesOnly(
+					EsHomeCommandLine,
+					e => e.ElasticsearchExecutable(Executable)
+					, "-E", $"path.home={EsHomeCommandLine}"
+				)
+			);
 
-		[Fact] public void ArgumentPassedOnCommandLineNeedsFlag() =>
+		[Fact]
+		public void ArgumentPassedOnCommandLineNeedsFlag() =>
 			ElasticsearchChangesOnly(
 				_executableParentFolder,
 				e => e.ElasticsearchExecutable(Executable)
@@ -102,13 +119,14 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 					.And.Contain($"path.home={EsHomeCommandLine}");
 			});
 
-		[Fact] public void ConjoinedArgumentPassedOnCommandLineWins() =>
+		[Fact]
+		public void ConjoinedArgumentPassedOnCommandLineWins() =>
 			InstantiateThrows(() =>
-                ElasticsearchChangesOnly(
-                    EsHomeCommandLine,
-                    e => e.ElasticsearchExecutable(Executable)
-                    , $"-Epath.home={EsHomeCommandLine}"
-                )
+				ElasticsearchChangesOnly(
+					EsHomeCommandLine,
+					e => e.ElasticsearchExecutable(Executable)
+					, $"-Epath.home={EsHomeCommandLine}"
+				)
 			);
 
 		[Fact]
@@ -116,12 +134,12 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 		{
 			var home = $"{EsHomeCommandLine}\\=x==y";
 			InstantiateThrows(() =>
-                ElasticsearchChangesOnly(
-                    home, e => e.ElasticsearchExecutable(Executable), "-E", $"path.home={home}"
-                )
+				ElasticsearchChangesOnly(
+					home, e => e.ElasticsearchExecutable(Executable), "-E", $"path.home={home}"
+				)
 			);
 		}
-		
+
 		private static void InstantiateThrows(Action instantiate) => instantiate
 			.ShouldThrowExactly<StartupException>()
 			.WithMessage("setting -E path.home is no longer supported");

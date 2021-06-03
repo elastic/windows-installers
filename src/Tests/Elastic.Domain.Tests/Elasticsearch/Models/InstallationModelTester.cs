@@ -41,7 +41,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			return fileSystem;
 		}
 
-		public InstallationModelTester() 
+		public InstallationModelTester()
 			: this
 			(
 				new MockWixStateProvider(),
@@ -52,19 +52,21 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 				CreateMockFileSystem(),
 				NoopSession.Elasticsearch,
 				null
-			) { }
+			)
+		{ }
 
 		public InstallationModelTester(
-			MockWixStateProvider wixState, 
-			MockJavaEnvironmentStateProvider javaState, 
-			MockElasticsearchEnvironmentStateProvider esState, 
+			MockWixStateProvider wixState,
+			MockJavaEnvironmentStateProvider javaState,
+			MockElasticsearchEnvironmentStateProvider esState,
 			NoopServiceStateProvider serviceState,
 			NoopPluginStateProvider pluginState,
-			MockFileSystem fileSystem, 
+			MockFileSystem fileSystem,
 			NoopSession session,
 			string[] args)
 		{
-			if (wixState == null) throw new ArgumentNullException(nameof(wixState));
+			if (wixState == null)
+				throw new ArgumentNullException(nameof(wixState));
 
 			this.JavaState = javaState ?? throw new ArgumentNullException(nameof(javaState));
 			this.EsState = esState ?? throw new ArgumentNullException(nameof(esState));
@@ -75,7 +77,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			this.JvmConfig = LocalJvmOptionsConfiguration.FromFolder(elasticsearchConfiguration.ConfigDirectory, fileSystem);
 			this.TempDirectoryConfiguration = new TempDirectoryConfiguration(session, esState, fileSystem);
 			this.InstallationModel = new ElasticsearchInstallationModel(
-				wixState, JavaConfig, elasticsearchConfiguration, serviceState, pluginState, 
+				wixState, JavaConfig, elasticsearchConfiguration, serviceState, pluginState,
 				EsConfig, JvmConfig, TempDirectoryConfiguration, fileSystem,
 				session, args);
 			this.FileSystem = fileSystem;
@@ -123,7 +125,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 				.And.HaveCount(this.InstallationModel.FirstInvalidStepValidationFailures.Count);
 
 			validateErrors?.Invoke(step.ValidationFailures);
-			
+
 			return this;
 		}
 
@@ -132,7 +134,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			var firstStep = this.InstallationModel.Steps.First();
 			return IsValidOnStep(firstStep);
 		}
-		
+
 		public InstallationModelTester IsNotified(Action<NoticeModel> assert)
 		{
 			var step = this.InstallationModel.NoticeModel;
@@ -171,7 +173,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 			this.InstallationModel.FirstInvalidStepValidationFailures.Should().BeEmpty();
 			step.ValidationFailures.Should().BeEmpty();
-			
+
 			this.InstallationModel.ValidationFailures.Should().BeEmpty();
 			this.InstallationModel.PrerequisiteFailures.Should().BeEmpty();
 
@@ -228,7 +230,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 			)
 			where TStep : IValidatableReactiveObject
 		{
-			var step  = selector(this.InstallationModel);
+			var step = selector(this.InstallationModel);
 			modify(step);
 
 			return this;
@@ -236,17 +238,18 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models
 
 		public static InstallationModelTester ValidPreflightChecks() => New(s => s
 			.Wix(alreadyInstalled: false)
-			.Java(j=>j.JavaHomeMachineVariable(@"C:\Java"))
+			.Java(j => j.EsJavaHomeMachineVariable(@"C:\EsJavaHome"))
 		);
 
 		public static InstallationModelTester ValidPreflightChecks(Func<TestSetupStateProvider, TestSetupStateProvider> selector) => New(s => selector(s
 			.Wix(alreadyInstalled: false, installationInProgress: true)
-			.Java(j => j.JavaHomeMachineVariable(@"C:\Java"))
+			.Java(j => j.EsJavaHomeMachineVariable(@"C:\EsJavaHome"))
 			)
 		);
+
 		public static InstallationModelTester ValidPreflightChecksForTasks(Func<TestSetupStateProvider, TestSetupStateProvider> selector) => New(s => selector(s
 			.Wix(alreadyInstalled: false)
-			.Java(j => j.JavaHomeMachineVariable(@"C:\Java"))
+			.Java(j => j.EsJavaHomeMachineVariable(@"C:\EsJavaHome"))
 			)
 		);
 
