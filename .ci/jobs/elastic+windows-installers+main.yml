@@ -1,13 +1,13 @@
 ---
 
 - job:
-    name: elastic+windows-installers+master
-    display-name: 'elastic / windows-installers # master'
-    description: Testing the windows-installers master branch.
+    name: elastic+windows-installers+main
+    display-name: 'elastic / windows-installers # main'
+    description: Testing the windows-installers main branch.
     scm:
       - git:
           branches:
-            - refs/heads/master
+            - refs/heads/main
     triggers:
       - github
       - timed: "@daily"
