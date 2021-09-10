@@ -15,7 +15,7 @@
     parameters:
       - string:
           name: branch_specifier
-          default: refs/heads/master
+          default: refs/heads/main
           description: Git branch to build
     properties:
       - github: 
