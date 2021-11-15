@@ -24,16 +24,6 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Process.Paths
 			});
 
 		[Fact]
-		public void UserHomeTakesPrecedenceOverAll() => JavaChangesOnly(j => j
-			.LegacyJavaHomeUserVariable(JavaHomeUser)
-			.LegacyJavaHomeMachineVariable(JavaHomeMachine)
-			)
-			.Start(p =>
-			{
-				p.ObservableProcess.BinaryCalled.Should().Be(JavaExe(JavaHomeUser));
-			});
-
-		[Fact]
 		public void JavaHomeUsesBundledJdk() => JavaChangesOnly(s => s)
 			.Start(p =>
 			{
