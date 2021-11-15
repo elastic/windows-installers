@@ -44,10 +44,10 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 			_javaStateProvider.EsJavaHomeProcessVariable,
 			_javaStateProvider.EsJavaHomeUserVariable,
 			_javaStateProvider.EsJavaHomeMachineVariable,
+			JavaFromEsHomeDirectory,
 			_javaStateProvider.LegacyJavaHomeProcessVariable,
 			_javaStateProvider.LegacyJavaHomeUserVariable,
 			_javaStateProvider.LegacyJavaHomeMachineVariable,
-			JavaFromEsHomeDirectory
 		};
 
 		private string JavaFromEsHomeDirectory

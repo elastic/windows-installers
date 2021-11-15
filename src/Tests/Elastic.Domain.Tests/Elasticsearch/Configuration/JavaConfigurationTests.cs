@@ -112,7 +112,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Configuration
 		);
 
 		[Fact]
-		void MachineBeatsEsHome() => AssertJavaHome(_machineVariable,
+		void EsHomeBeatsLegacyaJavaHome() => AssertJavaHome(Path.Combine(_esHome, "jdk"),
 			m => m.LegacyJavaHomeMachineVariable(_machineVariable),
 			m => m.EsHomeMachineVariable(_esHome)
 		);
