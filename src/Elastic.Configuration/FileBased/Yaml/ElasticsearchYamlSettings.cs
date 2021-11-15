@@ -71,8 +71,16 @@ namespace Elastic.Configuration.FileBased.Yaml
 		public string HttpPortString { get; set; }
 
 		public int? HttpPort => int.TryParse(HttpPortString, out int port) ? port : (int?)null;
-
+		
 		[YamlMember("transport.tcp.port")]
+		[DefaultValue(null)]
+		public string TransportTcpPortDeprecatedString
+		{
+			get => null;
+			set => this.TransportTcpPortString = value;
+		}
+
+		[YamlMember("transport.port")]
 		[DefaultValue(null)]
 		public string TransportTcpPortString { get; set; }
 		
