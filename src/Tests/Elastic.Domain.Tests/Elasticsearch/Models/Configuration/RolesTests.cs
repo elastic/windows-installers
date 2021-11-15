@@ -46,6 +46,16 @@ node.ingest: false
 			})
 			.CanClickNext();
 
+		[Fact] void SeedsNodeRolesArraryFromElasticsearchYaml() => WithExistingElasticsearchYaml($@"
+node.roles: [""ingest""]
+"
+				)
+				.OnStep(m => m.ConfigurationModel, step =>
+				{
+					step.DataNode.Should().BeFalse();
+					step.IngestNode.Should().BeTrue();
+					step.MasterNode.Should().BeFalse();
+				});
 			
 	}
 }

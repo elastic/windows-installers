@@ -61,9 +61,10 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					var s = config.Settings;
 					s.ClusterName.Should().Be(ConfigurationModel.DefaultClusterName);
 					s.NodeName.Should().Be(ConfigurationModel.DefaultNodeName);
-					s.MasterNode.Should().Be(ConfigurationModel.DefaultMasterNode);
-					s.DataNode.Should().Be(ConfigurationModel.DefaultDataNode);
-					s.IngestNode.Should().Be(ConfigurationModel.DefaultIngestNode);
+					s.MasterNode.Should().BeNull();
+					s.DataNode.Should().BeNull();
+					s.IngestNode.Should().BeNull();
+					s.NodeRoles.Should().BeNull();
 					s.MemoryLock.Should().Be(ConfigurationModel.DefaultMemoryLock);
 					s.LogsPath.Should().Be(LocationsModel.DefaultLogsDirectory);
 					s.DataPath.Should().Be(LocationsModel.DefaultDataDirectory);
@@ -141,8 +142,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					var s = config.Settings;
 					s.ClusterName.Should().Be("x");
 					s.NodeName.Should().Be("x");
-					s.MasterNode.Should().BeFalse();
-					s.IngestNode.Should().BeFalse();
+					s.MasterNode.Should().NotHaveValue();
+					s.IngestNode.Should().NotHaveValue();
+					s.NodeRoles.Should().BeNullOrEmpty();
 					s.MemoryLock.Should().BeFalse();
 					s.NetworkHost.Should().Be("xyz");
 					s.HttpPort.Should().Be(80);
@@ -316,6 +318,101 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					s.ClusterName.Should().Be("x");
 					s.NodeName.Should().Be("nodex");
 					s.InitialMasterNodes.Should().BeEquivalentTo(new List<string> { "nodey" });
+				}
+			);
+		
+		[Fact] void ConvertsOldNodeRoles() => DefaultValidModelForTasks(s => s
+			.Elasticsearch(es => es
+				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
+			)
+			.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@"
+node.data: true
+node.ingest: true
+"));
+					return fs;
+				})
+			)
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yaml = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
+					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var s = config.Settings;
+					s.MasterNode.Should().BeNull();
+					s.DataNode.Should().BeNull();
+					s.IngestNode.Should().BeNull();
+					s.NodeRoles.Should().BeEquivalentTo(new [] { "data", "ingest"});
+				}
+			);
+		
+		[Fact] void ConvertsAllRolesToEmpty() => DefaultValidModelForTasks(s => s
+			.Elasticsearch(es => es
+				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
+			)
+			.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@"
+node.data: true
+node.ingest: true
+node.master: true
+"));
+					return fs;
+				})
+			)
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yaml = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
+					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var s = config.Settings;
+					s.MasterNode.Should().BeNull();
+					s.DataNode.Should().BeNull();
+					s.IngestNode.Should().BeNull();
+					s.NodeRoles.Should().BeNullOrEmpty();
+				}
+			);
+		
+		[Fact] void PreservesNodeRoles() => DefaultValidModelForTasks(s => s
+			.Elasticsearch(es => es
+				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
+			)
+			.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@"
+node.roles: [""ingest"", ""data""]
+"));
+					return fs;
+				})
+			)
+			.OnStep(m => m.ConfigurationModel, s =>
+			{
+				s.MasterNode.Should().BeFalse();
+				s.MasterNode = true;
+			})
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yaml = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
+					yamlContents.Should().NotBeEmpty().And.NotBe("cluster.name: x");
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var s = config.Settings;
+					s.MasterNode.Should().BeNull();
+					s.DataNode.Should().BeNull();
+					s.IngestNode.Should().BeNull();
+					s.NodeRoles.Should().BeNullOrEmpty();
 				}
 			);
 		
