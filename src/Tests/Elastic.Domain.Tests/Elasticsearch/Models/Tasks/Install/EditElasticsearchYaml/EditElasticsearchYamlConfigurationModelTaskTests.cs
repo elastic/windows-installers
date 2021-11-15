@@ -63,8 +63,41 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					{
 						"localhost", "192.2.3.1:9301"
 					});
+					yamlContents.Should().Contain("transport.port");
 				}
 			);
 
+		[Fact] void DeprecatedTcpPortConfigIsPreserved() => DefaultValidModelForTasks(s => s
+			.Elasticsearch(es => es
+				.EsConfigMachineVariable(LocationsModel.DefaultConfigDirectory)
+			)
+			.FileSystem(fs =>
+				{
+					fs.AddFile(Path.Combine(LocationsModel.DefaultConfigDirectory, "elasticsearch.yml"), new MockFileData(@"
+transport.tcp.port: 9333
+cluster.name: xy
+"));
+					return fs;
+				})
+			)
+			.OnStep(m => m.ConfigurationModel, s =>
+			{
+			})
+			.AssertTask(
+				(m, s, fs) => new EditElasticsearchYamlTask(m, s, fs),
+				(m, t) =>
+				{
+					var dir = m.LocationsModel.ConfigDirectory;
+					var yaml = Path.Combine(dir, "elasticsearch.yml");
+					var yamlContents = t.FileSystem.File.ReadAllText(yaml);
+					yamlContents.Should().NotBeEmpty();
+					var config = ElasticsearchYamlConfiguration.FromFolder(dir, t.FileSystem);
+					var s = config.Settings;
+					s.TransportTcpPort.Should().Be(9333);
+					s.ClusterName.Should().Be("xy");
+					yamlContents.Should().Contain("transport.port");
+					yamlContents.Should().NotContain("transport.tcp.port");
+				}
+			);
 	}
 }
