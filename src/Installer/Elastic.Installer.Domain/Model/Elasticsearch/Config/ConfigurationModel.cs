@@ -85,9 +85,9 @@ namespace Elastic.Installer.Domain.Model.Elasticsearch.Config
 		{
 			this.ClusterName = this._yamlSettings?.ClusterName ?? DefaultClusterName;
 			this.NodeName = this._yamlSettings?.NodeName ?? DefaultNodeName;
-			this.MasterNode = this._yamlSettings?.MasterNode ?? DefaultMasterNode;
-			this.DataNode = this._yamlSettings?.DataNode ?? DefaultDataNode;
-			this.IngestNode = this._yamlSettings?.IngestNode ?? DefaultIngestNode;
+			this.MasterNode = this._yamlSettings?.HasNodeRole("master") ?? DefaultMasterNode;
+			this.DataNode = this._yamlSettings?.HasNodeRole("data") ?? DefaultDataNode;
+			this.IngestNode = this._yamlSettings?.HasNodeRole("ingest") ?? DefaultIngestNode;
 			this.SeedHosts = ReadSeedHosts();
 			this.LockMemory = this._yamlSettings?.MemoryLock ?? DefaultMemoryLock;
 			this.TotalPhysicalMemory = DefaultTotalPhysicalMemory;

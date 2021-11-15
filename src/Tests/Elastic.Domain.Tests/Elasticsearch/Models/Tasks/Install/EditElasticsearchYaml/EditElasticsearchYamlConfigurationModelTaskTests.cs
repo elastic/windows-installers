@@ -50,8 +50,9 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					var s = config.Settings;
 					s.ClusterName.Should().Be("x");
 					s.NodeName.Should().Be("x");
-					s.MasterNode.Should().BeFalse();
-					s.IngestNode.Should().BeFalse();
+					s.MasterNode.Should().BeNull();
+					s.IngestNode.Should().BeNull();
+					s.NodeRoles.Should().BeNullOrEmpty();
 					s.MemoryLock.Should().BeFalse();
 					s.NetworkHost.Should().Be("xyz");
 					s.HttpPort.Should().Be(80);

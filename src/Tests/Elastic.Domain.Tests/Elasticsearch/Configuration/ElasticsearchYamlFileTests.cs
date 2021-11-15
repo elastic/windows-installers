@@ -23,7 +23,7 @@ cluster.name: {clusterName}
 network.host: {networkHost}
 node.data: true
 node.ingest: true
-node.master: true
+node.master: false
 node.max_local_storage_nodes: 1
 node.name: {nodeName}
 path.data: {folder}data
@@ -38,8 +38,10 @@ xpack.random_setting: something
 			settings.NodeName.Should().Be(nodeName);
 			settings.ClusterName.Should().Be(clusterName);
 			settings.NetworkHost.Should().Be(networkHost);
-			settings.DataNode.Should().BeTrue();
-			settings.IngestNode.Should().BeTrue();
+			settings.DataNode.Should().BeNull();
+			settings.IngestNode.Should().BeNull();
+			settings.MasterNode.Should().BeNull();
+			settings.NodeRoles.Should().BeEquivalentTo(new [] {"data", "ingest"});
 			settings.MemoryLock.Should().BeTrue();
 			settings.DataPath.Should().Be(folder + "data");
 			settings.LogsPath.Should().Be(folder + "logs");
@@ -50,7 +52,21 @@ xpack.random_setting: something
 			optsFile.Save();
 
 			var fileContentsAfterSave = fs.File.ReadAllText(_path);
-			fileContentsAfterSave.Replace("\r", "").Should().Be(yaml.Replace("\r", ""));
+			var updatedYaml = $@"bootstrap.memory_lock: true
+cluster.name: {clusterName}
+network.host: {networkHost}
+node.max_local_storage_nodes: 1
+node.name: {nodeName}
+node.roles:
+  - data
+  - ingest
+path.data: {folder}data
+path.logs: {folder}logs
+xpack.license.self_generated.type: trial
+xpack.security.enabled: false
+xpack.random_setting: something
+";
+			fileContentsAfterSave.Replace("\r", "").Should().Be(updatedYaml.Replace("\r", ""));
 
 		}
 		

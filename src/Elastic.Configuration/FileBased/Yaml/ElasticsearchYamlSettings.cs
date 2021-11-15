@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Security.Policy;
 using SharpYaml.Serialization;
 
 namespace Elastic.Configuration.FileBased.Yaml
 {
 	public class ElasticsearchYamlSettings : Dictionary<string, object>, IYamlSettings
 	{
+		private List<string> _nodeRoles;
+
 		[YamlMember("cluster.name", SerializeMemberMode.Content)]
 		[DefaultValue(null)]
 		public string ClusterName { get; set; }
@@ -17,15 +21,75 @@ namespace Elastic.Configuration.FileBased.Yaml
 
 		[YamlMember("node.master")]
 		[DefaultValue(null)]
-		public bool? MasterNode { get; set; }
+		public bool? MasterNode
+		{
+			get => null;
+			set
+			{
+				this._masterNode = value;
+				SetNodeRole("master", value);
+			}
+		}
 
 		[YamlMember("node.data")]
 		[DefaultValue(null)]
-		public bool? DataNode { get; set; }
+		public bool? DataNode
+		{
+			get => null;
+			set
+			{
+				this._dataNode = value;
+				SetNodeRole("data", value);
+			}
+		}
 
 		[YamlMember("node.ingest")]
 		[DefaultValue(null)]
-		public bool? IngestNode { get; set; }
+		public bool? IngestNode
+		{
+			get => null;
+			set
+			{
+				this._ingestNode = value;
+				SetNodeRole("ingest", value);
+			}
+		}
+
+		public bool? HasNodeRole(string role)
+		{
+			if (role == "data" && _dataNode.HasValue) return _dataNode;
+			if (role == "ingest" && _ingestNode.HasValue) return _ingestNode;
+			if (role == "master" && _masterNode.HasValue) return _masterNode;
+			return NodeRoles?.Any(r => r != null && r.Equals(role, StringComparison.InvariantCultureIgnoreCase));
+		}
+
+		public void SetNodeRole(string role, bool? include)
+		{
+			if (_nodeRoles == null) _nodeRoles = new List<string>();
+			if (include.HasValue && include.Value) _nodeRoles.Add(role.ToLowerInvariant());
+			else _nodeRoles.Remove(role.ToLowerInvariant());
+			if (_nodeRoles.Count == 0) _nodeRoles = null;
+			if (_nodeRoles != null) _nodeRoles = new HashSet<string>(_nodeRoles).ToList();
+		}
+
+		private HashSet<string> _allRoles = new HashSet<string>(new [] {"ingest", "data", "master"});
+		private bool? _masterNode;
+		private bool? _dataNode;
+		private bool? _ingestNode;
+
+		[YamlMember("node.roles")]
+		[DefaultValue(null)]
+		public List<string> NodeRoles
+		{
+			get
+			{
+				if (_nodeRoles == null) return null;
+				//if all roles are set prefer not setting roles at all and rely on the defaults
+				return new HashSet<string>(_nodeRoles).SetEquals(_allRoles) ? null : _nodeRoles;
+			}
+			set => _nodeRoles = value;
+		}
+
 
 		[YamlMember("bootstrap.memory_lock")]
 		[DefaultValue(null)]
