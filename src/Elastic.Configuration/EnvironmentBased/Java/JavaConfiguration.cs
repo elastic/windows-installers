@@ -41,13 +41,13 @@ namespace Elastic.Configuration.EnvironmentBased.Java
 		public string JavaHomeCanonical => JavaHomeCandidates.FirstOrDefault(j => !string.IsNullOrWhiteSpace(j));
 
 		private List<string> JavaHomeCandidates => new List<string> {
+			JavaFromEsHomeDirectory,
 			_javaStateProvider.EsJavaHomeProcessVariable,
 			_javaStateProvider.EsJavaHomeUserVariable,
 			_javaStateProvider.EsJavaHomeMachineVariable,
 			_javaStateProvider.LegacyJavaHomeProcessVariable,
 			_javaStateProvider.LegacyJavaHomeUserVariable,
 			_javaStateProvider.LegacyJavaHomeMachineVariable,
-			JavaFromEsHomeDirectory
 		};
 
 		private string JavaFromEsHomeDirectory
