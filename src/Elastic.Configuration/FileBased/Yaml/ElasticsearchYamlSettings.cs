@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using SharpYaml.Serialization;
 
@@ -51,6 +52,7 @@ namespace Elastic.Configuration.FileBased.Yaml
 		[DefaultValue(null)]
 		public List<string> InitialMasterNodes { get; set; }
 
+		[Obsolete("Removed in Elasticsearch 8.0, still here to ensure upgraded unset it")]
 		[YamlMember("node.max_local_storage_nodes")]
 		[DefaultValue(null)]
 		public int? MaxLocalStorageNodes { get; set; }

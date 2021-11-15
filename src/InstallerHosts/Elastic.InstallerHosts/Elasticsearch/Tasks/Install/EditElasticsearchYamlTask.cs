@@ -54,7 +54,10 @@ namespace Elastic.InstallerHosts.Elasticsearch.Tasks.Install
 		private void ApplyServiceModel(ElasticsearchYamlSettings settings)
 		{
 			this.Session.SendProgress(1000, "updating elasticsearch.yml with values from locations model");
-			settings.MaxLocalStorageNodes = this.InstallationModel.ServiceModel.InstallAsService ? (int?) 1 : null;
+
+			//forcefully set max local storage to null, if read as part of an upgrade to 8.0 this now needs to be cleared
+			//as its no longer a valid elasticsearch option.
+			settings.MaxLocalStorageNodes = null;
 		}
 
 		private void ApplyLocationsModel(ElasticsearchYamlSettings settings, LocationsModel locations)
