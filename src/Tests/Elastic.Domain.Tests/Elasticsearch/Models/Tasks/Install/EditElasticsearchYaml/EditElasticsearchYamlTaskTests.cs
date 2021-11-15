@@ -67,8 +67,7 @@ namespace Elastic.Installer.Domain.Tests.Elasticsearch.Models.Tasks.Install.Edit
 					s.MemoryLock.Should().Be(ConfigurationModel.DefaultMemoryLock);
 					s.LogsPath.Should().Be(LocationsModel.DefaultLogsDirectory);
 					s.DataPath.Should().Be(LocationsModel.DefaultDataDirectory);
-					//because install as service is enabled by default
-					s.MaxLocalStorageNodes.Should().Be(1);
+					s.MaxLocalStorageNodes.Should().NotHaveValue();
 					s.NetworkHost.Should().BeNullOrEmpty();
 					s.HttpPortString.Should().Be("9200");
 					s.TransportTcpPortString.Should().Be("9300");
