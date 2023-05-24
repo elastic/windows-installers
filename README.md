@@ -1,4 +1,7 @@
-# Windows installers for the Elastic stack
+# Archived - Windows installers for the Elastic stack
+
+> **Warning**
+> This project is no longer maintained.
 
 This is the repository for the Elastic stack MSI-based Windows installers.
 
